@@ -1,0 +1,34 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "PGDocFixer",
+        "repositoryURL": "https://github.com/GalenRhodes/PGDocFixer.git",
+        "state": {
+          "branch": null,
+          "revision": "ca7d23bf4790c900a4da22f596ea16ae4c6ca06e",
+          "version": "1.0.3"
+        }
+      },
+      {
+        "package": "RingBuffer",
+        "repositoryURL": "https://github.com/GalenRhodes/RingBuffer",
+        "state": {
+          "branch": null,
+          "revision": "dc0a49844bb3c6dece170af10f586007f471019a",
+          "version": "1.0.6"
+        }
+      },
+      {
+        "package": "Rubicon",
+        "repositoryURL": "https://github.com/GalenRhodes/Rubicon.git",
+        "state": {
+          "branch": null,
+          "revision": "499f44d8f6c837afddb29506cc9462f2797039fc",
+          "version": "0.2.41"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

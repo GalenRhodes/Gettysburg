@@ -3,13 +3,39 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		83CFA60F255735DE005498FC /* All Gettysburg */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 83CFA612255735DE005498FC /* Build configuration list for PBXAggregateTarget "All Gettysburg" */;
+			buildPhases = (
+			);
+			dependencies = (
+				83CFA61825573611005498FC /* PBXTargetDependency */,
+				83CFA61A25573616005498FC /* PBXTargetDependency */,
+				83CFA61C25573619005498FC /* PBXTargetDependency */,
+			);
+			name = "All Gettysburg";
+			productName = "All Gettysburg";
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
+		1117D2079CDD0FBBD88632F2 /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DC62EA36597422ADA15A /* Tools.swift */; };
+		1117D2BD258FF873AB6FD1E3 /* SAXEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D79449953EA9D8CF7433 /* SAXEntity.swift */; };
+		1117D5AEBA95CEE7C9622FD3 /* SAXParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D8CB5662C06574566C24 /* SAXParser.swift */; };
+		1117D6EEBE25B5C02DB123ED /* TestSAXParserDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D9A83F514B719F827C7F /* TestSAXParserDelegate.swift */; };
+		1117DA7CD7C8F5E0E3B9ABD5 /* SAXParserDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DC6DEE5E3B74E67D8784 /* SAXParserDelegate.swift */; };
+		1117DBACBBB748A8639285FD /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DB804342BF77458B8663 /* main.swift */; };
+		1117DBB28EEC81BC5C07ACC6 /* SAXAttributeDecl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D11E4EEB0FE76994D54A /* SAXAttributeDecl.swift */; };
+		1117DD84FF3B4C156A93E6BE /* SAXLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D44E23FA026BBCEE11BF /* SAXLocator.swift */; };
+		1117DDAABC5C2559C3E58075 /* Gettysburg.h in Headers */ = {isa = PBXBuildFile; fileRef = 1117DA52094C2ABAE3EA2EBA /* Gettysburg.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1117DE24C7F2963D0F49F67F /* SAXElementContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D1C5F316767CC027B1F8 /* SAXElementContent.swift */; };
+		1117DFCA1E3B3E1E50E30826 /* SAXError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D30C091896AED90ABB5A /* SAXError.swift */; };
 		83CFA5BA2556E331005498FC /* Gettysburg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83CFA5B02556E331005498FC /* Gettysburg.framework */; };
 		83CFA5BF2556E331005498FC /* GettysburgTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CFA5BE2556E331005498FC /* GettysburgTests.swift */; };
-		83CFA5C12556E331005498FC /* Gettysburg.h in Headers */ = {isa = PBXBuildFile; fileRef = 83CFA5B32556E331005498FC /* Gettysburg.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -20,15 +46,71 @@
 			remoteGlobalIDString = 83CFA5AF2556E331005498FC;
 			remoteInfo = Gettysburg;
 		};
+		83CFA61725573611005498FC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83CFA5A72556E331005498FC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 83CFA5AF2556E331005498FC;
+			remoteInfo = Gettysburg;
+		};
+		83CFA61925573616005498FC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83CFA5A72556E331005498FC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 83CFA5B82556E331005498FC;
+			remoteInfo = GettysburgTests;
+		};
+		83CFA61B25573619005498FC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83CFA5A72556E331005498FC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 83CFA5D62556E6C4005498FC;
+			remoteInfo = DocFixer;
+		};
+		83CFA61D25573638005498FC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83CFA5A72556E331005498FC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 83CFA5AF2556E331005498FC;
+			remoteInfo = Gettysburg;
+		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		83CFA5D52556E6C4005498FC /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		1117D11E4EEB0FE76994D54A /* SAXAttributeDecl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXAttributeDecl.swift; sourceTree = "<group>"; };
+		1117D140D7C3EAE052E01D31 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.info; path = Info.plist; sourceTree = "<group>"; };
+		1117D1C5F316767CC027B1F8 /* SAXElementContent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXElementContent.swift; sourceTree = "<group>"; };
+		1117D30C091896AED90ABB5A /* SAXError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXError.swift; sourceTree = "<group>"; };
+		1117D3250DFFCE3E85ABD6E2 /* .jazzy.yaml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .jazzy.yaml; sourceTree = "<group>"; };
+		1117D32792ADADA24039E4BC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		1117D34903A4804B6646574A /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		1117D44E23FA026BBCEE11BF /* SAXLocator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXLocator.swift; sourceTree = "<group>"; };
+		1117D79449953EA9D8CF7433 /* SAXEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXEntity.swift; sourceTree = "<group>"; };
+		1117D8CB5662C06574566C24 /* SAXParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXParser.swift; sourceTree = "<group>"; };
+		1117D9A83F514B719F827C7F /* TestSAXParserDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestSAXParserDelegate.swift; sourceTree = "<group>"; };
+		1117DA52094C2ABAE3EA2EBA /* Gettysburg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gettysburg.h; sourceTree = "<group>"; };
+		1117DB804342BF77458B8663 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		1117DC62EA36597422ADA15A /* Tools.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tools.swift; sourceTree = "<group>"; };
+		1117DC6DEE5E3B74E67D8784 /* SAXParserDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXParserDelegate.swift; sourceTree = "<group>"; };
+		1117DD5AFC911B2020139DDF /* LinuxMain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinuxMain.swift; sourceTree = "<group>"; };
+		1117DEC96369491CED3F9649 /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		83CFA5B02556E331005498FC /* Gettysburg.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Gettysburg.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		83CFA5B32556E331005498FC /* Gettysburg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Gettysburg.h; sourceTree = "<group>"; };
-		83CFA5B42556E331005498FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		83CFA5B92556E331005498FC /* GettysburgTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GettysburgTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		83CFA5BE2556E331005498FC /* GettysburgTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GettysburgTests.swift; sourceTree = "<group>"; };
 		83CFA5C02556E331005498FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		83CFA5D72556E6C4005498FC /* DocFixer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = DocFixer; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,15 +129,43 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		83CFA5D42556E6C4005498FC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1117D2EC0E5DD8292487BE6B /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				1117DA52094C2ABAE3EA2EBA /* Gettysburg.h */,
+				1117D140D7C3EAE052E01D31 /* Info.plist */,
+			);
+			name = Other;
+			sourceTree = "<group>";
+		};
+		1117DEDAC7FE093CE0515186 /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				1117D32792ADADA24039E4BC /* README.md */,
+				1117DEC96369491CED3F9649 /* Package.swift */,
+				1117D34903A4804B6646574A /* LICENSE */,
+				1117D3250DFFCE3E85ABD6E2 /* .jazzy.yaml */,
+			);
+			name = Other;
+			sourceTree = "<group>";
+		};
 		83CFA5A62556E331005498FC = {
 			isa = PBXGroup;
 			children = (
-				83CFA5B22556E331005498FC /* Gettysburg */,
-				83CFA5BD2556E331005498FC /* GettysburgTests */,
+				83CFA5CD2556E55D005498FC /* Tests */,
+				83CFA5CC2556E53E005498FC /* Sources */,
 				83CFA5B12556E331005498FC /* Products */,
+				1117DEDAC7FE093CE0515186 /* Other */,
 			);
 			sourceTree = "<group>";
 		};
@@ -64,6 +174,7 @@
 			children = (
 				83CFA5B02556E331005498FC /* Gettysburg.framework */,
 				83CFA5B92556E331005498FC /* GettysburgTests.xctest */,
+				83CFA5D72556E6C4005498FC /* DocFixer */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -71,8 +182,15 @@
 		83CFA5B22556E331005498FC /* Gettysburg */ = {
 			isa = PBXGroup;
 			children = (
-				83CFA5B32556E331005498FC /* Gettysburg.h */,
-				83CFA5B42556E331005498FC /* Info.plist */,
+				1117D2EC0E5DD8292487BE6B /* Other */,
+				1117DC6DEE5E3B74E67D8784 /* SAXParserDelegate.swift */,
+				1117DC62EA36597422ADA15A /* Tools.swift */,
+				1117D8CB5662C06574566C24 /* SAXParser.swift */,
+				1117D79449953EA9D8CF7433 /* SAXEntity.swift */,
+				1117D11E4EEB0FE76994D54A /* SAXAttributeDecl.swift */,
+				1117D44E23FA026BBCEE11BF /* SAXLocator.swift */,
+				1117D1C5F316767CC027B1F8 /* SAXElementContent.swift */,
+				1117D30C091896AED90ABB5A /* SAXError.swift */,
 			);
 			path = Gettysburg;
 			sourceTree = "<group>";
@@ -82,8 +200,35 @@
 			children = (
 				83CFA5BE2556E331005498FC /* GettysburgTests.swift */,
 				83CFA5C02556E331005498FC /* Info.plist */,
+				1117D9A83F514B719F827C7F /* TestSAXParserDelegate.swift */,
 			);
 			path = GettysburgTests;
+			sourceTree = "<group>";
+		};
+		83CFA5CC2556E53E005498FC /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				83CFA5D82556E6C4005498FC /* DocFixer */,
+				83CFA5B22556E331005498FC /* Gettysburg */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		83CFA5CD2556E55D005498FC /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				83CFA5BD2556E331005498FC /* GettysburgTests */,
+				1117DD5AFC911B2020139DDF /* LinuxMain.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		83CFA5D82556E6C4005498FC /* DocFixer */ = {
+			isa = PBXGroup;
+			children = (
+				1117DB804342BF77458B8663 /* main.swift */,
+			);
+			path = DocFixer;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -93,7 +238,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				83CFA5C12556E331005498FC /* Gettysburg.h in Headers */,
+				1117DDAABC5C2559C3E58075 /* Gettysburg.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -114,6 +259,9 @@
 			dependencies = (
 			);
 			name = Gettysburg;
+			packageProductDependencies = (
+				83CFA5CF2556E65D005498FC,
+			);
 			productName = Gettysburg;
 			productReference = 83CFA5B02556E331005498FC /* Gettysburg.framework */;
 			productType = "com.apple.product-type.framework";
@@ -136,6 +284,27 @@
 			productReference = 83CFA5B92556E331005498FC /* GettysburgTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		83CFA5D62556E6C4005498FC /* DocFixer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 83CFA5DB2556E6C4005498FC /* Build configuration list for PBXNativeTarget "DocFixer" */;
+			buildPhases = (
+				83CFA5D32556E6C4005498FC /* Sources */,
+				83CFA5D42556E6C4005498FC /* Frameworks */,
+				83CFA5D52556E6C4005498FC /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				83CFA61E25573638005498FC /* PBXTargetDependency */,
+			);
+			name = DocFixer;
+			packageProductDependencies = (
+				83CFA5E22556E70C005498FC,
+			);
+			productName = DocFixer;
+			productReference = 83CFA5D72556E6C4005498FC /* DocFixer */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -151,6 +320,12 @@
 					83CFA5B82556E331005498FC = {
 						CreatedOnToolsVersion = 12.1;
 					};
+					83CFA5D62556E6C4005498FC = {
+						CreatedOnToolsVersion = 12.1;
+					};
+					83CFA60F255735DE005498FC = {
+						CreatedOnToolsVersion = 12.1;
+					};
 				};
 			};
 			buildConfigurationList = 83CFA5AA2556E331005498FC /* Build configuration list for PBXProject "Gettysburg" */;
@@ -162,12 +337,18 @@
 				Base,
 			);
 			mainGroup = 83CFA5A62556E331005498FC;
+			packageReferences = (
+				83CFA5CE2556E65D005498FC,
+				83CFA5E12556E70C005498FC,
+			);
 			productRefGroup = 83CFA5B12556E331005498FC /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				83CFA5AF2556E331005498FC /* Gettysburg */,
 				83CFA5B82556E331005498FC /* GettysburgTests */,
+				83CFA5D62556E6C4005498FC /* DocFixer */,
+				83CFA60F255735DE005498FC /* All Gettysburg */,
 			);
 		};
 /* End PBXProject section */
@@ -194,6 +375,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1117DA7CD7C8F5E0E3B9ABD5 /* SAXParserDelegate.swift in Sources */,
+				1117D2079CDD0FBBD88632F2 /* Tools.swift in Sources */,
+				1117D5AEBA95CEE7C9622FD3 /* SAXParser.swift in Sources */,
+				1117D2BD258FF873AB6FD1E3 /* SAXEntity.swift in Sources */,
+				1117DBB28EEC81BC5C07ACC6 /* SAXAttributeDecl.swift in Sources */,
+				1117DD84FF3B4C156A93E6BE /* SAXLocator.swift in Sources */,
+				1117DE24C7F2963D0F49F67F /* SAXElementContent.swift in Sources */,
+				1117DFCA1E3B3E1E50E30826 /* SAXError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -202,6 +391,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				83CFA5BF2556E331005498FC /* GettysburgTests.swift in Sources */,
+				1117D6EEBE25B5C02DB123ED /* TestSAXParserDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		83CFA5D32556E6C4005498FC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1117DBACBBB748A8639285FD /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -212,6 +410,26 @@
 			isa = PBXTargetDependency;
 			target = 83CFA5AF2556E331005498FC /* Gettysburg */;
 			targetProxy = 83CFA5BB2556E331005498FC /* PBXContainerItemProxy */;
+		};
+		83CFA61825573611005498FC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 83CFA5AF2556E331005498FC /* Gettysburg */;
+			targetProxy = 83CFA61725573611005498FC /* PBXContainerItemProxy */;
+		};
+		83CFA61A25573616005498FC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 83CFA5B82556E331005498FC /* GettysburgTests */;
+			targetProxy = 83CFA61925573616005498FC /* PBXContainerItemProxy */;
+		};
+		83CFA61C25573619005498FC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 83CFA5D62556E6C4005498FC /* DocFixer */;
+			targetProxy = 83CFA61B25573619005498FC /* PBXContainerItemProxy */;
+		};
+		83CFA61E25573638005498FC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 83CFA5AF2556E331005498FC /* Gettysburg */;
+			targetProxy = 83CFA61D25573638005498FC /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -347,13 +565,14 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = Gettysburg/Info.plist;
+				INFOPLIST_FILE = Sources/Gettysburg/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				PRODUCT_BUNDLE_IDENTIFIER = com.projectgalen.Gettysburg;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -371,13 +590,14 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = Gettysburg/Info.plist;
+				INFOPLIST_FILE = Sources/Gettysburg/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				PRODUCT_BUNDLE_IDENTIFIER = com.projectgalen.Gettysburg;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -391,7 +611,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = Q5XWZ7S7E9;
-				INFOPLIST_FILE = GettysburgTests/Info.plist;
+				INFOPLIST_FILE = Tests/GettysburgTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -409,7 +629,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = Q5XWZ7S7E9;
-				INFOPLIST_FILE = GettysburgTests/Info.plist;
+				INFOPLIST_FILE = Tests/GettysburgTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -418,6 +638,46 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.projectgalen.GettysburgTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		83CFA5DC2556E6C4005498FC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Q5XWZ7S7E9;
+				ENABLE_HARDENED_RUNTIME = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		83CFA5DD2556E6C4005498FC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Q5XWZ7S7E9;
+				ENABLE_HARDENED_RUNTIME = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		83CFA610255735DE005498FC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Q5XWZ7S7E9;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		83CFA611255735DE005498FC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Q5XWZ7S7E9;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
@@ -451,7 +711,57 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		83CFA5DB2556E6C4005498FC /* Build configuration list for PBXNativeTarget "DocFixer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				83CFA5DC2556E6C4005498FC /* Debug */,
+				83CFA5DD2556E6C4005498FC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		83CFA612255735DE005498FC /* Build configuration list for PBXAggregateTarget "All Gettysburg" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				83CFA610255735DE005498FC /* Debug */,
+				83CFA611255735DE005498FC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		83CFA5CE2556E65D005498FC = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/GalenRhodes/Rubicon.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.2.36;
+			};
+		};
+		83CFA5E12556E70C005498FC = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/GalenRhodes/PGDocFixer.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		83CFA5CF2556E65D005498FC = {
+			isa = XCSwiftPackageProductDependency;
+			package = 83CFA5CE2556E65D005498FC;
+			productName = Rubicon;
+		};
+		83CFA5E22556E70C005498FC = {
+			isa = XCSwiftPackageProductDependency;
+			package = 83CFA5E12556E70C005498FC;
+			productName = PGDocFixer;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 83CFA5A72556E331005498FC /* Project object */;
 }

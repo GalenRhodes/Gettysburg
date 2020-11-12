@@ -1,0 +1,523 @@
+{
+  "warnings": [
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXAttributeDecl.swift",
+      "line": 25,
+      "symbol": "SAXAttribute",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXElementContent.swift",
+      "line": 25,
+      "symbol": "SAXElementContent",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXEntity.swift",
+      "line": 25,
+      "symbol": "SAXEntity",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXLocator.swift",
+      "line": 25,
+      "symbol": "SAXLocator",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXLocator.swift",
+      "line": 26,
+      "symbol": "SAXLocator.lineNumber",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXLocator.swift",
+      "line": 27,
+      "symbol": "SAXLocator.columnNumber",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXLocator.swift",
+      "line": 28,
+      "symbol": "SAXLocator.publicId",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXLocator.swift",
+      "line": 29,
+      "symbol": "SAXLocator.systemId",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParser.swift",
+      "line": 43,
+      "symbol": "SAXParser",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParser.swift",
+      "line": 45,
+      "symbol": "SAXParser.delegate",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParser.swift",
+      "line": 47,
+      "symbol": "SAXParser.inputStream",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParser.swift",
+      "line": 48,
+      "symbol": "SAXParser.filename",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParser.swift",
+      "line": 49,
+      "symbol": "SAXParser.encoding",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 26,
+      "symbol": "SAXAttributeDeclFunc",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 27,
+      "symbol": "SAXAttributeFunc",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 28,
+      "symbol": "SAXCdataBlockFunc",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 29,
+      "symbol": "SAXCharactersFunc",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 30,
+      "symbol": "SAXCommentFunc",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 31,
+      "symbol": "SAXElementDeclFunc",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 32,
+      "symbol": "SAXEndDocumentFunc",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 33,
+      "symbol": "SAXEndElementFunc",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 34,
+      "symbol": "SAXEntityDeclFunc",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 35,
+      "symbol": "SAXErrorFunc",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 36,
+      "symbol": "SAXExternalSubsetFunc",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 37,
+      "symbol": "SAXFatalErrorFunc",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 38,
+      "symbol": "SAXGetEntityFunc",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 39,
+      "symbol": "SAXGetParameterEntityFunc",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 40,
+      "symbol": "SAXHasExternalSubsetFunc",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 41,
+      "symbol": "SAXHasInternalSubsetFunc",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 42,
+      "symbol": "SAXIgnorableWhitespaceFunc",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 43,
+      "symbol": "SAXInternalSubsetFunc",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 44,
+      "symbol": "SAXIsStandaloneFunc",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 45,
+      "symbol": "SAXNotationDeclFunc",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 46,
+      "symbol": "SAXProcessingInstructionFunc",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 47,
+      "symbol": "SAXReferenceFunc",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 48,
+      "symbol": "SAXResolveEntityFunc",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 49,
+      "symbol": "SAXSetDocumentLocatorFunc",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 50,
+      "symbol": "SAXStartDocumentFunc",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 51,
+      "symbol": "SAXStartElementFunc",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 52,
+      "symbol": "SAXUnparsedEntityDeclFunc",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 53,
+      "symbol": "SAXWarningFunc",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 54,
+      "symbol": "SAXStartElementNsFunc",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 55,
+      "symbol": "SAXEndElementNsFunc",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 57,
+      "symbol": "SAXParserDelegate",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 58,
+      "symbol": "SAXParserDelegate.parseAttributeDecl",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 59,
+      "symbol": "SAXParserDelegate.parseAttribute",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 60,
+      "symbol": "SAXParserDelegate.parseCdataBlock",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 61,
+      "symbol": "SAXParserDelegate.parseCharacters",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 62,
+      "symbol": "SAXParserDelegate.parseComment",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 63,
+      "symbol": "SAXParserDelegate.parseElementDecl",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 64,
+      "symbol": "SAXParserDelegate.parseEndDocument",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 65,
+      "symbol": "SAXParserDelegate.parseEndElement",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 66,
+      "symbol": "SAXParserDelegate.parseEntityDecl",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 67,
+      "symbol": "SAXParserDelegate.parseError",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 68,
+      "symbol": "SAXParserDelegate.parseExternalSubset",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 69,
+      "symbol": "SAXParserDelegate.parseFatalError",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 70,
+      "symbol": "SAXParserDelegate.parseGetEntity",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 71,
+      "symbol": "SAXParserDelegate.parseGetParameterEntity",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 72,
+      "symbol": "SAXParserDelegate.parseHasExternalSubset",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 73,
+      "symbol": "SAXParserDelegate.parseHasInternalSubset",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 74,
+      "symbol": "SAXParserDelegate.parseIgnorableWhitespace",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 75,
+      "symbol": "SAXParserDelegate.parseInternalSubset",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 76,
+      "symbol": "SAXParserDelegate.parseIsStandalone",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 77,
+      "symbol": "SAXParserDelegate.parseNotationDecl",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 78,
+      "symbol": "SAXParserDelegate.parseProcessingInstruction",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 79,
+      "symbol": "SAXParserDelegate.parseReference",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 80,
+      "symbol": "SAXParserDelegate.parseResolveEntity",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 81,
+      "symbol": "SAXParserDelegate.parseSetDocumentLocator",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 82,
+      "symbol": "SAXParserDelegate.parseStartDocument",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 83,
+      "symbol": "SAXParserDelegate.parseStartElement",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 84,
+      "symbol": "SAXParserDelegate.parseUnparsedEntityDecl",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 85,
+      "symbol": "SAXParserDelegate.parseWarning",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 86,
+      "symbol": "SAXParserDelegate.parseStartElementNs",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg/Sources/Gettysburg/SAXParserDelegate.swift",
+      "line": 87,
+      "symbol": "SAXParserDelegate.parseEndElementNs",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/Users/grhodes/Projects/2020/SwiftProjects/Gettysburg"
+}

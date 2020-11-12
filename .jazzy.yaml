@@ -1,0 +1,13 @@
+{
+  "clean": true,
+  "min_acl": "public",
+  "sdk": "macosx",
+  "author": "Galen Rhodes",
+  "author_url": "https://blog.projectgalen.com",
+  "github_url": "https://github.com/GalenRhodes/Gettysburg",
+  "github_file_prefix": "https://github.com/GalenRhodes/Gettysburg/blob/master",
+  "theme": "apple",
+  "use_safe_filenames": true,
+  "undocumented_text": "",
+  "title": "Gettysburg©",
+},
