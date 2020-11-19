@@ -18,7 +18,7 @@
    <LaunchAction
       useCustomWorkingDirectory = "YES"
       customWorkingDirectory = "$(SRCROOT)"
-      buildConfiguration = "Release"
+      buildConfiguration = "Debug"
       allowLocationSimulation = "YES">
       <BuildableProductRunnable>
          <BuildableReference
@@ -29,10 +29,6 @@
             ReferencedContainer = "container:Gettysburg.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <LocationScenarioReference
-         identifier = "com.apple.dt.IDEFoundation.CurrentLocationScenarioIdentifier"
-         referenceType = "1">
-      </LocationScenarioReference>
       <CommandLineArguments>
          <CommandLineArgument
             argument = "--remote-host"
@@ -71,5 +67,9 @@
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
+      <LocationScenarioReference
+         identifier = "com.apple.dt.IDEFoundation.CurrentLocationScenarioIdentifier"
+         referenceType = "1">
+      </LocationScenarioReference>
    </LaunchAction>
 </Scheme>

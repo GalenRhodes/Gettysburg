@@ -22,7 +22,11 @@
 
 import Foundation
 
-enum SAXError: Error {
-    case UnknowIOError
-    case UnexpectedEndOfFile
+public enum SAXError: Error {
+    case UnknowIOError(description: String = "Unknown I/O Error", pos: DocPosition)
+    case UnexpectedEndOfInput(description: String = "Unexpected End-of-Input", pos: DocPosition)
+    case UnexpectedCharacter(description: String, pos: DocPosition)
+    case Malformed(description: String, pos: DocPosition)
+    case UnsupportedVersion(description: String, pos: DocPosition)
+    case UnsupportedEncoding(description: String, pos: DocPosition)
 }

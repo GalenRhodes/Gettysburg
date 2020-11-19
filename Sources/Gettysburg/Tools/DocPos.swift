@@ -1,9 +1,9 @@
 /************************************************************************//**
  *     PROJECT: Gettysburg
- *    FILENAME: Tools.swift
+ *    FILENAME: DocPos.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
- *        DATE: 11/7/20
+ *        DATE: 11/12/20
  *
  * Copyright © 2020 Galen Rhodes. All rights reserved.
  *
@@ -21,4 +21,24 @@
  *//************************************************************************/
 
 import Foundation
-import Rubicon
+
+@usableFromInline class DocPos: Hashable, Comparable {
+    @usableFromInline let pos: DocPosition
+
+    @usableFromInline init(pos: DocPosition) {
+        self.pos = pos
+    }
+
+    @usableFromInline func hash(into hasher: inout Hasher) {
+        hasher.combine(pos.line)
+        hasher.combine(pos.column)
+    }
+
+    @usableFromInline static func == (lhs: DocPos, rhs: DocPos) -> Bool {
+        ((lhs === rhs) || ((lhs.pos.line == rhs.pos.line) && (lhs.pos.column == rhs.pos.column)))
+    }
+
+    @usableFromInline static func < (lhs: DocPos, rhs: DocPos) -> Bool {
+        ((lhs.pos.line < rhs.pos.line) || ((lhs.pos.line == rhs.pos.line) && (lhs.pos.column < rhs.pos.column)))
+    }
+}

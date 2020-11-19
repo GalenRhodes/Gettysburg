@@ -1,6 +1,6 @@
 {
   "clean": true,
-  "min_acl": "public",
+  "min_acl": "internal",
   "sdk": "macosx",
   "author": "Galen Rhodes",
   "author_url": "https://blog.projectgalen.com",
