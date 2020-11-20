@@ -131,7 +131,7 @@ public func encodingCheck(_ bInput: ByteInputStream, buffer: UnsafeMutablePointe
 /// - Parameter buffer: the buffer - should be at least 4 bytes.
 /// - Returns: `true` if these bytes represent a UTF-16 surrogate pair.
 ///
-@inlinable func surrogatePairCheck(buffer: UnsafeMutablePointer<UInt8>) -> Bool {
+func surrogatePairCheck(buffer: UnsafeMutablePointer<UInt8>) -> Bool {
     memcmp(buffer, &UTF16_HIGH_SURROGATE_START, 2) >= 0 && memcmp(buffer, &UTF16_HIGH_SURROGATE_END, 2) < 0 &&
     memcmp(buffer + 2, &UTF16_LOW_SURROGATE_START, 2) >= 0 && memcmp(buffer + 2, &UTF16_LOW_SURROGATE_END, 2) < 0
 }
@@ -145,7 +145,7 @@ public func encodingCheck(_ bInput: ByteInputStream, buffer: UnsafeMutablePointe
 ///   - s: swap
 /// - Returns: the copy.
 ///
-@inlinable func copyBuffer<T>(buffer: UnsafePointer<T>, count: Int, swap s: SwapAs = .None) -> UnsafeMutablePointer<T> {
+func copyBuffer<T>(buffer: UnsafePointer<T>, count: Int, swap s: SwapAs = .None) -> UnsafeMutablePointer<T> {
     let b = UnsafeMutablePointer<T>.allocate(capacity: count)
     b.initialize(from: buffer, count: count)
     SwapEndian(bytes: UnsafeMutablePointer(b), count: count, swap: s)
@@ -160,7 +160,7 @@ public func encodingCheck(_ bInput: ByteInputStream, buffer: UnsafeMutablePointe
 ///   - count: the number of bytes in the buffer.
 ///   - swap: what word size to swap them as.
 ///
-@inlinable func SwapEndian(bytes: UnsafeMutableRawPointer, count: Int, swap: SwapAs) {
+func SwapEndian(bytes: UnsafeMutableRawPointer, count: Int, swap: SwapAs) {
     switch swap {
         case .Word:
             let cc:   Int         = (count / MemoryLayout<UInt16>.size)
@@ -179,10 +179,27 @@ public func encodingCheck(_ bInput: ByteInputStream, buffer: UnsafeMutablePointe
 }
 
 extension String {
-    @inlinable func isOneOf(_ str: String...) -> Bool {
+    func isOneOf(_ str: String...) -> Bool {
         for s in str {
             if self == s { return true }
         }
         return false
+    }
+}
+
+let AscIICharsXlate: [String] = [
+    "<NUL>", "<SOH>", "<STX>", "<ETX>", "<EOT>", "<ENQ>", "<ACK>", "<BEL>", "<BS>", "<TAB>", "<LF>", "<VT>", "<FF>", "<CR>", "<SO>", "<SI>",
+    "<DLE>", "<DC1>", "<DC2>", "<DC3>", "<DC4>", "<NAK>", "<SYN>", "<ETB>", "<CAN>", "<EM>", "<SUB>", "<ESC>", "<FS>", "<GS>", "<RS>", "<US>"
+]
+
+extension Character {
+    @usableFromInline var printable: String {
+        let sc: UnicodeScalarView = unicodeScalars
+        if sc.count == 1 {
+            let sv: UInt32 = sc[sc.startIndex].value
+            if sv <= 32 { return AscIICharsXlate[Int(sv)] }
+            if sv == 127 { return "<DEL>" }
+        }
+        return "\(self)"
     }
 }

@@ -22,23 +22,23 @@
 
 import Foundation
 
-@usableFromInline class DocPos: Hashable, Comparable {
-    @usableFromInline let pos: DocPosition
+class DocPos: Hashable, Comparable {
+    let pos: DocPosition
 
-    @usableFromInline init(pos: DocPosition) {
+    init(pos: DocPosition) {
         self.pos = pos
     }
 
-    @usableFromInline func hash(into hasher: inout Hasher) {
+    func hash(into hasher: inout Hasher) {
         hasher.combine(pos.line)
         hasher.combine(pos.column)
     }
 
-    @usableFromInline static func == (lhs: DocPos, rhs: DocPos) -> Bool {
+    static func == (lhs: DocPos, rhs: DocPos) -> Bool {
         ((lhs === rhs) || ((lhs.pos.line == rhs.pos.line) && (lhs.pos.column == rhs.pos.column)))
     }
 
-    @usableFromInline static func < (lhs: DocPos, rhs: DocPos) -> Bool {
+    static func < (lhs: DocPos, rhs: DocPos) -> Bool {
         ((lhs.pos.line < rhs.pos.line) || ((lhs.pos.line == rhs.pos.line) && (lhs.pos.column < rhs.pos.column)))
     }
 }

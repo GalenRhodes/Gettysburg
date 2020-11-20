@@ -112,22 +112,22 @@ extension CharacterSet {
 }
 
 extension Character {
-    @inlinable func test(isNot other: Character...) -> Bool {
+    @usableFromInline func test(isNot other: Character...) -> Bool {
         for c in other { if self == c { return false } }
         return true
     }
 
-    @inlinable func test(is other: Character...) -> Bool {
+    @usableFromInline func test(is other: Character...) -> Bool {
         for c in other { if self == c { return true } }
         return false
     }
 
-    @inlinable func test(is other: CharacterSet) -> Bool {
+    @usableFromInline func test(is other: CharacterSet) -> Bool {
         for scalar in unicodeScalars { if other.contains(scalar) { return true } }
         return false
     }
 
-    @inlinable func test(isNot other: CharacterSet) -> Bool {
+    @usableFromInline func test(isNot other: CharacterSet) -> Bool {
         for scalar in unicodeScalars { if other.contains(scalar) { return false } }
         return true
     }

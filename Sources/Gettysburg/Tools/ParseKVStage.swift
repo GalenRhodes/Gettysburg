@@ -26,7 +26,7 @@ import Rubicon
 /*===============================================================================================================================*/
 /// Used by `parseKeyValueData(data:willThrow:)`
 ///
-@usableFromInline enum ParseKVStage: Int {
+enum ParseKVStage: Int {
     case PreKey       = 0
     case InKey        = 10
     case PostKey      = 20
@@ -35,7 +35,7 @@ import Rubicon
     case InValue      = 40
     case InWhiteSpace = 50
 
-    @inlinable var expecting: CharacterSet {
+    var expecting: CharacterSet {
         switch self {//@f:0
             case .PreKey                           : return .xmlNameStartChar
             case .InKey, .PostKey                  : return CharacterSet(charactersIn: "=")
@@ -44,7 +44,7 @@ import Rubicon
         }//@f:1
     }
 
-    @inlinable var expectingChar: Character {
+    var expectingChar: Character {
         switch self {//@f:0
             case .InKey, .PostKey                  : return "="
             case .PostEquals, .PreInValue, .InValue: return "\""
@@ -52,7 +52,7 @@ import Rubicon
         }//@f:1
     }
 
-    @inlinable var nextStage: [ParseKVStage] {
+    var nextStage: [ParseKVStage] {
         switch self { //@f:0
             case .PreKey      : return [ .InKey       , .InKey        ]
             case .InKey       : return [ .PostEquals  , .PostKey      ]
@@ -64,14 +64,14 @@ import Rubicon
         }//@f:1
     }
 
-    @inlinable var whiteSpaceCanTerminate: Bool {
+    var whiteSpaceCanTerminate: Bool {
         switch self { //@f:0
             case .InKey, .PostEquals: return true
             default                 : return false
         }//@f:1
     }
 
-    @inlinable func isIn(_ others: ParseKVStage...) -> Bool {
+    func isIn(_ others: ParseKVStage...) -> Bool {
         for o in others { if self == o { return true } }
         return false
     }
