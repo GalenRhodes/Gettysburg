@@ -24,7 +24,9 @@ import Foundation
 import Rubicon
 
 public typealias DocPosition = (line: Int, column: Int)
+public typealias CharPos = (Character, DocPosition)
 public typealias NSName = (prefix: String?, localName: String, pos: DocPosition)
+public typealias NSAttribute = (NSName, StringPos)
 
 open class SAXParser {
 
@@ -45,7 +47,7 @@ open class SAXParser {
 
     /*===========================================================================================================================*/
     /// Initialize the parser.
-    ///
+    /// 
     /// - Parameters:
     ///   - inputStream: the input stream.
     ///   - filename: the filename.
@@ -57,7 +59,7 @@ open class SAXParser {
 
     /*===========================================================================================================================*/
     /// Initialize the parser.
-    ///
+    /// 
     /// - Parameter filename: the filename to read from.
     ///
     public convenience init?(filename: String) {
@@ -67,7 +69,7 @@ open class SAXParser {
 
     /*===========================================================================================================================*/
     /// Initialize the parser.
-    ///
+    /// 
     /// - Parameter url: the URL to read from.
     ///
     public convenience init?(url: URL) {
@@ -77,7 +79,7 @@ open class SAXParser {
 
     /*===========================================================================================================================*/
     /// Initialize the parser.
-    ///
+    /// 
     /// - Parameters:
     ///   - data: the data object to read from.
     ///   - filename: the filename for the data.
@@ -88,7 +90,7 @@ open class SAXParser {
 
     /*===========================================================================================================================*/
     /// Initialize the parser.
-    ///
+    /// 
     /// - Parameters:
     ///   - data: the buffer to read the data from.
     ///   - filename: the filename for the data.
@@ -99,7 +101,7 @@ open class SAXParser {
 
     /*===========================================================================================================================*/
     /// Initialize the parser.
-    ///
+    /// 
     /// - Parameters:
     ///   - data: the pointer to the data to read from.
     ///   - count: the number of bytes in the data.
@@ -111,7 +113,7 @@ open class SAXParser {
 
     /*===========================================================================================================================*/
     /// Parse the XML document.
-    ///
+    /// 
     /// - Throws: if an error occurs during parsing.
     ///
     open func parse() throws {
@@ -129,24 +131,24 @@ open class SAXParser {
         //
         // Remember if we've already gotten the document element and/or the DTD.
         //
-        var elementFlag: Bool = false
-        var docTypeFlag: Bool = false
-        var (char, pos)       = try getNextChar(false)
+        var elementFlag: Bool                      = false
+        var docTypeFlag: Bool                      = false
+        var cp:          (Character?, DocPosition) = try getNextChar(false)
 
-        while let ch = char {
+        while let ch = cp.0 {
             if ch.test(is: .xmlWhiteSpace) {
-                unRead(char: ch, pos: pos)
+                unRead(cp: cp)
                 try delegateIgnorableWhitespace()
             }
-            else if char == "<" {
-                try parseStructure(pos: pos, docTypeFlag: &docTypeFlag, elementFlag: &elementFlag)
+            else if ch == "<" {
+                try parseStructure(pos: cp.1, docTypeFlag: &docTypeFlag, elementFlag: &elementFlag)
             }
             else {
-                unRead(char: ch, pos: pos)
-                throw SAXError.Malformed(description: "Character \(ch) not allowed here.", pos: pos)
+                unRead(cp: cp)
+                throw getUnexpectedCharError(char: (ch, cp.1))
             }
 
-            (char, pos) = try getNextChar(false)
+            cp = try getNextChar(false)
         }
         //
         // No more input.  We're done.
@@ -155,7 +157,7 @@ open class SAXParser {
 
     /*===========================================================================================================================*/
     /// Parse an XML structure that begins with the less-than symbol (<).
-    ///
+    /// 
     /// - Parameters:
     ///   - pos: The position of the less-than symbol in the document.
     ///   - docTypeFlag: DTD flag.
@@ -187,11 +189,11 @@ open class SAXParser {
                 }
                 else {
                     unRead(string: "<!\(strPos.string)", pos: pos)
-                    guard strPos.string == "DO" else { throw SAXError.UnexpectedCharacter(description: "Expected '--' or 'DO' but found '\(strPos.string)' instead.", pos: strPos.pos) }
+                    guard strPos.string == "DO" else { throw getMalformedError(expected: "--' or 'DO", got: strPos.string, pos: strPos.pos) }
                     //
                     // DTD!
                     //
-                    guard !docTypeFlag else { throw SAXError.Malformed(description: "Did not expect to find another DTD element here.", pos: pos) }
+                    guard !docTypeFlag else { throw getMalformedError(what: "another DTD element", pos: pos) }
                     try parseAndDelegateDocType()
                     docTypeFlag = true
                     return
@@ -200,10 +202,10 @@ open class SAXParser {
                 //
                 // Element?
                 //
-                unRead(string: "<\(char)", pos: pos)
-                guard char.test(is: .xmlNsNameStartChar) else { throw SAXError.UnexpectedCharacter(description: "Character '\(char) is not allowed to start an element tag name.", pos: charPos) }
-                guard !elementFlag else { throw SAXError.Malformed(description: "Did not expect to find another element here.", pos: pos) }
-                try parseAndDelegateElement()
+                unRead(char: char, pos: charPos)
+                let nsName = try getNSNamePair()
+                guard !elementFlag else { throw getMalformedError(what: "another element", pos: pos) }
+                try parseAndDelegateElement(tagName: nsName)
                 docTypeFlag = true
                 elementFlag = true
         }
@@ -211,72 +213,97 @@ open class SAXParser {
 
     /*===========================================================================================================================*/
     /// Parse and delegate an element.
-    ///
+    /// 
     /// - Throws: if an I/O error occurs or the element is malformed.
     ///
     func parseAndDelegateElement() throws {
+        let c = try getNextChar()
+        guard c.0 == "<" else { throw getUnexpectedCharError(char: c) }
+        let tagName = try getNSNamePair()
+        try parseAndDelegateElement(tagName: tagName)
+    }
+
+    func parseAndDelegateElement(tagName: NSName) throws {
+        var a:    [NSAttribute] = []
+        var c:    CharPos       = try getNextChar()
+        let char: Character     = c.0
+
+        while char != ">" {
+            if char == "/" {
+                let d = try getNextChar()
+                guard d.0 == ">" else { throw getBadCharError(wanted: ">", got: d) }
+                return
+            }
+            else if char.test(is: .xmlWhiteSpace) {
+                try scanPastWhitespace()
+            }
+            else if char.test(is: .xmlNsNameStartChar) {
+                unRead(cp: c)
+                a.append(try parseAttribute())
+            }
+            else {
+                throw getUnexpectedCharError(char: c)
+            }
+
+            c = try getNextChar()
+        }
+    }
+
+    @inlinable final func parseAttribute() throws -> NSAttribute {
+        let aName = try getNSNamePair()
+        let d     = try getNextChar()
+        guard d.0 == "=" else { throw getBadCharError(wanted: "=", got: d) }
+
+        let q = try getNextChar()
+        guard q.0.test(is: "\"", "'") else { throw getBadQuoteError(got: q) }
+
+        let aValue = try getString(keepLast: true) { (i: Int, c: Character, a: inout [Character]) -> Bool in (c != q.0) }
+        return (aName, StringPos(string: aValue.string.removeLast(count: 1), pos: aValue.pos))
     }
 
     /*===========================================================================================================================*/
     /// Parse and delegate the DTD.
-    ///
+    /// 
     /// - Throws: if an I/O error occurs or the DTD is malformed.
     ///
     func parseAndDelegateDocType() throws {
-        let test   = "<!DOCTYPE"
-        let sample = try getString(count: 9)
+        let s1 = "<!DOCTYPE"
+        let s2 = try getString(count: 9)
 
-        if test == sample.string {
-            let (char1, pos1) = try getNextChar()
-            guard char1.test(is: .xmlWhiteSpace) else { throw SAXError.UnexpectedCharacter(description: "Character '\(char1)' not expected here.", pos: pos1) }
-
-            var notDone: Bool   = true
-            var str:     String = ""
-            var char2           = try getNextChar().0
-
-            while notDone {
-                if try char2 == "]" && peekNextChar() == ">" {
-                    try parseAndDelegateInternalSubset(str + "\(char2)")
-                    notDone = false
-                }
-                else {
-                    str += "\(char2)"
-                    char2 = try getNextChar().0
-                }
-            }
+        if s1 == s2.string {
+            let (c, p) = try getNextChar()
+            guard c.test(is: .xmlWhiteSpace) else { throw getUnexpectedCharError(char: (c, p)) }
+            let s3 = try getString(keepLast: true, body: { (i: Int, c: Character, a: inout [Character]) -> Bool in !((c == ">") && (i > 0) && (a[i - 1] == "]")) }).string
+            try parseAndDelegateInternalSubset(s3.removeLast(count: 2))
         }
         else {
-            throw SAXError.UnexpectedCharacter(description: "Expected '\(test)' but got '\(sample.string)' instead.", pos: sample.pos)
+            throw getMalformedError(expected: s1, got: s2.string, pos: s2.pos)
         }
     }
 
     /*===========================================================================================================================*/
     /// Parse and delegate an external subset.
-    ///
+    /// 
     /// - Parameter str: the string containing the information about the external subset.
     /// - Throws: if the external subset cannot be found or is invalid.
     ///
     func parseAndDelegateExternalSubset(externalSubset str: String) throws {
-        if let f = delegate?.parseExternalSubset {
-            f(self, str, nil, nil)
-        }
+        if let f = delegate?.parseExternalSubset { f(self, str, nil, nil) }
     }
 
     /*===========================================================================================================================*/
     /// Parse and delegate the internal subset.
-    ///
+    /// 
     /// - Parameter str: the string containing the internal subset.
     /// - Throws: if the internal subset is invalid.
     ///
     func parseAndDelegateInternalSubset(_ str: String) throws {
-        if let f = delegate?.parseInternalSubset {
-            f(self, str, nil, nil)
-        }
+        if let f = delegate?.parseInternalSubset { f(self, str, nil, nil) }
     }
 
     /*===========================================================================================================================*/
     /// Get the next `count` characters.
-    ///
+    /// 
     /// - Parameter count: the number of characters to read.
     /// - Returns: the string of characters.
     /// - Throws: if an I/O error occurs or the EOF is reached before the desired number of characters are read.
@@ -292,7 +319,7 @@ open class SAXParser {
     /// Now we're going to look to see if we have an XML declaration on this bugger. Example: <?xml version="1.0" encoding="UTF-8"
     /// standalone="yes"?> The very first thing we better find is a less-than symbol `<`. Anything else would mean a malformed
     /// document.
-    ///
+    /// 
     /// - Throws: if an I/O error occurs or the document is malformed.
     ///
     func xmlDeclCheck() throws {
@@ -313,50 +340,30 @@ open class SAXParser {
 
     /*===========================================================================================================================*/
     /// Parse and send ignorable whitespace to the delegate.
-    ///
+    /// 
     /// - Parameter char: the first ignorable whitespace character of this string.
     /// - Throws: if an I/O error occurs.
     ///
     func delegateIgnorableWhitespace() throws {
         let ws = try scanPastWhitespace()
-        if let f = delegate?.parseIgnorableWhitespace {
-            f(self, ws)
-        }
+        if let f = delegate?.parseIgnorableWhitespace { f(self, ws) }
     }
 
     /*===========================================================================================================================*/
     /// Parse and send a comment to the delegate.
-    ///
+    /// 
     /// - Throws: if an I/O error occurs or the EOF is reached before the end of the comment is reached.
     ///
     func parseAndDelegateComment() throws {
-        var (char, _)            = try getNextChar()
-        var chars:   [Character] = []
-        let notDone: Bool        = true
-        let intro:   StringPos   = try getString(count: 4)
-
+        let intro: StringPos = try getString(count: 4)
         guard intro.string == "<!--" else { throw SAXError.Malformed(description: "Malformed Comment", pos: intro.pos) }
-
-        while notDone {
-            if char == "-" {
-                let sp = try getString(count: 2)
-
-                if sp.string == "->" {
-                    if let f = delegate?.parseComment { f(self, String(chars).trimmed) }
-                    break
-                }
-                else {
-                    unRead(sp)
-                }
-            }
-            chars.append(char)
-            (char, _) = try getNextChar()
-        }
+        let comment: StringPos = try getString(keepLast: true) { (i, c, arr: inout [Character]) -> Bool in !((c == ">") && (i >= 2) && (String(arr[(i - 2) ..< i]) == "--")) }
+        if let f = delegate?.parseComment { f(self, comment.string.removeLast(count: 3)) }
     }
 
     /*===========================================================================================================================*/
     /// Parse and send the processing instruction to the parser delegate.
-    ///
+    /// 
     /// - Throws: if an I/O error occurs or the EOF is reached.
     ///
     func parseAndDelegateProcessingInstruction() throws {
@@ -366,20 +373,18 @@ open class SAXParser {
 
     /*===========================================================================================================================*/
     /// Send the processing instruction to the parser delegate.
-    ///
+    /// 
     /// - Parameters:
     ///   - target: the target
     ///   - content: the content
     ///
     func delegateProcessingInstruction(target: StringPos, content: StringPos) {
-        if let f = delegate?.parseProcessingInstruction {
-            f(self, target.string, content.string)
-        }
+        if let f = delegate?.parseProcessingInstruction { f(self, target.string, content.string) }
     }
 
     /*===========================================================================================================================*/
     /// Parse the XML Declaration for version, encoding, and standalone-ness.
-    ///
+    /// 
     /// - Parameter content: the content of the XML Decl tag.
     /// - Throws: if the XML Decl is malformed.
     ///
@@ -394,6 +399,11 @@ open class SAXParser {
                     }
                     xmlVersion = v.string
                 case "encoding":
+                    //
+                    // We're not really going to switch the encoding at this point because we're only supporting
+                    // UTF-8, UTF-16, and UTF-32. The only time this might make sense if when we add support for
+                    // other single-byte encodings such as Windows-1252 or ISO 8859-1
+                    let oldEncoding = xmlEncoding
                     switch v.string.lowercased() {//@f:0
                         case "utf-8"             : xmlEncoding = String.Encoding.utf8
                         case "utf-16", "utf-16be": xmlEncoding = String.Encoding.utf16BigEndian
@@ -402,7 +412,7 @@ open class SAXParser {
                         case "utf-32le"          : xmlEncoding = String.Encoding.utf32LittleEndian
                         default                  : throw SAXError.UnsupportedEncoding(description : v.string, pos: (v.pos.line, v.pos.column))
                     }//@f:1
-              // TODO: Change Input Encoding...
+                    xmlEncoding = oldEncoding
                 case "standalone":
                     isStandalone = v.string.lowercased().isOneOf("true", "yes")
                 default:
@@ -413,7 +423,7 @@ open class SAXParser {
 
     /*===========================================================================================================================*/
     /// Update the given document position based on the given character as if it had been read from the input stream.
-    ///
+    /// 
     /// - Parameters:
     ///   - pos: the position.
     ///   - char: the character.
@@ -434,17 +444,17 @@ open class SAXParser {
 
     /*===========================================================================================================================*/
     /// Scans and collects any whitespace starting with the next character until the next non-whitespace character.
-    ///
+    /// 
     /// - Returns: A string of all the whitespace characters found.
     /// - Throws: if an I/O error occurs.
     ///
-    @discardableResult func scanPastWhitespace() throws -> String {
-        try getString(throwsOnEOF: false, body: { i, c, _ in c.test(is: .xmlWhiteSpace) }).string
+    @discardableResult @inlinable final func scanPastWhitespace() throws -> String {
+        try getString(throwOnEOF: false, body: { (_, c, _) -> Bool in c.test(is: .xmlWhiteSpace) }).string
     }
 
     /*===========================================================================================================================*/
     /// Determine the character encoding used and then create an instance of CharInputStream for us to use.
-    ///
+    /// 
     /// - Throws: if an I/O error occurs or there is not at least 4 bytes of data to read from the input stream.
     ///
     func createCharInputStream() throws {
@@ -482,7 +492,7 @@ open class SAXParser {
 
     /*===========================================================================================================================*/
     /// Convenience function for setting the delegate and calling parse in one call.
-    ///
+    /// 
     /// - Parameter delegate: the `SAXParserDelegate`.
     /// - Throws: if an error occurs during parsing.
     ///
@@ -493,22 +503,22 @@ open class SAXParser {
 
     /*===========================================================================================================================*/
     /// Test a character to see if it's the one wanted.
-    ///
+    /// 
     /// - Parameters:
     ///   - got: the character, and it's position, that we got.
     ///   - want: the character we wanted.
     /// - Returns: the character, and it's position, that we got.
     /// - Throws: if they don't match.
     ///
-    @discardableResult @inlinable final func testChar(got: (Character, DocPosition), want: Character) throws -> (Character, DocPosition) {
-        guard want == got.0 else { throw SAXError.UnexpectedCharacter(description: "Expected '\(want)' but received '\(got.0)'.", pos: got.1) }
+    @discardableResult @inlinable final func testChar(got: CharPos, want: Character) throws -> CharPos {
+        guard want == got.0 else { throw getBadCharError(wanted: want, got: got) }
         return got
     }
 
     /*===========================================================================================================================*/
     /// Parse a processing instruction. A processing instruction takes the form `<?target data?>` where `data` can be any text
     /// except for the sequence `?>` which marks the end of the processing instruction.
-    ///
+    /// 
     /// - Returns: a tuple containing the target and data strings.
     /// - Throws: if an I/O error occurs or the EOF is reached.
     ///
@@ -517,19 +527,15 @@ open class SAXParser {
         try testChar(got: try getNextChar(), want: "?")
         let target = try getName()
         try scanPastWhitespace()
-        let data = try getString { i, c, arr in
-            guard arr.count > 0 && c == ">" && arr[arr.count - 1] == "?" else { return true }
-            arr.removeLast()
-            return false
-        }
-        return (target, data)
+        let data = try getString(keepLast: true) { (i, c, arr) -> Bool in !((i > 0) && (c == ">") && (arr[i - 1] == "?")) }
+        return (target, StringPos(string: data.string.removeLast(count: 2), pos: data.pos))
     }
 
     /*===========================================================================================================================*/
     /// Parses out a string of Key/Value pairs. This method scans the input string for key/value pairs in the format
     /// `<whitespace>key="value"`. An apostrophe can be used in place of the double quotation mark but, which ever one is used, it
     /// has to end with the same one it starts with. In other words you can't have `key="value'`.
-    ///
+    /// 
     /// - Parameters:
     ///   - data: the string to parse.
     /// - Returns: a <code>[Dictionary](https://developer.apple.com/documentation/swift/Dictionary)</code> of the key/value pairs.
@@ -553,17 +559,17 @@ open class SAXParser {
                 guard idx < str.endIndex else { throw SAXError.UnexpectedEndOfInput(pos: pos) }
 
                 let (ch, start) = getNextChar(string: str, at: &idx, pos: &pos)
-                guard ch == "=" else { throw SAXError.UnexpectedCharacter(description: "Expected '=' but got '\(ch.printable)' instead.", pos: start) }
+                guard ch == "=" else { throw getBadCharError(wanted: "=", got: (ch, start)) }
                 guard idx < str.endIndex else { throw SAXError.UnexpectedEndOfInput(pos: pos) }
 
                 let (qt, p) = getNextChar(string: str, at: &idx, pos: &pos)
-                guard qt == "\"" || qt == "'" else { throw SAXError.UnexpectedCharacter(description: "Expected (\") or (') but got '\(qt.printable)' instead.", pos: p) }
+                guard qt == "\"" || qt == "'" else { throw getBadQuoteError(got: (qt, p)) }
 
                 kv[key] = try getString(from: str, index: &idx, pos: &pos) { (_, ch, _) in (ch != qt) }
                 getNextChar(string: str, at: &idx, pos: &pos) // Discard closing quotation mark.
             }
             else {
-                throw SAXError.UnexpectedCharacter(description: "Character '\(char.printable)' not expected here.", pos: pos)
+                throw getUnexpectedCharError(char: (char, pos))
             }
         }
 
@@ -572,7 +578,7 @@ open class SAXParser {
 
     /*===========================================================================================================================*/
     /// Un-read a string of characters.
-    ///
+    /// 
     /// - Parameters:
     ///   - string: the string.
     ///   - pos: the starting document position of this string.
@@ -584,7 +590,7 @@ open class SAXParser {
 
     /*===========================================================================================================================*/
     /// Un-read a string of characters.
-    ///
+    /// 
     /// - Parameter strPos: an instance of `StringPos`.
     ///
     @inlinable final func unRead(_ strPos: StringPos) {
@@ -594,7 +600,7 @@ open class SAXParser {
 
     /*===========================================================================================================================*/
     /// Un-read a character.
-    ///
+    /// 
     /// - Parameters:
     ///   - char: the character.
     ///   - pos: the document position of this character.
@@ -605,25 +611,43 @@ open class SAXParser {
     }
 
     /*===========================================================================================================================*/
-    /// Get a `prefix:localname` combination from the input stream.
+    /// Un-read a character.
+    /// 
+    /// - Parameter cp: the character and its document position of this character.
     ///
+    @inlinable final func unRead(cp: (Character?, DocPosition)) {
+        if let ch = cp.0 { unRead(char: ch, pos: cp.1) }
+    }
+
+    /*===========================================================================================================================*/
+    /// Un-read a character.
+    /// 
+    /// - Parameter cp: the character and its document position of this character.
+    ///
+    @inlinable final func unRead(cp: CharPos) {
+        unRead(char: cp.0, pos: cp.1)
+    }
+
+    /*===========================================================================================================================*/
+    /// Get a `prefix:localname` combination from the input stream.
+    /// 
     /// - Returns: a tuple (`NSName`) with the prefix and localname. Prefix may be `nil`.
     /// - Throws: if an I/O error occurs or if the EOF is reached.
     ///
-    func getNSNamePair() throws -> NSName {
+    @inlinable final func getNSNamePair() throws -> NSName {
         try scanPastWhitespace()
 
         let start              = _currPos
-        var localName: String  = try getNSName().string
         var prefix:    String? = nil
-        let (char, pos)        = try getNextChar()
+        var localName: String  = try getNSName().string
+        let ch                 = try getNextChar()
 
-        if char == ":" {
+        if ch.0 == ":" {
             prefix = localName
             localName = try getNSName().string
         }
         else {
-            unRead(char: char, pos: pos)
+            unRead(cp: ch)
         }
 
         return (prefix, localName, start)
@@ -631,17 +655,17 @@ open class SAXParser {
 
     /*===========================================================================================================================*/
     /// Get an XML namespace name.
-    ///
+    /// 
     /// - Returns: an instance of `StringPos` with the string and it's position in the document.
     /// - Throws: if an I/O error occurs or the EOF has been reached.
     ///
-    func getNSName() throws -> StringPos {
+    @inlinable final func getNSName() throws -> StringPos {
         try getString { (i, c, _) in ((i == 0) ? c.test(is: .xmlNsNameStartChar) : c.test(is: .xmlNsNameChar)) }
     }
 
     /*===========================================================================================================================*/
     /// Get an XML name.
-    ///
+    /// 
     /// - Returns: an instance of `StringPos` with the string and it's position in the document.
     /// - Throws: if an I/O error occurs or the EOF has been reached.
     ///
@@ -651,11 +675,11 @@ open class SAXParser {
 
     /*===========================================================================================================================*/
     /// Get a string from the input stream.
-    ///
+    /// 
     /// - Parameters:
     ///   - keepLast: if `true` then the last character read (that caused the closure to return `false`) is returned as part of the
     ///               string.
-    ///   - throwsOnEOF: if `true` then an exception is thrown if EOF is reached.
+    ///   - throwOnEOF: if `true` then an exception is thrown if EOF is reached.
     ///   - body: the closure to test the character.
     ///     - The count of characters read so far.
     ///     - The current character.
@@ -663,7 +687,7 @@ open class SAXParser {
     /// - Returns: an instance of `StringPos` with the string and it's position in the document.
     /// - Throws: if an I/O error occurs or if `throwOnEOF` is `true` and the EOF has been reached.
     ///
-    @inlinable final func getString(keepLast: Bool = false, throwsOnEOF: Bool = true, body: (Int, Character, inout [Character]) throws -> Bool) throws -> StringPos {
+    @inlinable final func getString(keepLast: Bool = false, throwOnEOF: Bool = true, body: (Int, Character, inout [Character]) throws -> Bool) throws -> StringPos {
         let start:       DocPosition               = _currPos
         var index:       Int                       = 0
         var chars:       [Character]               = []
@@ -678,7 +702,7 @@ open class SAXParser {
             if keepLast { chars.append(ch) }
             else { unRead(char: ch, pos: pos) }
         }
-        else if throwsOnEOF {
+        else if throwOnEOF {
             throw SAXError.UnexpectedEndOfInput(pos: pos)
         }
 
@@ -687,14 +711,14 @@ open class SAXParser {
 
     /*===========================================================================================================================*/
     /// Get a substring from another string.
-    ///
+    /// 
     /// - Parameters:
     ///   - str: the string to extract the substring from.
     ///   - idx: the index within the string to start extracting characters.
     ///   - pos: the position within the document of the character pointed to by idx.
     ///   - keepLast: if `true` then the last character read (that caused the closure to return `false`) is returned as part of the
     ///               string.
-    ///   - throwsOnEOF: if `true` then an exception is thrown if EOF is reached.
+    ///   - throwOnEOF: if `true` then an exception is thrown if EOF is reached.
     ///   - body: the closure that is used to test the characters to see if the end of the substring has been reached.
     ///     - The count of characters read so far.
     ///     - The current character.
@@ -706,18 +730,21 @@ open class SAXParser {
                                     index idx: inout String.Index,
                                     pos: inout DocPosition,
                                     keepLast: Bool = false,
-                                    throwsOnEOF: Bool = true,
+                                    throwOnEOF: Bool = true,
                                     body: (Int, Character, inout [Character]) throws -> Bool) throws -> StringPos {
         var chars: [Character] = []
         var i:     Int         = 0
         let start: DocPosition = pos
 
-        while try ((idx < str.endIndex) && body(i++, str[idx], &chars)) { chars.append(str[idx]) }
+        while try ((idx < str.endIndex) && body(i++, str[idx], &chars)) {
+            chars.append(str[idx])
+            idx = str.index(after: idx)
+        }
 
         if idx < str.endIndex {
             if keepLast { chars.append(getNextChar(string: str, at: &idx, pos: &pos).0) }
         }
-        else if throwsOnEOF {
+        else if throwOnEOF {
             throw SAXError.UnexpectedEndOfInput(pos: pos)
         }
 
@@ -726,7 +753,7 @@ open class SAXParser {
 
     /*===========================================================================================================================*/
     /// Get the next character from the input stream.
-    ///
+    /// 
     /// - Parameter throwOnEOF: if `true` then an exception will be thrown if there is no next character because the EOF has been
     ///                         reached.
     /// - Returns: the next character or `nil` if the EOF has been reached.
@@ -751,25 +778,25 @@ open class SAXParser {
 
     /*===========================================================================================================================*/
     /// Get a character from the input stream.
-    ///
+    /// 
     /// - Returns: a tuple with the character and it's position in the document.
     /// - Throws: if an I/O error occurs or the EOF has been reached.
     ///
-    @inlinable final func getNextChar() throws -> (Character, DocPosition) {
+    @inlinable final func getNextChar() throws -> CharPos {
         let (char, pos) = try getNextChar(true)
         return (char!, pos)
     }
 
     /*===========================================================================================================================*/
     /// Get a character from a string. On return, both the `idx` and `pos` will be updated.
-    ///
+    /// 
     /// - Parameters:
     ///   - string: the string.
     ///   - idx: the index of the character to get.
     ///   - pos: the position in the document for the character.
     /// - Returns: a tuple with the character and it's position in the document.
     ///
-    @discardableResult @inlinable final func getNextChar(string: String, at idx: inout String.Index, pos: inout DocPosition) -> (Character, DocPosition) {
+    @discardableResult @inlinable final func getNextChar(string: String, at idx: inout String.Index, pos: inout DocPosition) -> CharPos {
         let start = pos
         let char  = updatePosition(&pos, forChar: string[idx])
         idx = string.index(after: idx)
@@ -778,7 +805,7 @@ open class SAXParser {
 
     /*===========================================================================================================================*/
     /// Peek at the next character in the input stream.
-    ///
+    /// 
     /// - Returns: the next character.
     /// - Throws: if an I/O error occurs or if the EOF is reached.
     ///
@@ -786,5 +813,25 @@ open class SAXParser {
         let (char, pos) = try getNextChar()
         unRead(char: char, pos: pos)
         return char
+    }
+
+    @inlinable final func getBadCharError(wanted: Character, got: CharPos) -> SAXError {
+        SAXError.UnexpectedCharacter(description: "Expected '\(wanted.printable)' but got '\(got.0.printable) instead.", pos: got.1)
+    }
+
+    @inlinable final func getBadQuoteError(got: CharPos) -> SAXError {
+        SAXError.UnexpectedCharacter(description: "Expected (') or (\") but got '\(got.0.printable)' instead.", pos: got.1)
+    }
+
+    @inlinable final func getUnexpectedCharError(char: CharPos) -> SAXError {
+        SAXError.UnexpectedCharacter(description: "Character '\(char.0.printable)' not expected here.", pos: char.1)
+    }
+
+    @inlinable final func getMalformedError(expected s1: String, got s2: String, pos: DocPosition) -> SAXError {
+        SAXError.Malformed(description: "Expected '\(s1)' but got '\(s2)' instead.", pos: pos)
+    }
+
+    @inlinable final func getMalformedError(what: String, pos: DocPosition) -> SAXError {
+        SAXError.Malformed(description: "Did not expect to find \(what) here.", pos: pos)
     }
 }

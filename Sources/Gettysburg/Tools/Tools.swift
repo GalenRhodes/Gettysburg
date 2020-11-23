@@ -179,11 +179,21 @@ func SwapEndian(bytes: UnsafeMutableRawPointer, count: Int, swap: SwapAs) {
 }
 
 extension String {
-    func isOneOf(_ str: String...) -> Bool {
+    @usableFromInline func isOneOf(_ str: String...) -> Bool {
         for s in str {
             if self == s { return true }
         }
         return false
+    }
+
+    @usableFromInline func removeLast(count: Int) -> String {
+        let i = index(endIndex, offsetBy: -count)
+        return String(self[i ..< endIndex])
+    }
+
+    @usableFromInline func removeFirst(count: Int) -> String {
+        let i = index(startIndex, offsetBy: count)
+        return String(self[startIndex ..< i])
     }
 }
 
