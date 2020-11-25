@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>StringPos Structure Reference</title>
+    <title>SAXAttribute Structure Reference</title>
     <link href="../css/jazzy.css" rel="stylesheet" type="text/css" />
     <link href="../css/highlight.css" rel="stylesheet" type="text/css" />
     <meta charset='utf-8'>
@@ -10,8 +10,8 @@
 
   </head>
   <body>
-    <a class="dashAnchor" name="//apple_ref/swift/Struct/StringPos"></a>
-    <a title="StringPos Structure Reference"></a>
+    <a class="dashAnchor" name="//apple_ref/swift/Struct/SAXAttribute"></a>
+    <a title="SAXAttribute Structure Reference"></a>
     <header>
       <div class="content-wrapper">
         <p><a href="../index.html">Gettysburg©</a> (14% documented)</p>
@@ -22,7 +22,7 @@
       <p id="breadcrumbs">
         <a href="../index.html"> Reference</a>
         <img id="carat" src="../img/carat.png" />
-        StringPos Structure Reference
+        SAXAttribute Structure Reference
       </p>
     </div>
     <div class="content-wrapper">
@@ -256,10 +256,10 @@
       <article class="main-content">
         <section>
           <section class="section">
-            <h1>StringPos</h1>
+            <h1>SAXAttribute</h1>
               <div class="declaration">
                 <div class="language">
-                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">StringPos</span> <span class="p">:</span> <span class="kt">Hashable</span><span class="p">,</span> <span class="kt">Comparable</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">SAXAttribute</span> <span class="p">:</span> <span class="kt">Hashable</span></code></pre>
 
                 </div>
               </div>
@@ -271,9 +271,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:10Gettysburg9StringPosV6stringSSvp"></a>
-                    <a class="dashAnchor" name="//apple_ref/swift/Property/string"></a>
-                    <a class="token" href="#/s:10Gettysburg9StringPosV6stringSSvp">string</a>
+                    <a name="/s:10Gettysburg12SAXAttributeV9localName6prefix12namespaceURI7content9isDefaultACSS_SSSgAISSSbtcfc"></a>
+                    <a class="dashAnchor" name="//apple_ref/swift/Method/init(localName:prefix:namespaceURI:content:isDefault:)"></a>
+                    <a class="token" href="#/s:10Gettysburg12SAXAttributeV9localName6prefix12namespaceURI7content9isDefaultACSS_SSSgAISSSbtcfc">init(localName:prefix:namespaceURI:content:isDefault:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -287,99 +287,12 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">string</span><span class="p">:</span> <span class="kt">String</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">localName</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">prefix</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span> <span class="nv">namespaceURI</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span> <span class="nv">content</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">isDefault</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Tools/StringPos.swift#L">Show on GitHub</a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:10Gettysburg9StringPosV3posSi4line_Si6columntvp"></a>
-                    <a class="dashAnchor" name="//apple_ref/swift/Property/pos"></a>
-                    <a class="token" href="#/s:10Gettysburg9StringPosV3posSi4line_Si6columntvp">pos</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">pos</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:10Gettysburg11DocPositiona">DocPosition</a></span></code></pre>
-
-                        </div>
-                      </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Tools/StringPos.swift#L">Show on GitHub</a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:10Gettysburg9StringPosV6string4line6columnACSS_S2itcfc"></a>
-                    <a class="dashAnchor" name="//apple_ref/swift/Method/init(string:line:column:)"></a>
-                    <a class="token" href="#/s:10Gettysburg9StringPosV6string4line6columnACSS_S2itcfc">init(string:line:column:)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">line</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">column</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Tools/StringPos.swift#L29-L32">Show on GitHub</a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:10Gettysburg9StringPosV6string3posACSS_Si4line_Si6columnttcfc"></a>
-                    <a class="dashAnchor" name="//apple_ref/swift/Method/init(string:pos:)"></a>
-                    <a class="token" href="#/s:10Gettysburg9StringPosV6string3posACSS_Si4line_Si6columnttcfc">init(string:pos:)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">pos</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:10Gettysburg11DocPositiona">DocPosition</a></span><span class="p">)</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Tools/StringPos.swift#L34-L37">Show on GitHub</a>
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/SAXAttributeDecl.swift#L35-L41">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -408,65 +321,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Tools/StringPos.swift#L39-L43">Show on GitHub</a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:10Gettysburg9StringPosV2eeoiySbAC_SStFZ"></a>
-                    <a class="dashAnchor" name="//apple_ref/swift/Method/==(_:_:)"></a>
-                    <a class="token" href="#/s:10Gettysburg9StringPosV2eeoiySbAC_SStFZ">==(_:_:)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="o">==</span> <span class="p">(</span><span class="nv">lhs</span><span class="p">:</span> <span class="kt">StringPos</span><span class="p">,</span> <span class="nv">rhs</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Tools/StringPos.swift#L">Show on GitHub</a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:10Gettysburg9StringPosV2eeoiySbSS_ACtFZ"></a>
-                    <a class="dashAnchor" name="//apple_ref/swift/Method/==(_:_:)"></a>
-                    <a class="token" href="#/s:10Gettysburg9StringPosV2eeoiySbSS_ACtFZ">==(_:_:)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="o">==</span> <span class="p">(</span><span class="nv">lhs</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">rhs</span><span class="p">:</span> <span class="kt">StringPos</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Tools/StringPos.swift#L">Show on GitHub</a>
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/SAXAttributeDecl.swift#L43-L49">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -490,41 +345,12 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="o">==</span> <span class="p">(</span><span class="nv">lhs</span><span class="p">:</span> <span class="kt">StringPos</span><span class="p">,</span> <span class="nv">rhs</span><span class="p">:</span> <span class="kt">StringPos</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="o">==</span> <span class="p">(</span><span class="nv">lhs</span><span class="p">:</span> <span class="kt">SAXAttribute</span><span class="p">,</span> <span class="nv">rhs</span><span class="p">:</span> <span class="kt">SAXAttribute</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Tools/StringPos.swift#L">Show on GitHub</a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:SL1loiySbx_xtFZ"></a>
-                    <a class="dashAnchor" name="//apple_ref/swift/Method/&lt;(_:_:)"></a>
-                    <a class="token" href="#/s:SL1loiySbx_xtFZ">&lt;(_:_:)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="o">&lt;</span> <span class="p">(</span><span class="nv">lhs</span><span class="p">:</span> <span class="kt">StringPos</span><span class="p">,</span> <span class="nv">rhs</span><span class="p">:</span> <span class="kt">StringPos</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Tools/StringPos.swift#L">Show on GitHub</a>
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/SAXAttributeDecl.swift#L51-L57">Show on GitHub</a>
                       </div>
                     </section>
                   </div>

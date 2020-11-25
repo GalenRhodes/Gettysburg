@@ -24,6 +24,24 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
+public typealias DocPosition = (line: Int, column: Int)
+public typealias CharPos = (Character, DocPosition)
+public typealias NSName = (prefix: String?, localName: String, pos: DocPosition)
+public typealias NSAttribute = (NSName, StringPos)
+
+public func == (lhs: NSAttribute, rhs: NSAttribute) -> Bool { ((lhs.0 == rhs.0) && (lhs.1 == rhs.1)) }
+
+public func == (lhs: NSName, rhs: NSName) -> Bool { ((lhs.localName == rhs.localName) && (lhs.prefix == rhs.prefix)) }
+
+public func == (lhs: DocPosition, rhs: DocPosition) -> Bool { ((lhs.line == rhs.line) && (lhs.column == rhs.column)) }
+
+public func == (lhs: CharPos, rhs: CharPos) -> Bool { ((lhs.0 == rhs.0) && (lhs.1 == rhs.1)) }
+
+@inlinable public func combine(_ name: NSName) -> String {
+    if let pfx = name.prefix { return "\(pfx):\(name.localName)" }
+    return name.localName
+}
+
 public var UTF16LE_BOM: [UInt8] = [ 0xff, 0xfe ]
 public var UTF16BE_BOM: [UInt8] = [ 0xfe, 0xff ]
 public var UTF32LE_BOM: [UInt8] = [ 0xff, 0xfe, 0x00, 0x00 ]
@@ -63,7 +81,7 @@ public enum SwapAs: Int {
 /// - Parameter buffer: the input buffer.
 /// - Throws: in the event of an I/O error.
 ///
-public func encodingCheck(_ bInput: ByteInputStream, buffer: UnsafeMutablePointer<UInt8>) throws -> String.Encoding {
+public func encodingCheck(_ bInput: ByteInputStream, buffer: [UInt8]) throws -> String.Encoding {
     let encoding: String.Encoding
     // *****************************************************************************
     // *********************** CHARACTER ENCODING DETECTION ************************
@@ -131,9 +149,9 @@ public func encodingCheck(_ bInput: ByteInputStream, buffer: UnsafeMutablePointe
 /// - Parameter buffer: the buffer - should be at least 4 bytes.
 /// - Returns: `true` if these bytes represent a UTF-16 surrogate pair.
 ///
-func surrogatePairCheck(buffer: UnsafeMutablePointer<UInt8>) -> Bool {
-    memcmp(buffer, &UTF16_HIGH_SURROGATE_START, 2) >= 0 && memcmp(buffer, &UTF16_HIGH_SURROGATE_END, 2) < 0 &&
-    memcmp(buffer + 2, &UTF16_LOW_SURROGATE_START, 2) >= 0 && memcmp(buffer + 2, &UTF16_LOW_SURROGATE_END, 2) < 0
+func surrogatePairCheck(buffer: UnsafePointer<UInt8>) -> Bool {
+    memcmp(buffer, UTF16_HIGH_SURROGATE_START, 2) >= 0 && memcmp(buffer, UTF16_HIGH_SURROGATE_END, 2) < 0 &&
+    memcmp(buffer + 2, UTF16_LOW_SURROGATE_START, 2) >= 0 && memcmp(buffer + 2, UTF16_LOW_SURROGATE_END, 2) < 0
 }
 
 /*===============================================================================================================================*/
@@ -179,31 +197,31 @@ func SwapEndian(bytes: UnsafeMutableRawPointer, count: Int, swap: SwapAs) {
 }
 
 extension String {
-    @usableFromInline func isOneOf(_ str: String...) -> Bool {
+    @inlinable func isOneOf(_ str: String...) -> Bool {
         for s in str {
             if self == s { return true }
         }
         return false
     }
 
-    @usableFromInline func removeLast(count: Int) -> String {
+    @inlinable func removeLast(count: Int) -> String {
         let i = index(endIndex, offsetBy: -count)
         return String(self[i ..< endIndex])
     }
 
-    @usableFromInline func removeFirst(count: Int) -> String {
+    @inlinable func removeFirst(count: Int) -> String {
         let i = index(startIndex, offsetBy: count)
         return String(self[startIndex ..< i])
     }
 }
 
-let AscIICharsXlate: [String] = [
+@usableFromInline let AscIICharsXlate: [String] = [
     "<NUL>", "<SOH>", "<STX>", "<ETX>", "<EOT>", "<ENQ>", "<ACK>", "<BEL>", "<BS>", "<TAB>", "<LF>", "<VT>", "<FF>", "<CR>", "<SO>", "<SI>",
     "<DLE>", "<DC1>", "<DC2>", "<DC3>", "<DC4>", "<NAK>", "<SYN>", "<ETB>", "<CAN>", "<EM>", "<SUB>", "<ESC>", "<FS>", "<GS>", "<RS>", "<US>"
 ]
 
 extension Character {
-    @usableFromInline var printable: String {
+    @inlinable var printable:  String {
         let sc: UnicodeScalarView = unicodeScalars
         if sc.count == 1 {
             let sv: UInt32 = sc[sc.startIndex].value
@@ -212,4 +230,5 @@ extension Character {
         }
         return "\(self)"
     }
+    @inlinable var isXmlQuote: Bool { test(is: "\"", "'") }
 }

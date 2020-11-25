@@ -1,9 +1,9 @@
 /************************************************************************//**
  *     PROJECT: Gettysburg
- *    FILENAME: SAXAttributeDecl.swift
+ *    FILENAME: NamespaceInfo.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
- *        DATE: 11/7/20
+ *        DATE: 11/24/20
  *
  * Copyright © 2020 Galen Rhodes. All rights reserved.
  *
@@ -22,37 +22,21 @@
 
 import Foundation
 
-open class SAXAttributeDecl {
-}
+public struct NamespaceInfo: Hashable {
+    let uri: String
+    let prefix: String?
 
-public struct SAXAttribute: Hashable {
-    let localName:    String
-    let prefix:       String?
-    let namespaceURI: String?
-    let content:      String
-    let isDefault:    Bool
-
-    public init(localName: String, prefix: String?, namespaceURI: String?, content: String, isDefault: Bool) {
-        self.localName = localName
+    public init(uri: String, prefix: String?) {
+        self.uri = uri
         self.prefix = prefix
-        self.namespaceURI = namespaceURI
-        self.content = content
-        self.isDefault = isDefault
     }
 
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(localName)
+        hasher.combine(uri)
         hasher.combine(prefix)
-        hasher.combine(namespaceURI)
-        hasher.combine(content)
-        hasher.combine(isDefault)
     }
 
-    public static func == (lhs: SAXAttribute, rhs: SAXAttribute) -> Bool {
-        return lhs.localName == rhs.localName
-               && lhs.prefix == rhs.prefix
-               && lhs.namespaceURI == rhs.namespaceURI
-               && lhs.content == rhs.content
-               && lhs.isDefault == rhs.isDefault
+    public static func == (lhs: NamespaceInfo, rhs: NamespaceInfo) -> Bool {
+        return lhs.uri == rhs.uri && lhs.prefix == rhs.prefix
     }
 }
