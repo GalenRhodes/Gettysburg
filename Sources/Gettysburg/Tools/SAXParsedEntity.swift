@@ -1,11 +1,11 @@
 /************************************************************************//**
  *     PROJECT: Gettysburg
- *    FILENAME: NamespaceInfo.swift
+ *    FILENAME: SAXEntity.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
- *        DATE: 11/24/20
+ *        DATE: 1/15/21
  *
- * Copyright © 2020 Galen Rhodes. All rights reserved.
+ * Copyright © 2021 Galen Rhodes. All rights reserved.
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -22,21 +22,11 @@
 
 import Foundation
 
-public struct NamespaceInfo: Hashable {
-    let uri: String
-    let prefix: String?
+open class SAXParsedEntity: SAXParsedParentNode {
+    public let name: String
 
-    public init(uri: String, prefix: String?) {
-        self.uri = uri
-        self.prefix = prefix
-    }
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(uri)
-        hasher.combine(prefix)
-    }
-
-    public static func == (lhs: NamespaceInfo, rhs: NamespaceInfo) -> Bool {
-        return lhs.uri == rhs.uri && lhs.prefix == rhs.prefix
+    public init(name: String) {
+        self.name = name
+        super.init(type: .EntityRef)
     }
 }

@@ -1,11 +1,11 @@
 /************************************************************************//**
  *     PROJECT: Gettysburg
- *    FILENAME: DocPos.swift
+ *    FILENAME: SAXAttribute.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
- *        DATE: 11/12/20
+ *        DATE: 1/15/21
  *
- * Copyright © 2020 Galen Rhodes. All rights reserved.
+ * Copyright © 2021 Galen Rhodes. All rights reserved.
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -22,23 +22,29 @@
 
 import Foundation
 
-class DocPos: Hashable, Comparable {
-    let pos: DocPosition
+open class SAXParsedAttribute: SAXParsedNode, Hashable {
 
-    init(pos: DocPosition) {
-        self.pos = pos
+    let localName:    String
+    let prefix:       String?
+    let namespaceURI: String?
+    let defaulted:    Bool
+
+    public init(localName: String, prefix: String?, namespaceURI: String?, defaulted: Bool) {
+        self.localName = localName
+        self.prefix = prefix
+        self.namespaceURI = namespaceURI
+        self.defaulted = defaulted
+        super.init(type: .Attr)
     }
 
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(pos.line)
-        hasher.combine(pos.column)
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(localName)
+        hasher.combine(prefix)
+        hasher.combine(namespaceURI)
+        hasher.combine(defaulted)
     }
 
-    static func == (lhs: DocPos, rhs: DocPos) -> Bool {
-        ((lhs === rhs) || ((lhs.pos.line == rhs.pos.line) && (lhs.pos.column == rhs.pos.column)))
-    }
-
-    static func < (lhs: DocPos, rhs: DocPos) -> Bool {
-        ((lhs.pos.line < rhs.pos.line) || ((lhs.pos.line == rhs.pos.line) && (lhs.pos.column < rhs.pos.column)))
+    public static func == (lhs: SAXParsedAttribute, rhs: SAXParsedAttribute) -> Bool {
+        lhs.localName == rhs.localName && lhs.prefix == rhs.prefix && lhs.namespaceURI == rhs.namespaceURI && lhs.defaulted == rhs.defaulted
     }
 }

@@ -3,9 +3,9 @@
  *    FILENAME: SAXError.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
- *        DATE: 11/7/20
+ *        DATE: 1/15/21
  *
- * Copyright © 2020 Galen Rhodes. All rights reserved.
+ * Copyright © 2021 Galen Rhodes. All rights reserved.
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -23,10 +23,6 @@
 import Foundation
 
 public enum SAXError: Error {
-    case UnknowIOError(description: String = "Unknown I/O Error", pos: DocPosition)
-    case UnexpectedEndOfInput(description: String = "Unexpected End-of-Input", pos: DocPosition)
-    case UnexpectedCharacter(description: String, pos: DocPosition)
-    case Malformed(description: String, pos: DocPosition)
-    case UnsupportedVersion(description: String, pos: DocPosition)
-    case UnsupportedEncoding(description: String, pos: DocPosition)
+    case MissingHandler
+    case HandlerAlreadySet
 }

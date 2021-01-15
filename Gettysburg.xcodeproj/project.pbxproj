@@ -23,23 +23,17 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		1117D07D4E5DFD87315F0F0B /* ElementInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DC7991936CB64FE8E275 /* ElementInfo.swift */; };
-		1117D2BD258FF873AB6FD1E3 /* SAXEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D79449953EA9D8CF7433 /* SAXEntity.swift */; };
-		1117D4C6DD41079202FC524D /* DocPos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DCEF0625575E46F137AF /* DocPos.swift */; };
-		1117D51DE8FA5577BE4F6633 /* ParseKVStage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D40219D8C096B6B9B57C /* ParseKVStage.swift */; };
-		1117D5AEBA95CEE7C9622FD3 /* SAXParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D8CB5662C06574566C24 /* SAXParser.swift */; };
-		1117D68516B8780872B78417 /* NamespaceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D273DBC7D11BF9643B46 /* NamespaceInfo.swift */; };
+		1117D0351CED4587FDDA6094 /* SAXParsedAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DBD44B829AC1DAE7525D /* SAXParsedAttribute.swift */; };
+		1117D188BDA138353F3166C3 /* SAXDefaultHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D73DFD242AB436C24981 /* SAXDefaultHandler.swift */; };
+		1117D53E1F2EA5AF9F00B273 /* SAXParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D1A2A41D3594B5FFCAEA /* SAXParser.swift */; };
 		1117D6EEBE25B5C02DB123ED /* TestSAXParserDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D9A83F514B719F827C7F /* TestSAXParserDelegate.swift */; };
-		1117D766AB53705656DA9706 /* CharacterSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D553123B388A311CBA41 /* CharacterSets.swift */; };
-		1117D8DF000E0C523EF08D71 /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D96F8BCC091E4A822A7B /* Tools.swift */; };
-		1117DA7CD7C8F5E0E3B9ABD5 /* SAXParserDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DC6DEE5E3B74E67D8784 /* SAXParserDelegate.swift */; };
+		1117D995B001AA69416B1AD8 /* SAXHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D0A0F7ED343314CCEF20 /* SAXHandler.swift */; };
 		1117DBACBBB748A8639285FD /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DB804342BF77458B8663 /* main.swift */; };
-		1117DBB28EEC81BC5C07ACC6 /* SAXAttributeDecl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D11E4EEB0FE76994D54A /* SAXAttributeDecl.swift */; };
-		1117DBB4347F896988344FA1 /* StringPos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DFB35281883F2A2261F4 /* StringPos.swift */; };
-		1117DD84FF3B4C156A93E6BE /* SAXLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D44E23FA026BBCEE11BF /* SAXLocator.swift */; };
+		1117DCF077BBA37FE4374364 /* DTDElementContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D317F713F39B98A3EFB1 /* DTDElementContent.swift */; };
+		1117DCFD4AB415DC90BF0A61 /* SAXParsedEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D992FB04B6DF58ACF78D /* SAXParsedEntity.swift */; };
 		1117DDAABC5C2559C3E58075 /* Gettysburg.h in Headers */ = {isa = PBXBuildFile; fileRef = 1117DA52094C2ABAE3EA2EBA /* Gettysburg.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1117DE24C7F2963D0F49F67F /* SAXElementContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D1C5F316767CC027B1F8 /* SAXElementContent.swift */; };
-		1117DFCA1E3B3E1E50E30826 /* SAXError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D30C091896AED90ABB5A /* SAXError.swift */; };
+		1117DE0E191E70DC9A294E57 /* SAXParsedNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DB2FB92FCBEC16F1F6D7 /* SAXParsedNode.swift */; };
+		1117DE84D74D89919FA3A895 /* SAXError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DCE06B67991E85ABAD1B /* SAXError.swift */; };
 		83CFA5BA2556E331005498FC /* Gettysburg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83CFA5B02556E331005498FC /* Gettysburg.framework */; };
 		83CFA5BF2556E331005498FC /* GettysburgTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CFA5BE2556E331005498FC /* GettysburgTests.swift */; };
 /* End PBXBuildFile section */
@@ -95,35 +89,29 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1117D11E4EEB0FE76994D54A /* SAXAttributeDecl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXAttributeDecl.swift; sourceTree = "<group>"; };
+		1117D0A0F7ED343314CCEF20 /* SAXHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXHandler.swift; sourceTree = "<group>"; };
 		1117D140D7C3EAE052E01D31 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.info; path = Info.plist; sourceTree = "<group>"; };
-		1117D1C5F316767CC027B1F8 /* SAXElementContent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXElementContent.swift; sourceTree = "<group>"; };
+		1117D1A2A41D3594B5FFCAEA /* SAXParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXParser.swift; sourceTree = "<group>"; };
 		1117D24C2AC342935E43EA54 /* Test.dtd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Test.dtd; sourceTree = "<group>"; };
-		1117D273DBC7D11BF9643B46 /* NamespaceInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NamespaceInfo.swift; sourceTree = "<group>"; };
-		1117D30C091896AED90ABB5A /* SAXError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXError.swift; sourceTree = "<group>"; };
+		1117D317F713F39B98A3EFB1 /* DTDElementContent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DTDElementContent.swift; sourceTree = "<group>"; };
 		1117D3250DFFCE3E85ABD6E2 /* .jazzy.yaml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .jazzy.yaml; sourceTree = "<group>"; };
 		1117D32792ADADA24039E4BC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		1117D34903A4804B6646574A /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		1117D40219D8C096B6B9B57C /* ParseKVStage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseKVStage.swift; sourceTree = "<group>"; };
-		1117D44E23FA026BBCEE11BF /* SAXLocator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXLocator.swift; sourceTree = "<group>"; };
-		1117D553123B388A311CBA41 /* CharacterSets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CharacterSets.swift; sourceTree = "<group>"; };
-		1117D79449953EA9D8CF7433 /* SAXEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXEntity.swift; sourceTree = "<group>"; };
+		1117D73DFD242AB436C24981 /* SAXDefaultHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXDefaultHandler.swift; sourceTree = "<group>"; };
 		1117D7BD3C4A2B65CD16265F /* compname.txt */ = {isa = PBXFileReference; fileEncoding = 2483028224; lastKnownFileType = text; path = compname.txt; sourceTree = "<group>"; };
 		1117D7BF1803856C4213CB5E /* Test.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Test.xml; sourceTree = "<group>"; };
-		1117D8CB5662C06574566C24 /* SAXParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXParser.swift; sourceTree = "<group>"; };
-		1117D96F8BCC091E4A822A7B /* Tools.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tools.swift; sourceTree = "<group>"; };
+		1117D992FB04B6DF58ACF78D /* SAXParsedEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXParsedEntity.swift; sourceTree = "<group>"; };
 		1117D9A83F514B719F827C7F /* TestSAXParserDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestSAXParserDelegate.swift; sourceTree = "<group>"; };
 		1117D9BAFC548A58FAF127F5 /* Test3.xml */ = {isa = PBXFileReference; fileEncoding = 2483028224; lastKnownFileType = text.xml; path = Test3.xml; sourceTree = "<group>"; };
 		1117DA00775621297FDDF090 /* Test4.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Test4.xml; sourceTree = "<group>"; };
 		1117DA1BA1656B061F4F54F0 /* Test2.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Test2.xml; sourceTree = "<group>"; };
 		1117DA52094C2ABAE3EA2EBA /* Gettysburg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gettysburg.h; sourceTree = "<group>"; };
+		1117DB2FB92FCBEC16F1F6D7 /* SAXParsedNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXParsedNode.swift; sourceTree = "<group>"; };
 		1117DB804342BF77458B8663 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		1117DC6DEE5E3B74E67D8784 /* SAXParserDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXParserDelegate.swift; sourceTree = "<group>"; };
-		1117DC7991936CB64FE8E275 /* ElementInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ElementInfo.swift; sourceTree = "<group>"; };
-		1117DCEF0625575E46F137AF /* DocPos.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocPos.swift; sourceTree = "<group>"; };
+		1117DBD44B829AC1DAE7525D /* SAXParsedAttribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXParsedAttribute.swift; sourceTree = "<group>"; };
+		1117DCE06B67991E85ABAD1B /* SAXError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXError.swift; sourceTree = "<group>"; };
 		1117DD5AFC911B2020139DDF /* LinuxMain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinuxMain.swift; sourceTree = "<group>"; };
 		1117DEC96369491CED3F9649 /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
-		1117DFB35281883F2A2261F4 /* StringPos.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringPos.swift; sourceTree = "<group>"; };
 		83CFA5B02556E331005498FC /* Gettysburg.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Gettysburg.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		83CFA5B92556E331005498FC /* GettysburgTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GettysburgTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		83CFA5BE2556E331005498FC /* GettysburgTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GettysburgTests.swift; sourceTree = "<group>"; };
@@ -160,13 +148,10 @@
 		1117D17612E53881BE0FE030 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
-				1117D96F8BCC091E4A822A7B /* Tools.swift */,
-				1117DCEF0625575E46F137AF /* DocPos.swift */,
-				1117D553123B388A311CBA41 /* CharacterSets.swift */,
-				1117DFB35281883F2A2261F4 /* StringPos.swift */,
-				1117D40219D8C096B6B9B57C /* ParseKVStage.swift */,
-				1117D273DBC7D11BF9643B46 /* NamespaceInfo.swift */,
-				1117DC7991936CB64FE8E275 /* ElementInfo.swift */,
+				1117D992FB04B6DF58ACF78D /* SAXParsedEntity.swift */,
+				1117DBD44B829AC1DAE7525D /* SAXParsedAttribute.swift */,
+				1117D317F713F39B98A3EFB1 /* DTDElementContent.swift */,
+				1117DB2FB92FCBEC16F1F6D7 /* SAXParsedNode.swift */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -228,14 +213,11 @@
 			isa = PBXGroup;
 			children = (
 				1117D2EC0E5DD8292487BE6B /* Other */,
-				1117DC6DEE5E3B74E67D8784 /* SAXParserDelegate.swift */,
-				1117D8CB5662C06574566C24 /* SAXParser.swift */,
-				1117D79449953EA9D8CF7433 /* SAXEntity.swift */,
-				1117D11E4EEB0FE76994D54A /* SAXAttributeDecl.swift */,
-				1117D44E23FA026BBCEE11BF /* SAXLocator.swift */,
-				1117D1C5F316767CC027B1F8 /* SAXElementContent.swift */,
-				1117D30C091896AED90ABB5A /* SAXError.swift */,
 				1117D17612E53881BE0FE030 /* Tools */,
+				1117D0A0F7ED343314CCEF20 /* SAXHandler.swift */,
+				1117D1A2A41D3594B5FFCAEA /* SAXParser.swift */,
+				1117D73DFD242AB436C24981 /* SAXDefaultHandler.swift */,
+				1117DCE06B67991E85ABAD1B /* SAXError.swift */,
 			);
 			path = Gettysburg;
 			sourceTree = "<group>";
@@ -421,20 +403,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1117DA7CD7C8F5E0E3B9ABD5 /* SAXParserDelegate.swift in Sources */,
-				1117D5AEBA95CEE7C9622FD3 /* SAXParser.swift in Sources */,
-				1117D2BD258FF873AB6FD1E3 /* SAXEntity.swift in Sources */,
-				1117DBB28EEC81BC5C07ACC6 /* SAXAttributeDecl.swift in Sources */,
-				1117DD84FF3B4C156A93E6BE /* SAXLocator.swift in Sources */,
-				1117DE24C7F2963D0F49F67F /* SAXElementContent.swift in Sources */,
-				1117DFCA1E3B3E1E50E30826 /* SAXError.swift in Sources */,
-				1117D8DF000E0C523EF08D71 /* Tools.swift in Sources */,
-				1117D4C6DD41079202FC524D /* DocPos.swift in Sources */,
-				1117D766AB53705656DA9706 /* CharacterSets.swift in Sources */,
-				1117DBB4347F896988344FA1 /* StringPos.swift in Sources */,
-				1117D51DE8FA5577BE4F6633 /* ParseKVStage.swift in Sources */,
-				1117D68516B8780872B78417 /* NamespaceInfo.swift in Sources */,
-				1117D07D4E5DFD87315F0F0B /* ElementInfo.swift in Sources */,
+				1117D995B001AA69416B1AD8 /* SAXHandler.swift in Sources */,
+				1117D53E1F2EA5AF9F00B273 /* SAXParser.swift in Sources */,
+				1117D188BDA138353F3166C3 /* SAXDefaultHandler.swift in Sources */,
+				1117DE84D74D89919FA3A895 /* SAXError.swift in Sources */,
+				1117DCFD4AB415DC90BF0A61 /* SAXParsedEntity.swift in Sources */,
+				1117D0351CED4587FDDA6094 /* SAXParsedAttribute.swift in Sources */,
+				1117DCF077BBA37FE4374364 /* DTDElementContent.swift in Sources */,
+				1117DE0E191E70DC9A294E57 /* SAXParsedNode.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
