@@ -21,7 +21,13 @@
  *//************************************************************************/
 
 import Foundation
+import CoreFoundation
 import Rubicon
+
+fileprivate let UTF32LEBOM: [UInt8] = [ 0xFF, 0xFE, 0x00, 0x00 ]
+fileprivate let UTF32BEBOM: [UInt8] = [ 0x00, 0x00, 0xFE, 0xFF ]
+fileprivate let UTF16LEBOM: [UInt8] = [ 0xFF, 0xFE ]
+fileprivate let UTF16BEBOM: [UInt8] = [ 0xFE, 0xFF ]
 
 open class SAXParser<H: SAXHandler> {
 
@@ -60,13 +66,14 @@ open class SAXParser<H: SAXHandler> {
     public var allowedURIPrefixes: [String] = []
     public var willValidate:       Bool     = false
 
-    let inputStream: InputStream
+    let inputStream: MarkInputStream
+    var charStream:  CharInputStream! = nil
 
     lazy var lock: RecursiveLock = RecursiveLock()
 
     public init(inputStream: InputStream, uri: String, handler: H? = nil) {
         self.handler = handler
-        self.inputStream = inputStream
+        self.inputStream = MarkInputStream(inputStream: inputStream)
         self.uri = uri
     }
 
@@ -74,6 +81,66 @@ open class SAXParser<H: SAXHandler> {
         try lock.withLock { () -> H in
             guard let handler = handler else { throw SAXError.MissingHandler }
 
+            if inputStream.streamStatus == .notOpen { inputStream.open() }
+            inputStream.markSet()
+
+            var encoding: String  = "UTF-8"
+            var hasBom:   Bool    = false
+            var bytes1:   [UInt8] = Array<UInt8>(repeating: 0, count: 4)
+            var bytes2:   [UInt8] = []
+            let rc:       Int     = inputStream.read(&bytes1, maxLength: 4)
+
+            inputStream.markRelease()
+            guard rc == 4 else { throw StreamError.UnexpectedEndOfInput() }
+            bytes2.append(bytes1[0])
+            bytes2.append(bytes1[1])
+
+            if bytes1 == UTF32LEBOM { encoding = "UTF-32LE"; hasBom = true }
+            else if bytes1 == UTF32BEBOM { encoding = "UTF-32BE"; hasBom = true }
+            else if bytes2 == UTF16LEBOM { encoding = "UTF-16LE"; hasBom = true }
+            else if bytes2 == UTF16BEBOM { encoding = "UTF-16BE"; hasBom = true }
+            else if bytes1[0] == 0 && bytes1[1] == 0 && bytes1[3] != 0 { encoding = "UTF-32BE" }
+            else if bytes1[0] != 0 && bytes1[2] == 0 && bytes1[3] == 0 { encoding = "UTF-32LE" }
+            else if (bytes1[0] == 0 && bytes1[1] != 0) || (bytes1[2] == 0 && bytes1[3] != 0) { encoding = "UTF-16BE" }
+            else if (bytes1[1] == 0 && bytes1[0] != 0) || (bytes1[3] == 0 && bytes1[2] != 0) { encoding = "UTF-16LE" }
+
+            var decl: String? = nil
+            let bc:   Int     = 100
+
+            if encoding == "UTF-8" {
+                bytes1 = Array<UInt8>(repeating: 0, count: bc + 1)
+                inputStream.markSet()
+                _ = inputStream.read(&bytes1, maxLength: bc)
+                decl = String(cString: &bytes1)
+            }
+            else if encoding.hasPrefix("UTF-16") {
+                let xbc = (bc * 2)
+                bytes1 = Array<UInt8>(repeating: 0, count: xbc)
+                inputStream.markSet()
+                if hasBom {
+                    let bomSize = 2
+                    let rc: Int = inputStream.read(&bytes1, maxLength: bomSize)
+                    guard rc == bomSize else { throw StreamError.UnexpectedEndOfInput() }
+                }
+                _ = inputStream.read(&bytes1, maxLength: xbc)
+                decl = String(bytes: bytes1, encoding: encoding.hasSuffix("LE") ? .utf16LittleEndian : .utf16BigEndian)
+            }
+            else if encoding.hasPrefix("UTF-32") {
+                let xbc = (bc * 4)
+                bytes1 = Array<UInt8>(repeating: 0, count: xbc)
+                inputStream.markSet()
+                if hasBom {
+                    let bomSize = 4
+                    let rc: Int = inputStream.read(&bytes1, maxLength: bomSize)
+                    guard rc == bomSize else { throw StreamError.UnexpectedEndOfInput() }
+                }
+                _ = inputStream.read(&bytes1, maxLength: xbc)
+                decl = String(bytes: bytes1, encoding: encoding.hasSuffix("LE") ? .utf32LittleEndian : .utf32BigEndian)
+            }
+
+            print("XML Decl: \"\(decl ?? NULL)")
+
+            //let rx = try RegEx(pattern: "\\<\\?xml\\s+version=\"([^\"]+)\"(?:\\s+encoding=\"([^\"]+)\")?(?:\\s+standalone=\"([^\"]+)\")?\\s*\\?\\>")
             return handler
         }
     }
@@ -84,14 +151,59 @@ open class SAXParser<H: SAXHandler> {
         return self
     }
 
-    @discardableResult open func setValidation(willValidate: Bool) -> SAXParser<H> {
-        self.willValidate = willValidate
+    @discardableResult open func set(willValidate flag: Bool) -> SAXParser<H> {
+        self.willValidate = flag
         return self
     }
 
-    @discardableResult open func setAllowedURIPrefixes(uriPrefixes: [String], append: Bool = false) -> SAXParser<H> {
-        if append { allowedURIPrefixes.append(contentsOf: uriPrefixes) }
-        else { allowedURIPrefixes = uriPrefixes }
+    @discardableResult open func set(allowedUriPrefixes uris: [String], append: Bool = false) -> SAXParser<H> {
+        if append { allowedURIPrefixes.append(contentsOf: uris) }
+        else { allowedURIPrefixes = uris }
         return self
+    }
+}
+
+extension SAXParser.DTDExternalType: CustomStringConvertible {
+    public var description: String {
+        switch self {
+            case .System: return "System"
+            case .Public: return "Public"
+        }
+    }
+}
+
+extension SAXParser.DTDEntityType: CustomStringConvertible {
+    public var description: String {
+        switch self {
+            case .General:   return "General"
+            case .Parameter: return "Parameter"
+        }
+    }
+}
+
+extension SAXParser.DTDAttrType: CustomStringConvertible {
+    public var description: String {
+        switch self {
+            case .CDATA:      return "CDATA"
+            case .ID:         return "ID"
+            case .IDREF:      return "IDREF"
+            case .IDREFS:     return "IDREFS"
+            case .ENTITY:     return "ENTITY"
+            case .ENTITIES:   return "ENTITIES"
+            case .NMTOKEN:    return "NMTOKEN"
+            case .NMTOKENS:   return "NMTOKENS"
+            case .NOTATION:   return "NOTATION"
+            case .ENUMERATED: return "ENUMERATED"
+        }
+    }
+}
+
+extension SAXParser.DTDAttrDefaultType: CustomStringConvertible {
+    public var description: String {
+        switch self {
+            case .Required: return "Required"
+            case .Optional: return "Optional"
+            case .Fixed:    return "Fixed"
+        }
     }
 }

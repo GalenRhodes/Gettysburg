@@ -23,92 +23,96 @@
 import Foundation
 import Rubicon
 
+internal let NULL = "⏚"
+
 open class SAXDefaultHandler: SAXHandler {
-    public typealias H = SAXDefaultHandler
-
-    open func documentBegin(parser: SAXParser<H>, version: String?, encoding: String?, standAlone: Bool?) {
+    public func documentBegin<H>(parser: SAXParser<H>, version: String?, encoding: String?, standAlone: Bool?) where H: SAXHandler {
         /* TODO: Implement me... */
     }
 
-    open func dtdInternalBegin(parser: SAXParser<H>, rootElementName: String) {
+    public func dtdInternalBegin<H>(parser: SAXParser<H>, rootElementName: String) where H: SAXHandler {
         /* TODO: Implement me... */
     }
 
-    open func dtdExternalBegin(parser: SAXParser<H>, rootElementName: String, type: SAXParser<H>.DTDExternalType, externalId: String?, systemId: String) {
+    public func dtdExternalBegin<H>(parser: SAXParser<H>, rootElementName: String, type: SAXParser<H>.DTDExternalType, externalId: String?, systemId: String) where H: SAXHandler {
         /* TODO: Implement me... */
     }
 
-    open func dtdEntityDecl(parser: SAXParser<H>, name: String, type: SAXParser<H>.DTDEntityType, publicId: String?, systemId: String?, content: String) {
+    public func dtdEntityDecl<H>(parser: SAXParser<H>, name: String, type: SAXParser<H>.DTDEntityType, publicId: String?, systemId: String?, content: String) where H: SAXHandler {
         /* TODO: Implement me... */
     }
 
-    open func dtdUnparsedEntityDecl(parser: SAXParser<H>, name: String, type: SAXParser<H>.DTDExternalType, publicId: String?, systemId: String, notation: String) {
+    public func dtdUnparsedEntityDecl<H>(parser: SAXParser<H>, name: String, type: SAXParser<H>.DTDExternalType, publicId: String?, systemId: String, notation: String) where H: SAXHandler {
         /* TODO: Implement me... */
     }
 
-    open func dtdNotationDecl(parser: SAXParser<H>, name: String, type: SAXParser<H>.DTDExternalType, publicId: String?, systemId: String) {
+    public func dtdNotationDecl<H>(parser: SAXParser<H>, name: String, type: SAXParser<H>.DTDExternalType, publicId: String?, systemId: String) where H: SAXHandler {
         /* TODO: Implement me... */
     }
 
-    open func dtdElementDecl(parser: SAXParser<H>, name: String, allowedContent: DTDElementContent) {
+    public func dtdElementDecl<H>(parser: SAXParser<H>, name: String, allowedContent: DTDElementContent) where H: SAXHandler {
         /* TODO: Implement me... */
     }
 
-    open func dtdAttrDecl(parser: SAXParser<H>, elementName: String, attrName: String, type: SAXParser<H>.DTDAttrType, defaultType: SAXParser<H>.DTDAttrDefaultType, defaultValue: String?, values: [String]) {
+    public func dtdAttrDecl<H>(parser: SAXParser<H>, elementName: String, attrName: String, type: SAXParser<H>.DTDAttrType, defaultType: SAXParser<H>.DTDAttrDefaultType, defaultValue: String?, values: [String]) where H: SAXHandler {
         /* TODO: Implement me... */
     }
 
-    open func dtdEnd(parser: SAXParser<H>) {
+    public func dtdExternalEnd<H>(parser: SAXParser<H>, rootElementName: String) where H: SAXHandler {
         /* TODO: Implement me... */
     }
 
-    open func cdataSection(parser: SAXParser<H>, content: String) {
+    public func dtdInternalEnd<H>(parser: SAXParser<H>, rootElementName: String) where H: SAXHandler {
         /* TODO: Implement me... */
     }
 
-    open func text(parser: SAXParser<H>, content: String) {
+    public func cdataSection<H>(parser: SAXParser<H>, content: String) where H: SAXHandler {
         /* TODO: Implement me... */
     }
 
-    open func comment(parser: SAXParser<H>, comment: String) {
+    public func text<H>(parser: SAXParser<H>, content: String) where H: SAXHandler {
         /* TODO: Implement me... */
     }
 
-    open func processingInstruction(parser: SAXParser<H>, target: String, data: String) {
+    public func comment<H>(parser: SAXParser<H>, comment: String) where H: SAXHandler {
         /* TODO: Implement me... */
     }
 
-    open func elementBegin(parser: SAXParser<H>, localName: String, prefix: String?, namespaceURI: String?, namespaces: [String: String], attributes: [SAXParsedAttribute]) {
+    public func processingInstruction<H>(parser: SAXParser<H>, target: String, data: String) where H: SAXHandler {
         /* TODO: Implement me... */
     }
 
-    open func elementEnd(parser: SAXParser<H>, localName: String, prefix: String?, namespaceURI: String?) {
+    public func elementBegin<H>(parser: SAXParser<H>, localName: String, prefix: String?, namespaceURI: String?, namespaces: [String: String], attributes: [SAXParsedAttribute]) where H: SAXHandler {
         /* TODO: Implement me... */
     }
 
-    open func entityReference(parser: SAXParser<H>, name: String) -> SAXParsedEntity? {
+    public func elementEnd<H>(parser: SAXParser<H>, localName: String, prefix: String?, namespaceURI: String?) where H: SAXHandler {
+        /* TODO: Implement me... */
+    }
+
+    public func entityReference<H>(parser: SAXParser<H>, name: String) -> SAXParsedEntity? where H: SAXHandler {
         fatalError("entityReference(parser:name:) has not been implemented")
         /* TODO: Implement me... */
     }
 
-    open func resolveEntity(parser: SAXParser<H>, publicId: String?, systemId: String) -> InputStream? {
+    public func resolveEntity<H>(parser: SAXParser<H>, publicId: String?, systemId: String) -> InputStream? where H: SAXHandler {
         fatalError("resolveEntity(parser:publicId:systemId:) has not been implemented")
         /* TODO: Implement me... */
     }
 
-    open func parseErrorOccurred(parser: SAXParser<H>, error: Error) {
+    public func parseErrorOccurred<H>(parser: SAXParser<H>, error: Error) where H: SAXHandler {
         /* TODO: Implement me... */
     }
 
-    open func validationErrorOccurred(parser: SAXParser<H>, error: Error) {
+    public func validationErrorOccurred<H>(parser: SAXParser<H>, error: Error) where H: SAXHandler {
         /* TODO: Implement me... */
     }
 
-    open func warningOccurred(parser: SAXParser<H>, warning: Error) {
+    public func warningOccurred<H>(parser: SAXParser<H>, warning: Error) where H: SAXHandler {
         /* TODO: Implement me... */
     }
 
-    open func documentEnd(parser: SAXParser<H>) {
+    public func documentEnd<H>(parser: SAXParser<H>) where H: SAXHandler {
         /* TODO: Implement me... */
     }
 }

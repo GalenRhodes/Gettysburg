@@ -19,10 +19,11 @@ class GettysburgTests: XCTestCase {
     }
 
     func testStart() throws {
-        let fileName = "Tests/GettysburgTests/TestData/Test.xml"
+        let fileName = "Tests/GettysburgTests/TestData/Test_UTF-32LE.xml"
         guard let stream = InputStream(fileAtPath: fileName) else { fatalError() }
-        let sp = SAXParser(inputStream: stream, filename: fileName)
-        try sp.parse(delegate: TestSAXParserDelegate())
+        let handler = SAXTestHandler()
+        let parser  = SAXParser(inputStream: stream, uri: "", handler: handler)
+        try parser.parse()
     }
 
 //    func testPerformanceExample() throws {

@@ -23,47 +23,48 @@
 import Foundation
 
 public protocol SAXHandler {
-    associatedtype H: SAXHandler
 
-    func documentBegin(parser: SAXParser<H>, version: String?, encoding: String?, standAlone: Bool?)
+    func documentBegin<H>(parser: SAXParser<H>, version: String?, encoding: String?, standAlone: Bool?) where H: SAXHandler
 
-    func dtdInternalBegin(parser: SAXParser<H>, rootElementName: String)
+    func dtdInternalBegin<H>(parser: SAXParser<H>, rootElementName: String) where H: SAXHandler
 
-    func dtdExternalBegin(parser: SAXParser<H>, rootElementName: String, type: SAXParser<H>.DTDExternalType, externalId: String?, systemId: String)
+    func dtdExternalBegin<H>(parser: SAXParser<H>, rootElementName: String, type: SAXParser<H>.DTDExternalType, externalId: String?, systemId: String) where H: SAXHandler
 
-    func dtdEntityDecl(parser: SAXParser<H>, name: String, type: SAXParser<H>.DTDEntityType, publicId: String?, systemId: String?, content: String)
+    func dtdEntityDecl<H>(parser: SAXParser<H>, name: String, type: SAXParser<H>.DTDEntityType, publicId: String?, systemId: String?, content: String) where H: SAXHandler
 
-    func dtdUnparsedEntityDecl(parser: SAXParser<H>, name: String, type: SAXParser<H>.DTDExternalType, publicId: String?, systemId: String, notation: String)
+    func dtdUnparsedEntityDecl<H>(parser: SAXParser<H>, name: String, type: SAXParser<H>.DTDExternalType, publicId: String?, systemId: String, notation: String) where H: SAXHandler
 
-    func dtdNotationDecl(parser: SAXParser<H>, name: String, type: SAXParser<H>.DTDExternalType, publicId: String?, systemId: String)
+    func dtdNotationDecl<H>(parser: SAXParser<H>, name: String, type: SAXParser<H>.DTDExternalType, publicId: String?, systemId: String) where H: SAXHandler
 
-    func dtdElementDecl(parser: SAXParser<H>, name: String, allowedContent: DTDElementContent)
+    func dtdElementDecl<H>(parser: SAXParser<H>, name: String, allowedContent: DTDElementContent) where H: SAXHandler
 
-    func dtdAttrDecl(parser: SAXParser<H>, elementName: String, attrName: String, type: SAXParser<H>.DTDAttrType, defaultType: SAXParser<H>.DTDAttrDefaultType, defaultValue: String?, values: [String])
+    func dtdAttrDecl<H>(parser: SAXParser<H>, elementName: String, attrName: String, type: SAXParser<H>.DTDAttrType, defaultType: SAXParser<H>.DTDAttrDefaultType, defaultValue: String?, values: [String]) where H: SAXHandler
 
-    func dtdEnd(parser: SAXParser<H>)
+    func dtdExternalEnd<H>(parser: SAXParser<H>, rootElementName: String) where H: SAXHandler
 
-    func cdataSection(parser: SAXParser<H>, content: String)
+    func dtdInternalEnd<H>(parser: SAXParser<H>, rootElementName: String) where H: SAXHandler
 
-    func text(parser: SAXParser<H>, content: String)
+    func cdataSection<H>(parser: SAXParser<H>, content: String) where H: SAXHandler
 
-    func comment(parser: SAXParser<H>, comment: String)
+    func text<H>(parser: SAXParser<H>, content: String) where H: SAXHandler
 
-    func processingInstruction(parser: SAXParser<H>, target: String, data: String)
+    func comment<H>(parser: SAXParser<H>, comment: String) where H: SAXHandler
 
-    func elementBegin(parser: SAXParser<H>, localName: String, prefix: String?, namespaceURI: String?, namespaces: [String: String], attributes: [SAXParsedAttribute])
+    func processingInstruction<H>(parser: SAXParser<H>, target: String, data: String) where H: SAXHandler
 
-    func elementEnd(parser: SAXParser<H>, localName: String, prefix: String?, namespaceURI: String?)
+    func elementBegin<H>(parser: SAXParser<H>, localName: String, prefix: String?, namespaceURI: String?, namespaces: [String: String], attributes: [SAXParsedAttribute]) where H: SAXHandler
 
-    func entityReference(parser: SAXParser<H>, name: String) -> SAXParsedEntity?
+    func elementEnd<H>(parser: SAXParser<H>, localName: String, prefix: String?, namespaceURI: String?) where H: SAXHandler
 
-    func resolveEntity(parser: SAXParser<H>, publicId: String?, systemId: String) -> InputStream?
+    func entityReference<H>(parser: SAXParser<H>, name: String) -> SAXParsedEntity? where H: SAXHandler
 
-    func parseErrorOccurred(parser: SAXParser<H>, error: Error)
+    func resolveEntity<H>(parser: SAXParser<H>, publicId: String?, systemId: String) -> InputStream? where H: SAXHandler
 
-    func validationErrorOccurred(parser: SAXParser<H>, error: Error)
+    func parseErrorOccurred<H>(parser: SAXParser<H>, error: Error) where H: SAXHandler
 
-    func warningOccurred(parser: SAXParser<H>, warning: Error)
+    func validationErrorOccurred<H>(parser: SAXParser<H>, error: Error) where H: SAXHandler
 
-    func documentEnd(parser: SAXParser<H>)
+    func warningOccurred<H>(parser: SAXParser<H>, warning: Error) where H: SAXHandler
+
+    func documentEnd<H>(parser: SAXParser<H>) where H: SAXHandler
 }

@@ -1,9 +1,9 @@
 /************************************************************************//**
  *     PROJECT: Gettysburg
- *    FILENAME: SAXParsedNode.swift
+ *    FILENAME: SAXParsedTextNode.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
- *        DATE: 1/15/21
+ *        DATE: 1/18/21
  *
  * Copyright © 2021 Galen Rhodes. All rights reserved.
  *
@@ -22,26 +22,17 @@
 
 import Foundation
 
-open class SAXParsedNode {
-    public enum NodeType {
-        case Text
-        case CData
-        case Comment
-        case Element
-        case ProcInstruction
-        case EntityRef
-        case Attr
-    }
+open class SAXParsedTextNode: SAXParsedNode {
+    let text: String
 
-    let type: NodeType
-
-    public init(type: NodeType) { self.type = type }
-}
-
-open class SAXParsedParentNode: SAXParsedNode {
-    public var children: [SAXParsedNode] = []
-
-    public override init(type: NodeType) {
+    fileprivate init(type: NodeType, text: String) {
+        self.text = text
         super.init(type: type)
     }
+
+    public convenience init(text: String) { self.init(type: .Text, text: text) }
 }
+
+open class SAXParsedCData: SAXParsedTextNode { public convenience init(text: String) { self.init(type: .CData, text: text) } }
+
+open class SAXParsedComment: SAXParsedTextNode { public convenience init(text: String) { self.init(type: .Comment, text: text) } }

@@ -25,4 +25,5 @@ import Foundation
 public enum SAXError: Error {
     case MissingHandler
     case HandlerAlreadySet
+    case InvalidXMLVersion
 }

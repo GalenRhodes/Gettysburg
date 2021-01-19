@@ -26,8 +26,10 @@
 		1117D0351CED4587FDDA6094 /* SAXParsedAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DBD44B829AC1DAE7525D /* SAXParsedAttribute.swift */; };
 		1117D188BDA138353F3166C3 /* SAXDefaultHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D73DFD242AB436C24981 /* SAXDefaultHandler.swift */; };
 		1117D53E1F2EA5AF9F00B273 /* SAXParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D1A2A41D3594B5FFCAEA /* SAXParser.swift */; };
-		1117D6EEBE25B5C02DB123ED /* TestSAXParserDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D9A83F514B719F827C7F /* TestSAXParserDelegate.swift */; };
+		1117D68B62FFD1AA32F00AEB /* SAXTestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DEB2BBDD656C51384346 /* SAXTestHandler.swift */; };
+		1117D8FAC4E72228EC4ED683 /* SAXParsedElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DD95ACA053C26AEAC3AD /* SAXParsedElement.swift */; };
 		1117D995B001AA69416B1AD8 /* SAXHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D0A0F7ED343314CCEF20 /* SAXHandler.swift */; };
+		1117DB92A277E8F8DD6E0226 /* SAXParsedTextNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D29391870629DAB5E13D /* SAXParsedTextNode.swift */; };
 		1117DBACBBB748A8639285FD /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DB804342BF77458B8663 /* main.swift */; };
 		1117DCF077BBA37FE4374364 /* DTDElementContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D317F713F39B98A3EFB1 /* DTDElementContent.swift */; };
 		1117DCFD4AB415DC90BF0A61 /* SAXParsedEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D992FB04B6DF58ACF78D /* SAXParsedEntity.swift */; };
@@ -89,19 +91,23 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1117D07930C31B9EB322C3C2 /* Test_UTF-16BE.xml */ = {isa = PBXFileReference; fileEncoding = 2415919360; lastKnownFileType = text.xml; path = "Test_UTF-16BE.xml"; sourceTree = "<group>"; };
 		1117D0A0F7ED343314CCEF20 /* SAXHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXHandler.swift; sourceTree = "<group>"; };
 		1117D140D7C3EAE052E01D31 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.info; path = Info.plist; sourceTree = "<group>"; };
 		1117D1A2A41D3594B5FFCAEA /* SAXParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXParser.swift; sourceTree = "<group>"; };
 		1117D24C2AC342935E43EA54 /* Test.dtd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Test.dtd; sourceTree = "<group>"; };
+		1117D2654B632662DADD7449 /* Test_WINDOWS-1252.xml */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = text.xml; path = "Test_WINDOWS-1252.xml"; sourceTree = "<group>"; };
+		1117D29391870629DAB5E13D /* SAXParsedTextNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXParsedTextNode.swift; sourceTree = "<group>"; };
 		1117D317F713F39B98A3EFB1 /* DTDElementContent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DTDElementContent.swift; sourceTree = "<group>"; };
 		1117D3250DFFCE3E85ABD6E2 /* .jazzy.yaml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .jazzy.yaml; sourceTree = "<group>"; };
 		1117D32792ADADA24039E4BC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		1117D34903A4804B6646574A /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		1117D39A50E13D704326AF0E /* Test_UTF-8.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Test_UTF-8.xml"; sourceTree = "<group>"; };
+		1117D62B33D6FEF9D67D50E6 /* Test_UTF-32LE.xml */ = {isa = PBXFileReference; fileEncoding = 2617245952; lastKnownFileType = text.xml; path = "Test_UTF-32LE.xml"; sourceTree = "<group>"; };
 		1117D73DFD242AB436C24981 /* SAXDefaultHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXDefaultHandler.swift; sourceTree = "<group>"; };
 		1117D7BD3C4A2B65CD16265F /* compname.txt */ = {isa = PBXFileReference; fileEncoding = 2483028224; lastKnownFileType = text; path = compname.txt; sourceTree = "<group>"; };
 		1117D7BF1803856C4213CB5E /* Test.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Test.xml; sourceTree = "<group>"; };
 		1117D992FB04B6DF58ACF78D /* SAXParsedEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXParsedEntity.swift; sourceTree = "<group>"; };
-		1117D9A83F514B719F827C7F /* TestSAXParserDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestSAXParserDelegate.swift; sourceTree = "<group>"; };
 		1117D9BAFC548A58FAF127F5 /* Test3.xml */ = {isa = PBXFileReference; fileEncoding = 2483028224; lastKnownFileType = text.xml; path = Test3.xml; sourceTree = "<group>"; };
 		1117DA00775621297FDDF090 /* Test4.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Test4.xml; sourceTree = "<group>"; };
 		1117DA1BA1656B061F4F54F0 /* Test2.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Test2.xml; sourceTree = "<group>"; };
@@ -111,6 +117,8 @@
 		1117DBD44B829AC1DAE7525D /* SAXParsedAttribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXParsedAttribute.swift; sourceTree = "<group>"; };
 		1117DCE06B67991E85ABAD1B /* SAXError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXError.swift; sourceTree = "<group>"; };
 		1117DD5AFC911B2020139DDF /* LinuxMain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinuxMain.swift; sourceTree = "<group>"; };
+		1117DD95ACA053C26AEAC3AD /* SAXParsedElement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXParsedElement.swift; sourceTree = "<group>"; };
+		1117DEB2BBDD656C51384346 /* SAXTestHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXTestHandler.swift; sourceTree = "<group>"; };
 		1117DEC96369491CED3F9649 /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		83CFA5B02556E331005498FC /* Gettysburg.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Gettysburg.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		83CFA5B92556E331005498FC /* GettysburgTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GettysburgTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -152,6 +160,8 @@
 				1117DBD44B829AC1DAE7525D /* SAXParsedAttribute.swift */,
 				1117D317F713F39B98A3EFB1 /* DTDElementContent.swift */,
 				1117DB2FB92FCBEC16F1F6D7 /* SAXParsedNode.swift */,
+				1117DD95ACA053C26AEAC3AD /* SAXParsedElement.swift */,
+				1117D29391870629DAB5E13D /* SAXParsedTextNode.swift */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -174,6 +184,10 @@
 				1117DA00775621297FDDF090 /* Test4.xml */,
 				1117D24C2AC342935E43EA54 /* Test.dtd */,
 				1117DA1BA1656B061F4F54F0 /* Test2.xml */,
+				1117D39A50E13D704326AF0E /* Test_UTF-8.xml */,
+				1117D07930C31B9EB322C3C2 /* Test_UTF-16BE.xml */,
+				1117D62B33D6FEF9D67D50E6 /* Test_UTF-32LE.xml */,
+				1117D2654B632662DADD7449 /* Test_WINDOWS-1252.xml */,
 			);
 			path = TestData;
 			sourceTree = "<group>";
@@ -227,8 +241,8 @@
 			children = (
 				83CFA5BE2556E331005498FC /* GettysburgTests.swift */,
 				83CFA5C02556E331005498FC /* Info.plist */,
-				1117D9A83F514B719F827C7F /* TestSAXParserDelegate.swift */,
 				1117DA34C4883FCE9F6D0B90 /* TestData */,
+				1117DEB2BBDD656C51384346 /* SAXTestHandler.swift */,
 			);
 			path = GettysburgTests;
 			sourceTree = "<group>";
@@ -411,6 +425,8 @@
 				1117D0351CED4587FDDA6094 /* SAXParsedAttribute.swift in Sources */,
 				1117DCF077BBA37FE4374364 /* DTDElementContent.swift in Sources */,
 				1117DE0E191E70DC9A294E57 /* SAXParsedNode.swift in Sources */,
+				1117D8FAC4E72228EC4ED683 /* SAXParsedElement.swift in Sources */,
+				1117DB92A277E8F8DD6E0226 /* SAXParsedTextNode.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -419,7 +435,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				83CFA5BF2556E331005498FC /* GettysburgTests.swift in Sources */,
-				1117D6EEBE25B5C02DB123ED /* TestSAXParserDelegate.swift in Sources */,
+				1117D68B62FFD1AA32F00AEB /* SAXTestHandler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

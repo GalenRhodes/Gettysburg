@@ -1,9 +1,9 @@
 /************************************************************************//**
  *     PROJECT: Gettysburg
- *    FILENAME: SAXParsedNode.swift
+ *    FILENAME: SAXParsedElement.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
- *        DATE: 1/15/21
+ *        DATE: 1/18/21
  *
  * Copyright © 2021 Galen Rhodes. All rights reserved.
  *
@@ -22,26 +22,19 @@
 
 import Foundation
 
-open class SAXParsedNode {
-    public enum NodeType {
-        case Text
-        case CData
-        case Comment
-        case Element
-        case ProcInstruction
-        case EntityRef
-        case Attr
-    }
+open class SAXParsedElement: SAXParsedParentNode {
+    public let localName:    String
+    public let prefix:       String?
+    public let namespaceURI: String?
+    public let attribs:      [SAXParsedAttribute]
+    public let namespaces:   [String: String]
 
-    let type: NodeType
-
-    public init(type: NodeType) { self.type = type }
-}
-
-open class SAXParsedParentNode: SAXParsedNode {
-    public var children: [SAXParsedNode] = []
-
-    public override init(type: NodeType) {
-        super.init(type: type)
+    public init(localName: String, prefix: String? = nil, namespaceURI: String? = nil, attribs: [SAXParsedAttribute] = [], namespaces: [String: String] = [:]) {
+        self.localName = localName
+        self.prefix = prefix
+        self.namespaceURI = namespaceURI
+        self.attribs = attribs
+        self.namespaces = namespaces
+        super.init(type: .Element)
     }
 }

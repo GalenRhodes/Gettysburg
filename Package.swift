@@ -9,9 +9,7 @@ let package = Package(
   products: [
       .library(name: "Gettysburg", targets: [ "Gettysburg" ]),
   ],
-  dependencies: [
-      .package(name: "Rubicon", url: "https://github.com/GalenRhodes/Rubicon", from: "0.2.43"),
-  ],
+  dependencies: [ .package(name: "Rubicon", url: "https://github.com/GalenRhodes/Rubicon", from: "0.3.5"), ],
   targets: [
       .target(name: "Gettysburg", dependencies: [ "Rubicon" ]),
       .testTarget(name: "GettysburgTests", dependencies: [ "Gettysburg" ]),
