@@ -36,6 +36,8 @@
 		1117DDAABC5C2559C3E58075 /* Gettysburg.h in Headers */ = {isa = PBXBuildFile; fileRef = 1117DA52094C2ABAE3EA2EBA /* Gettysburg.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1117DE0E191E70DC9A294E57 /* SAXParsedNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DB2FB92FCBEC16F1F6D7 /* SAXParsedNode.swift */; };
 		1117DE84D74D89919FA3A895 /* SAXError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DCE06B67991E85ABAD1B /* SAXError.swift */; };
+		838D394525B8800E009FF043 /* PGDocFixer in Frameworks */ = {isa = PBXBuildFile; productRef = 83CFA5E22556E70C005498FC /* PGDocFixer */; };
+		838D394825B88044009FF043 /* Rubicon in Frameworks */ = {isa = PBXBuildFile; productRef = 838D394725B88044009FF043 /* Rubicon */; };
 		83CFA5BA2556E331005498FC /* Gettysburg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83CFA5B02556E331005498FC /* Gettysburg.framework */; };
 		83CFA5BF2556E331005498FC /* GettysburgTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CFA5BE2556E331005498FC /* GettysburgTests.swift */; };
 /* End PBXBuildFile section */
@@ -132,6 +134,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				838D394825B88044009FF043 /* Rubicon in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -147,6 +150,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				838D394525B8800E009FF043 /* PGDocFixer in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -302,6 +306,7 @@
 			);
 			name = Gettysburg;
 			packageProductDependencies = (
+				838D394725B88044009FF043 /* Rubicon */,
 			);
 			productName = Gettysburg;
 			productReference = 83CFA5B02556E331005498FC /* Gettysburg.framework */;
@@ -340,7 +345,7 @@
 			);
 			name = DocFixer;
 			packageProductDependencies = (
-				83CFA5E22556E70C005498FC,
+				83CFA5E22556E70C005498FC /* PGDocFixer */,
 			);
 			productName = DocFixer;
 			productReference = 83CFA5D72556E6C4005498FC /* DocFixer */;
@@ -379,7 +384,8 @@
 			);
 			mainGroup = 83CFA5A62556E331005498FC;
 			packageReferences = (
-				83CFA5E12556E70C005498FC,
+				83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer" */,
+				838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon" */,
 			);
 			productRefGroup = 83CFA5B12556E331005498FC /* Products */;
 			projectDirPath = "";
@@ -776,7 +782,15 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		83CFA5E12556E70C005498FC = {
+		838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/GalenRhodes/Rubicon.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.0;
+			};
+		};
+		83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/GalenRhodes/PGDocFixer.git";
 			requirement = {
@@ -787,9 +801,14 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		83CFA5E22556E70C005498FC = {
+		838D394725B88044009FF043 /* Rubicon */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 83CFA5E12556E70C005498FC;
+			package = 838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon" */;
+			productName = Rubicon;
+		};
+		83CFA5E22556E70C005498FC /* PGDocFixer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer" */;
 			productName = PGDocFixer;
 		};
 /* End XCSwiftPackageProductDependency section */
