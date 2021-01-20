@@ -94,7 +94,7 @@ open class SAXParser<H: SAXHandler> {
 
                 let buffSize:     Int         = 500
                 let buffer:       BytePointer = BytePointer.allocate(capacity: buffSize)
-                let hostEncoding: String      = "UTF-32\(NSHostByteOrder() == NS_LittleEndian ? "LE" : "BE")"
+                let hostEncoding: String      = "UTF-32\((CFByteOrderGetCurrent() == CFByteOrderLittleEndian.rawValue) ? "LE" : "BE")"
                 var hasBom:       Bool        = false
 
                 buffer.initialize(repeating: 0, count: buffSize)
