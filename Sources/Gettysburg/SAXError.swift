@@ -26,4 +26,6 @@ public enum SAXError: Error {
     case MissingHandler
     case HandlerAlreadySet
     case InvalidXMLVersion
+    case InvalidFileEncoding
+    case UnexpectedEndOfInput
 }

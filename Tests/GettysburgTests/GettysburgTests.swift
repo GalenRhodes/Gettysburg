@@ -19,7 +19,7 @@ class GettysburgTests: XCTestCase {
     }
 
     func testStart() throws {
-        let fileName = "Tests/GettysburgTests/TestData/Test_UTF-32LE.xml"
+        let fileName = "Tests/GettysburgTests/TestData/Test_UTF-16BE.xml"
         guard let stream = InputStream(fileAtPath: fileName) else { fatalError() }
         let handler = SAXTestHandler()
         let parser  = SAXParser(inputStream: stream, uri: "", handler: handler)
