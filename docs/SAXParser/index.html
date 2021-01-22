@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gettysburg - SAXParser</title>
+    <link rel="stylesheet" type="text/css" href="/Gettysburg/all.css" media="all" />
+</head>
+<body>
+    <header>
+        <a href="/Gettysburg/">
+            <strong>
+                Gettysburg
+            </strong>
+            <span>Documentation</span>
+        </a>
+        <sup>Beta</sup>
+    </header>
+
+    <!--
+    <form class="search">
+        <input type="search" placeholder="Search" />
+    </form>
+    -->
+
+    <nav>
+        <div class="wrapper">
+            <h2>On This Page</h2>
+            <ol><li><a href="#relationships">Relationships</a><ul><li><a href="#relationships">Nested Types</a></li></ul></li><li><a href="#initializers">Initializers</a><ul><li class="initializer"><a href="#saxparser.init(inputstream:uri:handler:)">init(input​Stream:​uri:​handler:​)</a></li></ul></li><li><a href="#properties">Properties</a><ul><li class="variable"><a href="#saxparser.handler">handler</a></li><li class="variable"><a href="#saxparser.uri">uri</a></li><li class="variable"><a href="#saxparser.alloweduriprefixes">allowed​URIPrefixes</a></li><li class="variable"><a href="#saxparser.willvalidate">will​Validate</a></li></ul></li><li><a href="#methods">Methods</a><ul><li class="function"><a href="#saxparser.parse()">parse()</a></li><li class="function"><a href="#saxparser.set(handler:)">set(handler:​)</a></li><li class="function"><a href="#saxparser.set(willvalidate:)">set(will​Validate:​)</a></li><li class="function"><a href="#saxparser.set(alloweduriprefixes:append:)">set(allowed​Uri​Prefixes:​append:​)</a></li></ul></li></ol>
+        </div>
+    </nav>
+
+    <main>
+        <article>
+            <h1>
+    <small>Class</small>
+    <code class="name">SAXParser</code>
+</h1>
+
+<html><body><pre class="highlight"><code><span class="attribute">open</span> <span class="keyword">class</span> <span class="type">SAXParser</span>&lt;<span class="variable">H</span>: <a href="/Gettysburg/SAXHandler"><span class="type">SAXHandler</span></a>&gt;</code></pre></body></html>
+<section id="relationships">
+    <h2 hidden>Relationships</h2>
+        
+        <h3>Nested Types</h3>
+<dl>
+    <dt class="enumeration"><code><a href="/Gettysburg/SAXParser_DTDEntityType">SAXParser.DTDEntityType</a></code></dt>
+<dd></dd>
+<dt class="enumeration"><code><a href="/Gettysburg/SAXParser_DTDExternalType">SAXParser.DTDExternalType</a></code></dt>
+<dd></dd>
+<dt class="enumeration"><code><a href="/Gettysburg/SAXParser_DTDAttrType">SAXParser.DTDAttrType</a></code></dt>
+<dd></dd>
+<dt class="enumeration"><code><a href="/Gettysburg/SAXParser_DTDAttrDefaultType">SAXParser.DTDAttrDefaultType</a></code></dt>
+<dd></dd>
+</dl>
+</section>
+    <section id="initializers">
+        <h2>Initializers</h2>
+
+        <div role="article" class="initializer" id="saxparser.init(inputstream:uri:handler:)">
+    <h3>
+        <code>init(input​Stream:​uri:​handler:​)</code>
+    </h3>
+    <html><body><pre class="highlight"><code><span class="keyword">public</span> <span class="keyword">init</span>(<span class="variable">inputStream</span>: <span class="type">InputStream</span>, <span class="variable">uri</span>: <span class="type">String</span>, <span class="variable">handler</span>: <span class="type">H</span>? = <span class="keyword">nil</span>)</code></pre></body></html>
+</div>
+    </section>
+    <section id="properties">
+        <h2>Properties</h2>
+
+        <div role="article" class="variable" id="saxparser.handler">
+    <h3>
+        <code>handler</code>
+    </h3>
+    <html><body><pre class="highlight"><code><span class="keyword">var</span> <span class="variable">handler</span>: <span class="type">H</span>? = <span class="keyword">nil</span></code></pre></body></html>
+</div>
+<div role="article" class="variable" id="saxparser.uri">
+    <h3>
+        <code>uri</code>
+    </h3>
+    <html><body><pre class="highlight"><code><span class="keyword">var</span> <span class="variable">uri</span>: <span class="type">String</span></code></pre></body></html>
+</div>
+<div role="article" class="variable" id="saxparser.alloweduriprefixes">
+    <h3>
+        <code>allowed​URIPrefixes</code>
+    </h3>
+    <html><body><pre class="highlight"><code><span class="keyword">var</span> <span class="variable">allowedURIPrefixes</span>: [<span class="type">String</span>] = []</code></pre></body></html>
+</div>
+<div role="article" class="variable" id="saxparser.willvalidate">
+    <h3>
+        <code>will​Validate</code>
+    </h3>
+    <html><body><pre class="highlight"><code><span class="keyword">var</span> <span class="variable">willValidate</span>: <span class="type">Bool</span> = <span class="keyword">false</span></code></pre></body></html>
+</div>
+    </section>
+    <section id="methods">
+        <h2>Methods</h2>
+
+        <div role="article" class="function" id="saxparser.parse()">
+    <h3>
+        <code>parse()</code>
+    </h3>
+    <html><body><pre class="highlight"><code><span class="attribute">@</span><span class="attribute">discardableResult</span> <span class="attribute">open</span> <span class="keyword">func</span> <span class="function">parse</span>() <span class="keyword">throws</span> -&gt; <span class="type">H</span></code></pre></body></html>
+</div>
+<div role="article" class="function" id="saxparser.set(handler:)">
+    <h3>
+        <code>set(handler:​)</code>
+    </h3>
+    <html><body><pre class="highlight"><code><span class="attribute">@</span><span class="attribute">discardableResult</span> <span class="keyword">public</span> <span class="attribute">final</span> <span class="keyword">func</span> <span class="function">set</span>(<span class="variable">handler</span>: <span class="type">H</span>) <span class="keyword">throws</span> -&gt; <a href="/Gettysburg/SAXParser"><span class="type">SAXParser</span></a>&lt;<span class="type">H</span>&gt;</code></pre></body></html>
+</div>
+<div role="article" class="function" id="saxparser.set(willvalidate:)">
+    <h3>
+        <code>set(will​Validate:​)</code>
+    </h3>
+    <html><body><pre class="highlight"><code><span class="attribute">@</span><span class="attribute">discardableResult</span> <span class="attribute">open</span> <span class="keyword">func</span> <span class="function">set</span>(<span class="variable">willValidate</span> <span class="variable">flag</span>: <span class="type">Bool</span>) -&gt; <a href="/Gettysburg/SAXParser"><span class="type">SAXParser</span></a>&lt;<span class="type">H</span>&gt;</code></pre></body></html>
+</div>
+<div role="article" class="function" id="saxparser.set(alloweduriprefixes:append:)">
+    <h3>
+        <code>set(allowed​Uri​Prefixes:​append:​)</code>
+    </h3>
+    <html><body><pre class="highlight"><code><span class="attribute">@</span><span class="attribute">discardableResult</span> <span class="attribute">open</span> <span class="keyword">func</span> <span class="function">set</span>(<span class="variable">allowedUriPrefixes</span> <span class="variable">uris</span>: [<span class="type">String</span>], <span class="variable">append</span>: <span class="type">Bool</span> = <span class="keyword">false</span>) -&gt; <a href="/Gettysburg/SAXParser"><span class="type">SAXParser</span></a>&lt;<span class="type">H</span>&gt;</code></pre></body></html>
+</div>
+    </section>
+
+
+
+        </article>
+    </main>
+
+    <footer>
+        <p>
+    Generated on <time datetime="2021-01-22T14:23:39-0500">January 22, 2021</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-beta.5</span>.
+</p>
+    </footer>
+</body>
+</html>
