@@ -31,6 +31,14 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
+            argument = "--project"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "$(PROJECT_NAME)"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "--remote-host"
             isEnabled = "YES">
          </CommandLineArgument>
@@ -55,11 +63,11 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--jazzy-version"
+            argument = "--swift-doc-format"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "0.13.1"
+            argument = "HTML"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument

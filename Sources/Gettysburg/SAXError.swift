@@ -23,9 +23,10 @@
 import Foundation
 
 public enum SAXError: Error {
-    case MissingHandler
-    case HandlerAlreadySet
-    case InvalidXMLVersion
-    case InvalidFileEncoding
-    case UnexpectedEndOfInput
+    case MissingHandler(description: String = "The SAX parsing handler was not set before the parsing began.")
+    case HandlerAlreadySet(description: String = "The SAX parsing handler was already set.")
+    case InvalidXMLVersion(description: String = "Invalid XML version in the XML declaration. Valid values are \"1.0\" and \"1.1\".")
+    case InvalidFileEncoding(description: String = "Invalid XML file encoding.")
+    case UnexpectedEndOfInput(description: String = "The end-of-input was reached before it was expected.")
+    case InvalidXMLDeclaration(description: String = "The XML declaration was invalid.")
 }

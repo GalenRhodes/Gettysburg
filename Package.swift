@@ -11,10 +11,10 @@ let package = Package(
         .library(name: "Gettysburg", targets: [ "Gettysburg" ]),
     ],
     dependencies: [
-        .package(name: "Rubicon", url: "https://github.com/GalenRhodes/Rubicon.git", .upToNextMajor(from: "0.1.0")),
+        .package(name: "Rubicon", url: "https://github.com/GalenRhodes/Rubicon.git", .upToNextMajor(from: "0.1.6")),
     ],
     targets: [
-        .target(name: "Gettysburg", dependencies: [ "Rubicon" ]),
-        .testTarget(name: "GettysburgTests", dependencies: [ "Gettysburg" ]),
+        .target(name: "Gettysburg", dependencies: [ "Rubicon" ], resources: [ .copy("Info.plist") ]),
+        .testTarget(name: "GettysburgTests", dependencies: [ "Gettysburg" ], resources: [ .copy("Info.plist"), .copy("TestData") ]),
     ])
 //@f:1

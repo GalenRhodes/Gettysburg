@@ -40,6 +40,7 @@
 		838D394825B88044009FF043 /* Rubicon in Frameworks */ = {isa = PBXBuildFile; productRef = 838D394725B88044009FF043 /* Rubicon */; };
 		83CFA5BA2556E331005498FC /* Gettysburg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83CFA5B02556E331005498FC /* Gettysburg.framework */; };
 		83CFA5BF2556E331005498FC /* GettysburgTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CFA5BE2556E331005498FC /* GettysburgTests.swift */; };
+		83DD3B8525B9CC0B0083BC1C /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 83DD3B8425B9CBEE0083BC1C /* libiconv.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -127,6 +128,7 @@
 		83CFA5BE2556E331005498FC /* GettysburgTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GettysburgTests.swift; sourceTree = "<group>"; };
 		83CFA5C02556E331005498FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		83CFA5D72556E6C4005498FC /* DocFixer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = DocFixer; sourceTree = BUILT_PRODUCTS_DIR; };
+		83DD3B8425B9CBEE0083BC1C /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,6 +136,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				83DD3B8525B9CC0B0083BC1C /* libiconv.tbd in Frameworks */,
 				838D394825B88044009FF043 /* Rubicon in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -214,6 +217,7 @@
 				83CFA5CC2556E53E005498FC /* Sources */,
 				83CFA5B12556E331005498FC /* Products */,
 				1117DEDAC7FE093CE0515186 /* Other */,
+				83DD3B8325B9CBEE0083BC1C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -275,6 +279,14 @@
 				1117DB804342BF77458B8663 /* main.swift */,
 			);
 			path = DocFixer;
+			sourceTree = "<group>";
+		};
+		83DD3B8325B9CBEE0083BC1C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				83DD3B8425B9CBEE0083BC1C /* libiconv.tbd */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
