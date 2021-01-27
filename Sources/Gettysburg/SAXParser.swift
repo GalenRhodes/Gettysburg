@@ -669,6 +669,13 @@ extension SAXParser.EndianBOM: CustomStringConvertible {
         }
     }
 
+    /*===========================================================================================================================================================================*/
+    /// Get the endian by the encoding name's suffix.
+    ///
+    /// - Parameter str: the suffix.
+    /// - Returns: the endian.
+    ///
+    ///
     @inlinable static func getEndianBySuffix(_ str: String?) -> Self {
         guard let str = str else { return .None }
         let s = str.uppercased()

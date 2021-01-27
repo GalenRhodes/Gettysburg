@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>cmpSuffix(suffix:source:) Function Reference</title>
+    <title>cmpPrefix(prefix:source:) Function Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset='utf-8'>
@@ -13,11 +13,11 @@
     <script src="../js/jazzy.search.js" defer></script>
   </head>
   <body>
-    <a name="//apple_ref/swift/Function/cmpSuffix(suffix:source:)" class="dashAnchor"></a>
-    <a title="cmpSuffix(suffix:source:) Function Reference"></a>
+    <a name="//apple_ref/swift/Function/cmpPrefix(prefix:source:)" class="dashAnchor"></a>
+    <a title="cmpPrefix(prefix:source:) Function Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">Gettysburg©</a> (9% documented)</p>
+        <p><a href="../index.html">Gettysburg©</a> (10% documented)</p>
         <p class="header-right"><a href="https://github.com/GalenRhodes/Gettysburg"><img src="../img/gh.png"/>View on GitHub</a></p>
         <p class="header-right">
           <form role="search" action="../search.json">
@@ -30,7 +30,7 @@
       <p id="breadcrumbs">
         <a href="../index.html"> Reference</a>
         <img id="carat" src="../img/carat.png" />
-        cmpSuffix(suffix:source:) Function Reference
+        cmpPrefix(prefix:source:) Function Reference
       </p>
     </div>
     <div class="content-wrapper">
@@ -100,6 +100,9 @@
                 <a href="../Classes/SAXParser.html">SAXParser</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Classes/SAXParser/EndianBOM.html">– EndianBOM</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Classes/SAXParser/DTDEntityType.html">– DTDEntityType</a>
               </li>
               <li class="nav-group-task">
@@ -110,9 +113,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/SAXParser/DTDAttrDefaultType.html">– DTDAttrDefaultType</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Classes/SAXParser/EndianBOM.html">– EndianBOM</a>
               </li>
             </ul>
           </li>
@@ -136,10 +136,10 @@
             <a href="../Functions.html">Functions</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
-                <a href="../Functions/cmpPrefix_28prefix_3Asource_3A_29_5F_24s6prefix6sourceSbSays5UInt8VG_5FAEtcD.html">cmpPrefix(prefix:source:)</a>
+                <a href="../Functions/cmpPrefix_28prefix_3Asource_3A_29_5F_24s6prefix6sourceSbSayxG_5FACtcSQRzluD.html">cmpPrefix(prefix:source:)</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Functions/cmpSuffix_28suffix_3Asource_3A_29_5F_24s6suffix6sourceSbSaySJG_5FACtcD.html">cmpSuffix(suffix:source:)</a>
+                <a href="../Functions/cmpSuffix_28suffix_3Asource_3A_29_5F_24s6suffix6sourceSbSayxG_5FACtcSQRzluD.html">cmpSuffix(suffix:source:)</a>
               </li>
             </ul>
           </li>
@@ -156,16 +156,16 @@
       <article class="main-content">
         <section>
           <section class="section">
-            <h1>cmpSuffix(suffix:source:)</h1>
+            <h1>cmpPrefix(prefix:source:)</h1>
               <div class="declaration">
                 <div class="language">
                   
                   <pre class="highlight swift"><code><span class="kd">@inlinable</span>
-<span class="kd">func</span> <span class="nf">cmpSuffix</span><span class="p">(</span><span class="n">suffix</span> <span class="nv">sfx</span><span class="p">:</span> <span class="p">[</span><span class="kt">Character</span><span class="p">],</span> <span class="n">source</span> <span class="nv">src</span><span class="p">:</span> <span class="p">[</span><span class="kt">Character</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+<span class="kd">func</span> <span class="n">cmpPrefix</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="k">prefix</span> <span class="nv">pfx</span><span class="p">:</span> <span class="p">[</span><span class="kt">T</span><span class="p">],</span> <span class="n">source</span> <span class="nv">src</span><span class="p">:</span> <span class="p">[</span><span class="kt">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">Equatable</span></code></pre>
 
                 </div>
               </div>
-            <p>Compares the suffix array to the end of the source array to see if they are the same.</p>
+            <p>Compares the prefix array to the beginning of the source array to see if they are the same.</p>
 
               <div>
                 <h4>Parameters</h4>
@@ -174,12 +174,12 @@
                       <tr>
                         <td>
                           <code>
-                          <em>sfx</em>
+                          <em>pfx</em>
                           </code>
                         </td>
                         <td>
                           <div>
-                            <p>the suffix array.</p>
+                            <p>the prefix array.</p>
                           </div>
                         </td>
                       </tr>
@@ -200,11 +200,11 @@
               </div>
               <div>
                 <h4>Return Value</h4>
-                <p><code>true</code> if the last sfx.count elements of the source array are the same as the suffix array. If the length of the source array (src.count) is less than the length of
-       the suffix array (sfx.count) then the return value will be <code>false</code>.</p>
+                <p><code>true</code> if the last pfx.count elements of the source array are the same as the prefix array. If the length of the source array (src.count) is less than the length of
+       the prefix array (pfx.count) then the return value will be <code>false</code>.</p>
               </div>
               <div class="slightly-smaller">
-                <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Tools/SAXTools.swift#L38-L45">Show on GitHub</a>
+                <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Tools/SAXTools.swift#L56-L61">Show on GitHub</a>
               </div>
           </section>
           <section class="section task-group-section">

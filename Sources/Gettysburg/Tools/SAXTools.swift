@@ -28,7 +28,7 @@ import CoreFoundation
 
 /*===============================================================================================================================================================================*/
 /// Compares the suffix array to the end of the source array to see if they are the same.
-///
+/// 
 /// - Parameters:
 ///   - sfx: the suffix array.
 ///   - src: the source array.
@@ -46,7 +46,7 @@ import CoreFoundation
 
 /*===============================================================================================================================================================================*/
 /// Compares the prefix array to the beginning of the source array to see if they are the same.
-///
+/// 
 /// - Parameters:
 ///   - pfx: the prefix array.
 ///   - src: the source array.

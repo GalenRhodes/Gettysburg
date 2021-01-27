@@ -5,47 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="60b0239b-d5a7-4057-9e21-57829d56877e" name="Default Changelist" comment="Moved up to Rubicon v0.1.7">
-      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/Tools/SAXTools.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/DocFixer.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations/DocFixer.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.jazzy.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/.jazzy.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.pbxproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved" beforeDir="false" afterPath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gettysburg.xcodeproj/xcshareddata/xcschemes/DocFixer.xcscheme" beforeDir="false" afterPath="$PROJECT_DIR$/Gettysburg.xcodeproj/xcshareddata/xcschemes/DocFixer.xcscheme" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gettysburg.xcodeproj/xcshareddata/xcschemes/Gettysburg.xcscheme" beforeDir="false" afterPath="$PROJECT_DIR$/Gettysburg.xcodeproj/xcshareddata/xcschemes/Gettysburg.xcscheme" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Package.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Package.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAXError.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAXError.swift" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAXParser.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAXParser.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tests/GettysburgTests/GettysburgTests.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/GettysburgTests/GettysburgTests.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tests/GettysburgTests/TestData/Test_UTF-8.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/GettysburgTests/TestData/Test_UTF-8.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/DTDElementContent/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/DTDElementContent_ContentType/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/DTDElementContent_Element/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/DTDElementContent_Item/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/DTDElementContent_ItemSet/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/DTDElementContent_ItemType/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/DTDElementContent_Occurrence/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/DTDElementContent_Order/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/DTDElementContent_PCData/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/SAXDefaultHandler/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/SAXError/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/SAXHandler/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/SAXParsedAttribute/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/SAXParsedCData/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/SAXParsedComment/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/SAXParsedElement/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/SAXParsedEntity/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/SAXParsedNode/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/SAXParsedNode_NodeType/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/SAXParsedParentNode/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/SAXParsedTextNode/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/SAXParser/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/SAXParser_DTDAttrDefaultType/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/SAXParser_DTDAttrType/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/SAXParser_DTDEntityType/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/SAXParser_DTDExternalType/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/all.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -128,7 +89,7 @@
       <workItem from="1611157884044" duration="11011000" />
       <workItem from="1611231535934" duration="12943000" />
       <workItem from="1611343353159" duration="1827000" />
-      <workItem from="1611582537991" duration="40764000" />
+      <workItem from="1611582537991" duration="40848000" />
     </task>
     <task id="LOCAL-00001" summary="Changed documentation style.">
       <created>1611343621921</created>
@@ -151,7 +112,14 @@
       <option name="project" value="LOCAL" />
       <updated>1611582659919</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Moved up to Rubicon v0.1.7">
+      <created>1611755341014</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1611755341014</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
