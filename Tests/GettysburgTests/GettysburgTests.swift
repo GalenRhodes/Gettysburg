@@ -22,7 +22,7 @@ class GettysburgTests: XCTestCase {
         let fileName = "Tests/GettysburgTests/TestData/Test_WINDOWS-1252.xml"
         guard let stream = InputStream(fileAtPath: fileName) else { fatalError() }
         let handler = SAXTestHandler()
-        let parser  = SAXParser(inputStream: stream, uri: "", handler: handler)
+        let parser  = SAXParser(inputStream: stream, url: "", handler: handler)
         try parser.parse()
     }
 

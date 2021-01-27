@@ -63,11 +63,11 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--swift-doc-format"
+            argument = "--jazzy-version"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "HTML"
+            argument = "0.13.6"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument

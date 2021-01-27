@@ -23,10 +23,11 @@
 import Foundation
 
 public enum SAXError: Error {
-    case MissingHandler(description: String = "The SAX parsing handler was not set before the parsing began.")
-    case HandlerAlreadySet(description: String = "The SAX parsing handler was already set.")
-    case InvalidXMLVersion(description: String = "Invalid XML version in the XML declaration. Valid values are \"1.0\" and \"1.1\".")
-    case InvalidFileEncoding(description: String = "Invalid XML file encoding.")
-    case UnexpectedEndOfInput(description: String = "The end-of-input was reached before it was expected.")
-    case InvalidXMLDeclaration(description: String = "The XML declaration was invalid.")
+    case MissingHandler(_ line: Int = 0, _ column: Int = 0, description: String = "The SAX parsing handler was not set before the parsing began.")
+    case HandlerAlreadySet(_ line: Int = 0, _ column: Int = 0, description: String = "The SAX parsing handler was already set.")
+    case InvalidXMLVersion(_ line: Int = 1, _ column: Int = 1, description: String = "Invalid XML version in the XML declaration. Valid values are \"1.0\" and \"1.1\".")
+    case InvalidFileEncoding(_ line: Int = 1, _ column: Int = 1, description: String = "Invalid XML file encoding.")
+    case InvalidXMLDeclaration(_ line: Int = 1, _ column: Int = 1, description: String = "The XML declaration was invalid.")
+    case UnexpectedEndOfInput(_ line: Int, _ column: Int, description: String = "The end-of-input was reached before it was expected.")
+    case InvalidCharacter(_ line: Int, _ column: Int, description: String)
 }

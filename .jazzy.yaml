@@ -1,6 +1,6 @@
 {
   "clean": true,
-  "min_acl": "public",
+  "min_acl": "internal",
   "sdk": "macosx",
   "author": "Galen Rhodes",
   "author_url": "https://blog.projectgalen.com",
@@ -10,4 +10,7 @@
   "use_safe_filenames": true,
   "undocumented_text": "",
   "title": "Gettysburg©",
+  "swift_build_tool": "xcodebuild",
+  "build_tool_arguments": ["-scheme", "Gettysburg",],
+  "separate_global_declarations": true,
 },
