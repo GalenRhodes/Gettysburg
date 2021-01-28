@@ -38,7 +38,7 @@ public protocol SAXHandler {
 
     func dtdElementDecl<H>(parser: SAXParser<H>, name: String, allowedContent: DTDElementContent) where H: SAXHandler
 
-    func dtdAttrDecl<H>(parser: SAXParser<H>, elementName: String, attrName: String, type: SAXParser<H>.DTDAttrType, defaultType: SAXParser<H>.DTDAttrDefaultType, defaultValue: String?, values: [String]) where H: SAXHandler
+    func dtdAttrDecl<H>(parser: SAXParser<H>, elementName: String, attrName: String, type: SAXParser<H>.DTDAttrType, defaultType: SAXParser<H>.DTDAttrRequirementType, defaultValue: String?, values: [String]) where H: SAXHandler
 
     func dtdExternalEnd<H>(parser: SAXParser<H>, rootElementName: String) where H: SAXHandler
 
@@ -46,7 +46,7 @@ public protocol SAXHandler {
 
     func cdataSection<H>(parser: SAXParser<H>, content: String) where H: SAXHandler
 
-    func text<H>(parser: SAXParser<H>, content: String) where H: SAXHandler
+    func text<H>(parser: SAXParser<H>, content: String, isWhitespace: Bool) where H: SAXHandler
 
     func comment<H>(parser: SAXParser<H>, comment: String) where H: SAXHandler
 

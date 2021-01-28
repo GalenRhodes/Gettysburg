@@ -54,7 +54,7 @@ open class SAXDefaultHandler: SAXHandler {
         /* TODO: Implement me... */
     }
 
-    public func dtdAttrDecl<H>(parser: SAXParser<H>, elementName: String, attrName: String, type: SAXParser<H>.DTDAttrType, defaultType: SAXParser<H>.DTDAttrDefaultType, defaultValue: String?, values: [String]) where H: SAXHandler {
+    public func dtdAttrDecl<H>(parser: SAXParser<H>, elementName: String, attrName: String, type: SAXParser<H>.DTDAttrType, defaultType: SAXParser<H>.DTDAttrRequirementType, defaultValue: String?, values: [String]) where H: SAXHandler {
         /* TODO: Implement me... */
     }
 
@@ -70,7 +70,7 @@ open class SAXDefaultHandler: SAXHandler {
         /* TODO: Implement me... */
     }
 
-    public func text<H>(parser: SAXParser<H>, content: String) where H: SAXHandler {
+    public func text<H>(parser: SAXParser<H>, content: String, isWhitespace: Bool) where H: SAXHandler {
         /* TODO: Implement me... */
     }
 

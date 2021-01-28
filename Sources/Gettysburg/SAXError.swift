@@ -30,4 +30,5 @@ public enum SAXError: Error {
     case InvalidXMLDeclaration(_ line: Int = 1, _ column: Int = 1, description: String = "The XML declaration was invalid.")
     case UnexpectedEndOfInput(_ line: Int, _ column: Int, description: String = "The end-of-input was reached before it was expected.")
     case InvalidCharacter(_ line: Int, _ column: Int, description: String)
+    case UnexpectedElement(_ line: Int, _ column: Int, description: String)
 }

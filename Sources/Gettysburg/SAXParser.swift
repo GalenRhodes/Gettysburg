@@ -32,7 +32,7 @@ fileprivate let UNITSIZE:   [String: Int] = [ "UTF-8": 1, "UTF-16LE": 2, "UTF-16
 
 open class SAXParser<H: SAXHandler> {
 
-    typealias XMLDecl = (version: String, versionSpecified: Bool, encoding: String, encodingSpecified: Bool, endianBom: EndianBOM, standalone: Bool, standaloneSpecified: Bool)
+    @usableFromInline typealias XMLDecl = (version: String, versionSpecified: Bool, encoding: String, encodingSpecified: Bool, endianBom: Endian, standalone: Bool, standaloneSpecified: Bool)
 
     public internal(set) var url:          String
     public internal(set) var handler:      H?      = nil
@@ -52,29 +52,64 @@ open class SAXParser<H: SAXHandler> {
 
     @usableFromInline var foundRootElement: Bool = false
 
-    public init(inputStream: InputStream, url: String, handler: H? = nil) {
+    /*===========================================================================================================================================================================*/
+    /// Create an instance of this parser from the given input stream.
+    ///
+    /// - Parameters:
+    ///   - inputStream: the <code>[InputStream](https://developer.apple.com/documentation/foundation/InputStream)</code>
+    ///   - url: the URL where this document is located. If none is provided then a generic one will be generated.
+    ///   - handler: an instance of a class that implements the `SAXHandler` protocol that will handle the messages sent from this parser.
+    ///
+    public init(inputStream: InputStream, url: String = "uuid:\(UUID().uuidString).xml", handler: H? = nil) {
         self.handler = handler
         self.inputStream = MarkInputStream(inputStream: inputStream)
         self.url = url
     }
 
+    /*===========================================================================================================================================================================*/
+    /// Set the instance of the class that implements `SAXHandler` that will handle the parsing messages sent from this parser.
+    ///
+    /// - Parameter handler: the handler.
+    /// - Returns: this parser.
+    /// - Throws: if the handler had already been set previously.
+    ///
     @discardableResult public final func set(handler: H) throws -> SAXParser<H> {
         guard self.handler == nil else { throw getSAXError_HandlerAlreadySet() }
         self.handler = handler
         return self
     }
 
+    /*===========================================================================================================================================================================*/
+    /// Set the willValidate flag.
+    ///
+    /// - Parameter flag: if `true` this parser will perform validation based on the DTD provided in the document. If `false` no validation will be performed.
+    /// - Returns: this parser.
+    ///
     @discardableResult open func set(willValidate flag: Bool) -> SAXParser<H> {
         self.willValidate = flag
         return self
     }
 
+    /*===========================================================================================================================================================================*/
+    /// Set the list of allowed URI prefixes for resolving external entities and DocTypes.
+    ///
+    /// - Parameters:
+    ///   - uris: the list of URI prefixes.
+    ///   - append: if `true` the list will be added to any already set. If `false` (the default) the list provided here will completely replace what is already there.
+    /// - Returns: this parser.
+    ///
     @discardableResult open func set(allowedUriPrefixes uris: [String], append: Bool = false) -> SAXParser<H> {
         if append { allowedURIPrefixes.append(contentsOf: uris) }
         else { allowedURIPrefixes = uris }
         return self
     }
 
+    /*===========================================================================================================================================================================*/
+    /// Parse the XML document.
+    ///
+    /// - Returns: The handler used to parse the document.
+    /// - Throws: if an I/O error occurs or if the XML document is malformed.
+    ///
     @discardableResult open func parse() throws -> H {
         try lock.withLock { () -> H in
             guard let handler = handler else { throw getSAXError_MissingHandler() }
@@ -98,7 +133,7 @@ open class SAXParser<H: SAXHandler> {
                                       version: (xmlDecl.versionSpecified ? xmlDecl.version : nil),
                                       encoding: (xmlDecl.encodingSpecified ? xmlDecl.encoding : nil),
                                       standAlone: (xmlDecl.standaloneSpecified ? xmlDecl.standalone : nil))
-                try parseDocument(handler)
+                try parseDocumentRoot(handler)
                 handler.documentEnd(parser: self)
             }
             catch let e {
@@ -116,43 +151,16 @@ open class SAXParser<H: SAXHandler> {
     ///
     /// - Throws: `SAXError` or any I/O errors.
     ///
-    func parseDocument(_ handler: H) throws {
+    func parseDocumentRoot(_ handler: H) throws {
         charStream.markSet()
         defer { charStream.markDelete() }
 
-        while var ch = try charStream.read() {
+        while let ch = try charStream.read() {
             if ch == "<" {
-                var chars: [Character] = []
-
-                charStream.markSet()
-                do {
-                    defer { charStream.markDelete() }
-
-                    if try charStream.read(chars: &chars, maxLength: 9) == 9 {
-                        let str = String(chars)
-
-                        if try str.matches(pattern: "\\!DOCTYPE\\s") {
-                            try parseDocType(handler)
-                        }
-                        else if str.hasPrefix("!--") {
-                            charStream.markReset()
-                            guard try charStream.read(chars: &chars, maxLength: 3) == 3 else { throw getSAXError_UnexpectedEndOfInput() }
-                            try parseComment(handler)
-                        }
-                    }
-                }
+                try parseDelimitedNode(handler)
             }
             else if ch.isWhitespace {
-                repeat {
-                    charStream.markUpdate()
-                    guard let c = try charStream.read() else {
-                        charStream.markDelete()
-                        return
-                    }
-                    ch = c
-                }
-                while ch.isWhitespace
-                charStream.markReset()
+                try parseWhitespaceNode(handler)
             }
             else {
                 charStream.markReset()
@@ -163,12 +171,127 @@ open class SAXParser<H: SAXHandler> {
         }
     }
 
+    /*===========================================================================================================================================================================*/
+    /// Parse a delimited node such as an element, comment, processing instruction, or DTD.
+    ///
+    /// - Parameters:
+    ///   - handler: the handler.
+    ///   - noDTD: if set to `true` then DTD nodes are not allowed. DTD nodes are only allowed before the root element is encountered.
+    ///   - noElement: if set to `true` then no element nodes are allowed. This might be the case at the document root where only one root element is allowed.
+    /// - Throws: if an I/O error occurs, if the node is malformed, or if a DTD was encountered when `noDTD` was set to `true`.
+    ///
+    func parseDelimitedNode(_ handler: H, noDTD: Bool = true, noElement: Bool = false) throws {
+        charStream.markSet()
+        defer { charStream.markDelete() }
+
+        if let ch = try charStream.read() {
+            switch ch {
+                case "!":
+                    charStream.markSet()
+                    //
+                    // Read the next 8 characters and see what we have here.
+                    //
+                    let str = try readString(count: 8)
+
+                    if str.hasPrefix("DOCTYPE") && str[str.index(before: str.endIndex)].isWhitespace {
+                        guard !noDTD else {
+                            charStream.markReturn()
+                            charStream.markReset()
+                            throw getSAXError_UnexpectedElement("A DOCTYPE declaration is not expected here.")
+                        }
+                        charStream.markDelete()
+                        //
+                        // This is a doctype node.
+                        //
+                        try parseDocType(handler)
+                    }
+                    else if str.hasPrefix("--") {
+                        charStream.markBackup(count: 6)
+                        charStream.markDelete()
+                        //
+                        // This is a comment node.
+                        //
+                        try parseComment(handler)
+                    }
+                    else {
+                        charStream.markReturn()
+                        throw getSAXError_InvalidCharacter("Unexpected characters \"\(str)\".")
+                    }
+                case "?": try parseProcessingInstruction(handler: handler)
+                default: break
+            }
+        }
+        else {
+            throw getSAXError_UnexpectedEndOfInput()
+        }
+    }
+
+    /*===========================================================================================================================================================================*/
+    /// Read and parse the processing instruction.
+    ///
+    /// - Parameter handler: the handler.
+    /// - Throws: if an I/O error occurs or if the EOF was found before the end of the processing instruction node.
+    ///
+    @inlinable final func parseProcessingInstruction(handler: H) throws {
+        let info = getPITargetAndData(processingInstruction: try readUntil(marker: "?>"))
+        handler.processingInstruction(parser: self, target: info.0, data: info.1)
+    }
+
+    /*===========================================================================================================================================================================*/
+    /// Take the string that contains the body of the processing instruction and break out the target and the data.
+    ///
+    /// - Parameter pi: the body of the processing instruction.
+    /// - Returns: a tuple with the target and the data.
+    ///
+    @inlinable final func getPITargetAndData(processingInstruction pi: String) -> (String, String) {
+        var idx = pi.startIndex
+        while idx < pi.endIndex {
+            if pi[idx].isWhitespace {
+                let target = String(pi[pi.startIndex ..< idx]).trimmed
+                idx = pi.index(after: idx)
+                while idx < pi.endIndex {
+                    if !pi[idx].isWhitespace { return (target, String(pi[idx ..< pi.endIndex]).trimmed) }
+                    idx = pi.index(after: idx)
+                }
+                return (target, "")
+            }
+            idx = pi.index(after: idx)
+        }
+        return (pi.trimmed, "")
+    }
+
+    /*===========================================================================================================================================================================*/
+    /// Parse out a text node combrised of nothing but whitespace.
+    ///
+    /// - Parameter handler: the handler.
+    /// - Throws: if an I/O error occurs.
+    ///
+    func parseWhitespaceNode(_ handler: H) throws {
+        charStream.markReset()
+        let str = try readWhitespace()
+        handler.text(parser: self, content: str, isWhitespace: true)
+    }
+
+    /*===========================================================================================================================================================================*/
+    /// Parse an encountered comment.
+    ///
+    /// - Parameter handler: the handler.
+    /// - Throws: if an I/O error occurs or the comment is malformed.
+    ///
     func parseComment(_ handler: H) throws {
         var comment: [Character] = []
 
+        charStream.markSet()
+        defer { charStream.markDelete() }
+
         while let ch = try charStream.read() {
-            if comment.count > 1 && comment[comment.count - 1] == "-" && comment[comment.count - 2] == "-" {
-                guard ch == ">" else { throw getSAXError_InvalidCharacter("Comments cannot contain double dashes.") }
+            let cc = comment.count
+
+            if cc > 1 && comment[cc - 1] == "-" && comment[cc - 2] == "-" {
+                guard ch == ">" else {
+                    charStream.markBackup(count: 2)
+                    throw getSAXError_InvalidCharacter("Comments cannot contain double dashes.")
+                }
                 comment.removeLast(2)
                 handler.comment(parser: self, comment: String(comment))
                 return
@@ -181,27 +304,63 @@ open class SAXParser<H: SAXHandler> {
         throw getSAXError_UnexpectedEndOfInput()
     }
 
+    /*===========================================================================================================================================================================*/
+    /// Parse out a DOCTYPE Declaration.
+    ///
+    /// - Parameter handler: The handler.
+    /// - Throws: if an I/O error occurs or if the DOCTYPE declaration is malformed or incomplete.
+    ///
     func parseDocType(_ handler: H) throws {
     }
 
-    final func readWhitespace() throws -> String {
+    /*===========================================================================================================================================================================*/
+    /// Read and return all the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> up to but not including the first encountered NON-whitespace
+    /// character.
+    ///
+    /// - Returns: the <code>[String](https://developer.apple.com/documentation/swift/String)</code> of
+    ///            <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s read.
+    /// - Throws: if an I/O error occurs.
+    ///
+    @usableFromInline final func readWhitespace() throws -> String {
         var chars: [Character] = []
         charStream.markSet()
 
         while let ch = try charStream.read() {
             guard ch.isWhitespace else {
-                charStream.markReturn()
+                charStream.markBackup(count: 1)
                 return String(chars)
             }
             chars <+ ch
-            charStream.markUpdate()
         }
 
         charStream.markDelete()
         return String(chars)
     }
 
-    final func readUntilWhitespace() throws -> String {
+    /*===========================================================================================================================================================================*/
+    /// Read `count` number of character from the input stream and return them as a string.
+    ///
+    /// - Parameters:
+    ///   - count: the number of characters to read.
+    ///   - errorOnEOF: if `true` and there are fewer than `count` characters left in the input stream then throw an exception.
+    /// - Returns: the number of characters read.
+    /// - Throws: if there is an I/O error or `errorOnEOF` is `true` and there are fewer than `count` characters left in the input stream.
+    ///
+    @inlinable final func readString(count: Int, errorOnEOF: Bool = true) throws -> String {
+        var chars: [Character] = []
+        guard try charStream.read(chars: &chars, maxLength: count) == count || !errorOnEOF else { throw getSAXError_UnexpectedEndOfInput() }
+        return String(chars)
+    }
+
+    /*===========================================================================================================================================================================*/
+    /// Read and return all the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s up to but not including the first encountered whitespace
+    /// character.
+    ///
+    /// - Returns: The <code>[String](https://developer.apple.com/documentation/swift/String)</code> of
+    ///            <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s read.
+    /// - Throws: if an I/O error occurs.
+    ///
+    @usableFromInline final func readUntilWhitespace() throws -> String {
         var chars: [Character] = []
         charStream.markSet()
 
@@ -218,9 +377,21 @@ open class SAXParser<H: SAXHandler> {
         return String(chars)
     }
 
-    final func readUntil(marker: String, dropMarker: Bool = true, leaveFPatMarker: Bool = false) throws -> String {
+    /*===========================================================================================================================================================================*/
+    /// Read until the given set of <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s is found.
+    ///
+    /// - Parameters:
+    ///   - marker: the sequence of <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s that will trigger the end of the read.
+    ///   - dropMarker: if `true` the marker will not be included in the returned <code>[String](https://developer.apple.com/documentation/swift/String)</code>.
+    ///   - leaveFPatMarker: if `true` the file pointer will be left at the first <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> of the
+    ///                      located marker.
+    /// - Returns: The <code>[String](https://developer.apple.com/documentation/swift/String)</code> of
+    ///            <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s read from the input.
+    /// - Throws: if an I/O error occurs or the EOF is reached before the marker is located.
+    ///
+    @usableFromInline final func readUntil(marker: String, dropMarker: Bool = true, leaveFPatMarker: Bool = false) throws -> String {
         var chars: [Character] = []
-        let _mrkr: [Character] = getCharacters(marker)
+        let _mrkr: [Character] = marker.getCharacters()
 
         while chars.count < _mrkr.count {
             guard let ch = try charStream.read() else { throw getSAXError_UnexpectedEndOfInput() }
@@ -236,30 +407,15 @@ open class SAXParser<H: SAXHandler> {
     }
 
     /*===========================================================================================================================================================================*/
-    /// This method returns an array of the individual characters of a string. It also breaks up grapheme clusters into their individual unicode code points.
-    ///
-    /// - Parameter str: the string.
-    /// - Returns: the characters that make up the string.
-    ///
-    final func getCharacters(_ str: String) -> [Character] {
-        var chars: [Character] = []
-        for ch: Character in str {
-            for sc: UnicodeScalar in ch.unicodeScalars {
-                chars <+ Character(sc)
-            }
-        }
-        return chars
-    }
-
-    /*===========================================================================================================================================================================*/
-    /// 99.99999% of the time the character encoding is going to be UTF-8 - which is the default. But the XML specification allows for other character encodings as well so we have
-    /// to try to detect what kind it really is.
+    /// 99.99999% of the time the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> encoding is going to be UTF-8 - which is the default. But the
+    /// XML specification allows for other <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> encodings as well so we have to try to detect what
+    /// kind it really is.
     ///
     /// - Parameter xmlDecl:
     /// - Returns:
     /// - Throws:
     ///
-    final func setupXMLFileEncoding(xmlDecl: inout XMLDecl) throws -> CharInputStream {
+    @usableFromInline final func setupXMLFileEncoding(xmlDecl: inout XMLDecl) throws -> CharInputStream {
         (xmlDecl.encoding, xmlDecl.endianBom) = try detectFileEncoding()
         #if DEBUG
             print("Charset Encoding: \(xmlDecl.encoding); Endian BOM: \(xmlDecl.endianBom)")
@@ -294,12 +450,13 @@ open class SAXParser<H: SAXHandler> {
     ///
     /// - Parameters:
     ///   - declString: the XML Declaration read from the document.
-    ///   - chStream: the character input stream.
+    ///   - chStream: the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>.
     ///   - xmlDecl: the current XML Declaration values.
-    /// - Returns: either the current character input stream or a new one if it was determined that it needed to change character encoding.
+    /// - Returns: either the current <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> or a new one if it was determined that
+    ///            it needed to change <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> encoding.
     /// - Throws: if an error occurred or if there was a problem with the XML Declaration.
     ///
-    final func parseXMLDeclaration(_ declString: String, chStream: CharInputStream, xmlDecl: inout XMLDecl) throws -> CharInputStream {
+    @usableFromInline final func parseXMLDeclaration(_ declString: String, chStream: CharInputStream, xmlDecl: inout XMLDecl) throws -> CharInputStream {
         //--------------------------------------------------------------------------------------------------
         // Now, normally the fields "version", "encoding", and "standalone" have to be in that exact order.
         // But we're going to be a little lax and not really care as long as only those three fields are
@@ -368,15 +525,15 @@ open class SAXParser<H: SAXHandler> {
     }
 
     /*===========================================================================================================================================================================*/
-    /// Changes the character input stream to match the encoding that we found in the XML Declaration.
+    /// Changes the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> to match the encoding that we found in the XML Declaration.
     ///
     /// - Parameters:
     ///   - xmlDecl: the XML Declaration values.
-    ///   - chStream: the current character input stream.
-    /// - Returns: the new character input stream.
+    ///   - chStream: the current <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>.
+    /// - Returns: the new <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>.
     /// - Throws: if the new encoding is not supported by the installed version of libiconv.
     ///
-    func changeEncoding(xmlDecl decl: XMLDecl, chStream chs: CharInputStream) throws -> CharInputStream {
+    @usableFromInline func changeEncoding(xmlDecl decl: XMLDecl, chStream chs: CharInputStream) throws -> CharInputStream {
         let nEnc: String = decl.encoding.uppercased()
         //-----------------------------------------------------------------------
         // Close the old character input stream and reset the byte input stream.
@@ -433,7 +590,7 @@ open class SAXParser<H: SAXHandler> {
     /// - Returns: `true` if we really have to change the encoding or `false` if we can continue with what we have.
     /// - Throws: `SAXError.InvalidFileEncoding` if the declared byte order is definitely NOT what we encountered in the file.
     ///
-    func isChangeReal(declEncoding: String, xmlDecl: XMLDecl) throws -> Bool {
+    @usableFromInline func isChangeReal(declEncoding: String, xmlDecl: XMLDecl) throws -> Bool {
         func foo(_ str: String) -> Bool { (str == "UTF-16" || str == "UTF-32") }
 
         let dEnc = declEncoding.uppercased()
@@ -446,15 +603,22 @@ open class SAXParser<H: SAXHandler> {
             return !xEnc.hasPrefix(dEnc)
         }
         else if foo(xEnc) && dEnc.hasPrefix(xEnc) {
-            if xmlDecl.endianBom == EndianBOM.getEndianBySuffix(dEnc) { return false }
-            let msg = "The byte order detected in the file does not match the byte order in the XML Declaration: \(xmlDecl.endianBom) != \(EndianBOM.getEndianBySuffix(dEnc))"
+            if xmlDecl.endianBom == Endian.getEndianBySuffix(dEnc) { return false }
+            let msg = "The byte order detected in the file does not match the byte order in the XML Declaration: \(xmlDecl.endianBom) != \(Endian.getEndianBySuffix(dEnc))"
             throw SAXError.InvalidXMLDeclaration(description: msg)
         }
 
         return true
     }
 
-    func getXMLDeclFields(_ match: RegularExpression.Match) throws -> [String: String] {
+    /*===========================================================================================================================================================================*/
+    /// The the fields out of a regex match of the XML Declaration.
+    ///
+    /// - Parameter match: the match object.
+    /// - Returns: The map of fields and values.
+    /// - Throws: if there was a duplicate field.
+    ///
+    @inlinable final func getXMLDeclFields(_ match: RegularExpression.Match) throws -> [String: String] {
         var values: [String: String] = [:]
         for i: Int in stride(from: 1, to: 7, by: 2) {
             if let key = match[i].subString, let val = match[i + 1].subString {
@@ -467,14 +631,16 @@ open class SAXParser<H: SAXHandler> {
     }
 
     /*===========================================================================================================================================================================*/
-    /// Without an XML Declaration at the beginning of the XML document the only valid character encodings are UTF-8, UTF-16, and UTF-32. But before we can read enough of the
-    /// document to tell if we even have an XML Declaration we first have to try to determine the character width by looking at the first 4 bytes of data. This should tell us if
-    /// we're looking at 8-bit (UTF-8), 16-bit (UTF-16), or 32-bit (UTF-32) characters.
+    /// Without an XML Declaration at the beginning of the XML document the only valid <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>
+    /// encodings are UTF-8, UTF-16, and UTF-32. But before we can read enough of the document to tell if we even have an XML Declaration we first have to try to determine the
+    /// <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> width by looking at the first 4 bytes of data. This should tell us if we're looking at
+    /// 8-bit (UTF-8), 16-bit (UTF-16), or 32-bit (UTF-32) characters.
     ///
-    /// - Returns: the name of the detected character encoding and the detected endian if it is a multi-byte character encoding.
+    /// - Returns: the name of the detected <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> encoding and the detected endian if it is a
+    ///            multi-byte <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> encoding.
     /// - Throws: SAXError or I/O <code>[Error](https://developer.apple.com/documentation/swift/error/)</code>.
     ///
-    final func detectFileEncoding() throws -> (String, EndianBOM) {
+    @usableFromInline final func detectFileEncoding() throws -> (String, Endian) {
         inputStream.markSet()
         defer { inputStream.markReturn() }
 
@@ -506,7 +672,14 @@ open class SAXParser<H: SAXHandler> {
         return ("UTF-8", .None)
     }
 
-    final func getXMLDecl(_ charStream: IConvCharInputStream) throws -> String {
+    /*===========================================================================================================================================================================*/
+    /// Read the XML Declaration from the XML document.
+    ///
+    /// - Parameter charStream: the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> stream to read the declaration from.
+    /// - Returns: a <code>[String](https://developer.apple.com/documentation/swift/String)</code> containing the XML Declaration.
+    /// - Throws: if the XML Declaration is malformed of if the EOF was found before the end of the XML Declaration was reached.
+    ///
+    @usableFromInline final func getXMLDecl(_ charStream: IConvCharInputStream) throws -> String {
         var chars: [Character] = []
 
         if let c1 = try charStream.read() {
@@ -522,91 +695,223 @@ open class SAXParser<H: SAXHandler> {
         throw getSAXError_InvalidXMLVersion("Unexpected end of input. The XML Declaration is incomplete: \"<?xml \(String(chars))\"")
     }
 
-    @usableFromInline final func getSAXError_MissingHandler(_ desc: String? = nil) -> SAXError {
+    /*===========================================================================================================================================================================*/
+    /// Get a `SAXError.MissingHandler(_:_:description:)` error.
+    ///
+    /// - Parameter desc: the description of the error. If none is provided then the default will be used.
+    /// - Returns: the error.
+    ///
+    @inlinable final func getSAXError_MissingHandler(_ desc: String? = nil) -> SAXError {
         let l = charStream.lineNumber
         let c = charStream.columnNumber
         if let d = desc { return SAXError.MissingHandler(l, c, description: d) }
         else { return SAXError.MissingHandler(l, c) }
     }
 
-    @usableFromInline final func getSAXError_HandlerAlreadySet(_ desc: String? = nil) -> SAXError {
+    /*===========================================================================================================================================================================*/
+    /// Get a `SAXError.HandlerAlreadySet(_:_:description:)` error.
+    ///
+    /// - Parameter desc: the description of the error. If none is provided then the default will be used.
+    /// - Returns: the error.
+    ///
+    @inlinable final func getSAXError_HandlerAlreadySet(_ desc: String? = nil) -> SAXError {
         let l = charStream.lineNumber
         let c = charStream.columnNumber
         if let d = desc { return SAXError.HandlerAlreadySet(l, c, description: d) }
         else { return SAXError.HandlerAlreadySet(l, c) }
     }
 
-    @usableFromInline final func getSAXError_InvalidXMLVersion(_ desc: String? = nil) -> SAXError {
+    /*===========================================================================================================================================================================*/
+    /// Get a `SAXError.InvalidXMLVersion(_:_:description:)` error.
+    ///
+    /// - Parameter desc: the description of the error. If none is provided then the default will be used.
+    /// - Returns: the error.
+    ///
+    @inlinable final func getSAXError_InvalidXMLVersion(_ desc: String? = nil) -> SAXError {
         let l = charStream.lineNumber
         let c = charStream.columnNumber
         if let d = desc { return SAXError.InvalidXMLVersion(l, c, description: d) }
         else { return SAXError.InvalidXMLVersion(l, c) }
     }
 
-    @usableFromInline final func getSAXError_InvalidFileEncoding(_ desc: String? = nil) -> SAXError {
+    /*===========================================================================================================================================================================*/
+    /// Get a `SAXError.InvalidFileEncoding(_:_:description:)` error.
+    ///
+    /// - Parameter desc: the description of the error. If none is provided then the default will be used.
+    /// - Returns: the error.
+    ///
+    @inlinable final func getSAXError_InvalidFileEncoding(_ desc: String? = nil) -> SAXError {
         let l = charStream.lineNumber
         let c = charStream.columnNumber
         if let d = desc { return SAXError.InvalidFileEncoding(l, c, description: d) }
         else { return SAXError.InvalidFileEncoding(l, c) }
     }
 
-    @usableFromInline final func getSAXError_InvalidXMLDeclaration(_ desc: String? = nil) -> SAXError {
+    /*===========================================================================================================================================================================*/
+    /// Get a `SAXError.InvalidXMLDeclaration(_:_:description:)` error.
+    ///
+    /// - Parameter desc: the description of the error. If none is provided then the default will be used.
+    /// - Returns: the error.
+    ///
+    @inlinable final func getSAXError_InvalidXMLDeclaration(_ desc: String? = nil) -> SAXError {
         let l = charStream.lineNumber
         let c = charStream.columnNumber
         if let d = desc { return SAXError.InvalidXMLDeclaration(l, c, description: d) }
         else { return SAXError.InvalidXMLDeclaration(l, c) }
     }
 
-    @usableFromInline final func getSAXError_InvalidCharacter(_ desc: String) -> SAXError {
+    /*===========================================================================================================================================================================*/
+    /// Get a `SAXError.InvalidCharacter(_:_:description:)` error.
+    ///
+    /// - Parameter desc: the description of the error.
+    /// - Returns: the error.
+    ///
+    @inlinable final func getSAXError_InvalidCharacter(_ desc: String) -> SAXError {
         let l = charStream.lineNumber
         let c = charStream.columnNumber
         return SAXError.InvalidCharacter(l, c, description: desc)
     }
 
-    @usableFromInline final func getSAXError_UnexpectedEndOfInput(_ desc: String? = nil) -> SAXError {
+    /*===========================================================================================================================================================================*/
+    /// Get a `SAXError.UnexpectedElement(_:_:description:)` error.
+    ///
+    /// - Parameter desc: the description of the error.
+    /// - Returns: the error.
+    ///
+    @inlinable final func getSAXError_UnexpectedElement(_ desc: String) -> SAXError {
+        let l = charStream.lineNumber
+        let c = charStream.columnNumber
+        return SAXError.UnexpectedElement(l, c, description: desc)
+    }
+
+    /*===========================================================================================================================================================================*/
+    /// Get a `SAXError.UnexpectedEndOfInput(_:_:description:)` error.
+    ///
+    /// - Parameter desc: the description of the error. If none is provided then the default will be used.
+    /// - Returns: the error.
+    ///
+    @inlinable final func getSAXError_UnexpectedEndOfInput(_ desc: String? = nil) -> SAXError {
         let l = charStream.lineNumber
         let c = charStream.columnNumber
         if let d = desc { return SAXError.UnexpectedEndOfInput(l, c, description: d) }
         else { return SAXError.UnexpectedEndOfInput(l, c) }
     }
 
-    public enum EndianBOM {
+    /*===========================================================================================================================================================================*/
+    /// Byte-order.
+    ///
+    public enum Endian {
+        /*=======================================================================================================================================================================*/
+        /// No byte-order or none detected.
+        ///
         case None
+        /*=======================================================================================================================================================================*/
+        /// Little Endian byte-order.
+        ///
         case LittleEndian
+        /*=======================================================================================================================================================================*/
+        /// Big Endian byte-order.
+        ///
         case BigEndian
     }
 
+    /*===========================================================================================================================================================================*/
+    /// DTD Entity Types
+    ///
     public enum DTDEntityType {
+        /*=======================================================================================================================================================================*/
+        /// General entity.
+        ///
         case General
+        /*=======================================================================================================================================================================*/
+        /// Parameter entity.
+        ///
         case Parameter
     }
 
+    /*===========================================================================================================================================================================*/
+    /// The type of external resource.
+    ///
     public enum DTDExternalType {
+        /*=======================================================================================================================================================================*/
+        /// Private resource.
+        ///
         case System
+        /*=======================================================================================================================================================================*/
+        /// Public resource.
+        ///
         case Public
     }
 
+    /*===========================================================================================================================================================================*/
+    /// The DTD attribute value types.
+    ///
     public enum DTDAttrType {
+        /*=======================================================================================================================================================================*/
+        /// Character data.
+        ///
         case CDATA
+        /*=======================================================================================================================================================================*/
+        /// ID attribute.
+        ///
         case ID
+        /*=======================================================================================================================================================================*/
+        /// ID reference.
+        ///
         case IDREF
+        /*=======================================================================================================================================================================*/
+        /// ID references.
+        ///
         case IDREFS
+        /*=======================================================================================================================================================================*/
+        /// Entity
+        ///
         case ENTITY
+        /*=======================================================================================================================================================================*/
+        /// Entities
+        ///
         case ENTITIES
+        /*=======================================================================================================================================================================*/
+        /// NMToken
+        ///
         case NMTOKEN
+        /*=======================================================================================================================================================================*/
+        /// NMTokens
+        ///
         case NMTOKENS
+        /*=======================================================================================================================================================================*/
+        /// Notation
+        ///
         case NOTATION
+        /*=======================================================================================================================================================================*/
+        /// Enumerated
+        ///
         case ENUMERATED
     }
 
-    public enum DTDAttrDefaultType {
+    /*===========================================================================================================================================================================*/
+    /// DTD Attribute Value Requirement Types
+    ///
+    public enum DTDAttrRequirementType {
+        /*=======================================================================================================================================================================*/
+        /// The attribute is required.
+        ///
         case Required
+        /*=======================================================================================================================================================================*/
+        /// The attribute is optional.
+        ///
         case Optional
+        /*=======================================================================================================================================================================*/
+        /// The attribute has a fixed value.
+        ///
         case Fixed
     }
 }
 
 extension SAXParser.DTDExternalType: CustomStringConvertible {
+    /*===========================================================================================================================================================================*/
+    /// A description of the external type.
+    ///
     public var description: String {
         switch self {
             case .System: return "System"
@@ -616,6 +921,9 @@ extension SAXParser.DTDExternalType: CustomStringConvertible {
 }
 
 extension SAXParser.DTDEntityType: CustomStringConvertible {
+    /*===========================================================================================================================================================================*/
+    /// A description of the entity type.
+    ///
     public var description: String {
         switch self {
             case .General:   return "General"
@@ -625,6 +933,9 @@ extension SAXParser.DTDEntityType: CustomStringConvertible {
 }
 
 extension SAXParser.DTDAttrType: CustomStringConvertible {
+    /*===========================================================================================================================================================================*/
+    /// A description of the attribute value type.
+    ///
     public var description: String {
         switch self {
             case .CDATA:      return "CDATA"
@@ -641,7 +952,10 @@ extension SAXParser.DTDAttrType: CustomStringConvertible {
     }
 }
 
-extension SAXParser.DTDAttrDefaultType: CustomStringConvertible {
+extension SAXParser.DTDAttrRequirementType: CustomStringConvertible {
+    /*===========================================================================================================================================================================*/
+    /// A description of the attribute requirement type.
+    ///
     public var description: String {
         switch self {
             case .Required: return "Required"
@@ -651,7 +965,10 @@ extension SAXParser.DTDAttrDefaultType: CustomStringConvertible {
     }
 }
 
-extension SAXParser.EndianBOM: CustomStringConvertible {
+extension SAXParser.Endian: CustomStringConvertible {
+    /*===========================================================================================================================================================================*/
+    /// A description of the byte-order.
+    ///
     public var description: String {
         switch self {
             case .None:         return "N/A"
@@ -660,6 +977,10 @@ extension SAXParser.EndianBOM: CustomStringConvertible {
         }
     }
 
+    /*===========================================================================================================================================================================*/
+    /// Get the byte-order for it's description. Big endian values are `BE`, `BIG`, `BIGENDIAN`, `BIG ENDIAN`. Little endian values are `LE`, `LITTLE`, `LITTLEENDIAN`, `LITTLE
+    /// ENDIAN`. Anything else returns `SAXParser.Endian.None`.
+    ///
     @inlinable static func getEndianBOM(_ str: String?) -> Self {
         guard let str = str else { return .None }
         switch str.uppercased() {
@@ -670,11 +991,10 @@ extension SAXParser.EndianBOM: CustomStringConvertible {
     }
 
     /*===========================================================================================================================================================================*/
-    /// Get the endian by the encoding name's suffix.
+    /// Get the endian by the encoding name's suffix. `LE` returns little endian, `BE` returns big endian, and anything else returns `SAXParser.Endian.None`.
     ///
     /// - Parameter str: the suffix.
     /// - Returns: the endian.
-    ///
     ///
     @inlinable static func getEndianBySuffix(_ str: String?) -> Self {
         guard let str = str else { return .None }

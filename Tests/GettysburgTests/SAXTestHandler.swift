@@ -61,7 +61,7 @@ open class SAXTestHandler: SAXDefaultHandler {
         super.dtdElementDecl(parser: parser, name: name, allowedContent: allowedContent)
     }
 
-    open override func dtdAttrDecl<H>(parser: SAXParser<H>, elementName: String, attrName: String, type: SAXParser<H>.DTDAttrType, defaultType: SAXParser<H>.DTDAttrDefaultType, defaultValue: String?, values: [String]) where H: SAXHandler {
+    open override func dtdAttrDecl<H>(parser: SAXParser<H>, elementName: String, attrName: String, type: SAXParser<H>.DTDAttrType, defaultType: SAXParser<H>.DTDAttrRequirementType, defaultValue: String?, values: [String]) where H: SAXHandler {
         print("DTD Attribute Decl: elementName = \"\(elementName)\"; attrName = \"\(attrName)\"; type = \"\(type)\";", terminator: "")
         print(" defaultType = \"\(defaultType)\"; defaultValue = \"\(defaultValue ?? NULL)\"; values = [", terminator: "")
         var f: Bool = true
@@ -88,8 +88,8 @@ open class SAXTestHandler: SAXDefaultHandler {
         super.cdataSection(parser: parser, content: content)
     }
 
-    open override func text<H>(parser: SAXParser<H>, content: String) where H: SAXHandler {
-        print("Text: content = \"\(content)\";")
+    open override func text<H>(parser: SAXParser<H>, content: String, isWhitespace: Bool) where H: SAXHandler {
+        print("Text: isWhitespace = \(isWhitespace); content = \"\(content)\";")
         super.text(parser: parser, content: content)
     }
 
