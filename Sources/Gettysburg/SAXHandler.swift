@@ -21,6 +21,11 @@
  *//************************************************************************/
 
 import Foundation
+import CoreFoundation
+import Rubicon
+#if os(Windows)
+    import WinSDK
+#endif
 
 public protocol SAXHandler {
 

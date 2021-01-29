@@ -21,6 +21,11 @@
  *//************************************************************************/
 
 import Foundation
+import CoreFoundation
+import Rubicon
+#if os(Windows)
+    import WinSDK
+#endif
 
 open class DTDElementContent: CustomStringConvertible {
 

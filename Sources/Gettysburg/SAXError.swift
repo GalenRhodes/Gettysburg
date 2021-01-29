@@ -21,6 +21,11 @@
  *//************************************************************************/
 
 import Foundation
+import CoreFoundation
+import Rubicon
+#if os(Windows)
+    import WinSDK
+#endif
 
 public enum SAXError: Error {
     case MissingHandler(_ line: Int = 0, _ column: Int = 0, description: String = "The SAX parsing handler was not set before the parsing began.")

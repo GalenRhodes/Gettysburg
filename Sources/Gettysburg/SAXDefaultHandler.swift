@@ -21,7 +21,11 @@
  *//************************************************************************/
 
 import Foundation
+import CoreFoundation
 import Rubicon
+#if os(Windows)
+    import WinSDK
+#endif
 
 internal let NULL = "⏚"
 

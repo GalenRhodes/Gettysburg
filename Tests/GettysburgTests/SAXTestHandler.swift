@@ -90,7 +90,7 @@ open class SAXTestHandler: SAXDefaultHandler {
 
     open override func text<H>(parser: SAXParser<H>, content: String, isWhitespace: Bool) where H: SAXHandler {
         print("Text: isWhitespace = \(isWhitespace); content = \"\(content)\";")
-        super.text(parser: parser, content: content)
+        super.text(parser: parser, content: content, isWhitespace: isWhitespace)
     }
 
     open override func comment<H>(parser: SAXParser<H>, comment: String) where H: SAXHandler {

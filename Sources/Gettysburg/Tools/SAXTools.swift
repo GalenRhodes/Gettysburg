@@ -22,9 +22,16 @@
 
 import Foundation
 import CoreFoundation
+import Rubicon
 #if os(Windows)
     import WinSDK
 #endif
+
+let UTF32LEBOM: [UInt8]       = [ 0xFF, 0xFE, 0x00, 0x00 ]
+let UTF32BEBOM: [UInt8]       = [ 0x00, 0x00, 0xFE, 0xFF ]
+let UTF16LEBOM: [UInt8]       = [ 0xFF, 0xFE ]
+let UTF16BEBOM: [UInt8]       = [ 0xFE, 0xFF ]
+let UNITSIZE:   [String: Int] = [ "UTF-8": 1, "UTF-16LE": 2, "UTF-16BE": 2, "UTF-32LE": 4, "UTF-32BE": 4 ]
 
 /*===============================================================================================================================================================================*/
 /// Compares the suffix array to the end of the source array to see if they are the same.
@@ -58,4 +65,13 @@ import CoreFoundation
     guard src.count >= cc else { return false }
     for i in (0 ..< cc) { guard pfx[i] == src[i] else { return false } }
     return true
+}
+
+extension InputStream {
+    @inlinable func read() throws -> UInt8? {
+        var byte: UInt8 = 0
+        let rc = read(&byte, maxLength: 1)
+        guard rc >= 0 else { throw streamError ?? StreamError.UnknownError() }
+        return ((rc == 0) ? nil : byte)
+    }
 }

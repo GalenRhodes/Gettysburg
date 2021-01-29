@@ -23,12 +23,9 @@
 import Foundation
 import CoreFoundation
 import Rubicon
-
-fileprivate let UTF32LEBOM: [UInt8]       = [ 0xFF, 0xFE, 0x00, 0x00 ]
-fileprivate let UTF32BEBOM: [UInt8]       = [ 0x00, 0x00, 0xFE, 0xFF ]
-fileprivate let UTF16LEBOM: [UInt8]       = [ 0xFF, 0xFE ]
-fileprivate let UTF16BEBOM: [UInt8]       = [ 0xFE, 0xFF ]
-fileprivate let UNITSIZE:   [String: Int] = [ "UTF-8": 1, "UTF-16LE": 2, "UTF-16BE": 2, "UTF-32LE": 4, "UTF-32BE": 4 ]
+#if os(Windows)
+    import WinSDK
+#endif
 
 open class SAXParser<H: SAXHandler> {
 
@@ -54,7 +51,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Create an instance of this parser from the given input stream.
-    ///
+    /// 
     /// - Parameters:
     ///   - inputStream: the <code>[InputStream](https://developer.apple.com/documentation/foundation/InputStream)</code>
     ///   - url: the URL where this document is located. If none is provided then a generic one will be generated.
@@ -68,7 +65,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Set the instance of the class that implements `SAXHandler` that will handle the parsing messages sent from this parser.
-    ///
+    /// 
     /// - Parameter handler: the handler.
     /// - Returns: this parser.
     /// - Throws: if the handler had already been set previously.
@@ -81,18 +78,18 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Set the willValidate flag.
-    ///
+    /// 
     /// - Parameter flag: if `true` this parser will perform validation based on the DTD provided in the document. If `false` no validation will be performed.
     /// - Returns: this parser.
     ///
     @discardableResult open func set(willValidate flag: Bool) -> SAXParser<H> {
-        self.willValidate = flag
+        willValidate = flag
         return self
     }
 
     /*===========================================================================================================================================================================*/
     /// Set the list of allowed URI prefixes for resolving external entities and DocTypes.
-    ///
+    /// 
     /// - Parameters:
     ///   - uris: the list of URI prefixes.
     ///   - append: if `true` the list will be added to any already set. If `false` (the default) the list provided here will completely replace what is already there.
@@ -106,7 +103,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Parse the XML document.
-    ///
+    /// 
     /// - Returns: The handler used to parse the document.
     /// - Throws: if an I/O error occurs or if the XML document is malformed.
     ///
@@ -148,7 +145,7 @@ open class SAXParser<H: SAXHandler> {
     /*===========================================================================================================================================================================*/
     /// Parse out the main body of the XML Document that includes the root element and DOCTYPES as well as any processing instructions, whitespace, and comments that might exist
     /// at the root level.
-    ///
+    /// 
     /// - Throws: `SAXError` or any I/O errors.
     ///
     func parseDocumentRoot(_ handler: H) throws {
@@ -173,7 +170,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Parse a delimited node such as an element, comment, processing instruction, or DTD.
-    ///
+    /// 
     /// - Parameters:
     ///   - handler: the handler.
     ///   - noDTD: if set to `true` then DTD nodes are not allowed. DTD nodes are only allowed before the root element is encountered.
@@ -228,18 +225,18 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Read and parse the processing instruction.
-    ///
+    /// 
     /// - Parameter handler: the handler.
     /// - Throws: if an I/O error occurs or if the EOF was found before the end of the processing instruction node.
     ///
     @inlinable final func parseProcessingInstruction(handler: H) throws {
-        let info = getPITargetAndData(processingInstruction: try readUntil(marker: "?>"))
-        handler.processingInstruction(parser: self, target: info.0, data: info.1)
+        let (target, data) = getPITargetAndData(processingInstruction: try readUntil(marker: "?>"))
+        handler.processingInstruction(parser: self, target: target, data: data)
     }
 
     /*===========================================================================================================================================================================*/
     /// Take the string that contains the body of the processing instruction and break out the target and the data.
-    ///
+    /// 
     /// - Parameter pi: the body of the processing instruction.
     /// - Returns: a tuple with the target and the data.
     ///
@@ -262,7 +259,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Parse out a text node combrised of nothing but whitespace.
-    ///
+    /// 
     /// - Parameter handler: the handler.
     /// - Throws: if an I/O error occurs.
     ///
@@ -274,7 +271,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Parse an encountered comment.
-    ///
+    /// 
     /// - Parameter handler: the handler.
     /// - Throws: if an I/O error occurs or the comment is malformed.
     ///
@@ -284,10 +281,15 @@ open class SAXParser<H: SAXHandler> {
         charStream.markSet()
         defer { charStream.markDelete() }
 
+        while comment.count < 2 {
+            guard let ch = try charStream.read() else { throw getSAXError_UnexpectedEndOfInput() }
+            comment <+ ch
+        }
+
         while let ch = try charStream.read() {
             let cc = comment.count
 
-            if cc > 1 && comment[cc - 1] == "-" && comment[cc - 2] == "-" {
+            if comment[cc - 1] == "-" && comment[cc - 2] == "-" {
                 guard ch == ">" else {
                     charStream.markBackup(count: 2)
                     throw getSAXError_InvalidCharacter("Comments cannot contain double dashes.")
@@ -306,7 +308,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Parse out a DOCTYPE Declaration.
-    ///
+    /// 
     /// - Parameter handler: The handler.
     /// - Throws: if an I/O error occurs or if the DOCTYPE declaration is malformed or incomplete.
     ///
@@ -316,7 +318,7 @@ open class SAXParser<H: SAXHandler> {
     /*===========================================================================================================================================================================*/
     /// Read and return all the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> up to but not including the first encountered NON-whitespace
     /// character.
-    ///
+    /// 
     /// - Returns: the <code>[String](https://developer.apple.com/documentation/swift/String)</code> of
     ///            <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s read.
     /// - Throws: if an I/O error occurs.
@@ -339,7 +341,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Read `count` number of character from the input stream and return them as a string.
-    ///
+    /// 
     /// - Parameters:
     ///   - count: the number of characters to read.
     ///   - errorOnEOF: if `true` and there are fewer than `count` characters left in the input stream then throw an exception.
@@ -355,7 +357,7 @@ open class SAXParser<H: SAXHandler> {
     /*===========================================================================================================================================================================*/
     /// Read and return all the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s up to but not including the first encountered whitespace
     /// character.
-    ///
+    /// 
     /// - Returns: The <code>[String](https://developer.apple.com/documentation/swift/String)</code> of
     ///            <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s read.
     /// - Throws: if an I/O error occurs.
@@ -379,7 +381,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Read until the given set of <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s is found.
-    ///
+    /// 
     /// - Parameters:
     ///   - marker: the sequence of <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s that will trigger the end of the read.
     ///   - dropMarker: if `true` the marker will not be included in the returned <code>[String](https://developer.apple.com/documentation/swift/String)</code>.
@@ -410,7 +412,7 @@ open class SAXParser<H: SAXHandler> {
     /// 99.99999% of the time the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> encoding is going to be UTF-8 - which is the default. But the
     /// XML specification allows for other <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> encodings as well so we have to try to detect what
     /// kind it really is.
-    ///
+    /// 
     /// - Parameter xmlDecl:
     /// - Returns:
     /// - Throws:
@@ -447,7 +449,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Parse the XML Declaration read from the document.
-    ///
+    /// 
     /// - Parameters:
     ///   - declString: the XML Declaration read from the document.
     ///   - chStream: the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>.
@@ -471,53 +473,11 @@ open class SAXParser<H: SAXHandler> {
         #if DEBUG
             print("XML Decl: \"\(declString)")
         #endif
-
-        if let match: RegularExpression.Match = regex.firstMatch(in: declString) {
-            let values = try getXMLDeclFields(match)
-            //---------------------------------------------------------------
-            // Look for the version. At the very least that should be there.
-            //---------------------------------------------------------------
-            guard let declVersion = values["version"] else { throw getSAXError_InvalidXMLDeclaration("The version is missing from the XML Declaration: \"\(declString)\"") }
-            guard declVersion == "1.0" || declVersion == "1.1" else { throw getSAXError_InvalidXMLVersion("The version stated in the XML Declaration is unsupported: \"\(declVersion)\"") }
-
-            xmlDecl.version = declVersion
-            xmlDecl.versionSpecified = true
-
-            //------------------------------------
-            // Now look for the "standalone" key.
-            //------------------------------------
-            if let declStandalone = values["standalone"] {
-                //--------------------------------------------------------
-                // If it is there then it has to be either "yes" or "no".
-                //--------------------------------------------------------
-                guard value(declStandalone, isOneOf: "yes", "no") else { throw getSAXError_InvalidXMLDeclaration("Invalid argument for standalone: \"\(declStandalone)\"") }
-
-                xmlDecl.standalone = (declStandalone == "yes")
-                xmlDecl.standaloneSpecified = true
-            }
-
-            if let declEncoding = values["encoding"] {
-                if declEncoding.uppercased() != xmlDecl.encoding {
-                    #if DEBUG
-                        print("New Encoding Specified: \"\(declEncoding)\"")
-                    #endif
-                    let willChange = try isChangeReal(declEncoding: declEncoding, xmlDecl: xmlDecl)
-                    xmlDecl.encoding = declEncoding
-                    xmlDecl.encodingSpecified = true
-                    if willChange { return try changeEncoding(xmlDecl: xmlDecl, chStream: chStream) }
-                }
-
-                xmlDecl.encoding = declEncoding
-                xmlDecl.encodingSpecified = true
-            }
-
-            //--------------------------------------------------------------------------------
-            // There is no change to the encoding so we stick with what we have and continue.
-            //--------------------------------------------------------------------------------
-            inputStream.markDelete()
-            return chStream
-        }
-
+        //------------------------------------------------------------------
+        // We have what looks like a valid XML Declaration. So let's
+        // parse it out, validate the data, and populate the xmlDecl tuple.
+        //------------------------------------------------------------------
+        if let match: RegularExpression.Match = regex.firstMatch(in: declString) { return try parseXMLDeclValues(&xmlDecl, match, declString, chStream) }
         //---------------------------------------------------------------
         // The XML Declaration we got is malformed and cannot be parsed.
         //---------------------------------------------------------------
@@ -525,20 +485,123 @@ open class SAXParser<H: SAXHandler> {
     }
 
     /*===========================================================================================================================================================================*/
-    /// Changes the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> to match the encoding that we found in the XML Declaration.
+    /// Parse out the XML Declaration found in the XML Document and populate the fields of our assumed xmlDecl tuple.
+    /// 
+    /// - Parameters:
+    ///   - xmlDecl: the current (assumed) values.
+    ///   - match: the RegularExpression.Match object from our RegularExpression test.
+    ///   - declString: the full text of the XML Declaration found in the document.
+    ///   - chStream: the current (detected) <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>.
+    /// - Returns: the current <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> or a new one if the character encoding had to
+    ///            change.
+    /// - Throws: if the XML Declaration found in the document was malformed or the newly declared character encoding found in it is unsupported.
     ///
+    @inlinable final func parseXMLDeclValues(_ xmlDecl: inout XMLDecl, _ match: RegularExpression.Match, _ declString: String, _ chStream: CharInputStream) throws -> CharInputStream {
+        //---------------------
+        // Isolate the fields.
+        //---------------------
+        let values = try getXMLDeclFields(match)
+        //---------------------------------------------------------------
+        // Look for the version. At the very least that should be there.
+        //---------------------------------------------------------------
+        try parseXMLDeclVersion(&xmlDecl, declString, values)
+        //------------------------------------
+        // Now look for the "standalone" key.
+        //------------------------------------
+        try parseXMLDeclStandalone(&xmlDecl, values)
+        //---------------------------------------------------------------------------------------
+        // Now look for the "encoding" key and change the character stream's encoding if needed.
+        //---------------------------------------------------------------------------------------
+        return try parseXMLDeclEncoding(&xmlDecl, chStream, values)
+    }
+
+    /*===========================================================================================================================================================================*/
+    /// Get the declared XML `version` from the XML Declaration found in the document. If the XML Declaration exists in the document then it has to at least have the `version`.
+    /// 
+    /// - Parameters:
+    ///   - xmlDecl: the current XML Declaration values.
+    ///   - declString: the XML Declaration found in the document.
+    ///   - values: the values from that XML Declaration.
+    /// - Throws: if the `version` is incorrect.
+    ///
+    @inlinable final func parseXMLDeclVersion(_ xmlDecl: inout XMLDecl, _ declString: String, _ values: [String: String]) throws {
+        guard let declVersion = values["version"] else { throw getSAXError_InvalidXMLDeclaration("The version is missing from the XML Declaration: \"\(declString)\"") }
+        guard (declVersion == "1.0") || (declVersion == "1.1") else { throw getSAXError_InvalidXMLVersion("The version stated in the XML Declaration is unsupported: \"\(declVersion)\"") }
+        xmlDecl.version = declVersion
+        xmlDecl.versionSpecified = true
+    }
+
+    /*===========================================================================================================================================================================*/
+    /// Get the declared XML `standalone` field, if it exists, from the XML Declaration found in the document.
+    /// 
+    /// - Parameters:
+    ///   - xmlDecl: the current (assumed) XML Declaration values.
+    ///   - values: the values found in the XML Declaration in the document.
+    /// - Throws: if the value for `standalone` is not `yes` or `no`.
+    ///
+    @inlinable final func parseXMLDeclStandalone(_ xmlDecl: inout XMLDecl, _ values: [String: String]) throws {
+        if let declStandalone = values["standalone"] {
+            //--------------------------------------------------------
+            // If it is there then it has to be either "yes" or "no".
+            //--------------------------------------------------------
+            guard value(declStandalone, isOneOf: "yes", "no") else { throw getSAXError_InvalidXMLDeclaration("Invalid argument for standalone: \"\(declStandalone)\"") }
+
+            xmlDecl.standalone = (declStandalone == "yes")
+            xmlDecl.standaloneSpecified = true
+        }
+    }
+
+    /*===========================================================================================================================================================================*/
+    /// Get the declared XML encoding from the XML Declaration found in the document. If an encoding is found that is different than the detected encoding then create a new
+    /// <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> and return that one.
+    /// 
+    /// - Parameters:
+    ///   - xmlDecl: the current (assumed) XML Declaration values.
+    ///   - chStream: the current (detected) <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>.
+    ///   - values: the values from the XML Declaration found in the document.
+    /// - Returns: the current <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> unless a different encoding was declared in the
+    ///            XML Declaration in which case a new <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> with that encoding is
+    ///            returned.
+    /// - Throws: if the newly declared character encoding is not supported.
+    ///
+    @inlinable final func parseXMLDeclEncoding(_ xmlDecl: inout XMLDecl, _ chStream: CharInputStream, _ values: [String: String]) throws -> CharInputStream {
+        if let declEncoding = values["encoding"] {
+            if declEncoding.uppercased() != xmlDecl.encoding {
+                #if DEBUG
+                    print("New Encoding Specified: \"\(declEncoding)\"")
+                #endif
+                let willChange = try isChangeReal(declEncoding: declEncoding, xmlDecl: xmlDecl)
+                xmlDecl.encoding = declEncoding
+                xmlDecl.encodingSpecified = true
+                if willChange { return try changeEncoding(xmlDecl: xmlDecl, chStream: chStream) }
+            }
+
+            xmlDecl.encoding = declEncoding
+            xmlDecl.encodingSpecified = true
+        }
+
+        //--------------------------------------------------------------------------------
+        // There is no change to the encoding so we stick with what we have and continue.
+        //--------------------------------------------------------------------------------
+        inputStream.markDelete()
+        return chStream
+    }
+
+    /*===========================================================================================================================================================================*/
+    /// Changes the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> to match the encoding that we found in the XML Declaration.
+    /// 
     /// - Parameters:
     ///   - xmlDecl: the XML Declaration values.
     ///   - chStream: the current <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>.
     /// - Returns: the new <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>.
     /// - Throws: if the new encoding is not supported by the installed version of libiconv.
     ///
-    @usableFromInline func changeEncoding(xmlDecl decl: XMLDecl, chStream chs: CharInputStream) throws -> CharInputStream {
+    @usableFromInline func changeEncoding(xmlDecl decl: XMLDecl, chStream oChStream: CharInputStream) throws -> CharInputStream {
         let nEnc: String = decl.encoding.uppercased()
         //-----------------------------------------------------------------------
         // Close the old character input stream and reset the byte input stream.
         //-----------------------------------------------------------------------
-        chs.close()
+        oChStream.close()
         inputStream.markReturn()
         //--------------------------------------------------------------
         // Now check to make sure we have support for the new encoding.
@@ -558,39 +621,20 @@ open class SAXParser<H: SAXHandler> {
         //----------------------------------------------------------------------------------
         // Now read past the XML Declaration since we don't need to parse it a second time.
         //----------------------------------------------------------------------------------
-        var c: Character = "<" // Doesn't matter the value as long as it's not a question mark.
-        while let ch = try nChStream.read() {
-            #if DEBUG
-                print("\(ch)", terminator: "")
-            #endif
-            if ch == ">" && c == "?" {
-                #if DEBUG
-                    print("")
-                #endif
-                return nChStream
-            }
-            c = ch
-        }
-        #if DEBUG
-            print("")
-        #endif
-        //------------------------------------------------------------------
-        // We ran out of characters before we finished reading past the XML
-        // Declaration so something went very wrong.
-        //------------------------------------------------------------------
-        throw SAXError.UnexpectedEndOfInput(nChStream.lineNumber, nChStream.columnNumber)
+        _ = try readUntil(marker: "?>")
+        return nChStream
     }
 
     /*===========================================================================================================================================================================*/
     /// The declared encoding is different than what we guessed at so now let's see if we really have to change or if it's simply a variation of what we guessed.
-    ///
+    /// 
     /// - Parameters:
     ///   - xmlDecl: the current XML Declaration values including what we guessed was the encoding.
     ///   - declEncoding: the encoding specified in the XML Declaration.
     /// - Returns: `true` if we really have to change the encoding or `false` if we can continue with what we have.
     /// - Throws: `SAXError.InvalidFileEncoding` if the declared byte order is definitely NOT what we encountered in the file.
     ///
-    @usableFromInline func isChangeReal(declEncoding: String, xmlDecl: XMLDecl) throws -> Bool {
+    @inlinable func isChangeReal(declEncoding: String, xmlDecl: XMLDecl) throws -> Bool {
         func foo(_ str: String) -> Bool { (str == "UTF-16" || str == "UTF-32") }
 
         let dEnc = declEncoding.uppercased()
@@ -613,7 +657,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// The the fields out of a regex match of the XML Declaration.
-    ///
+    /// 
     /// - Parameter match: the match object.
     /// - Returns: The map of fields and values.
     /// - Throws: if there was a duplicate field.
@@ -635,7 +679,7 @@ open class SAXParser<H: SAXHandler> {
     /// encodings are UTF-8, UTF-16, and UTF-32. But before we can read enough of the document to tell if we even have an XML Declaration we first have to try to determine the
     /// <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> width by looking at the first 4 bytes of data. This should tell us if we're looking at
     /// 8-bit (UTF-8), 16-bit (UTF-16), or 32-bit (UTF-32) characters.
-    ///
+    /// 
     /// - Returns: the name of the detected <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> encoding and the detected endian if it is a
     ///            multi-byte <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> encoding.
     /// - Throws: SAXError or I/O <code>[Error](https://developer.apple.com/documentation/swift/error/)</code>.
@@ -653,8 +697,13 @@ open class SAXParser<H: SAXHandler> {
         // if it was encoded in UTF-32 we would at least get the "<" character even if the
         // BOM was missing.
         //-----------------------------------------------------------------------------------
-        guard rc == 4 else { throw SAXError.UnexpectedEndOfInput(0, 0) }
+        guard rc == 4 else { throw SAXError.UnexpectedEndOfInput(1, 1) }
 
+        //-----------------------------------------
+        // Don't change the order of these tests.
+        //-----------------------------------------
+        // Start by looking for a byte order mark.
+        //-----------------------------------------
         if cmpPrefix(prefix: UTF32LEBOM, source: buf) { return ("UTF-32", .LittleEndian) }
         else if cmpPrefix(prefix: UTF32BEBOM, source: buf) { return ("UTF-32", .BigEndian) }
         else if cmpPrefix(prefix: UTF16LEBOM, source: buf) { return ("UTF-16", .LittleEndian) }
@@ -674,127 +723,104 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Read the XML Declaration from the XML document.
-    ///
+    /// 
     /// - Parameter charStream: the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> stream to read the declaration from.
     /// - Returns: a <code>[String](https://developer.apple.com/documentation/swift/String)</code> containing the XML Declaration.
     /// - Throws: if the XML Declaration is malformed of if the EOF was found before the end of the XML Declaration was reached.
     ///
     @usableFromInline final func getXMLDecl(_ charStream: IConvCharInputStream) throws -> String {
         var chars: [Character] = []
-
         if let c1 = try charStream.read() {
             guard c1 != ">" else { throw getSAXError_InvalidXMLVersion("The XML Declaration string is malformed: \"<?xml>\"") }
-
             chars <+ c1
             while let c2 = try charStream.read() {
                 if c2 == ">" && chars.last! == "?" { return "<?xml\(String(chars))>" }
                 chars <+ c2
             }
         }
-
         throw getSAXError_InvalidXMLVersion("Unexpected end of input. The XML Declaration is incomplete: \"<?xml \(String(chars))\"")
     }
 
     /*===========================================================================================================================================================================*/
     /// Get a `SAXError.MissingHandler(_:_:description:)` error.
-    ///
+    /// 
     /// - Parameter desc: the description of the error. If none is provided then the default will be used.
     /// - Returns: the error.
     ///
     @inlinable final func getSAXError_MissingHandler(_ desc: String? = nil) -> SAXError {
-        let l = charStream.lineNumber
-        let c = charStream.columnNumber
-        if let d = desc { return SAXError.MissingHandler(l, c, description: d) }
-        else { return SAXError.MissingHandler(l, c) }
+        if let d = desc { return SAXError.MissingHandler(charStream.lineNumber, charStream.columnNumber, description: d) }
+        else { return SAXError.MissingHandler(charStream.lineNumber, charStream.columnNumber) }
     }
 
     /*===========================================================================================================================================================================*/
     /// Get a `SAXError.HandlerAlreadySet(_:_:description:)` error.
-    ///
+    /// 
     /// - Parameter desc: the description of the error. If none is provided then the default will be used.
     /// - Returns: the error.
     ///
     @inlinable final func getSAXError_HandlerAlreadySet(_ desc: String? = nil) -> SAXError {
-        let l = charStream.lineNumber
-        let c = charStream.columnNumber
-        if let d = desc { return SAXError.HandlerAlreadySet(l, c, description: d) }
-        else { return SAXError.HandlerAlreadySet(l, c) }
+        if let d = desc { return SAXError.HandlerAlreadySet(charStream.lineNumber, charStream.columnNumber, description: d) }
+        else { return SAXError.HandlerAlreadySet(charStream.lineNumber, charStream.columnNumber) }
     }
 
     /*===========================================================================================================================================================================*/
     /// Get a `SAXError.InvalidXMLVersion(_:_:description:)` error.
-    ///
+    /// 
     /// - Parameter desc: the description of the error. If none is provided then the default will be used.
     /// - Returns: the error.
     ///
     @inlinable final func getSAXError_InvalidXMLVersion(_ desc: String? = nil) -> SAXError {
-        let l = charStream.lineNumber
-        let c = charStream.columnNumber
-        if let d = desc { return SAXError.InvalidXMLVersion(l, c, description: d) }
-        else { return SAXError.InvalidXMLVersion(l, c) }
+        if let d = desc { return SAXError.InvalidXMLVersion(charStream.lineNumber, charStream.columnNumber, description: d) }
+        else { return SAXError.InvalidXMLVersion(charStream.lineNumber, charStream.columnNumber) }
     }
 
     /*===========================================================================================================================================================================*/
     /// Get a `SAXError.InvalidFileEncoding(_:_:description:)` error.
-    ///
+    /// 
     /// - Parameter desc: the description of the error. If none is provided then the default will be used.
     /// - Returns: the error.
     ///
     @inlinable final func getSAXError_InvalidFileEncoding(_ desc: String? = nil) -> SAXError {
-        let l = charStream.lineNumber
-        let c = charStream.columnNumber
-        if let d = desc { return SAXError.InvalidFileEncoding(l, c, description: d) }
-        else { return SAXError.InvalidFileEncoding(l, c) }
+        if let d = desc { return SAXError.InvalidFileEncoding(charStream.lineNumber, charStream.columnNumber, description: d) }
+        else { return SAXError.InvalidFileEncoding(charStream.lineNumber, charStream.columnNumber) }
     }
 
     /*===========================================================================================================================================================================*/
     /// Get a `SAXError.InvalidXMLDeclaration(_:_:description:)` error.
-    ///
+    /// 
     /// - Parameter desc: the description of the error. If none is provided then the default will be used.
     /// - Returns: the error.
     ///
     @inlinable final func getSAXError_InvalidXMLDeclaration(_ desc: String? = nil) -> SAXError {
-        let l = charStream.lineNumber
-        let c = charStream.columnNumber
-        if let d = desc { return SAXError.InvalidXMLDeclaration(l, c, description: d) }
-        else { return SAXError.InvalidXMLDeclaration(l, c) }
+        if let d = desc { return SAXError.InvalidXMLDeclaration(charStream.lineNumber, charStream.columnNumber, description: d) }
+        else { return SAXError.InvalidXMLDeclaration(charStream.lineNumber, charStream.columnNumber) }
     }
 
     /*===========================================================================================================================================================================*/
     /// Get a `SAXError.InvalidCharacter(_:_:description:)` error.
-    ///
+    /// 
     /// - Parameter desc: the description of the error.
     /// - Returns: the error.
     ///
-    @inlinable final func getSAXError_InvalidCharacter(_ desc: String) -> SAXError {
-        let l = charStream.lineNumber
-        let c = charStream.columnNumber
-        return SAXError.InvalidCharacter(l, c, description: desc)
-    }
+    @inlinable final func getSAXError_InvalidCharacter(_ desc: String) -> SAXError { SAXError.InvalidCharacter(charStream.lineNumber, charStream.columnNumber, description: desc) }
 
     /*===========================================================================================================================================================================*/
     /// Get a `SAXError.UnexpectedElement(_:_:description:)` error.
-    ///
+    /// 
     /// - Parameter desc: the description of the error.
     /// - Returns: the error.
     ///
-    @inlinable final func getSAXError_UnexpectedElement(_ desc: String) -> SAXError {
-        let l = charStream.lineNumber
-        let c = charStream.columnNumber
-        return SAXError.UnexpectedElement(l, c, description: desc)
-    }
+    @inlinable final func getSAXError_UnexpectedElement(_ desc: String) -> SAXError { SAXError.UnexpectedElement(charStream.lineNumber, charStream.columnNumber, description: desc) }
 
     /*===========================================================================================================================================================================*/
     /// Get a `SAXError.UnexpectedEndOfInput(_:_:description:)` error.
-    ///
+    /// 
     /// - Parameter desc: the description of the error. If none is provided then the default will be used.
     /// - Returns: the error.
     ///
     @inlinable final func getSAXError_UnexpectedEndOfInput(_ desc: String? = nil) -> SAXError {
-        let l = charStream.lineNumber
-        let c = charStream.columnNumber
-        if let d = desc { return SAXError.UnexpectedEndOfInput(l, c, description: d) }
-        else { return SAXError.UnexpectedEndOfInput(l, c) }
+        if let d = desc { return SAXError.UnexpectedEndOfInput(charStream.lineNumber, charStream.columnNumber, description: d) }
+        else { return SAXError.UnexpectedEndOfInput(charStream.lineNumber, charStream.columnNumber) }
     }
 
     /*===========================================================================================================================================================================*/
@@ -908,18 +934,6 @@ open class SAXParser<H: SAXHandler> {
     }
 }
 
-extension SAXParser.DTDExternalType: CustomStringConvertible {
-    /*===========================================================================================================================================================================*/
-    /// A description of the external type.
-    ///
-    public var description: String {
-        switch self {
-            case .System: return "System"
-            case .Public: return "Public"
-        }
-    }
-}
-
 extension SAXParser.DTDEntityType: CustomStringConvertible {
     /*===========================================================================================================================================================================*/
     /// A description of the entity type.
@@ -992,7 +1006,7 @@ extension SAXParser.Endian: CustomStringConvertible {
 
     /*===========================================================================================================================================================================*/
     /// Get the endian by the encoding name's suffix. `LE` returns little endian, `BE` returns big endian, and anything else returns `SAXParser.Endian.None`.
-    ///
+    /// 
     /// - Parameter str: the suffix.
     /// - Returns: the endian.
     ///
@@ -1000,5 +1014,17 @@ extension SAXParser.Endian: CustomStringConvertible {
         guard let str = str else { return .None }
         let s = str.uppercased()
         return (s.hasSuffix("BE") ? .BigEndian : (s.hasSuffix("LE") ? .LittleEndian : .None))
+    }
+}
+
+extension SAXParser.DTDExternalType: CustomStringConvertible {
+    /*===========================================================================================================================================================================*/
+    /// A description of the external type.
+    ///
+    public var description: String {
+        switch self {
+            case .System: return "System"
+            case .Public: return "Public"
+        }
     }
 }
