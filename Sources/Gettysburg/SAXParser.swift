@@ -27,6 +27,9 @@ import Rubicon
     import WinSDK
 #endif
 
+/*===============================================================================================================================================================================*/
+/// An implementation of a SAX parser.
+///
 open class SAXParser<H: SAXHandler> {
 
     @usableFromInline typealias XMLDecl = (version: String, versionSpecified: Bool, encoding: String, encodingSpecified: Bool, endianBom: Endian, standalone: Bool, standaloneSpecified: Bool)
@@ -52,7 +55,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Create an instance of this parser from the given input stream.
-    ///
+    /// 
     /// - Parameters:
     ///   - inputStream: the <code>[InputStream](https://developer.apple.com/documentation/foundation/InputStream)</code>
     ///   - url: the URL where this document is located. If none is provided then a generic one will be generated.
@@ -66,7 +69,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Set the instance of the class that implements `SAXHandler` that will handle the parsing messages sent from this parser.
-    ///
+    /// 
     /// - Parameter handler: the handler.
     /// - Returns: this parser.
     /// - Throws: if the handler had already been set previously.
@@ -79,7 +82,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Set the willValidate flag.
-    ///
+    /// 
     /// - Parameter flag: if `true` this parser will perform validation based on the DTD provided in the document. If `false` no validation will be performed.
     /// - Returns: this parser.
     ///
@@ -90,7 +93,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Set the list of allowed URI prefixes for resolving external entities and DocTypes.
-    ///
+    /// 
     /// - Parameters:
     ///   - uris: the list of URI prefixes.
     ///   - append: if `true` the list will be added to any already set. If `false` (the default) the list provided here will completely replace what is already there.
@@ -104,7 +107,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Parse the XML document.
-    ///
+    /// 
     /// - Returns: The handler used to parse the document.
     /// - Throws: if an I/O error occurs or if the XML document is malformed.
     ///
@@ -146,7 +149,7 @@ open class SAXParser<H: SAXHandler> {
     /*===========================================================================================================================================================================*/
     /// Parse out the main body of the XML Document that includes the root element and DOCTYPES as well as any processing instructions, whitespace, and comments that might exist
     /// at the root level.
-    ///
+    /// 
     /// - Throws: `SAXError` or any I/O errors.
     ///
     func parseDocumentRoot(_ handler: H) throws {
@@ -171,7 +174,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Parse a delimited node such as an element, comment, processing instruction, or DTD.
-    ///
+    /// 
     /// - Parameters:
     ///   - handler: the handler.
     ///   - noDTD: if set to `true` then DTD nodes are not allowed. DTD nodes are only allowed before the root element is encountered.
@@ -197,10 +200,10 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Parse and handle an element.
-    ///
+    /// 
     /// - Parameters:
     ///   - handler: the SAXHandler
-    ///   - firstChar: the first character of the element name.
+    ///   - firstChar: the first <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> of the element name.
     /// - Throws: if there is an I/O error or the element is malformed.
     ///
     final func parseElement(_ handler: H) throws {
@@ -214,7 +217,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Parse the element opening tag.
-    ///
+    /// 
     /// - Returns: a tuple containing the boolean indicating if this is an open or close element and any attributes contained in the element tag.
     /// - Throws: if there is an I/O error or the element is malformed.
     ///
@@ -242,63 +245,10 @@ open class SAXParser<H: SAXHandler> {
     }
 
     /*===========================================================================================================================================================================*/
-    /// Holds intermediate attribute information while parsing an element tag.
-    ///
-    class NSAttribInfo {
-        /*=======================================================================================================================================================================*/
-        /// the line number of the start of the attribute.
-        ///
-        let line:         Int
-        /*=======================================================================================================================================================================*/
-        /// the column number of the start of the attribute.
-        ///
-        let column:       Int
-        /*=======================================================================================================================================================================*/
-        /// the namespace prefix for the attribute name.
-        ///
-        let prefix:       String?
-        /*=======================================================================================================================================================================*/
-        /// the localname for the attribute name.
-        ///
-        let localName:    String
-        /*=======================================================================================================================================================================*/
-        /// the namespace URI for the attribute.
-        ///
-        var namespaceURI: String? = nil
-        /*=======================================================================================================================================================================*/
-        /// the value for the attribute.
-        ///
-        let value:        String
-
-        /*=======================================================================================================================================================================*/
-        /// Constructs a new namespaced attribute info.
-        ///
-        /// - Parameters:
-        ///   - line: the line number of the start of the attribute.
-        ///   - column: the column number of the start of the attribute.
-        ///   - prefix: the namespace prefix for the attribute name.
-        ///   - localName: the localname for the attribute name.
-        ///   - value: the value for the attribute.
-        ///
-        init(line: Int, column: Int, prefix: String?, localName: String, value: String) {
-            self.line = line
-            self.column = column
-            self.prefix = prefix
-            self.localName = localName
-            self.value = value
-        }
-
-        /*=======================================================================================================================================================================*/
-        /// the fully qualified name for this attribute.
-        ///
-        var qName: String { Gettysburg.qName(prefix: prefix, localName: localName) }
-    }
-
-    /*===========================================================================================================================================================================*/
     /// Process the elements attributes.
-    ///
+    /// 
     /// - Parameter rawAttrs: the raw attribute data.
-    /// - Returns: an array of `SAXParsedAttribute`.
+    /// - Returns: an <code>[Array](https://developer.apple.com/documentation/swift/Array)</code> of `SAXParsedAttribute`.
     /// - Throws: if an I/O error occurs or if the attributes are malformed.
     ///
     final func processAttributes(attributes rawAttrs: [String: String]) throws -> [SAXParsedAttribute] {
@@ -345,7 +295,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Reach and attribute from the element tag body.
-    ///
+    /// 
     /// - Returns: instance of `NSAttribInfo` that contains the attribute information.
     /// - Throws: if an error occurs.
     ///
@@ -378,10 +328,10 @@ open class SAXParser<H: SAXHandler> {
     }
 
     /*===========================================================================================================================================================================*/
-    /// Reads the attributes value from the character input stream.
-    ///
+    /// Reads the attributes value from the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> input stream.
+    /// 
     /// - Returns: the attributes value.
-    /// - Throws: if an I/O error occurs or if there are illegal characters in the value.
+    /// - Throws: if an I/O error occurs or if there are illegal <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s in the value.
     ///
     final func readAttributeValue() throws -> String {
         var chars: [Character] = []
@@ -398,7 +348,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Read the entity reference and resolve it.
-    ///
+    /// 
     /// - Returns: the resolved entity reference.
     /// - Throws: if the entity reference is malformed or there is an error during resolution.
     ///
@@ -408,10 +358,10 @@ open class SAXParser<H: SAXHandler> {
     }
 
     /*===========================================================================================================================================================================*/
-    /// Read the character entity reference.
-    ///
-    /// - Returns: the resolved character entity reference.
-    /// - Throws: if the character entity reference is malformed.
+    /// Read the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> entity reference.
+    /// 
+    /// - Returns: the resolved <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> entity reference.
+    /// - Throws: if the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> entity reference is malformed.
     ///
     final func readCharacterEntityReference() throws -> Character {
         var ch  = try readChar()
@@ -421,12 +371,12 @@ open class SAXParser<H: SAXHandler> {
     }
 
     /*===========================================================================================================================================================================*/
-    /// Read the scalar value for the character entity reference.
-    ///
+    /// Read the scalar value for the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> entity reference.
+    /// 
     /// - Parameters:
-    ///   - ch: the first character of the scalar.
+    ///   - ch: the first <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> of the scalar.
     ///   - hex: `true` if the scalar is in hexadecimal format or `false` if it is in decimal format.
-    /// - Returns: the resolved character.
+    /// - Returns: the resolved <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>.
     /// - Throws: if the scalar is malformed.
     ///
     final func readCharacterEntityReference_Dec(_ ch: Character, hex: Bool) throws -> Character {
@@ -453,6 +403,13 @@ open class SAXParser<H: SAXHandler> {
         while true
     }
 
+    /*===========================================================================================================================================================================*/
+    /// Read and resolved a standard entity reference.
+    /// 
+    /// - Parameter ch: the firt <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> of the entity name.
+    /// - Returns: the resolved, parsed entity.
+    /// - Throws: if an I/O error occurs or the entity name is malformed or there is an error resolving the entity.
+    ///
     final func readStandardEntityReference(_ ch: Character) throws -> String {
         if ch.isXmlNameStartChar {
             let entity = try readStandardEntityReference_Loop(ch)
@@ -469,6 +426,14 @@ open class SAXParser<H: SAXHandler> {
         }
     }
 
+    /*===========================================================================================================================================================================*/
+    /// Read the entity name from the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> input stream.
+    /// 
+    /// - Parameter ch: the first <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> of the entity name.
+    /// - Returns: the full entity name.
+    /// - Throws: if an I/O error occurs, the EOF is encountered before the end of the entity name marker (;), or an illegal
+    ///           <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> is encountered.
+    ///
     final func readStandardEntityReference_Loop(_ ch: Character) throws -> String {
         var chars: [Character] = [ ch ]
         while let ch = try charStream.read() {
@@ -481,7 +446,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// TODO: Resolve Entity Reference...
-    ///
+    /// 
     /// - Parameter ent: the entity name.
     /// - Returns: the text of the entity.
     /// - Throws: if an error occurs.
@@ -490,6 +455,12 @@ open class SAXParser<H: SAXHandler> {
         "&\(ent);"
     }
 
+    /*===========================================================================================================================================================================*/
+    /// Attempt to resolve the namespace URI given the qualified name for an element or attribute.
+    /// 
+    /// - Parameter name: the fully qualified name.
+    /// - Returns: a tuple with the local name, prefix, and namespace URI. The namespace URI may be `nil` if it can't be resolved. The prefix may be `nil` if there isn't one.
+    ///
     @inlinable final func getNamespaceInfo(qualifiedName name: String) -> (localName: String, prefix: String?, namespaceURI: String?) {
         let (prefix, localName) = name.getXmlPrefixAndLocalName()
         if prefix == "xml" {
@@ -509,6 +480,12 @@ open class SAXParser<H: SAXHandler> {
         return (name, nil, nil)
     }
 
+    /*===========================================================================================================================================================================*/
+    /// Attempt to resolve the namespace URI given the prefix.
+    /// 
+    /// - Parameter prefix: the prefix.
+    /// - Returns: the namespace URI or `nil` if it can't be found.
+    ///
     @inlinable final func getNamespaceURI(prefix: String) -> String? {
         var idx = namespaceMappings.endIndex
         let stx = namespaceMappings.startIndex
@@ -522,10 +499,27 @@ open class SAXParser<H: SAXHandler> {
         return nil
     }
 
+    /*===========================================================================================================================================================================*/
+    /// Parse the body of the element. That would be everything between "<tagname>" and "</tagname>".
+    /// 
+    /// - Parameters:
+    ///   - handler: the SAX Handler.
+    ///   - elementName: the name of the element.
+    ///   - attributes: the attributes of the element.
+    /// - Throws: if an I/O error occurs, the EOF is encountered, or something in the body is malformed.
+    ///
     final func parseElementBody(_ handler: H, elementName: String, attributes: [SAXParsedAttribute]) throws {
         // TODO: Parse Element Body...
     }
 
+    /*===========================================================================================================================================================================*/
+    /// Parse a DocType or Comment.
+    /// 
+    /// - Parameters:
+    ///   - handler: The SAX Handler.
+    ///   - noDTD: `true` if the DTD has already been parsed or is not allowed at this point.
+    /// - Throws: if an I/O error occurs or there is an invalid <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>.
+    ///
     func parseDocTypeOrComment(_ handler: H, noDTD: Bool) throws {
         markSet()
         //
@@ -568,9 +562,9 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Read and parse the processing instruction.
-    ///
+    /// 
     /// - Parameter handler: the handler.
-    /// - Throws: if an I/O error occurs or if the EOF was found before the end of the processing instruction node.
+    /// - Throws: if an I/O error occurs or if the EOF was encountered before the end of the processing instruction node.
     ///
     @inlinable final func parseProcessingInstruction(_ handler: H) throws {
         let (target, data) = getPITargetAndData(processingInstruction: try readUntil(marker: "?", ">"))
@@ -579,7 +573,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Take the string that contains the body of the processing instruction and break out the target and the data.
-    ///
+    /// 
     /// - Parameter pi: the body of the processing instruction.
     /// - Returns: a tuple with the target and the data.
     ///
@@ -604,7 +598,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Parse out a text node combrised of nothing but whitespace.
-    ///
+    /// 
     /// - Parameter handler: the handler.
     /// - Throws: if an I/O error occurs.
     ///
@@ -614,7 +608,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Parse an encountered comment.
-    ///
+    /// 
     /// - Parameter handler: the handler.
     /// - Throws: if an I/O error occurs or the comment is malformed.
     ///
@@ -629,7 +623,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Parse out a DOCTYPE Declaration.
-    ///
+    /// 
     /// - Parameter handler: The handler.
     /// - Throws: if an I/O error occurs or if the DOCTYPE declaration is malformed or incomplete.
     ///
@@ -639,12 +633,14 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Read and return all the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> up to but not including the first encountered NON-whitespace
-    /// character.
-    ///
-    /// - Parameter noEOF: if `true` then an error is thrown if the end-of-file is encountered before the first non-whitespace character is found. The default is `false`.
+    /// <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>.
+    /// 
+    /// - Parameter noEOF: if `true` then an error is thrown if the EOF is encountered before the first non-whitespace
+    ///                    <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> is found. The default is `false`.
     /// - Returns: the <code>[String](https://developer.apple.com/documentation/swift/String)</code> of
     ///            <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s read.
-    /// - Throws: if an I/O error occurs or `noEOF` is `true` and the end-of-file is encountered before the first non-whitespace character is found.
+    /// - Throws: if an I/O error occurs or `noEOF` is `true` and the EOF is encountered before the first non-whitespace
+    ///           <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> is found.
     ///
     @discardableResult @usableFromInline final func readWhitespace(noEOF: Bool = false) throws -> String {
         var buffer: [Character] = []
@@ -662,18 +658,20 @@ open class SAXParser<H: SAXHandler> {
     }
 
     /*===========================================================================================================================================================================*/
-    /// Read `count` number of character from the input stream and return them as a string.
-    ///
-    /// - Parameter count: the number of characters to read.
-    /// - Returns: the number of characters read.
-    /// - Throws: if there is an I/O error or if there are fewer than `count` characters left in the input stream.
+    /// Read `count` number of <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s from the [input
+    /// stream](http://goober/Rubicon/Protocols/CharInputStream.html) and return them as a string.
+    /// 
+    /// - Parameter count: the number of <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s to read.
+    /// - Returns: the number of <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s read.
+    /// - Throws: if there is an I/O error or if there are fewer than `count` <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s left in the
+    ///           input stream.
     ///
     @inlinable final func readString(count: Int) throws -> String { ((count > 0) ? try doReadUntil(predicate: { _, cc in (cc < (count - 1)) }) : "") }
 
     /*===========================================================================================================================================================================*/
     /// Read and return all the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s up to but not including the first encountered whitespace
-    /// character.
-    ///
+    /// <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>.
+    /// 
     /// - Returns: The <code>[String](https://developer.apple.com/documentation/swift/String)</code> of
     ///            <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s read.
     /// - Throws: if an I/O error occurs.
@@ -682,7 +680,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Read until the given set of <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s is found.
-    ///
+    /// 
     /// - Parameters:
     ///   - marker: the sequence of <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s that will trigger the end of the read.
     ///   - dropMarker: if `true` the marker will not be included in the returned <code>[String](https://developer.apple.com/documentation/swift/String)</code>.
@@ -694,6 +692,15 @@ open class SAXParser<H: SAXHandler> {
     ///
     @usableFromInline final func readUntil(marker mrk: Character...) throws -> String { try doReadUntil { buf in cmpSuffix(suffix: mrk, source: buf) } }
 
+    /*===========================================================================================================================================================================*/
+    /// Read <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s from the [input stream](http://goober/Rubicon/Protocols/CharInputStream.html) and
+    /// make sure they match the given <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s in the order they're given.
+    /// 
+    /// - Parameter chars: the list of expected <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s.
+    /// - Returns: the string from the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s.
+    /// - Throws: if an I/O error occurs, the EOF is encountered, or the read <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s don't match the
+    ///           <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s in the list.
+    ///
     @discardableResult @inlinable final func readCharAnd(expected chars: Character...) throws -> String {
         guard !chars.isEmpty else { fatalError() }
         var chars: [Character] = []
@@ -710,6 +717,16 @@ open class SAXParser<H: SAXHandler> {
         return String(chars)
     }
 
+    /*===========================================================================================================================================================================*/
+    /// Read the next <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> from the [input
+    /// stream](http://goober/Rubicon/Protocols/CharInputStream.html) and make sure it matches the any of the expected
+    /// <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s.
+    /// 
+    /// - Parameter chars: the list of expected <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s.
+    /// - Returns: the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> read.
+    /// - Throws: if an I/O error occurs, the EOF is encountered, or the read <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> is not any of the
+    ///           expected <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s.
+    ///
     @discardableResult @inlinable final func readCharOr(expected chars: Character...) throws -> Character {
         guard !chars.isEmpty else { fatalError() }
         markSet()
@@ -722,14 +739,55 @@ open class SAXParser<H: SAXHandler> {
         throw getSAXError_InvalidCharacter("Expected one of \"\(str)\" but found \"\(ch)\" instead.")
     }
 
+    /*===========================================================================================================================================================================*/
+    /// Read a single <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> from the input stream.
+    /// 
+    /// - Returns: the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> read.
+    /// - Throws: if an I/O error occurs or the EOF is encountered.
+    ///
     @inlinable final func readChar() throws -> Character { guard let ch = try charStream.read() else { throw getSAXError_UnexpectedEndOfInput() }; return ch }
 
+    /*===========================================================================================================================================================================*/
+    /// Read an [XML name](https://www.w3.org/TR/REC-xml/#sec-common-syn) from the input stream.
+    /// 
+    /// - Returns: the XML name.
+    /// - Throws: if an I/O error occurs.
+    ///
     @inlinable final func readXmlName() throws -> String { try doReadUntil(backup: true) { ch, cc in !((cc == 0) ? ch.isXmlNameStartChar : ch.isXmlNameChar) } }
 
+    /*===========================================================================================================================================================================*/
+    /// Read an [XML NMTOKEN](https://www.w3.org/TR/REC-xml/#sec-common-syn) from the input stream.
+    /// 
+    /// - Returns: the XML name.
+    /// - Throws: if an I/O error occurs.
+    ///
     @inlinable final func readXmlNmtoken() throws -> String { try doReadUntil(backup: true) { ch, _ in !ch.isXmlNameChar } }
 
+    /*===========================================================================================================================================================================*/
+    /// Read from the [character input stream](http://goober/Rubicon/Protocols/CharInputStream.html) until the given
+    /// <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> is found.
+    /// 
+    /// - Parameter ch: the given <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>.
+    /// - Returns: the string of <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s up to, but not including, the given
+    ///            <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>.
+    /// - Throws: if an I/O error occurs or the EOF is encountered before the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> is found.
+    ///
     @inlinable final func readUntil(character ch: Character) throws -> String { try doReadUntil(backup: true) { c0, _ in ch == c0 } }
 
+    /*===========================================================================================================================================================================*/
+    /// Read <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s from the [input stream](http://goober/Rubicon/Protocols/CharInputStream.html)
+    /// until the closure returns `true`. The closure is called for each <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> read. When the closure
+    /// returns `true` then reading will stop and a string containing the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s read is returned.
+    /// 
+    /// - Parameters:
+    ///   - backup: if `true` then the last `count` <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s are returned to the [input
+    ///             stream](http://goober/Rubicon/Protocols/CharInputStream.html) to be read again.
+    ///   - cc: the number of <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s to return to the input stream.
+    ///   - body: a closure that receives the last <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> read and the total number of
+    ///           <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s read so far. When the closure returns `true` reading will stop.
+    /// - Returns: the string of <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s read.
+    /// - Throws: if an I/O error occurs or any error thrown by the closure.
+    ///
     @inlinable final func doReadUntil(backup: Bool = false, count cc: Int = 1, predicate body: (Character, Int) throws -> Bool) throws -> String {
         try doRead { ch, buffer in
             if try body(ch, buffer.count) {
@@ -741,39 +799,59 @@ open class SAXParser<H: SAXHandler> {
         }
     }
 
+    /*===========================================================================================================================================================================*/
+    /// Read <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s from the [input stream](http://goober/Rubicon/Protocols/CharInputStream.html)
+    /// until the closure returns `true`. The closure is called for each <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> read. When the closure
+    /// returns `true` then reading will stop and a string containing the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s read is returned.
+    /// 
+    /// - Parameters:
+    ///   - backup: if `true` then the last `count` <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s are returned to the [input
+    ///             stream](http://goober/Rubicon/Protocols/CharInputStream.html) to be read again.
+    ///   - cc: the number of <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s to return to the input stream.
+    ///   - body: a closure that receives the all the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s read so far. When the closure returns
+    ///           `true` reading will stop.
+    /// - Returns: the string of <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s read.
+    /// - Throws: if an I/O error occurs or any error thrown by the closure.
+    ///
     @inlinable final func doReadUntil(backup: Bool = false, count cc: Int = 1, predicate body: ([Character]) throws -> Bool) throws -> String {
         try doRead { ch, buffer in
             buffer <+ ch
-            if try body(buffer) {
-                if backup {
-                    markBackup(count: cc)
-                    buffer.removeLast(cc)
-                }
-                return true
+            guard try body(buffer) else { return false }
+            if backup {
+                markBackup(count: cc)
+                buffer.removeLast(cc)
             }
-            return false
+            return true
         }
     }
 
     /*===========================================================================================================================================================================*/
-    /// Read characters from the character input stream and pass them to the closure along with a character array. When the closure returns `true` then the character array will be
-    /// wrapped in a string and returned.
-    ///
+    /// Read <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s from the [character input
+    /// stream](http://goober/Rubicon/Protocols/CharInputStream.html) and pass them to the closure along with a
+    /// <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> <code>[Array](https://developer.apple.com/documentation/swift/Array)</code>. When the
+    /// closure returns `true` then the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>
+    /// <code>[Array](https://developer.apple.com/documentation/swift/Array)</code> will be wrapped in a string and returned.
+    /// 
     /// - Parameter body: the closure.
-    /// - Returns: a new string made from the contents of the character array passed to the closure.
-    /// - Throws: any error thrown by the closure or if an I/O error occurs or the end-of-file is encountered.
+    /// - Returns: a new string made from the contents of the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>
+    ///            <code>[Array](https://developer.apple.com/documentation/swift/Array)</code> passed to the closure.
+    /// - Throws: any error thrown by the closure or if an I/O error occurs or the EOF is encountered.
     ///
     @inlinable final func doRead(_ body: (Character, inout [Character]) throws -> Bool) throws -> String { try doRead(charInputStream: charStream, body) }
 
     /*===========================================================================================================================================================================*/
-    /// Read characters from the character input stream and pass them to the closure along with a character array. When the closure returns `true` then the character array will be
-    /// wrapped in a string and returned.
-    ///
+    /// Read <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s from the [character input
+    /// stream](http://goober/Rubicon/Protocols/CharInputStream.html) and pass them to the closure along with a
+    /// <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> <code>[Array](https://developer.apple.com/documentation/swift/Array)</code>. When the
+    /// closure returns `true` then the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>
+    /// <code>[Array](https://developer.apple.com/documentation/swift/Array)</code> will be wrapped in a string and returned.
+    /// 
     /// - Parameters:
-    ///   - cString: the character input stream to read from.
+    ///   - cString: the [character input stream](http://goober/Rubicon/Protocols/CharInputStream.html) to read from.
     ///   - body: the closure.
-    /// - Returns: a new string made from the contents of the character array passed to the closure.
-    /// - Throws: any error thrown by the closure or if an I/O error occurs or the end-of-file is encountered.
+    /// - Returns: a new string made from the contents of the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>
+    ///            <code>[Array](https://developer.apple.com/documentation/swift/Array)</code> passed to the closure.
+    /// - Throws: any error thrown by the closure or if an I/O error occurs or the EOF is encountered.
     ///
     @inlinable final func doRead(charInputStream cStream: CharInputStream, _ body: (Character, inout [Character]) throws -> Bool) throws -> String {
         do {
@@ -800,7 +878,7 @@ open class SAXParser<H: SAXHandler> {
     /// 99.99999% of the time the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> encoding is going to be UTF-8 - which is the default. But the
     /// XML specification allows for other <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> encodings as well so we have to try to detect what
     /// kind it really is.
-    ///
+    /// 
     /// - Parameter xmlDecl:
     /// - Returns:
     /// - Throws:
@@ -838,15 +916,15 @@ open class SAXParser<H: SAXHandler> {
     }
 
     /*===========================================================================================================================================================================*/
-    /// Parse the XML Declaration read from the document.
-    ///
+    /// Parse the [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) read from the document.
+    /// 
     /// - Parameters:
-    ///   - declString: the XML Declaration read from the document.
+    ///   - declString: the [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) read from the document.
     ///   - chStream: the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>.
-    ///   - xmlDecl: the current XML Declaration values.
+    ///   - xmlDecl: the current [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) values.
     /// - Returns: either the current <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> or a new one if it was determined that
     ///            it needed to change <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> encoding.
-    /// - Throws: if an error occurred or if there was a problem with the XML Declaration.
+    /// - Throws: if an error occurred or if there was a problem with the [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml).
     ///
     @usableFromInline final func parseXMLDeclaration(_ declString: String, chStream: CharInputStream, xmlDecl: inout XMLDecl) throws -> CharInputStream {
         //--------------------------------------------------------------------------------------------------
@@ -877,16 +955,17 @@ open class SAXParser<H: SAXHandler> {
     }
 
     /*===========================================================================================================================================================================*/
-    /// Parse out the XML Declaration found in the XML Document and populate the fields of our assumed xmlDecl tuple.
-    ///
+    /// Parse out the [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) found in the XML Document and populate the fields of our assumed xmlDecl tuple.
+    /// 
     /// - Parameters:
     ///   - xmlDecl: the current (assumed) values.
     ///   - match: the RegularExpression.Match object from our RegularExpression test.
-    ///   - declString: the full text of the XML Declaration found in the document.
+    ///   - declString: the full text of the [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) found in the document.
     ///   - chStream: the current (detected) <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>.
-    /// - Returns: the current <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> or a new one if the character encoding had to
-    ///            change.
-    /// - Throws: if the XML Declaration found in the document was malformed or the newly declared character encoding found in it is unsupported.
+    /// - Returns: the current <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> or a new one if the
+    ///            <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> encoding had to change.
+    /// - Throws: if the [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) found in the document was malformed or the newly declared
+    ///           <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> encoding found in it is unsupported.
     ///
     @inlinable final func parseXMLDeclValues(_ xmlDecl: inout XMLDecl, _ match: RegularExpression.Match, _ declString: String, _ chStream: CharInputStream) throws -> CharInputStream {
         //---------------------
@@ -908,12 +987,13 @@ open class SAXParser<H: SAXHandler> {
     }
 
     /*===========================================================================================================================================================================*/
-    /// Get the declared XML `version` from the XML Declaration found in the document. If the XML Declaration exists in the document then it has to at least have the `version`.
-    ///
+    /// Get the declared XML `version` from the [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) found in the document. If the [XML
+    /// Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) exists in the document then it has to at least have the `version`.
+    /// 
     /// - Parameters:
-    ///   - xmlDecl: the current XML Declaration values.
-    ///   - declString: the XML Declaration found in the document.
-    ///   - values: the values from that XML Declaration.
+    ///   - xmlDecl: the current [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) values.
+    ///   - declString: the [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) found in the document.
+    ///   - values: the values from that [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml).
     /// - Throws: if the `version` is incorrect.
     ///
     @inlinable final func parseXMLDeclVersion(_ xmlDecl: inout XMLDecl, _ declString: String, _ values: [String: String]) throws {
@@ -924,11 +1004,11 @@ open class SAXParser<H: SAXHandler> {
     }
 
     /*===========================================================================================================================================================================*/
-    /// Get the declared XML `standalone` field, if it exists, from the XML Declaration found in the document.
-    ///
+    /// Get the declared XML `standalone` field, if it exists, from the [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) found in the document.
+    /// 
     /// - Parameters:
-    ///   - xmlDecl: the current (assumed) XML Declaration values.
-    ///   - values: the values found in the XML Declaration in the document.
+    ///   - xmlDecl: the current (assumed) [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) values.
+    ///   - values: the values found in the [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) in the document.
     /// - Throws: if the value for `standalone` is not `yes` or `no`.
     ///
     @inlinable final func parseXMLDeclStandalone(_ xmlDecl: inout XMLDecl, _ values: [String: String]) throws {
@@ -944,17 +1024,18 @@ open class SAXParser<H: SAXHandler> {
     }
 
     /*===========================================================================================================================================================================*/
-    /// Get the declared XML encoding from the XML Declaration found in the document. If an encoding is found that is different than the detected encoding then create a new
-    /// <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> and return that one.
-    ///
+    /// Get the declared XML encoding from the [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) found in the document. If an encoding is found that is
+    /// different than the detected encoding then create a new <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> and return that
+    /// one.
+    /// 
     /// - Parameters:
-    ///   - xmlDecl: the current (assumed) XML Declaration values.
+    ///   - xmlDecl: the current (assumed) [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) values.
     ///   - chStream: the current (detected) <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>.
-    ///   - values: the values from the XML Declaration found in the document.
+    ///   - values: the values from the [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) found in the document.
     /// - Returns: the current <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> unless a different encoding was declared in the
-    ///            XML Declaration in which case a new <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> with that encoding is
-    ///            returned.
-    /// - Throws: if the newly declared character encoding is not supported.
+    ///            [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) in which case a new <code>[character input
+    ///            stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> with that encoding is returned.
+    /// - Throws: if the newly declared <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> encoding is not supported.
     ///
     @inlinable final func parseXMLDeclEncoding(_ xmlDecl: inout XMLDecl, _ chStream: CharInputStream, _ values: [String: String]) throws -> CharInputStream {
         if let declEncoding = values["encoding"] {
@@ -983,10 +1064,11 @@ open class SAXParser<H: SAXHandler> {
     }
 
     /*===========================================================================================================================================================================*/
-    /// Changes the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> to match the encoding that we found in the XML Declaration.
-    ///
+    /// Changes the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> to match the encoding that we found in the [XML
+    /// Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml).
+    /// 
     /// - Parameters:
-    ///   - xmlDecl: the XML Declaration values.
+    ///   - xmlDecl: the [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) values.
     ///   - chStream: the current <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>.
     /// - Returns: the new <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>.
     /// - Throws: if the new encoding is not supported by the installed version of libiconv.
@@ -994,7 +1076,7 @@ open class SAXParser<H: SAXHandler> {
     @usableFromInline func changeEncoding(xmlDecl decl: XMLDecl, chStream oChStream: CharInputStream) throws -> CharInputStream {
         let nEnc: String = decl.encoding.uppercased()
         //-----------------------------------------------------------------------
-        // Close the old character input stream and reset the byte input stream.
+        // Close the old [character input stream](http://goober/Rubicon/Protocols/CharInputStream.html) and reset the byte input stream.
         //-----------------------------------------------------------------------
         oChStream.close()
         inputStream.markReturn()
@@ -1026,10 +1108,10 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// The declared encoding is different than what we guessed at so now let's see if we really have to change or if it's simply a variation of what we guessed.
-    ///
+    /// 
     /// - Parameters:
-    ///   - xmlDecl: the current XML Declaration values including what we guessed was the encoding.
-    ///   - declEncoding: the encoding specified in the XML Declaration.
+    ///   - xmlDecl: the current [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) values including what we guessed was the encoding.
+    ///   - declEncoding: the encoding specified in the [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml).
     /// - Returns: `true` if we really have to change the encoding or `false` if we can continue with what we have.
     /// - Throws: `SAXError.InvalidFileEncoding` if the declared byte order is definitely NOT what we encountered in the file.
     ///
@@ -1055,8 +1137,8 @@ open class SAXParser<H: SAXHandler> {
     }
 
     /*===========================================================================================================================================================================*/
-    /// The the fields out of a regex match of the XML Declaration.
-    ///
+    /// The the fields out of a regex match of the [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml).
+    /// 
     /// - Parameter match: the match object.
     /// - Returns: The map of fields and values.
     /// - Throws: if there was a duplicate field.
@@ -1074,11 +1156,12 @@ open class SAXParser<H: SAXHandler> {
     }
 
     /*===========================================================================================================================================================================*/
-    /// Without an XML Declaration at the beginning of the XML document the only valid <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>
-    /// encodings are UTF-8, UTF-16, and UTF-32. But before we can read enough of the document to tell if we even have an XML Declaration we first have to try to determine the
+    /// Without an [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) at the beginning of the XML document the only valid
+    /// <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> encodings are UTF-8, UTF-16, and UTF-32. But before we can read enough of the document
+    /// to tell if we even have an [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) we first have to try to determine the
     /// <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> width by looking at the first 4 bytes of data. This should tell us if we're looking at
-    /// 8-bit (UTF-8), 16-bit (UTF-16), or 32-bit (UTF-32) characters.
-    ///
+    /// 8-bit (UTF-8), 16-bit (UTF-16), or 32-bit (UTF-32) <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s.
+    /// 
     /// - Returns: the name of the detected <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> encoding and the detected endian if it is a
     ///            multi-byte <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> encoding.
     /// - Throws: SAXError or I/O <code>[Error](https://developer.apple.com/documentation/swift/error/)</code>.
@@ -1121,11 +1204,13 @@ open class SAXParser<H: SAXHandler> {
     }
 
     /*===========================================================================================================================================================================*/
-    /// Read the XML Declaration from the XML document.
-    ///
+    /// Read the [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) from the XML document.
+    /// 
     /// - Parameter charStream: the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> stream to read the declaration from.
-    /// - Returns: a <code>[String](https://developer.apple.com/documentation/swift/String)</code> containing the XML Declaration.
-    /// - Throws: if the XML Declaration is malformed of if the EOF was found before the end of the XML Declaration was reached.
+    /// - Returns: a <code>[String](https://developer.apple.com/documentation/swift/String)</code> containing the [XML
+    ///            Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml).
+    /// - Throws: if the [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) is malformed of if the EOF was encountered before the end of the [XML
+    ///           Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) was reached.
     ///
     @usableFromInline final func getXMLDecl(_ cStream: IConvCharInputStream) throws -> String {
         let s = try doRead(charInputStream: cStream) { ch, buffer in
@@ -1141,7 +1226,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Get a `SAXError.MissingHandler(_:_:description:)` error.
-    ///
+    /// 
     /// - Parameter desc: the description of the error. If none is provided then the default will be used.
     /// - Returns: the error.
     ///
@@ -1152,7 +1237,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Get a `SAXError.HandlerAlreadySet(_:_:description:)` error.
-    ///
+    /// 
     /// - Parameter desc: the description of the error. If none is provided then the default will be used.
     /// - Returns: the error.
     ///
@@ -1163,7 +1248,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Get a `SAXError.InvalidXMLVersion(_:_:description:)` error.
-    ///
+    /// 
     /// - Parameter desc: the description of the error. If none is provided then the default will be used.
     /// - Returns: the error.
     ///
@@ -1174,7 +1259,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Get a `SAXError.InvalidFileEncoding(_:_:description:)` error.
-    ///
+    /// 
     /// - Parameter desc: the description of the error. If none is provided then the default will be used.
     /// - Returns: the error.
     ///
@@ -1185,7 +1270,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Get a `SAXError.InvalidXMLDeclaration(_:_:description:)` error.
-    ///
+    /// 
     /// - Parameter desc: the description of the error. If none is provided then the default will be used.
     /// - Returns: the error.
     ///
@@ -1196,7 +1281,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Get a `SAXError.InvalidCharacter(_:_:description:)` error.
-    ///
+    /// 
     /// - Parameter desc: the description of the error.
     /// - Returns: the error.
     ///
@@ -1204,7 +1289,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Get a `SAXError.UnexpectedElement(_:_:description:)` error.
-    ///
+    /// 
     /// - Parameter desc: the description of the error.
     /// - Returns: the error.
     ///
@@ -1212,7 +1297,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Get a `SAXError.MalformedNumber(_:_:description:)` error.
-    ///
+    /// 
     /// - Parameter desc: the description of the error.
     /// - Returns: the error.
     ///
@@ -1220,7 +1305,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Get a `SAXError.NamespaceError(_:_:description:)` error.
-    ///
+    /// 
     /// - Parameter desc: the description of the error.
     /// - Returns: the error.
     ///
@@ -1228,91 +1313,13 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Get a `SAXError.UnexpectedEndOfInput(_:_:description:)` error.
-    ///
+    /// 
     /// - Parameter desc: the description of the error. If none is provided then the default will be used.
     /// - Returns: the error.
     ///
     @inlinable final func getSAXError_UnexpectedEndOfInput(_ desc: String? = nil) -> SAXError {
         if let d = desc { return SAXError.UnexpectedEndOfInput(charStream.lineNumber, charStream.columnNumber, description: d) }
         else { return SAXError.UnexpectedEndOfInput(charStream.lineNumber, charStream.columnNumber) }
-    }
-
-    @usableFromInline enum ForCharsExit {
-        case GetNextChar
-        case KeepLastChar
-        case PushBackLastChar(count: Int = 1)
-    }
-
-    /*===========================================================================================================================================================================*/
-    /// Read <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s from the <code>[character input
-    /// stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> calling the closure body for each
-    /// <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>. This method will also track the previous `count`
-    /// <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s so they can be used as part of the processing.
-    ///
-    /// - Parameters:
-    ///   - count: the count of the previous <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s to track.
-    ///   - body: the closure that gets called for each <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>. The closure takes three parameters.
-    ///           The first is the current <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>, the second is an array of the previous `count`
-    ///           <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s, and the last is the <code>[character input
-    ///           stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> that is being read from. The closure can return one of three possible values.
-    ///           `ForCharsExit.GetNextChar` if it wants the next <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> from the <code>[character
-    ///           input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>. `ForCharsExit.KeepLastChar` if it wants to stop and keep the last
-    ///           <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> it got. `ForCharsExit.PushBackLastChar` if it wants to stop and push the last
-    ///           <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> back onto the <code>[character input
-    ///           stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> to be read again.
-    /// - Returns: `false` if this method returned because the end-of-file was reached.
-    /// - Throws: if an I/O <code>[Error](https://developer.apple.com/documentation/swift/error/)</code> occurred or the closure threw an
-    ///           <code>[Error](https://developer.apple.com/documentation/swift/error/)</code>.
-    ///
-    @discardableResult @inlinable final func forChars(trackLast count: Int = 5, _ body: (Character, [Character], CharInputStream) throws -> ForCharsExit) throws -> Bool {
-        try forChars(chInStream: charStream, trackLast: count, body)
-    }
-
-    /*===========================================================================================================================================================================*/
-    /// Read <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s from the <code>[character input
-    /// stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> calling the closure body for each
-    /// <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>. This method will also track the previous `count`
-    /// <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s so they can be used as part of the processing.
-    ///
-    /// - Parameters:
-    ///   - count: the count of the previous <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s to track.
-    ///   - chInStream: the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> to be read from.
-    ///   - body: the closure that gets called for each <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>. The closure takes three parameters.
-    ///           The first is the current <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>, the second is an array of the previous `count`
-    ///           <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s, and the last is the <code>[character input
-    ///           stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> that is being read from. The closure can return one of three possible values.
-    ///           `ForCharsExit.GetNextChar` if it wants the next <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> from the <code>[character
-    ///           input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>. `ForCharsExit.KeepLastChar` if it wants to stop and keep the last
-    ///           <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> it got. `ForCharsExit.PushBackLastChar` if it wants to stop and push the last
-    ///           <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> back onto the <code>[character input
-    ///           stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> to be read again.
-    /// - Returns: `false` if this method returned because the end-of-file was reached.
-    /// - Throws: if an I/O <code>[Error](https://developer.apple.com/documentation/swift/error/)</code> occurred or the closure threw an
-    ///           <code>[Error](https://developer.apple.com/documentation/swift/error/)</code>.
-    ///
-    @discardableResult @inlinable final func forChars(chInStream: CharInputStream, trackLast count: Int = 5, _ body: (Character, [Character], CharInputStream) throws -> ForCharsExit) throws -> Bool {
-        var buffer: [Character] = []
-        chInStream.markSet()
-        defer {
-            chInStream.markDelete()
-            buffer.removeAll(keepingCapacity: false)
-        }
-
-        while let char = try chInStream.read() {
-            switch try body(char, buffer, chInStream) {
-                case .PushBackLastChar(count: let cc):
-                    chInStream.markBackup(count: ((cc < 1) ? 1 : cc))
-                    return true
-                case .KeepLastChar:
-                    return true
-                case .GetNextChar:
-                    break
-            }
-            buffer <+ char
-            if buffer.count > count { buffer.removeFirst() }
-        }
-
-        return false
     }
 
     /*===========================================================================================================================================================================*/
@@ -1366,7 +1373,7 @@ open class SAXParser<H: SAXHandler> {
     ///
     public enum DTDAttrType {
         /*=======================================================================================================================================================================*/
-        /// Character data.
+        /// <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> data.
         ///
         case CDATA
         /*=======================================================================================================================================================================*/
@@ -1425,10 +1432,26 @@ open class SAXParser<H: SAXHandler> {
         case Fixed
     }
 
+    /*===========================================================================================================================================================================*/
+    /// Holds a prefix and namespace URI combination.
+    ///
     @usableFromInline class NamespaceURIMapping {
+        /*=======================================================================================================================================================================*/
+        /// The prefix.
+        ///
         @usableFromInline let prefix:       String
+        /*=======================================================================================================================================================================*/
+        /// The namespace URI.
+        ///
         @usableFromInline let namespaceURI: String
 
+        /*=======================================================================================================================================================================*/
+        /// Create a new namespace prefix/URI mapping.
+        /// 
+        /// - Parameters:
+        ///   - prefix: the namespace prefix.
+        ///   - namespaceURI: the namespace URI.
+        ///
         @usableFromInline init(prefix: String = "", namespaceURI: String) {
             self.prefix = prefix
             self.namespaceURI = namespaceURI
@@ -1446,6 +1469,59 @@ open class SAXParser<H: SAXHandler> {
     @inlinable final func markReset() { charStream.markReset() }
 
     @inlinable final func markBackup(count: Int = 1) { charStream.markBackup(count: count) }
+
+    /*===========================================================================================================================================================================*/
+    /// Holds intermediate attribute information while parsing an element tag.
+    ///
+    @usableFromInline class NSAttribInfo {
+        /*=======================================================================================================================================================================*/
+        /// the line number of the start of the attribute.
+        ///
+        @usableFromInline let line:         Int
+        /*=======================================================================================================================================================================*/
+        /// the column number of the start of the attribute.
+        ///
+        @usableFromInline let column:       Int
+        /*=======================================================================================================================================================================*/
+        /// the namespace prefix for the attribute name.
+        ///
+        @usableFromInline let prefix:       String?
+        /*=======================================================================================================================================================================*/
+        /// the localname for the attribute name.
+        ///
+        @usableFromInline let localName:    String
+        /*=======================================================================================================================================================================*/
+        /// the namespace URI for the attribute.
+        ///
+        @usableFromInline var namespaceURI: String? = nil
+        /*=======================================================================================================================================================================*/
+        /// the value for the attribute.
+        ///
+        @usableFromInline let value:        String
+
+        /*=======================================================================================================================================================================*/
+        /// the fully qualified name for this attribute.
+        ///
+        @usableFromInline var qName: String { Gettysburg.qName(prefix: prefix, localName: localName) }
+
+        /*=======================================================================================================================================================================*/
+        /// Constructs a new namespaced attribute info.
+        /// 
+        /// - Parameters:
+        ///   - line: the line number of the start of the attribute.
+        ///   - column: the column number of the start of the attribute.
+        ///   - prefix: the namespace prefix for the attribute name.
+        ///   - localName: the localname for the attribute name.
+        ///   - value: the value for the attribute.
+        ///
+        @usableFromInline init(line: Int, column: Int, prefix: String?, localName: String, value: String) {
+            self.line = line
+            self.column = column
+            self.prefix = prefix
+            self.localName = localName
+            self.value = value
+        }
+    }
 }
 
 extension SAXParser.DTDEntityType: CustomStringConvertible {
@@ -1520,7 +1596,7 @@ extension SAXParser.Endian: CustomStringConvertible {
 
     /*===========================================================================================================================================================================*/
     /// Get the endian by the encoding name's suffix. `LE` returns little endian, `BE` returns big endian, and anything else returns `SAXParser.Endian.None`.
-    ///
+    /// 
     /// - Parameter str: the suffix.
     /// - Returns: the endian.
     ///
