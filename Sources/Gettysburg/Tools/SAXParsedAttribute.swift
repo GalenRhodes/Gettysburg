@@ -33,12 +33,14 @@ open class SAXParsedAttribute: SAXParsedNode, Hashable {
     let prefix:       String?
     let namespaceURI: String?
     let defaulted:    Bool
+    let value:        String
 
-    public init(localName: String, prefix: String?, namespaceURI: String?, defaulted: Bool) {
+    public init(localName: String, prefix: String?, namespaceURI: String?, defaulted: Bool, value: String) {
         self.localName = localName
         self.prefix = prefix
         self.namespaceURI = namespaceURI
         self.defaulted = defaulted
+        self.value = value
         super.init(type: .Attr)
     }
 
@@ -47,9 +49,10 @@ open class SAXParsedAttribute: SAXParsedNode, Hashable {
         hasher.combine(prefix)
         hasher.combine(namespaceURI)
         hasher.combine(defaulted)
+        hasher.combine(value)
     }
 
     public static func == (lhs: SAXParsedAttribute, rhs: SAXParsedAttribute) -> Bool {
-        lhs.localName == rhs.localName && lhs.prefix == rhs.prefix && lhs.namespaceURI == rhs.namespaceURI && lhs.defaulted == rhs.defaulted
+        lhs.localName == rhs.localName && lhs.prefix == rhs.prefix && lhs.namespaceURI == rhs.namespaceURI && lhs.defaulted == rhs.defaulted && lhs.value == rhs.value
     }
 }

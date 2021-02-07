@@ -36,4 +36,7 @@ public enum SAXError: Error {
     case UnexpectedEndOfInput(_ line: Int, _ column: Int, description: String = "The end-of-input was reached before it was expected.")
     case InvalidCharacter(_ line: Int, _ column: Int, description: String)
     case UnexpectedElement(_ line: Int, _ column: Int, description: String)
+    case MalformedNumber(_ line: Int, _ column: Int, description: String)
+    case NamespaceError(_ line: Int, _ column: Int, description: String)
+    case DuplicateAttribute(_ line: Int, _ column: Int, description: String)
 }
