@@ -168,6 +168,7 @@
 		1117DDBC86ED365697829E77 /* InternalClasses.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternalClasses.swift; sourceTree = "<group>"; };
 		1117DEB2BBDD656C51384346 /* SAXTestHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXTestHandler.swift; sourceTree = "<group>"; };
 		1117DEC96369491CED3F9649 /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
+		1117DF25C968B209A3179FBE /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = file.gitignore; path = .gitignore; sourceTree = "<group>"; };
 		1117DF63B5A9F5E181FD2C9C /* XMLEntities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XMLEntities.swift; sourceTree = "<group>"; };
 		1117DF67151CBCFC4806850A /* CharacterSets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CharacterSets.swift; sourceTree = "<group>"; };
 		1117DFD8E623DF433A4A62E8 /* IO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IO.swift; sourceTree = "<group>"; };
@@ -298,6 +299,7 @@
 				1117DEC96369491CED3F9649 /* Package.swift */,
 				1117D34903A4804B6646574A /* LICENSE */,
 				1117D3250DFFCE3E85ABD6E2 /* .jazzy.yaml */,
+				1117DF25C968B209A3179FBE /* .gitignore */,
 			);
 			name = Other;
 			sourceTree = "<group>";
