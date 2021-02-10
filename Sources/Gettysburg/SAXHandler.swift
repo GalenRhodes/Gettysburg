@@ -35,7 +35,9 @@ public protocol SAXHandler {
 
     func dtdExternalBegin<H>(parser: SAXParser<H>, rootElementName: String, type: SAXParser<H>.DTDExternalType, externalId: String?, systemId: String) where H: SAXHandler
 
-    func dtdEntityDecl<H>(parser: SAXParser<H>, name: String, type: SAXParser<H>.DTDEntityType, publicId: String?, systemId: String?, content: String) where H: SAXHandler
+    func dtdExternalEntityDecl<H>(parser: SAXParser<H>, name: String, entityType: SAXParser<H>.DTDEntityType, type: SAXParser<H>.DTDExternalType, publicId: String?, systemId: String) where H: SAXHandler
+
+    func dtdEntityDecl<H>(parser: SAXParser<H>, name: String, entityType: SAXParser<H>.DTDEntityType, content: String) where H: SAXHandler
 
     func dtdUnparsedEntityDecl<H>(parser: SAXParser<H>, name: String, type: SAXParser<H>.DTDExternalType, publicId: String?, systemId: String, notation: String) where H: SAXHandler
 

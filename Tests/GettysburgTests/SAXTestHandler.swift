@@ -41,9 +41,14 @@ open class SAXTestHandler: SAXDefaultHandler {
         super.dtdExternalBegin(parser: parser, rootElementName: rootElementName, type: type, externalId: externalId, systemId: systemId)
     }
 
-    open override func dtdEntityDecl<H>(parser: SAXParser<H>, name: String, type: SAXParser<H>.DTDEntityType, publicId: String?, systemId: String?, content: String) where H: SAXHandler {
-        print("DTD Entity Decl: name = \"\(name)\"; type = \"\(type)\"; publicId = \"\(publicId ?? NULL)\"; systemId = \"\(systemId ?? NULL)\"; content = \"\(content)\";")
-        super.dtdEntityDecl(parser: parser, name: name, type: type, publicId: publicId, systemId: systemId, content: content)
+    public override func dtdExternalEntityDecl<H>(parser: SAXParser<H>, name: String, entityType: SAXParser<H>.DTDEntityType, type: SAXParser<H>.DTDExternalType, publicId: String?, systemId: String) where H: SAXHandler {
+        print("DTD External Entity Decl: name = \"\(name)\"; entityType = \"\(entityType)\"; type = \"\(type)\"; publicId = \"\(publicId ?? NULL)\"; systemId = \"\(systemId)\";")
+        super.dtdExternalEntityDecl(parser: parser, name: name, entityType: entityType, type: type, publicId: publicId, systemId: systemId)
+    }
+
+    public override func dtdEntityDecl<H>(parser: SAXParser<H>, name: String, entityType: SAXParser<H>.DTDEntityType, content: String) where H: SAXHandler {
+        print("DTD Entity Decl: name = \"\(name)\"; entityType = \"\(entityType)\"; content = \"\(content)\";")
+        super.dtdEntityDecl(parser: parser, name: name, entityType: entityType, content: content)
     }
 
     open override func dtdUnparsedEntityDecl<H>(parser: SAXParser<H>, name: String, type: SAXParser<H>.DTDExternalType, publicId: String?, systemId: String, notation: String) where H: SAXHandler {

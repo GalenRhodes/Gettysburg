@@ -42,10 +42,6 @@ open class SAXDefaultHandler: SAXHandler {
         /* TODO: Implement me... */
     }
 
-    public func dtdEntityDecl<H>(parser: SAXParser<H>, name: String, type: SAXParser<H>.DTDEntityType, publicId: String?, systemId: String?, content: String) where H: SAXHandler {
-        /* TODO: Implement me... */
-    }
-
     public func dtdUnparsedEntityDecl<H>(parser: SAXParser<H>, name: String, type: SAXParser<H>.DTDExternalType, publicId: String?, systemId: String, notation: String) where H: SAXHandler {
         /* TODO: Implement me... */
     }
@@ -117,6 +113,14 @@ open class SAXDefaultHandler: SAXHandler {
     }
 
     public func documentEnd<H>(parser: SAXParser<H>) where H: SAXHandler {
+        /* TODO: Implement me... */
+    }
+
+    public func dtdExternalEntityDecl<H>(parser: SAXParser<H>, name: String, entityType: SAXParser<H>.DTDEntityType, type: SAXParser<H>.DTDExternalType, publicId: String?, systemId: String) where H: SAXHandler {
+        /* TODO: Implement me... */
+    }
+
+    public func dtdEntityDecl<H>(parser: SAXParser<H>, name: String, entityType: SAXParser<H>.DTDEntityType, content: String) where H: SAXHandler {
         /* TODO: Implement me... */
     }
 }

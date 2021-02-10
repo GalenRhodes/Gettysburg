@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <!DOCTYPE Person [
-        <!ENTITY % qt "(gsr:LastName,gsr:FirstName,MiddleName,pgx:dob,bob:info,usa:family,(garfield|odie),ack:Batman,foo?,bar?)">
         <!ENTITY smiley "🤩">
         <!ENTITY compname "Triple Dog Dare Media">
         <!ENTITY copyright "🤪 2017 by Triple Dog Dare Media Incorporated 🤩">
