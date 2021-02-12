@@ -50,7 +50,7 @@ let UNITSIZE:   [String: Int] = [ "UTF-8": 1, "UTF-16LE": 2, "UTF-16BE": 2, "UTF
 
 /*===============================================================================================================================================================================*/
 /// Compares the suffix array to the end of the source array to see if they are the same.
-/// 
+///
 /// - Parameters:
 ///   - sfx: the suffix array.
 ///   - src: the source array.
@@ -75,7 +75,7 @@ let UNITSIZE:   [String: Int] = [ "UTF-8": 1, "UTF-16LE": 2, "UTF-16BE": 2, "UTF
 
 /*===============================================================================================================================================================================*/
 /// Compares the prefix array to the beginning of the source array to see if they are the same.
-/// 
+///
 /// - Parameters:
 ///   - pfx: the prefix array.
 ///   - src: the source array.
@@ -101,7 +101,7 @@ let UNITSIZE:   [String: Int] = [ "UTF-8": 1, "UTF-16LE": 2, "UTF-16BE": 2, "UTF
 extension InputStream {
     /*===========================================================================================================================================================================*/
     /// Read a single byte from the input stream.
-    /// 
+    ///
     /// - Returns: the next byte or `nil` if the end-of-file has been reached.
     /// - Throws: if an I/O error occurred.
     ///
@@ -119,3 +119,10 @@ extension InputStream {
 }
 
 @inlinable func qName(prefix: String?, localName: String) -> String { ((prefix == nil) ? localName : "\(prefix!):\(localName)") }
+
+/// Creates and returns an absolute file URL for the fileAtPath relative to the current working directory path.
+///
+/// - Parameter fileAtPath: the file path.
+/// - Returns: the absolute file URL.
+///
+@inlinable func urlFor(fileAtPath: String) -> URL { URL(fileURLWithPath: fileAtPath, relativeTo: URL(fileURLWithPath: FileManager.default.currentDirectoryPath)) }

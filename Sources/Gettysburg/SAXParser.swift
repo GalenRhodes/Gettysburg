@@ -32,12 +32,15 @@ import Rubicon
 ///
 open class SAXParser<H: SAXHandler> {
 
-    public internal(set) var url:          String
     public internal(set) var handler:      H?      = nil
     public internal(set) var xmlVersion:   String? = nil
     public internal(set) var xmlEncoding:  String? = nil
     public internal(set) var isStandalone: Bool?   = nil
 
+    public let url:     URL
+    public let baseURL: URL
+
+    @inlinable final public var filename:     String { url.lastPathComponent }
     @inlinable final public var lineNumber:   Int { charStream.lineNumber }
     @inlinable final public var columnNumber: Int { charStream.columnNumber }
 
@@ -53,21 +56,62 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Create an instance of this parser from the given input stream.
-    /// 
+    ///
     /// - Parameters:
     ///   - inputStream: the <code>[InputStream](https://developer.apple.com/documentation/foundation/InputStream)</code>
     ///   - url: the URL where this document is located. If none is provided then a generic one will be generated.
     ///   - handler: an instance of a class that implements the `SAXHandler` protocol that will handle the messages sent from this parser.
     ///
-    public init(inputStream: InputStream, url: String = "uuid:\(UUID().uuidString).xml", handler: H? = nil) {
+    public init(inputStream: InputStream, url: URL? = nil, handler: H? = nil) {
         self.handler = handler
-        self.inputStream = MarkInputStream(inputStream: inputStream)
-        self.url = url
+        self.inputStream = ((inputStream as? MarkInputStream) ?? MarkInputStream(inputStream: inputStream))
+
+        if let url = url { self.url = url }
+        else { self.url = urlFor(fileAtPath: "\(UUID().uuidString).xml") }
+
+        self.baseURL = self.url.absoluteURL.deletingLastPathComponent()
+        #if DEBUG
+            print("File URL: \"\(self.url.absoluteString)\"")
+            print("Base URL: \"\(baseURL.absoluteString)\"")
+        #endif
+    }
+
+    /// Create an instance of this parser from the given URL.
+    ///
+    /// - Parameters:
+    ///   - url: the URL where the XML document is located.
+    ///   - handler: an instance of a class that implements the `SAXHandler` protocol that will handle the messages sent from this parser.
+    ///
+    public convenience init?(url: URL, handler: H? = nil) {
+        guard let inputSt = InputStream(url: url) else { return nil }
+        self.init(inputStream: inputSt, url: url, handler: handler)
+    }
+
+    /// Create an instance of this parser from the given file name.
+    ///
+    /// - Parameters:
+    ///   - fileAtPath: the path to the XML document file.
+    ///   - handler: an instance of a class that implements the `SAXHandler` protocol that will handle the messages sent from this parser.
+    ///
+    public convenience init?(fileAtPath: String, handler: H? = nil) {
+        let url = urlFor(fileAtPath: fileAtPath)
+        guard let inputSt = InputStream(url: url) else { return nil }
+        self.init(inputStream: inputSt, url: url, handler: handler)
+    }
+
+    /// Create an instance of this parser from the given data object.
+    ///
+    /// - Parameters:
+    ///   - data: the data containting the XML document.
+    ///   - handler: an instance of a class that implements the `SAXHandler` protocol that will handle the messages sent from this parser.
+    ///
+    public convenience init(data: Data, handler: H? = nil) {
+        self.init(inputStream: InputStream(data: data), url: urlFor(fileAtPath: "data-\(UUID().uuidString).xml"), handler: handler)
     }
 
     /*===========================================================================================================================================================================*/
     /// Set the instance of the class that implements `SAXHandler` that will handle the parsing messages sent from this parser.
-    /// 
+    ///
     /// - Parameter handler: the handler.
     /// - Returns: this parser.
     /// - Throws: if the handler had already been set previously.
@@ -80,7 +124,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Set the willValidate flag.
-    /// 
+    ///
     /// - Parameter flag: if `true` this parser will perform validation based on the DTD provided in the document. If `false` no validation will be performed.
     /// - Returns: this parser.
     ///
@@ -91,7 +135,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Set the list of allowed URI prefixes for resolving external entities and DocTypes.
-    /// 
+    ///
     /// - Parameters:
     ///   - uris: the list of URI prefixes.
     ///   - append: if `true` the list will be added to any already set. If `false` (the default) the list provided here will completely replace what is already there.
@@ -105,7 +149,7 @@ open class SAXParser<H: SAXHandler> {
 
     /*===========================================================================================================================================================================*/
     /// Parse the XML document.
-    /// 
+    ///
     /// - Returns: The handler used to parse the document.
     /// - Throws: if an I/O error occurs or if the XML document is malformed.
     ///
@@ -120,7 +164,7 @@ open class SAXParser<H: SAXHandler> {
                 //------------------------------------------------
                 // Try to determine the encoding of the XML file.
                 //------------------------------------------------
-                charStream = try setupXMLFileEncoding(xmlDecl: &xmlDecl)
+                charStream = try getXMLCharInputStream(inputStream: inputStream, xmlDecl: &xmlDecl)
                 defer { charStream.close() }
                 // FIXME: If the char stream didn't change then we still have a mark on it at this point.
                 xmlVersion = xmlDecl.version

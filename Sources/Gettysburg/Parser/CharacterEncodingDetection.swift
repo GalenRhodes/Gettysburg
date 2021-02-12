@@ -33,75 +33,103 @@ extension SAXParser {
     /// 99.99999% of the time the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> encoding is going to be UTF-8 - which is the default for XML.
     /// But the XML specification allows for other <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> encodings as well so we have to try to
     /// detect what kind it really is.
-    /// 
+    ///
     /// The [XML specification states](https://www.w3.org/TR/REC-xml/#charencoding):
-    /// 
+    ///
     /// > Each external parsed entity in an XML document may use a different encoding for its characters. All XML processors must be able to read entities in both the UTF-8 and
     /// UTF-16 encodings. The terms "UTF-8" and "UTF-16" in this specification do not apply to related character encodings, including but not limited to UTF-16BE, UTF-16LE, or
     /// CESU-8.
-    /// 
+    ///
     /// > Entities encoded in UTF-16 must and entities encoded in UTF-8 may begin with the Byte Order Mark described by Annex H of [ISO/IEC 10646:2000], section 16.8 of [Unicode]
     /// (https://home.unicode.org) (the ZERO WIDTH NO-BREAK SPACE character, #xFEFF). This is an encoding signature, not part of either the markup or the character data of the XML
     /// document. XML processors must be able to use this character to differentiate between UTF-8 and UTF-16 encoded documents.
-    /// 
+    ///
     /// > If the replacement text of an external entity is to begin with the character U+FEFF, and no text declaration is present, then a Byte Order Mark MUST be present, whether
     /// the entity is encoded in UTF-8 or UTF-16.
-    /// 
+    ///
     /// > Although an XML processor is required to read only entities in the UTF-8 and UTF-16 encodings, it is recognized that other encodings are used around the world, and it
     /// may be desired for XML processors to read entities that use them. In the absence of external character encoding information (such as MIME headers), parsed entities which
     /// are stored in an encoding other than UTF-8 or UTF-16 must begin with a text declaration (see 4.3.1 The Text Declaration) containing an encoding declaration
-    /// 
+    ///
     /// In short, we're supposed to start out assuming the possibility of UTF-8 or UTF-16 and then if there is an XML Declaration we should see the encoding field in that, if it
     /// has one, to determine the actual character encoding used in the document.
-    /// 
+    ///
     /// Gettysburg will actually attempt to detect and handle UTF-8, UTF-16, and UTF-32 character encodings (with or without a byte-order-mark). Gettysburg will also handle other
     /// character encodings as long as there is an [XML Declaration](https://www.w3.org/TR/REC-xml/#sec-prolog-dtd) in the document specifying what the proper character encoding
     /// should be. That XML Declaration should be in either UTF-8, UTF-16, or UTF-32 encoding. Also, the encoding specified in the XML Declaration should match the byte-width of
     /// the XML Declaration itself. In other words, don't start off with UTF-16 and then specify UTF-8 in the XML Declaration. Even if everything AFTER the XML Declaration is in
     /// UTF-8 this is considered a malformed and invalid XML document.
-    /// 
+    ///
     /// The same applies to external entities and DTDs (which are considered a special case of external entities). Character encodings other than UTF-8, UTF-16, and UTF-32 will be
     /// supported as long as there is a [Text Declaration (XML specification sections 4.3.1 - 4.3.3)](https://www.w3.org/TR/REC-xml/#sec-TextDecl) at the beginning of the external
     /// entity or DTD.
-    /// 
+    ///
     /// - Parameter xmlDecl: the `XMLDecl` tuple.
     /// - Returns: the character input stream based on the determined character encoding.
     /// - Throws: if an I/O error occurred or the character encoding could not be determined or is unsupported.
     ///
-    func setupXMLFileEncoding(xmlDecl: inout XMLDecl) throws -> CharInputStream {
-        (xmlDecl.encoding, xmlDecl.endianBom) = try detectFileEncoding()
+    func getXMLCharInputStream(inputStream inStream: MarkInputStream, xmlDecl: inout XMLDecl) throws -> CharInputStream {
+        (xmlDecl.encoding, xmlDecl.endianBom) = try detectFileEncoding(inputStream: inStream)
 
         //--------------------------------------------------------------------------------
         // So now we will see if there
         // is an XML Declaration telling us that it's something different.
         //--------------------------------------------------------------------------------
-        inputStream.markSet()
+        inStream.markSet()
+        defer { inStream.markDelete() }
 
-        var chars:       [Character]          = []
-        let tCharStream: IConvCharInputStream = IConvCharInputStream(inputStream: inputStream, autoClose: false, encodingName: xmlDecl.encoding)
-
+        let tCharStream: IConvCharInputStream = IConvCharInputStream(inputStream: inStream, autoClose: false, encodingName: xmlDecl.encoding)
         tCharStream.open()
         tCharStream.markSet()
 
         //-------------------------------------------------------------------------------------------------------
         // If we have an XML Declaration, parse it and see if it says something different than what we detected.
         //-------------------------------------------------------------------------------------------------------
-        _ = try tCharStream.read(chars: &chars, maxLength: 5)
-        if String(chars) == "<?xml" {
-            return try parseXMLDeclaration(try getXMLDecl(tCharStream), chStream: tCharStream, xmlDecl: &xmlDecl)
+        let prefix = try readString(tCharStream, count: 5, exact: false)
+        if prefix.lowercased() == "<?xml" {
+            let decl: String = try getXMLDecl(tCharStream)
+            return try parseXMLDeclaration(decl, chStream: tCharStream, xmlDecl: &xmlDecl)
         }
 
         //-----------------------------------------------------------------------------------
         // Otherwise there is no XML Declaration so we stick with what we have and continue.
         //-----------------------------------------------------------------------------------
-        inputStream.markDelete()
         tCharStream.markReturn()
         return tCharStream
     }
 
+    /// Get a character input stream for the external entity from the given input stream.
+    ///
+    /// - Parameter inStream: the byte input stream.
+    /// - Returns: the character input stream based on the determined character encoding.
+    /// - Throws: if an I/O error occurred or the character encoding could not be determined or is unsupported.
+    ///
+    func getEntityCharacterInputStream(inputStream inStream: InputStream) throws -> CharInputStream {
+        let inStream: MarkInputStream = ((inStream as? MarkInputStream) ?? MarkInputStream(inputStream: inStream))
+        let (enc, bom)                = try detectFileEncoding(inputStream: inStream)
+
+        inStream.markSet()
+        defer { inStream.markDelete() }
+
+        let chStream: CharInputStream = IConvCharInputStream(inputStream: inStream, autoClose: false, encodingName: enc)
+        chStream.open()
+        chStream.markSet()
+
+        let prefix = try readString(chStream, count: 5, exact: false)
+        if prefix.lowercased() == "<?xml" {
+            let values: [String: String] = try parseXMLDecl(try getTextDecl(chStream))
+            if let dEnc = values["encoding"], dEnc.uppercased() != enc, try isChangeReal(declEncoding: dEnc, detectedEncoding: enc, byteOrderMark: bom) {
+                return try changeEncoding(declEncoding: dEnc, inputStream: inStream, chStream: chStream)
+            }
+        }
+
+        chStream.markReturn()
+        return chStream
+    }
+
     /*===========================================================================================================================================================================*/
     /// Parse the [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) read from the document.
-    /// 
+    ///
     /// - Parameters:
     ///   - declString: the [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) read from the document.
     ///   - chStream: the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>.
@@ -110,24 +138,19 @@ extension SAXParser {
     ///            it needed to change <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> encoding.
     /// - Throws: if an error occurred or if there was a problem with the [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml).
     ///
-    fileprivate func parseXMLDeclaration(_ declString: String, chStream: CharInputStream, xmlDecl: inout XMLDecl) throws -> CharInputStream {
+    private func parseXMLDeclaration(_ declString: String, chStream: CharInputStream, xmlDecl: inout XMLDecl) throws -> CharInputStream {
         //--------------------------------------------------------------------------------------------------
         // Now, normally the fields "version", "encoding", and "standalone" have to be in that exact order.
         // But we're going to be a little lax and not really care as long as only those three fields are
         // there. However, we are going to stick to the requirement that "version" has to be there. The
         // other two fields are optional. Also, each field can only be there once. In other words, for
         // example, the "standalone" field cannot exist twice.
-        //--------------------------------------------------------------------------------------------------
-        let sx    = "version|encoding|standalone"
-        let sy    = "\\s+(\(sx))=\"([^\"]+)\""
-        let regex = try RegularExpression(pattern: "^\\<\\?xml\(sy)(?:\(sy))?(?:\(sy))?\\s*\\?\\>")
-
-        //------------------------------------------------------------------
+        //
         // We have what looks like a valid XML Declaration. So let's
         // parse it out, validate the data, and populate the xmlDecl tuple.
         //------------------------------------------------------------------
-        if let match: RegularExpression.Match = regex.firstMatch(in: declString) {
-            return try parseXMLDeclValues(&xmlDecl, match, declString, chStream)
+        if let match: RegularExpression.Match = try getXMLDeclRegex().firstMatch(in: declString) {
+            return try analyzeXMLDeclValues(values: try getXMLDeclFields(match), chStream: chStream, declString: declString, xmlDecl: &xmlDecl)
         }
         //---------------------------------------------------------------
         // The XML Declaration we got is malformed and cannot be parsed.
@@ -135,24 +158,26 @@ extension SAXParser {
         throw SAXError.InvalidXMLDeclaration(charStream, description: "The XML Declaration string is malformed: \"\(declString)\"")
     }
 
-    /*===========================================================================================================================================================================*/
-    /// Parse out the [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) found in the XML Document and populate the fields of our assumed xmlDecl tuple.
-    /// 
-    /// - Parameters:
-    ///   - xmlDecl: the current (assumed) values.
-    ///   - match: the RegularExpression.Match object from our RegularExpression test.
-    ///   - declString: the full text of the [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) found in the document.
-    ///   - chStream: the current (detected) <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>.
-    /// - Returns: the current <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> or a new one if the
-    ///            <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> encoding had to change.
-    /// - Throws: if the [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) found in the document was malformed or the newly declared
-    ///           <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> encoding found in it is unsupported.
+    /// Get the regular expression used to break up an XML Declaration into it's properties.
     ///
-    fileprivate func parseXMLDeclValues(_ xmlDecl: inout XMLDecl, _ match: RegularExpression.Match, _ declString: String, _ chStream: CharInputStream) throws -> CharInputStream {
-        //---------------------
-        // Isolate the fields.
-        //---------------------
-        let values = try getXMLDeclFields(match)
+    /// - Returns: the regular expression.
+    /// - Throws: if the regular expression pattern is malformed.
+    ///
+    private func getXMLDeclRegex() throws -> RegularExpression {
+        let sx = "version|encoding|standalone"
+        let sy = "\\s+(\(sx))=\"([^\"]+)\""
+        return try RegularExpression(pattern: "^\\<\\?xml\(sy)(?:\(sy))?(?:\(sy))?\\s*\\?\\>")
+    }
+
+    private func parseXMLDecl(_ declString: String) throws -> [String: String] {
+        if let match: RegularExpression.Match = try getXMLDeclRegex().firstMatch(in: declString) { return try getXMLDeclFields(match) }
+        //---------------------------------------------------------------
+        // The XML Declaration we got is malformed and cannot be parsed.
+        //---------------------------------------------------------------
+        throw SAXError.InvalidXMLDeclaration(charStream, description: "The XML Declaration string is malformed: \"\(declString)\"")
+    }
+
+    private func analyzeXMLDeclValues(values: [String: String], chStream: CharInputStream, declString: String, xmlDecl: inout XMLDecl) throws -> CharInputStream {
         //---------------------------------------------------------------
         // Look for the version. At the very least that should be there.
         //---------------------------------------------------------------
@@ -170,7 +195,7 @@ extension SAXParser {
     /*===========================================================================================================================================================================*/
     /// Get the declared XML `version` from the [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) found in the document. If the [XML
     /// Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) exists in the document then it has to at least have the `version`.
-    /// 
+    ///
     /// - Parameters:
     ///   - xmlDecl: the current [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) values.
     ///   - declString: the [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) found in the document.
@@ -179,14 +204,16 @@ extension SAXParser {
     ///
     fileprivate func parseXMLDeclVersion(_ xmlDecl: inout XMLDecl, _ declString: String, _ values: [String: String]) throws {
         guard let declVersion = values["version"] else { throw SAXError.InvalidXMLDeclaration(charStream, description: "The version is missing from the XML Declaration: \"\(declString)\"") }
-        guard (declVersion == "1.0") || (declVersion == "1.1") else { throw SAXError.InvalidXMLVersion(charStream, description: "The version stated in the XML Declaration is unsupported: \"\(declVersion)\"") }
+        guard (declVersion == "1.0") || (declVersion == "1.1") else {
+            throw SAXError.InvalidXMLVersion(charStream, description: "The version stated in the XML Declaration is unsupported: \"\(declVersion)\"")
+        }
         xmlDecl.version = declVersion
         xmlDecl.versionSpecified = true
     }
 
     /*===========================================================================================================================================================================*/
     /// Get the declared XML `standalone` field, if it exists, from the [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) found in the document.
-    /// 
+    ///
     /// - Parameters:
     ///   - xmlDecl: the current (assumed) [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) values.
     ///   - values: the values found in the [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) in the document.
@@ -208,7 +235,7 @@ extension SAXParser {
     /// Get the declared XML encoding from the [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) found in the document. If an encoding is found that is
     /// different than the detected encoding then create a new <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> and return that
     /// one.
-    /// 
+    ///
     /// - Parameters:
     ///   - xmlDecl: the current (assumed) [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) values.
     ///   - chStream: the current (detected) <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>.
@@ -221,13 +248,13 @@ extension SAXParser {
     fileprivate func parseXMLDeclEncoding(_ xmlDecl: inout XMLDecl, _ chStream: CharInputStream, _ values: [String: String]) throws -> CharInputStream {
         if let declEncoding = values["encoding"] {
             if declEncoding.uppercased() != xmlDecl.encoding {
-                let willChange = try isChangeReal(declEncoding: declEncoding, xmlDecl: xmlDecl)
+                let willChange = try isChangeReal(declEncoding: declEncoding, detectedEncoding: xmlDecl.encoding, byteOrderMark: xmlDecl.endianBom)
 
                 xmlDecl.encoding = declEncoding
                 xmlDecl.encodingSpecified = true
 
                 if willChange {
-                    return try changeEncoding(xmlDecl: xmlDecl, chStream: chStream)
+                    return try changeEncoding(declEncoding: xmlDecl.encoding, inputStream: inputStream, chStream: chStream)
                 }
             }
 
@@ -243,23 +270,14 @@ extension SAXParser {
         return chStream
     }
 
-    /*===========================================================================================================================================================================*/
-    /// Changes the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> to match the encoding that we found in the [XML
-    /// Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml).
-    /// 
-    /// - Parameters:
-    ///   - xmlDecl: the [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) values.
-    ///   - chStream: the current <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>.
-    /// - Returns: the new <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>.
-    /// - Throws: if the new encoding is not supported by the installed version of libiconv.
-    ///
-    fileprivate func changeEncoding(xmlDecl decl: XMLDecl, chStream oChStream: CharInputStream) throws -> CharInputStream {
-        let nEnc: String = decl.encoding.uppercased()
+    private func changeEncoding(declEncoding dEncoding: String, inputStream inStream: MarkInputStream, chStream oChStream: CharInputStream) throws -> CharInputStream {
+        let nEnc: String = dEncoding.uppercased()
         //-----------------------------------------------------------------------
         // Close the old [character input stream](http://goober/Rubicon/Protocols/CharInputStream.html) and reset the byte input stream.
         //-----------------------------------------------------------------------
+        oChStream.markDelete()
         oChStream.close()
-        inputStream.markReturn()
+        inStream.markReturn()
         //--------------------------------------------------------------
         // Now check to make sure we have support for the new encoding.
         //--------------------------------------------------------------
@@ -268,38 +286,24 @@ extension SAXParser {
             // The encoding found in the XML Declaration is not
             // supported by the installed version of libiconv.
             //--------------------------------------------------
-            throw SAXError.InvalidFileEncoding(charStream, description: "The file encoding in the XML Declaration is not supported: \"\(decl.encoding)\"")
+            throw SAXError.InvalidFileEncoding(charStream, description: "The file encoding in the XML Declaration is not supported: \"\(dEncoding)\"")
         }
         //----------------------------------------------------------------------------
         // We have support for the new encoding so open a new character input stream.
         //----------------------------------------------------------------------------
-        let nChStream = IConvCharInputStream(inputStream: inputStream, autoClose: false, encodingName: nEnc)
-        nChStream.open()
+        let newChStream = IConvCharInputStream(inputStream: inStream, autoClose: false, encodingName: nEnc)
+        newChStream.open()
         //----------------------------------------------------------------------------------
         // Now read past the XML Declaration since we don't need to parse it a second time.
         //----------------------------------------------------------------------------------
-        var lc: Character = " "
-        while let ch = try nChStream.read() {
-            if ch == ">" && lc == "?" { return nChStream }
-            lc = ch
-        }
-        throw SAXError.UnexpectedEndOfInput(nChStream)
+        _ = try readUntil(newChStream, marker: "?", ">")
+        return newChStream
     }
 
-    /*===========================================================================================================================================================================*/
-    /// The declared encoding is different than what we guessed at so now let's see if we really have to change or if it's simply a variation of what we guessed.
-    /// 
-    /// - Parameters:
-    ///   - xmlDecl: the current [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) values including what we guessed was the encoding.
-    ///   - declEncoding: the encoding specified in the [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml).
-    /// - Returns: `true` if we really have to change the encoding or `false` if we can continue with what we have.
-    /// - Throws: `SAXError.InvalidFileEncoding` if the declared byte order is definitely NOT what we encountered in the file.
-    ///
-    fileprivate func isChangeReal(declEncoding: String, xmlDecl: XMLDecl) throws -> Bool {
-        func foo(_ str: String) -> Bool { (str == "UTF-16" || str == "UTF-32") }
+    private func isChangeReal(declEncoding: String, detectedEncoding xEnc: String, byteOrderMark bom: Endian) throws -> Bool {
+        let dEnc: String = declEncoding.uppercased()
 
-        let dEnc = declEncoding.uppercased()
-        let xEnc = xmlDecl.encoding
+        func foo(_ str: String) -> Bool { (str == "UTF-16" || str == "UTF-32") }
 
         if xEnc == "UTF-8" {
             return true
@@ -308,9 +312,11 @@ extension SAXParser {
             return !xEnc.hasPrefix(dEnc)
         }
         else if foo(xEnc) && dEnc.hasPrefix(xEnc) {
-            if xmlDecl.endianBom == Endian.getEndianBySuffix(dEnc) { return false }
-            let msg = "The byte order detected in the file does not match the byte order in the XML Declaration: \(xmlDecl.endianBom) != \(Endian.getEndianBySuffix(dEnc))"
-            throw SAXError.InvalidXMLDeclaration(description: msg)
+            guard bom == Endian.getEndianBySuffix(dEnc) else {
+                let msg = "The byte order detected in the file does not match the byte order in the XML Declaration: \(bom) != \(Endian.getEndianBySuffix(dEnc))"
+                throw SAXError.InvalidXMLDeclaration(description: msg)
+            }
+            return false
         }
 
         return true
@@ -318,7 +324,7 @@ extension SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// The the fields out of a regex match of the [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml).
-    /// 
+    ///
     /// - Parameter match: the match object.
     /// - Returns: The map of fields and values.
     /// - Throws: if there was a duplicate field.
@@ -328,7 +334,9 @@ extension SAXParser {
         for i: Int in stride(from: 1, to: 7, by: 2) {
             if let key = match[i].subString, let val = match[i + 1].subString {
                 let k = key.trimmed
-                guard values[k] == nil else { throw SAXError.InvalidXMLDeclaration(charStream, description: "The XML Declaration contains duplicate fields. First duplicate field encountered: \"\(k)\"") }
+                guard values[k] == nil else {
+                    throw SAXError.InvalidXMLDeclaration(charStream, description: "The XML Declaration contains duplicate fields. First duplicate field encountered: \"\(k)\"")
+                }
                 values[k] = val.trimmed
             }
         }
@@ -341,17 +349,17 @@ extension SAXParser {
     /// to tell if we even have an [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) we first have to try to determine the
     /// <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> width by looking at the first 4 bytes of data. This should tell us if we're looking at
     /// 8-bit (UTF-8), 16-bit (UTF-16), or 32-bit (UTF-32) <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s.
-    /// 
+    ///
     /// - Returns: the name of the detected <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> encoding and the detected endian if it is a
     ///            multi-byte <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> encoding.
     /// - Throws: SAXError or I/O <code>[Error](https://developer.apple.com/documentation/swift/error/)</code>.
     ///
-    fileprivate func detectFileEncoding() throws -> (String, Endian) {
-        inputStream.markSet()
-        defer { inputStream.markReturn() }
+    fileprivate func detectFileEncoding(inputStream inStream: MarkInputStream) throws -> (String, Endian) {
+        inStream.markSet()
+        defer { inStream.markReturn() }
 
         var buf: [UInt8] = []
-        let rc:  Int     = try inputStream.read(to: &buf, maxLength: 4)
+        let rc:  Int     = try inStream.read(to: &buf, maxLength: 4)
 
         //-----------------------------------------------------------------------------------
         // No matter what it has to have at least 4 characters because the smallest possible
@@ -385,14 +393,14 @@ extension SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Read the [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) from the XML document.
-    /// 
+    ///
     /// - Parameter charStream: the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> stream to read the declaration from.
     /// - Returns: a <code>[String](https://developer.apple.com/documentation/swift/String)</code> containing the [XML
     ///            Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml).
     /// - Throws: if the [XML Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) is malformed of if the EOF was encountered before the end of the [XML
     ///           Declaration](https://xmlwriter.net/xml_guide/xml_declaration.shtml) was reached.
     ///
-    fileprivate func getXMLDecl(_ cStream: IConvCharInputStream) throws -> String {
+    fileprivate func getXMLDecl(_ cStream: CharInputStream) throws -> String {
         let s = try doRead(charInputStream: cStream) { ch, buffer in
             if ch == ">" {
                 if let p = buffer.last, p == "?" { return true }
@@ -403,4 +411,6 @@ extension SAXParser {
         }
         return "<?xml\(s)>"
     }
+
+    private func getTextDecl(_ chStream: CharInputStream) throws -> String { "<?xml\(try readUntil(charStream, marker: "?", ">"))" }
 }

@@ -101,12 +101,14 @@ public class SAXError: Error, CustomStringConvertible {
     public class InvalidEntityReference: SAXError {}
 
     public class MalformedDTD: SAXError {}
+
+    public class MalformedURL: SAXError {}
 }
 
 extension SAXParser {
     /*===========================================================================================================================================================================*/
     /// Returns a message about a bad character.
-    /// 
+    ///
     /// - Parameter ch: the character.
     /// - Returns: the message
     ///
@@ -114,7 +116,7 @@ extension SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Returns a message about a bad character.
-    /// 
+    ///
     /// - Parameters:
     ///   - ch1: the expected character.
     ///   - ch2: the character we got.
@@ -124,7 +126,7 @@ extension SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Returns a message about a bad character.
-    /// 
+    ///
     /// - Parameters:
     ///   - ch1: the expected characters.
     ///   - ch2: the character we got.
@@ -143,7 +145,7 @@ extension SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Returns a message about a bad character.
-    /// 
+    ///
     /// - Parameters:
     ///   - ch1: the expected characters.
     ///   - ch2: the character we got.

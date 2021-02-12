@@ -5,7 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="60b0239b-d5a7-4057-9e21-57829d56877e" name="Default Changelist" comment="Removed **/grhodes.xcuserdatad/ from GIT.">
-      <change beforePath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.xcworkspace/xcuserdata/grhodes.xcuserdatad/WorkspaceSettings.xcsettings" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Parser/CharacterEncodingDetection.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Parser/CharacterEncodingDetection.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Parser/IO.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Parser/IO.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Parser/ParseDocType.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Parser/ParseDocType.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAXError.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAXError.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAXParser.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAXParser.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Tools/SAXTools.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Tools/SAXTools.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/GettysburgTests/GettysburgTests.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/GettysburgTests/GettysburgTests.swift" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,7 +85,7 @@
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="Settings.Markdown" />
   </component>
-  <component name="RunManager" selected="Application.DocFixer">
+  <component name="RunManager" selected="XCTest.Gettysburg Tests">
     <list>
       <item itemvalue="Application.DocFixer" />
       <item itemvalue="Application.Gettysburg" />
@@ -113,7 +120,7 @@
       <workItem from="1612549491780" duration="11039000" />
       <workItem from="1612673481377" duration="35214000" />
       <workItem from="1612872800328" duration="20247000" />
-      <workItem from="1612965287945" duration="9901000" />
+      <workItem from="1612965287945" duration="20182000" />
     </task>
     <task id="LOCAL-00001" summary="Changed documentation style.">
       <created>1611343621921</created>
@@ -206,7 +213,14 @@
       <option name="project" value="LOCAL" />
       <updated>1612980468040</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Removed **/grhodes.xcuserdatad/ from GIT.">
+      <created>1612980642280</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1612980642280</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -243,9 +257,9 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/Sources/Gettysburg/Parser/ParseDocType.swift</url>
-          <line>134</line>
-          <option name="timeStamp" value="2" />
+          <url>file://$PROJECT_DIR$/Sources/Gettysburg/SAXParser.swift</url>
+          <line>157</line>
+          <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>

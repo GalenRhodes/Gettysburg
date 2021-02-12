@@ -31,7 +31,7 @@ extension SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Read and return a quoted string.
-    /// 
+    ///
     /// - Returns: the text in between double quotes (") or single quotes (')
     /// - Throws: if an I/O error occurs or if the EOF is encountered before the closing quotation mark is found.
     ///
@@ -39,7 +39,7 @@ extension SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Read and return a quoted string.
-    /// 
+    ///
     /// - Parameter chStream: the [input stream](http://goober/Rubicon/Protocols/CharInputStream.html) to read from.
     /// - Returns: the text in between double quotes (") or single quotes (')
     /// - Throws: if an I/O error occurs or if the EOF is encountered before the closing quotation mark is found.
@@ -70,7 +70,7 @@ extension SAXParser {
     /*===========================================================================================================================================================================*/
     /// Read and return all the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> up to but not including the first encountered NON-whitespace
     /// <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>.
-    /// 
+    ///
     /// - Parameter noEOF: if `true` then an error is thrown if the EOF is encountered before the first non-whitespace
     ///                    <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> is found. The default is `false`.
     /// - Returns: the <code>[String](https://developer.apple.com/documentation/swift/String)</code> of
@@ -83,7 +83,7 @@ extension SAXParser {
     /*===========================================================================================================================================================================*/
     /// Read and return all the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> up to but not including the first encountered NON-whitespace
     /// <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>.
-    /// 
+    ///
     /// - Parameters:
     ///   - chStream: the [input stream](http://goober/Rubicon/Protocols/CharInputStream.html) to read from.
     ///   - noEOF: if `true` then an error is thrown if the EOF is encountered before the first non-whitespace
@@ -109,7 +109,7 @@ extension SAXParser {
     /*===========================================================================================================================================================================*/
     /// Skip past all the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> up to but not including the first encountered NON-whitespace
     /// <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>.
-    /// 
+    ///
     /// - Parameters:
     ///   - mustHave: if `true` then there has to be at least ONE whitespace character.
     ///   - push: if '`true`' the first non-whitespace character encountered will be pushed back into the input stream as well as being returned. The default is `false`.
@@ -122,7 +122,7 @@ extension SAXParser {
     /*===========================================================================================================================================================================*/
     /// Skip past all the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> up to but not including the first encountered NON-whitespace
     /// <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>.
-    /// 
+    ///
     /// - Parameters:
     ///   - chStream: the [input stream](http://goober/Rubicon/Protocols/CharInputStream.html) to read from.
     ///   - mustHave: if `true` then there has to be at least ONE whitespace character. The default is `true`.
@@ -148,29 +148,35 @@ extension SAXParser {
     /*===========================================================================================================================================================================*/
     /// Read `count` number of <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s from the [input
     /// stream](http://goober/Rubicon/Protocols/CharInputStream.html) and return them as a string.
-    /// 
-    /// - Parameter count: the number of <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s to read.
+    ///
+    /// - Parameters:
+    ///   - count: the number of <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s to read.
+    ///   - exact: if true and the number of character read before EOF is encountered is less than count then an exception is thrown. Default is true.
     /// - Returns: the number of <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s read.
     /// - Throws: if there is an I/O error or if there are fewer than `count` <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s left in the
     ///           input stream.
     ///
-    @inlinable func readString(count: Int) throws -> String { try readString(charStream, count: count) }
+    @inlinable func readString(count: Int, exact: Bool = true) throws -> String { try readString(charStream, count: count, exact: exact) }
 
     /*===========================================================================================================================================================================*/
     /// Read `count` number of <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s from the [input
     /// stream](http://goober/Rubicon/Protocols/CharInputStream.html) and return them as a string.
-    /// 
+    ///
     /// - Parameters:
     ///   - chStream: the [input stream](http://goober/Rubicon/Protocols/CharInputStream.html) to read from.
     ///   - count: the number of <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s to read.
+    ///   - exact: if true and the number of character read before EOF is encountered is less than count then an exception is thrown. Default is true.
     /// - Returns: the number of <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s read.
     /// - Throws: if there is an I/O error or if there are fewer than `count` <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s left in the
     ///           input stream.
     ///
-    @inlinable func readString(_ chStream: CharInputStream, count: Int) throws -> String {
+    @inlinable func readString(_ chStream: CharInputStream, count: Int, exact: Bool = true) throws -> String {
         var buffer: [Character] = []
         for _ in (0 ..< count) {
-            guard let ch = try chStream.read() else { throw SAXError.UnexpectedEndOfInput(chStream) }
+            guard let ch = try chStream.read() else {
+                if exact { throw SAXError.UnexpectedEndOfInput(chStream) }
+                return String(buffer)
+            }
             buffer <+ ch
         }
         return String(buffer)
@@ -179,7 +185,7 @@ extension SAXParser {
     /*===========================================================================================================================================================================*/
     /// Read and return all the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s up to but not including the first encountered whitespace
     /// <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>.
-    /// 
+    ///
     /// - Returns: The <code>[String](https://developer.apple.com/documentation/swift/String)</code> of
     ///            <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s read.
     /// - Throws: if an I/O error occurs.
@@ -189,7 +195,7 @@ extension SAXParser {
     /*===========================================================================================================================================================================*/
     /// Read and return all the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s up to but not including the first encountered whitespace
     /// <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>.
-    /// 
+    ///
     /// - Parameter chStream: the [input stream](http://goober/Rubicon/Protocols/CharInputStream.html) to read from.
     /// - Returns: The <code>[String](https://developer.apple.com/documentation/swift/String)</code> of
     ///            <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s read.
@@ -199,7 +205,7 @@ extension SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Read until the given set of <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s is found.
-    /// 
+    ///
     /// - Parameter marker: the sequence of <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s that will trigger the end of the read.
     /// - Returns: The <code>[String](https://developer.apple.com/documentation/swift/String)</code> of
     ///            <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s read from the input.
@@ -209,7 +215,7 @@ extension SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Read until the given set of <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s is found.
-    /// 
+    ///
     /// - Parameters:
     ///   - chStream: the [input stream](http://goober/Rubicon/Protocols/CharInputStream.html) to read from.
     ///   - marker: the sequence of <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s that will trigger the end of the read.
@@ -221,7 +227,7 @@ extension SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Read until the given set of <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s is found.
-    /// 
+    ///
     /// - Parameters:
     ///   - chStream: the [input stream](http://goober/Rubicon/Protocols/CharInputStream.html) to read from.
     ///   - marker: the sequence of <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s that will trigger the end of the read.
@@ -234,7 +240,7 @@ extension SAXParser {
     /*===========================================================================================================================================================================*/
     /// Read <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s from the [input stream](http://goober/Rubicon/Protocols/CharInputStream.html) and
     /// make sure they match the given <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s in the order they're given.
-    /// 
+    ///
     /// - Parameter chars: the list of expected <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s.
     /// - Returns: the string from the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s.
     /// - Throws: if an I/O error occurs, the EOF is encountered, or the read <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s don't match the
@@ -245,7 +251,7 @@ extension SAXParser {
     /*===========================================================================================================================================================================*/
     /// Read <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s from the [input stream](http://goober/Rubicon/Protocols/CharInputStream.html) and
     /// make sure they match the given <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s in the order they're given.
-    /// 
+    ///
     /// - Parameters:
     ///   - chStream: the [input stream](http://goober/Rubicon/Protocols/CharInputStream.html) to read from.
     ///   - chars: the list of expected <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s.
@@ -258,7 +264,7 @@ extension SAXParser {
     /*===========================================================================================================================================================================*/
     /// Read <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s from the [input stream](http://goober/Rubicon/Protocols/CharInputStream.html) and
     /// make sure they match the given <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s in the order they're given.
-    /// 
+    ///
     /// - Parameters:
     ///   - chStream: the [input stream](http://goober/Rubicon/Protocols/CharInputStream.html) to read from.
     ///   - chars: the list of expected <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s.
@@ -286,7 +292,7 @@ extension SAXParser {
     /*===========================================================================================================================================================================*/
     /// Read <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s from the [input stream](http://goober/Rubicon/Protocols/CharInputStream.html) and
     /// make sure they match the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s in the given string in the order they're given.
-    /// 
+    ///
     /// - Parameter string: the string containing the expected <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s.
     /// - Returns: the string from the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s.
     /// - Throws: if an I/O error occurs, the EOF is encountered, or the read <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s don't match the
@@ -297,7 +303,7 @@ extension SAXParser {
     /*===========================================================================================================================================================================*/
     /// Read <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s from the [input stream](http://goober/Rubicon/Protocols/CharInputStream.html) and
     /// make sure they match the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s in the given string in the order they're given.
-    /// 
+    ///
     /// - Parameters:
     ///   - chStream: the [input stream](http://goober/Rubicon/Protocols/CharInputStream.html) to read from.
     ///   - string: the string containing the expected <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s.
@@ -328,7 +334,7 @@ extension SAXParser {
     /// Read the next <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> from the [input
     /// stream](http://goober/Rubicon/Protocols/CharInputStream.html) and make sure it matches the any of the expected
     /// <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s.
-    /// 
+    ///
     /// - Parameter chars: the list of expected <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s.
     /// - Returns: the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> read.
     /// - Throws: if an I/O error occurs, the EOF is encountered, or the read <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> is not any of the
@@ -340,7 +346,7 @@ extension SAXParser {
     /// Read the next <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> from the [input
     /// stream](http://goober/Rubicon/Protocols/CharInputStream.html) and make sure it matches the any of the expected
     /// <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s.
-    /// 
+    ///
     /// - Parameters:
     ///   - chStream: the [input stream](http://goober/Rubicon/Protocols/CharInputStream.html) to read from.
     ///   - chars: the list of expected <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s.
@@ -354,7 +360,7 @@ extension SAXParser {
     /// Read the next <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> from the [input
     /// stream](http://goober/Rubicon/Protocols/CharInputStream.html) and make sure it matches the any of the expected
     /// <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s.
-    /// 
+    ///
     /// - Parameters:
     ///   - chStream: the [input stream](http://goober/Rubicon/Protocols/CharInputStream.html) to read from.
     ///   - chars: the list of expected <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s.
@@ -371,7 +377,7 @@ extension SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Read a single <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> from the input stream.
-    /// 
+    ///
     /// - Returns: the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> read.
     /// - Throws: if an I/O error occurs or the EOF is encountered.
     ///
@@ -379,7 +385,7 @@ extension SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Read a single <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> from the input stream.
-    /// 
+    ///
     /// - Parameter chStream: the [input stream](http://goober/Rubicon/Protocols/CharInputStream.html) to read from.
     /// - Returns: the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> read.
     /// - Throws: if an I/O error occurs or the EOF is encountered.
@@ -391,7 +397,7 @@ extension SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Read an [XML name](https://www.w3.org/TR/REC-xml/#sec-common-syn) from the input stream.
-    /// 
+    ///
     /// - Returns: the XML name.
     /// - Throws: if an I/O error occurs.
     ///
@@ -399,7 +405,7 @@ extension SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Read an [XML name](https://www.w3.org/TR/REC-xml/#sec-common-syn) from the input stream.
-    /// 
+    ///
     /// - Parameter chStream: the [input stream](http://goober/Rubicon/Protocols/CharInputStream.html) to read from.
     /// - Returns: the XML name.
     /// - Throws: if an I/O error occurs.
@@ -410,7 +416,7 @@ extension SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Read an [XML NMTOKEN](https://www.w3.org/TR/REC-xml/#sec-common-syn) from the input stream.
-    /// 
+    ///
     /// - Returns: the XML name.
     /// - Throws: if an I/O error occurs.
     ///
@@ -418,7 +424,7 @@ extension SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Read an [XML NMTOKEN](https://www.w3.org/TR/REC-xml/#sec-common-syn) from the input stream.
-    /// 
+    ///
     /// - Parameter chStream: the [input stream](http://goober/Rubicon/Protocols/CharInputStream.html) to read from.
     /// - Returns: the XML name.
     /// - Throws: if an I/O error occurs.
@@ -428,7 +434,7 @@ extension SAXParser {
     /*===========================================================================================================================================================================*/
     /// Read from the [character input stream](http://goober/Rubicon/Protocols/CharInputStream.html) until the given
     /// <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> is found.
-    /// 
+    ///
     /// - Parameter ch: the given <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>.
     /// - Returns: the string of <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s up to, but not including, the given
     ///            <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>.
@@ -439,7 +445,7 @@ extension SAXParser {
     /*===========================================================================================================================================================================*/
     /// Read from the [character input stream](http://goober/Rubicon/Protocols/CharInputStream.html) until the given
     /// <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> is found.
-    /// 
+    ///
     /// - Parameters:
     ///   - chStream: the [input stream](http://goober/Rubicon/Protocols/CharInputStream.html) to read from.
     ///   - ch: the given <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>.
@@ -453,7 +459,7 @@ extension SAXParser {
     /// Read <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s from the [input stream](http://goober/Rubicon/Protocols/CharInputStream.html)
     /// until the closure returns `true`. The closure is called for each <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> read. When the closure
     /// returns `true` then reading will stop and a string containing the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s read is returned.
-    /// 
+    ///
     /// - Parameters:
     ///   - backup: if `true` then the last `count` <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s are returned to the [input
     ///             stream](http://goober/Rubicon/Protocols/CharInputStream.html) to be read again.
@@ -471,7 +477,7 @@ extension SAXParser {
     /// Read <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s from the [input stream](http://goober/Rubicon/Protocols/CharInputStream.html)
     /// until the closure returns `true`. The closure is called for each <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> read. When the closure
     /// returns `true` then reading will stop and a string containing the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s read is returned.
-    /// 
+    ///
     /// - Parameters:
     ///   - chStream: the [input stream](http://goober/Rubicon/Protocols/CharInputStream.html) to read from.
     ///   - backup: if `true` then the last `count` <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s are returned to the [input
@@ -497,7 +503,7 @@ extension SAXParser {
     /// Read <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s from the [input stream](http://goober/Rubicon/Protocols/CharInputStream.html)
     /// until the closure returns `true`. The closure is called for each <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> read. When the closure
     /// returns `true` then reading will stop and a string containing the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s read is returned.
-    /// 
+    ///
     /// - Parameters:
     ///   - backup: if `true` then the last `count` <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s are returned to the [input
     ///             stream](http://goober/Rubicon/Protocols/CharInputStream.html) to be read again.
@@ -515,7 +521,7 @@ extension SAXParser {
     /// Read <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s from the [input stream](http://goober/Rubicon/Protocols/CharInputStream.html)
     /// until the closure returns `true`. The closure is called for each <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> read. When the closure
     /// returns `true` then reading will stop and a string containing the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s read is returned.
-    /// 
+    ///
     /// - Parameters:
     ///   - backup: if `true` then the last `count` <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>s are returned to the [input
     ///             stream](http://goober/Rubicon/Protocols/CharInputStream.html) to be read again.
@@ -543,7 +549,7 @@ extension SAXParser {
     /// <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> <code>[Array](https://developer.apple.com/documentation/swift/Array)</code>. When the
     /// closure returns `true` then the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>
     /// <code>[Array](https://developer.apple.com/documentation/swift/Array)</code> will be wrapped in a string and returned.
-    /// 
+    ///
     /// - Parameter body: the closure.
     /// - Returns: a new string made from the contents of the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>
     ///            <code>[Array](https://developer.apple.com/documentation/swift/Array)</code> passed to the closure.
@@ -557,7 +563,7 @@ extension SAXParser {
     /// <code>[Character](https://developer.apple.com/documentation/swift/Character)</code> <code>[Array](https://developer.apple.com/documentation/swift/Array)</code>. When the
     /// closure returns `true` then the <code>[Character](https://developer.apple.com/documentation/swift/Character)</code>
     /// <code>[Array](https://developer.apple.com/documentation/swift/Array)</code> will be wrapped in a string and returned.
-    /// 
+    ///
     /// - Parameters:
     ///   - cString: the [character input stream](http://goober/Rubicon/Protocols/CharInputStream.html) to read from.
     ///   - body: the closure.

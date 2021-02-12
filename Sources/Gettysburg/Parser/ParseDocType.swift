@@ -31,7 +31,7 @@ extension SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Parse out a DOCTYPE Declaration. This method picks up AFTER the text "<!DOCTYPE " has already been read from the input stream.
-    /// 
+    ///
     /// - Parameter handler: The handler.
     /// - Throws: if an I/O error occurs or if the DOCTYPE declaration is malformed or incomplete.
     ///
@@ -54,7 +54,7 @@ extension SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Parse an external public DTD
-    /// 
+    ///
     /// - Parameters:
     ///   - handler: the handler
     ///   - elemName: the root element name.
@@ -75,7 +75,7 @@ extension SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Parse an external system DTD
-    /// 
+    ///
     /// - Parameters:
     ///   - handler: the handler
     ///   - elemName: the root element name.
@@ -96,7 +96,7 @@ extension SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Parse an internal DTD
-    /// 
+    ///
     /// - Parameters:
     ///   - handler: the handler
     ///   - elemName: the root element name.
@@ -110,7 +110,7 @@ extension SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Parse an external DTD
-    /// 
+    ///
     /// - Parameters:
     ///   - handler: the handler
     ///   - elemName: the root element name.
@@ -121,13 +121,19 @@ extension SAXParser {
     ///
     private func parseExternalDTD(_ handler: H, element elemName: String, type: DTDExternalType, name: String?, location: String) throws {
         handler.dtdExternalBegin(parser: self, rootElementName: elemName, type: type, externalId: name, systemId: location)
-        // TODO: Read from external file. Encoding?
+        if let url: URL = URL(string: location, relativeTo: baseURL) {
+            // TODO: Read from external file. Encoding?
+
+        }
+        else {
+            handler.parseErrorOccurred(parser: self, error: SAXError.MalformedURL(charStream, description: "Malformed URL: \(location)"))
+        }
         handler.dtdExternalEnd(parser: self, rootElementName: elemName)
     }
 
     /*===========================================================================================================================================================================*/
     /// Parse and handle an internal or external DTD.
-    /// 
+    ///
     /// - Parameters:
     ///   - handler: the handler
     ///   - elemName: the root element name.
@@ -147,7 +153,7 @@ extension SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Parse and handle an internal or external DTD.
-    /// 
+    ///
     /// - Parameters:
     ///   - handler: the handler
     ///   - chStream: the character input stream to read from.
@@ -194,7 +200,7 @@ extension SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Parse and handle a conditional declaration.
-    /// 
+    ///
     /// - Parameters:
     ///   - handler: the SAX handler.
     ///   - chStream: the character input stream.
@@ -221,7 +227,7 @@ extension SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Parse and handle a notation declaration.
-    /// 
+    ///
     /// - Parameters:
     ///   - handler: the SAX handler.
     ///   - chStream: the character input stream.
@@ -235,7 +241,7 @@ extension SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Parse and handle an attribute declaration.
-    /// 
+    ///
     /// - Parameters:
     ///   - handler: the SAX handler.
     ///   - chStream: the character input stream.
@@ -249,7 +255,7 @@ extension SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Parse and handle an element declaration.
-    /// 
+    ///
     /// - Parameters:
     ///   - handler: the SAX handler.
     ///   - chStream: the character input stream.
@@ -263,7 +269,7 @@ extension SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Parse and handle an entity declaration.
-    /// 
+    ///
     /// - Parameters:
     ///   - handler: the SAX handler.
     ///   - chStream: the character input stream.
@@ -303,7 +309,7 @@ extension SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Determine if the external entity is a public or system external type.
-    /// 
+    ///
     /// - Parameter chStream: the character input stream.
     /// - Returns: `SAXParser.DTDExternalType.Public` or `SAXParser.DTDExternalType.System`.
     /// - Throws: if an I/O error occurs or if the external entity type is not "SYSTEM" or "PUBLIC"
@@ -316,7 +322,7 @@ extension SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Determine if the entity is a general entity or a parameter entity.
-    /// 
+    ///
     /// - Parameters:
     ///   - chStream: The character input stream.
     ///   - ch: the last character read.
@@ -339,7 +345,7 @@ extension SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Parse and handle an external entity declaration.
-    /// 
+    ///
     /// - Parameters:
     ///   - handler: the handler.
     ///   - chStream: the character input stream.
@@ -361,7 +367,7 @@ extension SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Parse and handle an Unparsed Entity Declaration.
-    /// 
+    ///
     /// - Parameters:
     ///   - handler: the handler.
     ///   - chStream: the character input stream.
