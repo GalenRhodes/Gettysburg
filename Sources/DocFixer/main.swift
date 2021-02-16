@@ -13,6 +13,7 @@ func docFixer() -> Int {
     let mAndR: [RegexRepl] = [
         RegexRepl(pattern: "(?<!\\w|`)(nil)(?!\\w|`)", repl: "`$1`"),
         RegexRepl(pattern: "(?<!\\w|`)(\\w+(?:\\.\\w+)*\\([^)]*\\))(?!\\w|`)", repl: "`$1`"),
+        RegexRepl(pattern: "(?<=\\s)(char(?:acter)? input stream)(?=\\W)", repl: "<code>[$1](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>"),
     ]
     return doDocFixer(args: CommandLine.arguments, replacements: mAndR)
 }

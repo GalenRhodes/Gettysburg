@@ -10,24 +10,13 @@ import XCTest
 
 class GettysburgTests: XCTestCase {
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
+    let testDataDir: String = "Tests/GettysburgTests/TestData"
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
+    override func setUpWithError() throws {}
 
-    func testStart() throws {
-        let fileName = "Tests/GettysburgTests/TestData/Test_UTF-16BE.xml"
-        let handler = SAXTestHandler()
-        if let parser  = SAXParser(fileAtPath: fileName, handler: handler) {
-            try parser.parse()
-        }
-        else {
-            XCTFail("Unable to open file \"\(fileName)\".")
-        }
-    }
+    override func tearDownWithError() throws {}
+
+    func testStart() throws {}
 
 //    func testPerformanceExample() throws {
 //        // This is an example of a performance test case.
