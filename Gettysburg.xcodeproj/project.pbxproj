@@ -24,10 +24,32 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		1117D0A4FF07F25A60BC18D2 /* SAXHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D3A1E6C4AA50C5538A81 /* SAXHandler.swift */; };
+		1117D0F54CBF298264462A01 /* DocType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D8C45F1B0D5FC49A7BD8 /* DocType.swift */; };
+		1117D22191E359EA24C6A826 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DFB20447E8856673449D /* Extensions.swift */; };
+		1117D4474B91CC14AE141F54 /* Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DE9A1CF91E7263AFD24B /* Text.swift */; };
+		1117D52FC3302D0A10F3E84F /* SAXParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DEEF81A42D01ABDC174A /* SAXParser.swift */; };
+		1117D5D675B775BF598C131A /* SAXAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D2DEC3706C4D65F03862 /* SAXAttribute.swift */; };
+		1117D5F629595A697025A9A5 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D3E6184A707D9FC4E293 /* Document.swift */; };
+		1117D614D9655003FF21181A /* ProcessingInstruction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DA824E14682604234458 /* ProcessingInstruction.swift */; };
+		1117D681F10301D6211E80CD /* DocTypeElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DB4A18324ACDE93EB65C /* DocTypeElement.swift */; };
 		1117D68B62FFD1AA32F00AEB /* SAXTestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DEB2BBDD656C51384346 /* SAXTestHandler.swift */; };
+		1117D7C3FA667B4863A25898 /* SAXCharInputStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D624CCC13A7CE4FD5811 /* SAXCharInputStream.swift */; };
+		1117D83F8FAF58D0C2B39866 /* SAXElementDecl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DCD41E64577F76B87B75 /* SAXElementDecl.swift */; };
+		1117D8909EA0CE1758E59ADA /* DocTypeEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DD5B0B133552D0A44749 /* DocTypeEntity.swift */; };
+		1117D8DFE2AC6F4ADC667B01 /* SAXText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D52214D80D5CD20FB455 /* SAXText.swift */; };
+		1117D91388446226B32F9AA1 /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D44F455A6E1F051E1FE7 /* Tools.swift */; };
+		1117D9565EDC7735384C480F /* CharInputStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D27E52C9747092059B34 /* CharInputStream.swift */; };
+		1117DA2C00000F8C35A61C83 /* DocTypeAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DD3F85EE41DBCCAFED94 /* DocTypeAttribute.swift */; };
+		1117DA65DD62A27F9DE76C4E /* ExternalEntities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D9D29D4438623D3D7394 /* ExternalEntities.swift */; };
 		1117DA9DA3ACFB977CAA77CA /* CharacterSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DF67151CBCFC4806850A /* CharacterSets.swift */; };
+		1117DAE28F5216597168750E /* SAXError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D597EAA818B7614CEAEF /* SAXError.swift */; };
+		1117DB1BBF5EC06F66B205BC /* SAXEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D589E141CB6EA1FFEA80 /* SAXEntity.swift */; };
 		1117DBACBBB748A8639285FD /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DB804342BF77458B8663 /* main.swift */; };
+		1117DCC26185D5ACA4C0B569 /* SAXNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D61D8E71863201C17818 /* SAXNode.swift */; };
+		1117DD52BDA82EF3D833AEE7 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D823F398AB0E260CA6A8 /* Enums.swift */; };
 		1117DDAABC5C2559C3E58075 /* Gettysburg.h in Headers */ = {isa = PBXBuildFile; fileRef = 1117DA52094C2ABAE3EA2EBA /* Gettysburg.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1117DFF887C85EEA1E0DAEDF /* Element.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DAFBEFBAF2446DD9BCDC /* Element.swift */; };
 		8356BB3C25D038AA00E41DFC /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D86804A3FA8399671C13 /* main.swift */; };
 		8356BB4425D03A8100E41DFC /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 83DD3B8425B9CBEE0083BC1C /* libiconv.tbd */; };
 		83CFA5BA2556E331005498FC /* Gettysburg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83CFA5B02556E331005498FC /* Gettysburg.framework */; };
@@ -107,27 +129,49 @@
 		1117D173F94712C34C49032A /* Test_UTF-16BE_ext.xml */ = {isa = PBXFileReference; fileEncoding = 2415919360; lastKnownFileType = text.xml; path = "Test_UTF-16BE_ext.xml"; sourceTree = "<group>"; };
 		1117D24C2AC342935E43EA54 /* Test.dtd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Test.dtd; sourceTree = "<group>"; };
 		1117D2654B632662DADD7449 /* Test_WINDOWS-1252.xml */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = text.xml; path = "Test_WINDOWS-1252.xml"; sourceTree = "<group>"; };
+		1117D27E52C9747092059B34 /* CharInputStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CharInputStream.swift; sourceTree = "<group>"; };
 		1117D2AD350A984772DC23C9 /* XML_Entities_Data_A.csv */ = {isa = PBXFileReference; lastKnownFileType = file.csv; path = XML_Entities_Data_A.csv; sourceTree = "<group>"; };
+		1117D2DEC3706C4D65F03862 /* SAXAttribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXAttribute.swift; sourceTree = "<group>"; };
 		1117D3250DFFCE3E85ABD6E2 /* .jazzy.yaml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .jazzy.yaml; sourceTree = "<group>"; };
 		1117D32792ADADA24039E4BC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		1117D34903A4804B6646574A /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		1117D39A50E13D704326AF0E /* Test_UTF-8.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Test_UTF-8.xml"; sourceTree = "<group>"; };
+		1117D3A1E6C4AA50C5538A81 /* SAXHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXHandler.swift; sourceTree = "<group>"; };
+		1117D3E6184A707D9FC4E293 /* Document.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
+		1117D44F455A6E1F051E1FE7 /* Tools.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tools.swift; sourceTree = "<group>"; };
 		1117D49E8D02446DD4DCA48F /* XML_Entities_Data.csv */ = {isa = PBXFileReference; lastKnownFileType = file.csv; path = XML_Entities_Data.csv; sourceTree = "<group>"; };
+		1117D52214D80D5CD20FB455 /* SAXText.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXText.swift; sourceTree = "<group>"; };
+		1117D589E141CB6EA1FFEA80 /* SAXEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXEntity.swift; sourceTree = "<group>"; };
+		1117D597EAA818B7614CEAEF /* SAXError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXError.swift; sourceTree = "<group>"; };
+		1117D61D8E71863201C17818 /* SAXNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXNode.swift; sourceTree = "<group>"; };
+		1117D624CCC13A7CE4FD5811 /* SAXCharInputStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXCharInputStream.swift; sourceTree = "<group>"; };
 		1117D62B33D6FEF9D67D50E6 /* Test_UTF-32LE.xml */ = {isa = PBXFileReference; fileEncoding = 2617245952; lastKnownFileType = text.xml; path = "Test_UTF-32LE.xml"; sourceTree = "<group>"; };
 		1117D7BD3C4A2B65CD16265F /* compname.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = compname.txt; sourceTree = "<group>"; };
 		1117D7BF1803856C4213CB5E /* Test.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Test.xml; sourceTree = "<group>"; };
+		1117D823F398AB0E260CA6A8 /* Enums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
 		1117D86804A3FA8399671C13 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		1117D8C36782AC8D094246EE /* Test_UTF-16LE_ext.dtd */ = {isa = PBXFileReference; fileEncoding = 2483028224; lastKnownFileType = text.xml; path = "Test_UTF-16LE_ext.dtd"; sourceTree = "<group>"; };
+		1117D8C45F1B0D5FC49A7BD8 /* DocType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocType.swift; sourceTree = "<group>"; };
 		1117D9BAFC548A58FAF127F5 /* Test3.xml */ = {isa = PBXFileReference; fileEncoding = 2483028224; lastKnownFileType = text.xml; path = Test3.xml; sourceTree = "<group>"; };
+		1117D9D29D4438623D3D7394 /* ExternalEntities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExternalEntities.swift; sourceTree = "<group>"; };
 		1117DA00775621297FDDF090 /* Test4.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Test4.xml; sourceTree = "<group>"; };
 		1117DA1BA1656B061F4F54F0 /* Test2.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Test2.xml; sourceTree = "<group>"; };
 		1117DA52094C2ABAE3EA2EBA /* Gettysburg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gettysburg.h; sourceTree = "<group>"; };
+		1117DA824E14682604234458 /* ProcessingInstruction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProcessingInstruction.swift; sourceTree = "<group>"; };
+		1117DAFBEFBAF2446DD9BCDC /* Element.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Element.swift; sourceTree = "<group>"; };
+		1117DB4A18324ACDE93EB65C /* DocTypeElement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocTypeElement.swift; sourceTree = "<group>"; };
 		1117DB804342BF77458B8663 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		1117DCD41E64577F76B87B75 /* SAXElementDecl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXElementDecl.swift; sourceTree = "<group>"; };
+		1117DD3F85EE41DBCCAFED94 /* DocTypeAttribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocTypeAttribute.swift; sourceTree = "<group>"; };
 		1117DD5AFC911B2020139DDF /* LinuxMain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinuxMain.swift; sourceTree = "<group>"; };
+		1117DD5B0B133552D0A44749 /* DocTypeEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocTypeEntity.swift; sourceTree = "<group>"; };
+		1117DE9A1CF91E7263AFD24B /* Text.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Text.swift; sourceTree = "<group>"; };
 		1117DEB2BBDD656C51384346 /* SAXTestHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXTestHandler.swift; sourceTree = "<group>"; };
 		1117DEC96369491CED3F9649 /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
+		1117DEEF81A42D01ABDC174A /* SAXParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXParser.swift; sourceTree = "<group>"; };
 		1117DF25C968B209A3179FBE /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = file.gitignore; path = .gitignore; sourceTree = "<group>"; };
 		1117DF67151CBCFC4806850A /* CharacterSets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CharacterSets.swift; sourceTree = "<group>"; };
+		1117DFB20447E8856673449D /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		8356BB1A25D0375F00E41DFC /* EntityTool */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = EntityTool; sourceTree = BUILT_PRODUCTS_DIR; };
 		83CFA5B02556E331005498FC /* Gettysburg.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Gettysburg.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		83CFA5B92556E331005498FC /* GettysburgTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GettysburgTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -172,6 +216,36 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1117D1A63D2BE088AFE1141A /* Parser */ = {
+			isa = PBXGroup;
+			children = (
+				1117D9D29D4438623D3D7394 /* ExternalEntities.swift */,
+				1117D8C45F1B0D5FC49A7BD8 /* DocType.swift */,
+				1117DE9A1CF91E7263AFD24B /* Text.swift */,
+				1117DAFBEFBAF2446DD9BCDC /* Element.swift */,
+				1117DA824E14682604234458 /* ProcessingInstruction.swift */,
+				1117D3E6184A707D9FC4E293 /* Document.swift */,
+				1117DD5B0B133552D0A44749 /* DocTypeEntity.swift */,
+				1117DB4A18324ACDE93EB65C /* DocTypeElement.swift */,
+				1117DD3F85EE41DBCCAFED94 /* DocTypeAttribute.swift */,
+			);
+			path = Parser;
+			sourceTree = "<group>";
+		};
+		1117D1D1CA404704C027B264 /* Misc */ = {
+			isa = PBXGroup;
+			children = (
+				1117DFB20447E8856673449D /* Extensions.swift */,
+				1117D823F398AB0E260CA6A8 /* Enums.swift */,
+				1117DCD41E64577F76B87B75 /* SAXElementDecl.swift */,
+				1117D597EAA818B7614CEAEF /* SAXError.swift */,
+				1117D27E52C9747092059B34 /* CharInputStream.swift */,
+				1117D44F455A6E1F051E1FE7 /* Tools.swift */,
+				1117D624CCC13A7CE4FD5811 /* SAXCharInputStream.swift */,
+			);
+			path = Misc;
+			sourceTree = "<group>";
+		};
 		1117D2EC0E5DD8292487BE6B /* Other */ = {
 			isa = PBXGroup;
 			children = (
@@ -196,6 +270,17 @@
 				1117DF67151CBCFC4806850A /* CharacterSets.swift */,
 			);
 			path = Validation;
+			sourceTree = "<group>";
+		};
+		1117D6941BC45C90FFFEC89A /* DOM */ = {
+			isa = PBXGroup;
+			children = (
+				1117D61D8E71863201C17818 /* SAXNode.swift */,
+				1117D2DEC3706C4D65F03862 /* SAXAttribute.swift */,
+				1117D52214D80D5CD20FB455 /* SAXText.swift */,
+				1117D589E141CB6EA1FFEA80 /* SAXEntity.swift */,
+			);
+			path = DOM;
 			sourceTree = "<group>";
 		};
 		1117DA34C4883FCE9F6D0B90 /* TestData */ = {
@@ -265,6 +350,11 @@
 			children = (
 				1117D2EC0E5DD8292487BE6B /* Other */,
 				1117D557776ABCAF0E334CE5 /* Validation */,
+				1117D3A1E6C4AA50C5538A81 /* SAXHandler.swift */,
+				1117DEEF81A42D01ABDC174A /* SAXParser.swift */,
+				1117D6941BC45C90FFFEC89A /* DOM */,
+				1117D1D1CA404704C027B264 /* Misc */,
+				1117D1A63D2BE088AFE1141A /* Parser */,
 			);
 			path = Gettysburg;
 			sourceTree = "<group>";
@@ -492,6 +582,28 @@
 			buildActionMask = 2147483647;
 			files = (
 				1117DA9DA3ACFB977CAA77CA /* CharacterSets.swift in Sources */,
+				1117D0A4FF07F25A60BC18D2 /* SAXHandler.swift in Sources */,
+				1117D52FC3302D0A10F3E84F /* SAXParser.swift in Sources */,
+				1117DCC26185D5ACA4C0B569 /* SAXNode.swift in Sources */,
+				1117D5D675B775BF598C131A /* SAXAttribute.swift in Sources */,
+				1117D8DFE2AC6F4ADC667B01 /* SAXText.swift in Sources */,
+				1117DB1BBF5EC06F66B205BC /* SAXEntity.swift in Sources */,
+				1117D22191E359EA24C6A826 /* Extensions.swift in Sources */,
+				1117DD52BDA82EF3D833AEE7 /* Enums.swift in Sources */,
+				1117D83F8FAF58D0C2B39866 /* SAXElementDecl.swift in Sources */,
+				1117DAE28F5216597168750E /* SAXError.swift in Sources */,
+				1117D9565EDC7735384C480F /* CharInputStream.swift in Sources */,
+				1117D91388446226B32F9AA1 /* Tools.swift in Sources */,
+				1117D7C3FA667B4863A25898 /* SAXCharInputStream.swift in Sources */,
+				1117DA65DD62A27F9DE76C4E /* ExternalEntities.swift in Sources */,
+				1117D0F54CBF298264462A01 /* DocType.swift in Sources */,
+				1117D4474B91CC14AE141F54 /* Text.swift in Sources */,
+				1117DFF887C85EEA1E0DAEDF /* Element.swift in Sources */,
+				1117D614D9655003FF21181A /* ProcessingInstruction.swift in Sources */,
+				1117D5F629595A697025A9A5 /* Document.swift in Sources */,
+				1117D8909EA0CE1758E59ADA /* DocTypeEntity.swift in Sources */,
+				1117D681F10301D6211E80CD /* DocTypeElement.swift in Sources */,
+				1117DA2C00000F8C35A61C83 /* DocTypeAttribute.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

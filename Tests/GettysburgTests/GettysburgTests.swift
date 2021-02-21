@@ -16,12 +16,105 @@ class GettysburgTests: XCTestCase {
 
     override func tearDownWithError() throws {}
 
-    func testStart() throws {}
+    func testInitURL1() throws {
+        let istr = InputStream(data: Data())
+        let sax  = try SAXParser(inputStream: istr, url: nil, handler: SAXTestHandler())
 
-//    func testPerformanceExample() throws {
-//        // This is an example of a performance test case.
-//        self.measure {
-//            // Put the code you want to measure the time of here.
-//        }
-//    }
+        print("--------------------------------------------------------------------------------")
+        print("      URL: \"\(sax.url.absoluteString)\"")
+        print(" Base URL: \"\(sax.baseURL.absoluteString)\"")
+        print("File Name: \"\(sax.filename)\"")
+    }
+
+    func testInitURL2() throws {
+        let istr = InputStream(data: Data())
+        let sax  = try SAXParser(inputStream: istr, url: URL(string: "http://galenrhodes/swift.xml"), handler: SAXTestHandler())
+
+        print("--------------------------------------------------------------------------------")
+        print("      URL: \"\(sax.url.absoluteString)\"")
+        print(" Base URL: \"\(sax.baseURL.absoluteString)\"")
+        print("File Name: \"\(sax.filename)\"")
+    }
+
+    func testInitURL3() throws {
+        let istr = InputStream(data: Data())
+        let sax  = try SAXParser(inputStream: istr, url: URL(string: "swift.xml", relativeTo: URL(string: "http://galenrhodes")), handler: SAXTestHandler())
+
+        print("--------------------------------------------------------------------------------")
+        print("      URL: \"\(sax.url.absoluteString)\"")
+        print(" Base URL: \"\(sax.baseURL.absoluteString)\"")
+        print("File Name: \"\(sax.filename)\"")
+    }
+
+    func testInitURL4() throws {
+        let istr = InputStream(data: Data())
+        let sax  = try SAXParser(inputStream: istr, url: URL(string: "swift.xml"), handler: SAXTestHandler())
+
+        print("--------------------------------------------------------------------------------")
+        print("      URL: \"\(sax.url.absoluteString)\"")
+        print(" Base URL: \"\(sax.baseURL.absoluteString)\"")
+        print("File Name: \"\(sax.filename)\"")
+    }
+
+    func testInitURL5() throws {
+        let names: [String] = [ "UTF-8", "UTF-16BE", "UTF-16BE_ext", "UTF-32LE", "WINDOWS-1252" ]
+
+        for name in names {
+            let fname = "Tests/GettysburgTests/TestData/Test_\(name).xml"
+            let url   = getFileURL(filename: fname)
+
+            guard let istr = InputStream(url: url) else { throw SAXError.MalformedURL(url.absoluteString) }
+            let sax = try SAXParser(inputStream: istr, url: URL(string: fname), handler: SAXTestHandler())
+
+            print("================================================================================")
+            print("      URL: \"\(sax.url.absoluteString)\"")
+            print(" Base URL: \"\(sax.baseURL.absoluteString)\"")
+            print("File Name: \"\(sax.filename)\"")
+            try sax.createCharStream()
+            print("--------------------------------------------------------------------------------")
+            print("          URL: \"\(sax.url.absoluteString)\"")
+            print("     Base URL: \"\(sax.baseURL.absoluteString)\"")
+            print("    File Name: \"\(sax.filename)\"")
+            print("File Encoding: \"\(sax.charStream.encodingName)\"")
+        }
+    }
+
+    func testParse() throws {
+        print("--------------------------------------------------------------------------------")
+        let name  = "UTF-8"
+        let fname = "Tests/GettysburgTests/TestData/Test_\(name).xml"
+        let url   = getFileURL(filename: fname)
+        guard let istr = InputStream(url: url) else { throw SAXError.MalformedURL(url.absoluteString) }
+        let sax = try SAXParser(inputStream: istr, url: url, handler: SAXTestHandler())
+        try sax.parse()
+    }
+
+    func testGetInvalidCharInfo() throws {
+        print("--------------------------------------------------------------------------------")
+        let strs = [ "X41", "!43", "!A4", "!ET", "!NO" ]
+        for str in strs {
+            let (ch, chars) = str.getInvalidCharInfo(strings: "!EL", "!AT", "!NO", "!EN", "!--")
+            if chars.isEmpty {
+                print("\"\(str)\" -> \"!EL\", \"!AT\", \"!NO\", \"!EN\", \"!--\": Character \"\(ch)\" not expected here.")
+            }
+            else if chars.count == 1 {
+                print("\"\(str)\" -> \"!EL\", \"!AT\", \"!NO\", \"!EN\", \"!--\": Expected \"\(chars[chars.startIndex])\" but found \"\(ch)\" instead.")
+            }
+            else if chars.count == 2 {
+                print("\"\(str)\" -> \"!EL\", \"!AT\", \"!NO\", \"!EN\", \"!--\": Expected \"\(chars[chars.startIndex])\" or \"\(chars[chars.index(after: chars.startIndex)])\" but found \"\(ch)\" instead.")
+            }
+            else {
+                var x: String = "\"\(chars[chars.startIndex])\""
+                for y in ((chars.startIndex + 1) ..< chars.endIndex) { x += ", \"\(chars[y])\"" }
+                print("\"\(str)\" -> \"!EL\", \"!AT\", \"!NO\", \"!EN\", \"!--\": Expected one of \(x) but found \"\(ch)\" instead.")
+            }
+        }
+    }
+
+    //    func testPerformanceExample() throws {
+    //        // This is an example of a performance test case.
+    //        self.measure {
+    //            // Put the code you want to measure the time of here.
+    //        }
+    //    }
 }

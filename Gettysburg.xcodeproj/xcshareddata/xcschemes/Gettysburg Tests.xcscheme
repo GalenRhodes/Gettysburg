@@ -26,6 +26,11 @@
                BlueprintName = "GettysburgTests"
                ReferencedContainer = "container:Gettysburg.xcodeproj">
             </BuildableReference>
+            <SelectedTests>
+               <Test
+                  Identifier = "GettysburgTests/testGetInvalidCharInfo">
+               </Test>
+            </SelectedTests>
          </TestableReference>
       </Testables>
    </TestAction>
