@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>SAXParser Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Class/SAXParser" class="dashAnchor"></a>
+    <a title="SAXParser Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">Gettysburg©</a> (11% documented)</p>
+        <p class="header-right"><a href="https://github.com/GalenRhodes/Gettysburg"><img src="../img/gh.png"/>View on GitHub</a></p>
+        <p class="header-right">
+          <form role="search" action="../search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html"> Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        SAXParser Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/SAXAttribute.html">SAXAttribute</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SAXCData.html">SAXCData</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SAXCharInputStream.html">SAXCharInputStream</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SAXComment.html">SAXComment</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SAXDTD.html">SAXDTD</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SAXDTDAttribute.html">SAXDTDAttribute</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SAXDTDElement.html">SAXDTDElement</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SAXDTDElementContentElement.html">SAXDTDElementContentElement</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SAXDTDElementContentItem.html">SAXDTDElementContentItem</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SAXDTDElementContentItem/ItemType.html">– ItemType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SAXDTDElementContentItem/ItemMultiplicity.html">– ItemMultiplicity</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SAXDTDElementContentList.html">SAXDTDElementContentList</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SAXDTDElementContentList/ItemConjunction.html">– ItemConjunction</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SAXDTDElementContentPCData.html">SAXDTDElementContentPCData</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SAXDTDEntity.html">SAXDTDEntity</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SAXDTDNotation.html">SAXDTDNotation</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SAXDTDUnparsedEntity.html">SAXDTDUnparsedEntity</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SAXEntity.html">SAXEntity</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SAXError.html">SAXError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SAXError/UnexpectedEndOfInput.html">– UnexpectedEndOfInput</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SAXError/InvalidCharacter.html">– InvalidCharacter</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SAXError/UnsupportedCharacterEncoding.html">– UnsupportedCharacterEncoding</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SAXError/MalformedURL.html">– MalformedURL</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SAXError/MalformedXMLDecl.html">– MalformedXMLDecl</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SAXError/IOError.html">– IOError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SAXError/MalformedProcessingInstruction.html">– MalformedProcessingInstruction</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SAXError/MalformedDocument.html">– MalformedDocument</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SAXError/MissingName.html">– MissingName</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SAXError/MalformedDTD.html">– MalformedDTD</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SAXError/InternalError.html">– InternalError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SAXNode.html">SAXNode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SAXNode/NodeType.html">– NodeType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SAXParser.html">SAXParser</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SAXParser/ExternalEntityResolvingPolicy.html">– ExternalEntityResolvingPolicy</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SAXText.html">SAXText</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SAXUnparsedEntity.html">SAXUnparsedEntity</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Global%20Variables.html">Global Variables</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Global%20Variables/BOM32BE.html">BOM32BE</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables/BOM32LE.html">BOM32LE</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables/HEX_5F1.html">HEX_1</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables/RXO.html">RXO</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables/XML_5F1.html">XML_1</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables/XML_5F2.html">XML_2</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables/XML_5F3.html">XML_3</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables/XML_5F4.html">XML_4</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables/XML_5FDECL_5FPREFIX_5FPATTERN.html">XML_DECL_PREFIX_PATTERN</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables/rxNMTokenPattern.html">rxNMTokenPattern</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables/rxNameCharSet.html">rxNameCharSet</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables/rxNamePattern.html">rxNamePattern</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables/rxNameStartCharSet.html">rxNameStartCharSet</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/LeadingWhitespace.html">LeadingWhitespace</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/SAXAttributeDefaultType.html">SAXAttributeDefaultType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/SAXAttributeType.html">SAXAttributeType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/SAXElementAllowedContent.html">SAXElementAllowedContent</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/SAXEntityType.html">SAXEntityType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/SAXExternalType.html">SAXExternalType</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Extensions/Array.html">Array</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/ArraySlice.html">ArraySlice</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/CharInputStream.html">CharInputStream</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Character.html">Character</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/InputStream.html">InputStream</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/String.html">String</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Unicode.html">Unicode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/Unicode/Scalar.html">– Scalar</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Functions.html">Functions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Functions/_3D_3D_28_5F_3A_5F_3A_29_5F_24sySbSayxG_5Fs10ArraySliceVyxGtcSQRzluD.html">==(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions/_3D_3D_28_5F_3A_5F_3A_29_5F_24sySbs10ArraySliceVyxG_5FSayxGtcSQRzluD.html">==(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions/checkXMLDecl_28_5F_3AguessedEncoding_3A_29_5F_24s_5F15guessedEncodingSS7Rubicon15MarkInputStreamC_5FSStKcD.html">checkXMLDecl(_:guessedEncoding:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions/determineEncoding_28_5F_3A_29_5F_24sySS7Rubicon15MarkInputStreamCKcD.html">determineEncoding(_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions/getCurrDirURL_28_29_5F_24s10Foundation3URLVycD.html">getCurrDirURL()</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions/getFileEncoding_28_5F_3A_29_5F_24sySS7Rubicon15MarkInputStreamCKcD.html">getFileEncoding(_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions/getFileURL_28filename_3A_29_5F_24s8filename10Foundation3URLVSS_5FtcD.html">getFileURL(filename:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions/getFinalEncoding_28inferredEnc_3AxmlDeclEnc_3A_29_5F_24s11inferredEnc07xmlDeclB0S2S_5FSStcD.html">getFinalEncoding(inferredEnc:xmlDeclEnc:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions/getSubStringAndPos_28_5F_3Arange_3Aposition_3AcharStream_3A_29_5F_24s_5F5range8position10charStreamSS_5FSi_5FSittSS_5FSnySS5IndexVGSi_5FSit10Gettysburg012SAXCharInputD0CtcD.html">getSubStringAndPos(_:range:position:charStream:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions/getURL_28string_3A_29_5F_24s6string10Foundation3URLVSS_5FtKcD.html">getURL(string:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions/printArray_28_5F_3A_29_5F_24syySaySSSgGcD.html">printArray(_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions/regexError_28_5F_3A_29_5F_24sys5Error_5FpsAA_5FpSgcD.html">regexError(_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions/tabCalc_28pos_3AtabSize_3A_29_5F_24s3pos7tabSizeS2i_5FSitcD.html">tabCalc(pos:tabSize:)</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/SAXHandler.html">SAXHandler</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>SAXParser</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">SAXParser</span></code></pre>
+
+                </div>
+              </div>
+            
+              <div class="slightly-smaller">
+                <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/SAXParser.swift#L27-L95">Show on GitHub</a>
+              </div>
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Gettysburg9SAXParserC29ExternalEntityResolvingPolicyO"></a>
+                    <a name="//apple_ref/swift/Enum/ExternalEntityResolvingPolicy" class="dashAnchor"></a>
+                    <a class="direct-link" href="../Classes/SAXParser/ExternalEntityResolvingPolicy.html">ExternalEntityResolvingPolicy</a>
+                    </code>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Gettysburg9SAXParserC10lineNumberSivp"></a>
+                    <a name="//apple_ref/swift/Property/lineNumber" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Gettysburg9SAXParserC10lineNumberSivp">lineNumber</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">lineNumber</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/SAXParser.swift#L">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Gettysburg9SAXParserC12columnNumberSivp"></a>
+                    <a name="//apple_ref/swift/Property/columnNumber" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Gettysburg9SAXParserC12columnNumberSivp">columnNumber</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">columnNumber</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/SAXParser.swift#L">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Gettysburg9SAXParserC7baseURL10Foundation0D0Vvp"></a>
+                    <a name="//apple_ref/swift/Property/baseURL" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Gettysburg9SAXParserC7baseURL10Foundation0D0Vvp">baseURL</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">baseURL</span><span class="p">:</span> <span class="kt">URL</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/SAXParser.swift#L">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Gettysburg9SAXParserC8filenameSSvp"></a>
+                    <a name="//apple_ref/swift/Property/filename" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Gettysburg9SAXParserC8filenameSSvp">filename</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">filename</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/SAXParser.swift#L">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Gettysburg9SAXParserC10xmlVersionSSvp"></a>
+                    <a name="//apple_ref/swift/Property/xmlVersion" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Gettysburg9SAXParserC10xmlVersionSSvp">xmlVersion</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This value is not valid until after parsing has started.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">internal(set)</span> <span class="k">var</span> <span class="nv">xmlVersion</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/SAXParser.swift#L44">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Gettysburg9SAXParserC11xmlEncodingSSvp"></a>
+                    <a name="//apple_ref/swift/Property/xmlEncoding" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Gettysburg9SAXParserC11xmlEncodingSSvp">xmlEncoding</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This value is not valid until after parsing has started.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">internal(set)</span> <span class="k">var</span> <span class="nv">xmlEncoding</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/SAXParser.swift#L48">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Gettysburg9SAXParserC13xmlStandaloneSbvp"></a>
+                    <a name="//apple_ref/swift/Property/xmlStandalone" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Gettysburg9SAXParserC13xmlStandaloneSbvp">xmlStandalone</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This value is not valid until after parsing has started.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">internal(set)</span> <span class="k">var</span> <span class="nv">xmlStandalone</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/SAXParser.swift#L52">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Gettysburg9SAXParserC25allowedExternalEntityURLsShySSGvp"></a>
+                    <a name="//apple_ref/swift/Property/allowedExternalEntityURLs" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Gettysburg9SAXParserC25allowedExternalEntityURLsShySSGvp">allowedExternalEntityURLs</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">allowedExternalEntityURLs</span><span class="p">:</span> <span class="kt">Set</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/SAXParser.swift#L">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Gettysburg9SAXParserC29externalEntityResolvingPolicyAC08ExternaldeF0Ovp"></a>
+                    <a name="//apple_ref/swift/Property/externalEntityResolvingPolicy" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Gettysburg9SAXParserC29externalEntityResolvingPolicyAC08ExternaldeF0Ovp">externalEntityResolvingPolicy</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">externalEntityResolvingPolicy</span><span class="p">:</span> <span class="kt"><a href="../Classes/SAXParser/ExternalEntityResolvingPolicy.html">ExternalEntityResolvingPolicy</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/SAXParser.swift#L">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Gettysburg9SAXParserC7docTypeAA6SAXDTDCvp"></a>
+                    <a name="//apple_ref/swift/Property/docType" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Gettysburg9SAXParserC7docTypeAA6SAXDTDCvp">docType</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@usableFromInline</span>
+<span class="kd">lazy</span> <span class="k">var</span> <span class="nv">docType</span><span class="p">:</span> <span class="kt"><a href="../Classes/SAXDTD.html">SAXDTD</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/SAXParser.swift#L">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Gettysburg9SAXParserC10charStreamAA012SAXCharInputD0CSgvp"></a>
+                    <a name="//apple_ref/swift/Property/charStream" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Gettysburg9SAXParserC10charStreamAA012SAXCharInputD0CSgvp">charStream</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@usableFromInline</span>
+<span class="k">var</span> <span class="nv">charStream</span><span class="p">:</span> <span class="kt"><a href="../Classes/SAXCharInputStream.html">SAXCharInputStream</a></span><span class="o">!</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/SAXParser.swift#L">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Gettysburg9SAXParserC11inputStream7Rubicon09MarkInputD0Cvp"></a>
+                    <a name="//apple_ref/swift/Property/inputStream" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Gettysburg9SAXParserC11inputStream7Rubicon09MarkInputD0Cvp">inputStream</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@usableFromInline</span>
+<span class="k">let</span> <span class="nv">inputStream</span><span class="p">:</span> <span class="kt">MarkInputStream</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/SAXParser.swift#L">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Gettysburg9SAXParserC7handlerAA10SAXHandler_pvp"></a>
+                    <a name="//apple_ref/swift/Property/handler" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Gettysburg9SAXParserC7handlerAA10SAXHandler_pvp">handler</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@usableFromInline</span>
+<span class="k">let</span> <span class="nv">handler</span><span class="p">:</span> <span class="kt"><a href="../Protocols/SAXHandler.html">SAXHandler</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/SAXParser.swift#L">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Gettysburg9SAXParserC3url10Foundation3URLVvp"></a>
+                    <a name="//apple_ref/swift/Property/url" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Gettysburg9SAXParserC3url10Foundation3URLVvp">url</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@usableFromInline</span>
+<span class="k">let</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/SAXParser.swift#L">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Gettysburg9SAXParserC11inputStream3url7handlerACSo07NSInputD0C_10Foundation3URLVSgAA10SAXHandler_ptKcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(inputStream:url:handler:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Gettysburg9SAXParserC11inputStream3url7handlerACSo07NSInputD0C_10Foundation3URLVSgAA10SAXHandler_ptKcfc">init(inputStream:<wbr>url:<wbr>handler:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="nf">init</span><span class="p">(</span><span class="nv">inputStream</span><span class="p">:</span> <span class="kt">InputStream</span><span class="p">,</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">handler</span><span class="p">:</span> <span class="kt"><a href="../Protocols/SAXHandler.html">SAXHandler</a></span><span class="p">)</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/SAXParser.swift#L64-L68">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Gettysburg9SAXParserC16createCharStreamyyKF"></a>
+                    <a name="//apple_ref/swift/Method/createCharStream()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Gettysburg9SAXParserC16createCharStreamyyKF">createCharStream()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">createCharStream</span><span class="p">()</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/SAXParser.swift#L70-L73">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Gettysburg9SAXParserC5parseyyKF"></a>
+                    <a name="//apple_ref/swift/Method/parse()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Gettysburg9SAXParserC5parseyyKF">parse()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Parse the document.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    if an I/O error occurs or the document is malformed.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">open</span> <span class="kd">func</span> <span class="nf">parse</span><span class="p">()</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/SAXParser.swift#L80-L94">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Gettysburg9SAXParserC16getCharStreamFor8systemIdAA012SAXCharInputE0CSS_tKF"></a>
+                    <a name="//apple_ref/swift/Method/getCharStreamFor(systemId:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Gettysburg9SAXParserC16getCharStreamFor8systemIdAA012SAXCharInputE0CSS_tKF">getCharStreamFor(systemId:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@inlinable</span>
+<span class="kd">func</span> <span class="nf">getCharStreamFor</span><span class="p">(</span><span class="nv">systemId</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/SAXCharInputStream.html">SAXCharInputStream</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/Tools.swift#L">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Gettysburg9SAXParserC16getCharStreamFor8systemId06sourcedE0AA012SAXCharInputE0CSS_AHtKF"></a>
+                    <a name="//apple_ref/swift/Method/getCharStreamFor(systemId:sourceCharStream:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Gettysburg9SAXParserC16getCharStreamFor8systemId06sourcedE0AA012SAXCharInputE0CSS_AHtKF">getCharStreamFor(systemId:<wbr>sourceCharStream:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@inlinable</span>
+<span class="kd">func</span> <span class="nf">getCharStreamFor</span><span class="p">(</span><span class="nv">systemId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="n">sourceCharStream</span> <span class="nv">chStream</span><span class="p">:</span> <span class="kt"><a href="../Classes/SAXCharInputStream.html">SAXCharInputStream</a></span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/SAXCharInputStream.html">SAXCharInputStream</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/Tools.swift#L64-L68">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Gettysburg9SAXParserC16getCharStreamFor05inputE08systemIdAA012SAXCharInputE0CSo07NSInputE0C_SStKF"></a>
+                    <a name="//apple_ref/swift/Method/getCharStreamFor(inputStream:systemId:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Gettysburg9SAXParserC16getCharStreamFor05inputE08systemIdAA012SAXCharInputE0CSo07NSInputE0C_SStKF">getCharStreamFor(inputStream:<wbr>systemId:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@inlinable</span>
+<span class="kd">func</span> <span class="nf">getCharStreamFor</span><span class="p">(</span><span class="nv">inputStream</span><span class="p">:</span> <span class="kt">InputStream</span><span class="p">,</span> <span class="nv">systemId</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/SAXCharInputStream.html">SAXCharInputStream</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/Tools.swift#L70-L73">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Gettysburg9SAXParserC22skipOverXmlDeclarationyAA18SAXCharInputStreamCAFKF"></a>
+                    <a name="//apple_ref/swift/Method/skipOverXmlDeclaration(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Gettysburg9SAXParserC22skipOverXmlDeclarationyAA18SAXCharInputStreamCAFKF">skipOverXmlDeclaration(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@inlinable</span>
+<span class="kd">func</span> <span class="nf">skipOverXmlDeclaration</span><span class="p">(</span><span class="n">_</span> <span class="nv">chStream</span><span class="p">:</span> <span class="kt"><a href="../Classes/SAXCharInputStream.html">SAXCharInputStream</a></span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/SAXCharInputStream.html">SAXCharInputStream</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/Tools.swift#L75-L97">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Gettysburg9SAXParserC12getParserURL6string10Foundation0E0VSS_tKF"></a>
+                    <a name="//apple_ref/swift/Method/getParserURL(string:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Gettysburg9SAXParserC12getParserURL6string10Foundation0E0VSS_tKF">getParserURL(string:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@inlinable</span>
+<span class="kd">func</span> <span class="nf">getParserURL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">URL</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/Tools.swift#L99-L102">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Gettysburg9SAXParserC12parseDocTypeyyKF"></a>
+                    <a name="//apple_ref/swift/Method/parseDocType()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Gettysburg9SAXParserC12parseDocTypeyyKF">parseDocType()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Parse and handle a DOCTYPE element.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    if an I/O error occurs or the DOCTYPE is malformed.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">parseDocType</span><span class="p">()</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Parser/DocType.swift#L36-L54">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Gettysburg9SAXParserC13getAttribTypeyAA012SAXAttributeE0OSSF"></a>
+                    <a name="//apple_ref/swift/Method/getAttribType(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Gettysburg9SAXParserC13getAttribTypeyAA012SAXAttributeE0OSSF">getAttribType(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Get the attribute type based on it&rsquo;s name.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@inlinable</span>
+<span class="kd">final</span> <span class="kd">func</span> <span class="nf">getAttribType</span><span class="p">(</span><span class="n">_</span> <span class="nv">attribType</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Enums/SAXAttributeType.html">SAXAttributeType</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>attribType</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the attribute type name.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>the attribute type.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Parser/DocType.swift#L422-L435">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Gettysburg9SAXParserC14getDefaultTypeyAA012SAXAttributedE0OSSSgF"></a>
+                    <a name="//apple_ref/swift/Method/getDefaultType(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Gettysburg9SAXParserC14getDefaultTypeyAA012SAXAttributedE0OSSSgF">getDefaultType(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Get the default value type for an attribute based on the type name.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@inlinable</span>
+<span class="kd">final</span> <span class="kd">func</span> <span class="nf">getDefaultType</span><span class="p">(</span><span class="n">_</span> <span class="nv">typeName</span><span class="p">:</span> <span class="kt">String</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Enums/SAXAttributeDefaultType.html">SAXAttributeDefaultType</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>typeName</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the type name.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>the default value type.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Parser/DocType.swift#L443-L453">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Gettysburg9SAXParserC13parseDocumentyyKF"></a>
+                    <a name="//apple_ref/swift/Method/parseDocument()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Gettysburg9SAXParserC13parseDocumentyyKF">parseDocument()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Parse the document.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    if an I/O error occurs or the document is malformed.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">parseDocument</span><span class="p">()</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Parser/Document.swift#L34-L98">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Gettysburg9SAXParserC12parseElementyyKF"></a>
+                    <a name="//apple_ref/swift/Method/parseElement()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Gettysburg9SAXParserC12parseElementyyKF">parseElement()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Parse and handle an element.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    if there is an I/O error or the element or one of it&rsquo;s children is malformed.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">parseElement</span><span class="p">()</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Parser/Element.swift#L34-L35">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Gettysburg9SAXParserC32getExternalEntityCharInputStream3urlAA07SAXChargH0C10Foundation3URLV_tKF"></a>
+                    <a name="//apple_ref/swift/Method/getExternalEntityCharInputStream(url:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Gettysburg9SAXParserC32getExternalEntityCharInputStream3urlAA07SAXChargH0C10Foundation3URLV_tKF">getExternalEntityCharInputStream(url:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">getExternalEntityCharInputStream</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/SAXCharInputStream.html">SAXCharInputStream</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Parser/ExternalEntities.swift#L28-L46">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Gettysburg9SAXParserC26parseProcessingInstructionyyKF"></a>
+                    <a name="//apple_ref/swift/Method/parseProcessingInstruction()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Gettysburg9SAXParserC26parseProcessingInstructionyyKF">parseProcessingInstruction()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Parse and handle a processing instruction.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    if there is an I/O error or the processing instruction is malformed.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">parseProcessingInstruction</span><span class="p">()</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Parser/ProcessingInstruction.swift#L34-L41">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Gettysburg9SAXParserC12parseXMLDeclyyKF"></a>
+                    <a name="//apple_ref/swift/Method/parseXMLDecl()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Gettysburg9SAXParserC12parseXMLDeclyyKF">parseXMLDecl()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Parse the XML Declaration if there is one. The XML Declaration is a special case of a processing instruction.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    if an I/O error occurs or the XML Declaration is malformed.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">parseXMLDecl</span><span class="p">()</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Parser/ProcessingInstruction.swift#L48-L94">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Gettysburg9SAXParserC17parseCDATASectionyyKF"></a>
+                    <a name="//apple_ref/swift/Method/parseCDATASection()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Gettysburg9SAXParserC17parseCDATASectionyyKF">parseCDATASection()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Parse and handle a CDATA Section.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    if an I/O error occurs.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">parseCDATASection</span><span class="p">()</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Parser/Text.swift#L34-L38">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Gettysburg9SAXParserC12parseCommentyyKF"></a>
+                    <a name="//apple_ref/swift/Method/parseComment()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Gettysburg9SAXParserC12parseCommentyyKF">parseComment()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Parse and handle Comment.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    if an I/O error occurs or the comment is malformed.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">parseComment</span><span class="p">()</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Parser/Text.swift#L45-L48">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Gettysburg9SAXParserC12parseComment10charStreamyAA012SAXCharInputF0C_tKF"></a>
+                    <a name="//apple_ref/swift/Method/parseComment(charStream:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Gettysburg9SAXParserC12parseComment10charStreamyAA012SAXCharInputF0C_tKF">parseComment(charStream:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">parseComment</span><span class="p">(</span><span class="nv">charStream</span><span class="p">:</span> <span class="kt"><a href="../Classes/SAXCharInputStream.html">SAXCharInputStream</a></span><span class="p">)</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Parser/Text.swift#L50-L71">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2021 <a class="link" href="https://blog.projectgalen.com" target="_blank" rel="external">Galen Rhodes</a>. All rights reserved. (Last updated: 2021-03-02)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>
