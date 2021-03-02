@@ -26,8 +26,9 @@ import Rubicon
 
 extension SAXParser {
 
+    /*===========================================================================================================================================================================*/
     /// Parse and handle an element.
-    ///
+    /// 
     /// - Throws: if there is an I/O error or the element or one of it's children is malformed.
     ///
     func parseElement() throws {

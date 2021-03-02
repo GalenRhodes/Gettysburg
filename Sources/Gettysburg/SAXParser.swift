@@ -38,20 +38,28 @@ open class SAXParser {
     public var baseURL:      URL { ((charStream == nil) ? url.deletingLastPathComponent() : charStream.baseURL) }
     public var filename:     String { ((charStream == nil) ? url.lastPathComponent : charStream.filename) }
 
+    /*===========================================================================================================================================================================*/
     /// This value is not valid until after parsing has started.
+    ///
     public internal(set) var xmlVersion:    String = ""
+    /*===========================================================================================================================================================================*/
     /// This value is not valid until after parsing has started.
+    ///
     public internal(set) var xmlEncoding:   String = ""
+    /*===========================================================================================================================================================================*/
     /// This value is not valid until after parsing has started.
+    ///
     public internal(set) var xmlStandalone: Bool   = true
 
     public var allowedExternalEntityURLs:     Set<String>                   = []
     public var externalEntityResolvingPolicy: ExternalEntityResolvingPolicy = .always
 
-    var charStream:  SAXCharInputStream! = nil
-    let inputStream: MarkInputStream
-    let handler:     SAXHandler
-    let url:         URL
+    @usableFromInline lazy var docType: SAXDTD = SAXDTD()
+
+    @usableFromInline var charStream:  SAXCharInputStream! = nil
+    @usableFromInline let inputStream: MarkInputStream
+    @usableFromInline let handler:     SAXHandler
+    @usableFromInline let url:         URL
 
     init(inputStream: InputStream, url: URL? = nil, handler: SAXHandler) throws {
         self.inputStream = ((inputStream as? MarkInputStream) ?? MarkInputStream(inputStream: inputStream))
@@ -64,8 +72,9 @@ open class SAXParser {
         charStream.open()
     }
 
+    /*===========================================================================================================================================================================*/
     /// Parse the document.
-    ///
+    /// 
     /// - Throws: if an I/O error occurs or the document is malformed.
     ///
     open func parse() throws {

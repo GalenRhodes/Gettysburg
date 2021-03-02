@@ -23,7 +23,7 @@
 import Foundation
 import CoreFoundation
 
-open class SAXNode {
+open class SAXNode: Hashable {
     public enum NodeType {
         case Text
         case Comment
@@ -60,6 +60,17 @@ open class SAXNode {
     public init(name: String, type: NodeType) {
         self.name = name
         self.type = type
+    }
+
+    open func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
+        hasher.combine(type)
+    }
+
+    public static func == (lhs: SAXNode, rhs: SAXNode) -> Bool {
+        if lhs === rhs { return true }
+        if Swift.type(of: lhs) != Swift.type(of: rhs) { return false }
+        return lhs.name == rhs.name && lhs.type == rhs.type
     }
 
     @discardableResult open func append(node: SAXNode) -> SAXNode {

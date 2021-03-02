@@ -26,8 +26,9 @@ import Rubicon
 
 extension SAXParser {
 
+    /*===========================================================================================================================================================================*/
     /// Parse the document.
-    ///
+    /// 
     /// - Throws: if an I/O error occurs or the document is malformed.
     ///
     func parseDocument() throws {

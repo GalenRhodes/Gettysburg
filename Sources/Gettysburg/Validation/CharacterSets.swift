@@ -28,17 +28,18 @@ import Rubicon
 #endif
 
 //@f:0
-let rxNameStartCharSet: String = "a-zA-Z_:\\u00c0-\\u00d6\\u00d8-\\u00f6\\u00f8-\\u02ff\\u0370-\\u037d\\u037f-\\u1fff\\u200c-\\u200d\\u2070-\\u218f\\u2c00-\\u2fef\\u3001-\\ud7ff\\uf900-\\ufdcf\\ufdf0-\\ufffd\\U00010000-\\U000effff"
-let rxNameCharSet:      String = "\(rxNameStartCharSet)0123456789.\\u00b7\\u0300-\\u036f\\u203f-\\u2040-"
+let rxNameStartCharSet: String = "[a-zA-Z_:]|[\\u00c0-\\u00d6]|[\\u00d8-\\u00f6]|[\\u00f8-\\u02ff]|[\\u0370-\\u037d]|[\\u037f-\\u1fff]|[\\u200c-\\u200d]|[\\u2070-\\u218f]|[\\u2c00-\\u2fef]|[\\u3001-\\ud7ff]|[\\uf900-\\ufdcf]|[\\ufdf0-\\ufffd]|[\\U00010000-\\U000effff]"
+let rxNameCharSet:      String = "\(rxNameStartCharSet)|[0123456789.]|[\\u00b7]|[\\u0300-\\u036f]|[\\u203f-\\u2040]|[-]"
 
-@usableFromInline let HEX_1                 = "0123456789abcdefABCDEF".unicodeScalars.map { $0 }
-@usableFromInline let XML_1                 = ":ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_".unicodeScalars.map { $0 }
-@usableFromInline let XML_2                 = [ UnicodeScalar(UInt8(0xb7)) ] + XML_1 + "-.0123456789".unicodeScalars.map { $0 }
-@usableFromInline let XML_3                 = [ (UInt32(0xc0)   ..< UInt32(0xd7)),    (UInt32(0xd8)   ..< UInt32(0xf7)),   (UInt32(0xf8)   ..< UInt32(0x300)),  (UInt32(0x370)   ..< UInt32(0x37e)),
-                                                (UInt32(0x37f)  ..< UInt32(0x2000)),  (UInt32(0x200c) ..< UInt32(0x200e)), (UInt32(0x2070) ..< UInt32(0x2190)), (UInt32(0x2c00)  ..< UInt32(0x2ff0)),
-                                                (UInt32(0x3001) ..< UInt32(0xd800)),  (UInt32(0xf900) ..< UInt32(0xfdd0)), (UInt32(0xfdf0) ..< UInt32(0xfffe)), (UInt32(0x10000) ..< UInt32(0xf0000)) ]
-@usableFromInline let XML_4                 = [ (UInt32(0x0300) ..< UInt32(0x0370)),  (UInt32(0x203f) ..< UInt32(0x2041)) ] + XML_3
-@usableFromInline let rxNamePattern: String = "[\(rxNameStartCharSet)][\(rxNameCharSet)]*"
+@usableFromInline let HEX_1:            [UnicodeScalar] = "0123456789abcdefABCDEF".unicodeScalars.map { $0 }
+@usableFromInline let XML_1:            [UnicodeScalar] = ":ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_".unicodeScalars.map { $0 }
+@usableFromInline let XML_2:            [UnicodeScalar] = [ UnicodeScalar(UInt8(0xb7)) ] + XML_1 + "-.0123456789".unicodeScalars.map { $0 }
+@usableFromInline let XML_3:            [Range<UInt32>] = [ (UInt32(0xc0)   ..< UInt32(0xd7)),    (UInt32(0xd8)   ..< UInt32(0xf7)),   (UInt32(0xf8)   ..< UInt32(0x300)),  (UInt32(0x370)   ..< UInt32(0x37e)),
+                                                            (UInt32(0x37f)  ..< UInt32(0x2000)),  (UInt32(0x200c) ..< UInt32(0x200e)), (UInt32(0x2070) ..< UInt32(0x2190)), (UInt32(0x2c00)  ..< UInt32(0x2ff0)),
+                                                            (UInt32(0x3001) ..< UInt32(0xd800)),  (UInt32(0xf900) ..< UInt32(0xfdd0)), (UInt32(0xfdf0) ..< UInt32(0xfffe)), (UInt32(0x10000) ..< UInt32(0xf0000)) ]
+@usableFromInline let XML_4:            [Range<UInt32>] = [ (UInt32(0x0300) ..< UInt32(0x0370)),  (UInt32(0x203f) ..< UInt32(0x2041)) ] + XML_3
+@usableFromInline let rxNamePattern:    String          = "(?:(?:\(rxNameStartCharSet))(?:\(rxNameCharSet))*)"
+@usableFromInline let rxNMTokenPattern: String          = "(?:\(rxNameCharSet))+"
 
 extension Unicode.Scalar {
     @inlinable var isXmlNameStartChar: Bool { XML_1.contains(self) || XML_3.isAny(predicate: { $0.contains(value) }) }

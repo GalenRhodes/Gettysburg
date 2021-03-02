@@ -25,7 +25,6 @@ import CoreFoundation
 
 open class SAXText: SAXNode {
     public override var content: String { _content }
-
     private let _content: String
 
     fileprivate init(name: String, type: NodeType, content: String) {

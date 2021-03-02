@@ -53,6 +53,7 @@ public enum SAXElementAllowedContent {
     case `Any`
     case Elements
     case Mixed
+    case PCData
 }
 
 public enum SAXExternalType {

@@ -78,11 +78,12 @@ extension SAXElementAllowedContent: CustomStringConvertible {
             case .Elements: return "Elements"
             case .Mixed: return "Mixed"
             case .Any: return "Any"
+            case .PCData: return "#PCDATA"
         }
     }
 }
 
-extension SAXElementDeclItem.ItemType: CustomStringConvertible {
+extension SAXDTDElementContentItem.ItemType: CustomStringConvertible {
     public var description: String {
         switch self {
             case .Element: return "Element"
@@ -92,7 +93,7 @@ extension SAXElementDeclItem.ItemType: CustomStringConvertible {
     }
 }
 
-extension SAXElementDeclItem.ItemMultiplicity: CustomStringConvertible {
+extension SAXDTDElementContentItem.ItemMultiplicity: CustomStringConvertible {
     public var description: String {
         switch self {
             case .Optional: return "Optional"
@@ -103,7 +104,7 @@ extension SAXElementDeclItem.ItemMultiplicity: CustomStringConvertible {
     }
 }
 
-extension SAXElementDeclList.ItemConjunction: CustomStringConvertible {
+extension SAXDTDElementContentList.ItemConjunction: CustomStringConvertible {
     public var description: String {
         switch self {
             case .And: return "And"
@@ -145,9 +146,18 @@ extension String {
         return index(startIndex, offsetBy: position, limitedBy: limit)
     }
 
-    func getInvalidCharInfo(strings: String...) -> (Character, [Character]) { foo(startIndex, 0, strings) }
+    @inlinable func firstIndex(of chars: Character..., from idx: String.Index) -> String.Index? {
+        var i = idx
+        while i < endIndex {
+            if chars.contains(self[i]) { return i }
+            formIndex(after: &i)
+        }
+        return nil
+    }
 
-    func getInvalidCharInfo(strings: [String]) -> (Character, [Character]) { foo(startIndex, 0, strings) }
+    @usableFromInline func getInvalidCharInfo(strings: String...) -> (Character, [Character]) { foo(startIndex, 0, strings) }
+
+    @usableFromInline func getInvalidCharInfo(strings: [String]) -> (Character, [Character]) { foo(startIndex, 0, strings) }
 
     private func foo(_ idx: Index, _ pos: Int, _ strList: [String]) -> (Character, [Character]) {
         guard idx < endIndex else { return (self[startIndex], []) }
@@ -166,5 +176,35 @@ extension String {
         if nStrList.isEmpty { return (ch1, charSet.map({ $0 }).sorted()) }
         return foo(self.index(after: idx), (pos + 1), nStrList)
     }
-}
 
+    @usableFromInline func positionOfIndex(_ idx: String.Index, startingLine: Int = 1, startingColumn: Int = 1, tabSize: Int = 4) -> (Int, Int) {
+        var pos:  (Int, Int)                = (startingLine, startingColumn)
+        let rx:   RegularExpression         = RegularExpression(pattern: "(?:\\R|\\u000b|\\u000c)")!
+        let ms:   [RegularExpression.Match] = rx.matches(in: self)
+        var lIdx: String.Index              = startIndex
+        let eIdx: String.Index              = ((idx < endIndex) ? idx : endIndex)
+
+        for x in (0 ..< ms.count) {
+            let m    = ms[x]
+            let uIdx = m.range.upperBound
+
+            if idx < uIdx { break }
+
+            switch m.subString {
+                case "\u{0b}": pos.0 = tabCalc(pos: pos.0, tabSize: tabSize)
+                case "\u{0c}": pos.0 += 24
+                default: pos.0 += 1
+            }
+
+            pos.1 = 1
+            lIdx = uIdx
+        }
+
+        while lIdx < eIdx {
+            pos.1 = ((self[lIdx] == "\t") ? tabCalc(pos: pos.1, tabSize: tabSize) : (pos.1 + 1))
+            lIdx = index(after: lIdx)
+        }
+
+        return pos
+    }
+}

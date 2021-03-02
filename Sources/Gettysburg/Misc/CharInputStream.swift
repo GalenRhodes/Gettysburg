@@ -25,6 +25,12 @@ import CoreFoundation
 import Rubicon
 
 extension CharInputStream {
+    @inlinable func readAll() throws -> String {
+        var chars: [Character] = []
+        while let ch = try read() { chars <+ ch }
+        return String(chars)
+    }
+
     @inlinable func readUntil(found: String, excludeFound: Bool = false) throws -> String { try readUntil(found: found.getCharacters(), excludeFound: excludeFound) }
 
     @inlinable func readUntil(found: Character..., excludeFound: Bool = false) throws -> String { try readUntil(found: found, excludeFound: excludeFound) }
@@ -223,4 +229,3 @@ extension CharInputStream {
 
     @inlinable @discardableResult func readChars(mustBe string: String) throws -> String { try readChars(mustBe: string.getCharacters()) }
 }
-

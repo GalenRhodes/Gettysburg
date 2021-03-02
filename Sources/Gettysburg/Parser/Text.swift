@@ -26,8 +26,9 @@ import Rubicon
 
 extension SAXParser {
 
+    /*===========================================================================================================================================================================*/
     /// Parse and handle a CDATA Section.
-    ///
+    /// 
     /// - Throws: if an I/O error occurs.
     ///
     func parseCDATASection() throws {
@@ -36,8 +37,9 @@ extension SAXParser {
         handler.cdataSection(self, content: text)
     }
 
+    /*===========================================================================================================================================================================*/
     /// Parse and handle Comment.
-    ///
+    /// 
     /// - Throws: if an I/O error occurs or the comment is malformed.
     ///
     func parseComment() throws {

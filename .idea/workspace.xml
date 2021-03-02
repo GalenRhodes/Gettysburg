@@ -5,11 +5,80 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="60b0239b-d5a7-4057-9e21-57829d56877e" name="Default Changelist" comment="This is better.">
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DTD/SAXDTD.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DTD/SAXDTDElement.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DTD/SAXDTDEntity.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DTD/SAXDTDNotation.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Tests/GettysburgTests/TestData/Test_UTF-8_ext.dtd" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/Gettysburg.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Gettysburg.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/Gettysburg_Tests.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations/Gettysburg_Tests.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.pbxproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved" beforeDir="false" afterPath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gettysburg.xcodeproj/xcshareddata/xcschemes/EntityTool.xcscheme" beforeDir="false" afterPath="$PROJECT_DIR$/Gettysburg.xcodeproj/xcshareddata/xcschemes/EntityTool.xcscheme" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gettysburg.xcodeproj/xcshareddata/xcschemes/Gettysburg Tests.xcscheme" beforeDir="false" afterPath="$PROJECT_DIR$/Gettysburg.xcodeproj/xcshareddata/xcschemes/Gettysburg Tests.xcscheme" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Package.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Package.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Parser/DocTypeElement.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Parser/DocTypeElement.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/SAXAttribute.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/SAXAttribute.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/SAXEntity.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/SAXEntity.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/SAXNode.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/SAXNode.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/SAXText.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/SAXText.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Misc/CharInputStream.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Misc/CharInputStream.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Misc/Enums.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Misc/Enums.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Misc/Extensions.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Misc/Extensions.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Misc/SAXCharInputStream.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Misc/SAXCharInputStream.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Misc/SAXElementDecl.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Misc/SAXElementDecl.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Misc/SAXError.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Misc/SAXError.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Misc/Tools.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Misc/Tools.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Parser/DocType.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Parser/DocType.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Parser/DocTypeAttribute.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Parser/DocTypeElement.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DTD/SAXDTDAttribute.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Parser/DocTypeEntity.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Parser/Document.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Parser/Document.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Parser/Element.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Parser/Element.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Parser/ProcessingInstruction.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Parser/ProcessingInstruction.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Parser/Text.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Parser/Text.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAXHandler.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAXHandler.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAXParser.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAXParser.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Validation/CharacterSets.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Validation/CharacterSets.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/GettysburgTests/GettysburgTests.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/GettysburgTests/GettysburgTests.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/GettysburgTests/SAXTestHandler.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/GettysburgTests/SAXTestHandler.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/GettysburgTests/TestData/Test_UTF-8.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/GettysburgTests/TestData/Test_UTF-8.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Extensions.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Extensions.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Extensions/Character.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Extensions/Character.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Extensions/String.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Extensions/String.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Extensions/Unicode.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Extensions/Unicode.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Extensions/Unicode/Scalar.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Extensions/Unicode/Scalar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Global Variables.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Global Variables.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Global Variables/HEX_5F1.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Global Variables/HEX_5F1.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Global Variables/XML_5F1.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Global Variables/XML_5F1.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Global Variables/XML_5F2.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Global Variables/XML_5F2.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Global Variables/XML_5F3.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Global Variables/XML_5F3.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Global Variables/XML_5F4.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Global Variables/XML_5F4.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Global Variables/rxNameCharSet.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Global Variables/rxNameCharSet.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Global Variables/rxNamePattern.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Global Variables/rxNamePattern.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Global Variables/rxNameStartCharSet.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Global Variables/rxNameStartCharSet.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/badge.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/badge.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Extensions.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Extensions.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Extensions/Character.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Extensions/Character.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Extensions/String.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Extensions/String.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Extensions/Unicode.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Extensions/Unicode.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Extensions/Unicode/Scalar.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Extensions/Unicode/Scalar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Global Variables.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Global Variables.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Global Variables/HEX_5F1.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Global Variables/HEX_5F1.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Global Variables/XML_5F1.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Global Variables/XML_5F1.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Global Variables/XML_5F2.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Global Variables/XML_5F2.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Global Variables/XML_5F3.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Global Variables/XML_5F3.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Global Variables/XML_5F4.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Global Variables/XML_5F4.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Global Variables/rxNameCharSet.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Global Variables/rxNameCharSet.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Global Variables/rxNamePattern.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Global Variables/rxNamePattern.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Global Variables/rxNameStartCharSet.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Global Variables/rxNameStartCharSet.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/search.json" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/search.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/docSet.dsidx" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/docSet.dsidx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.tgz" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.tgz" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/search.json" beforeDir="false" afterPath="$PROJECT_DIR$/docs/search.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/undocumented.json" beforeDir="false" afterPath="$PROJECT_DIR$/docs/undocumented.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,11 +146,11 @@
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
-  <component name="RunManager" selected="XCTest.Gettysburg Tests">
+  <component name="RunManager" selected="Application.DocFixer">
     <list>
+      <item itemvalue="Application.EntityTool" />
       <item itemvalue="Application.DocFixer" />
       <item itemvalue="Application.Gettysburg" />
-      <item itemvalue="Application.EntityTool" />
       <item itemvalue="XCTest.Gettysburg Tests" />
     </list>
   </component>
@@ -122,7 +191,18 @@
       <workItem from="1613765935743" duration="22000" />
       <workItem from="1613766190843" duration="12675000" />
       <workItem from="1613865285262" duration="14852000" />
-      <workItem from="1613937464604" duration="96000" />
+      <workItem from="1613937464604" duration="4142000" />
+      <workItem from="1614015535804" duration="6378000" />
+      <workItem from="1614083067921" duration="22258000" />
+      <workItem from="1614111218275" duration="3903000" />
+      <workItem from="1614195341016" duration="8687000" />
+      <workItem from="1614220221936" duration="70000" />
+      <workItem from="1614220438850" duration="194000" />
+      <workItem from="1614273566176" duration="11295000" />
+      <workItem from="1614301081576" duration="5947000" />
+      <workItem from="1614345249589" duration="7432000" />
+      <workItem from="1614592761749" duration="10802000" />
+      <workItem from="1614695581330" duration="256000" />
     </task>
     <task id="LOCAL-00001" summary="Changed documentation style.">
       <created>1611343621921</created>
@@ -243,7 +323,14 @@
       <option name="project" value="LOCAL" />
       <updated>1613904707006</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="This is better.">
+      <created>1613937603359</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1613937603359</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

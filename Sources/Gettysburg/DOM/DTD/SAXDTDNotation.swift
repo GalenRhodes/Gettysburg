@@ -1,9 +1,9 @@
 /************************************************************************//**
  *     PROJECT: Gettysburg
- *    FILENAME: DocTypeElement.swift
+ *    FILENAME: SAXNotation.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
- *        DATE: 2/21/21
+ *        DATE: 2/23/21
  *
  * Copyright © 2021 Galen Rhodes. All rights reserved.
  *
@@ -24,11 +24,26 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-extension SAXParser {
+open class SAXDTDNotation: Hashable {
+    public let name: String
+    public let publicId: String?
+    public let systemId: String?
 
-    func parseElementDecl(_ chStream: SAXCharInputStream, _ rootElement: String) throws {
-        try chStream.readChars(mustBe: "ELEMENT")
-        let name = try chStream.readName()
-        // TODO - Implement
+    @usableFromInline init(name: String, publicId: String?, systemId: String?) {
+        self.name = name
+        self.publicId = publicId
+        self.systemId = systemId
+    }
+
+    open func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
+        hasher.combine(publicId)
+        hasher.combine(systemId)
+    }
+
+    public static func == (lhs: SAXDTDNotation, rhs: SAXDTDNotation) -> Bool {
+        if lhs === rhs { return true }
+        if type(of: lhs) != type(of: rhs) { return false }
+        return lhs.name == rhs.name && lhs.publicId == rhs.publicId && lhs.systemId == rhs.systemId
     }
 }

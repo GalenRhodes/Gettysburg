@@ -28,7 +28,7 @@
             </BuildableReference>
             <SelectedTests>
                <Test
-                  Identifier = "GettysburgTests/testGetInvalidCharInfo">
+                  Identifier = "GettysburgTests/testParse">
                </Test>
             </SelectedTests>
          </TestableReference>

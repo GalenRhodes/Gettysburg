@@ -24,12 +24,12 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-class SAXCharInputStream: IConvCharInputStream {
-    let baseURL:  URL
-    let url:      URL
-    let filename: String
+@usableFromInline class SAXCharInputStream: IConvCharInputStream {
+    @usableFromInline let baseURL:  URL
+    @usableFromInline let url:      URL
+    @usableFromInline let filename: String
 
-    init(inputStream: MarkInputStream, url: URL) throws {
+    @usableFromInline init(inputStream: MarkInputStream, url: URL) throws {
         self.url = url
 
         let burl = try getURL(string: self.url.absoluteString)
@@ -84,12 +84,14 @@ class SAXCharInputStream: IConvCharInputStream {
 
     if try str.matches(pattern: XML_DECL_PREFIX_PATTERN) {
         let xmlDecl = try charStream.readUntil(found: "?>")
-        let regex   = try RegularExpression(pattern: "\\s(?:encoding)=\"([^\"]+)\"")
 
-        if let match = regex.firstMatch(in: xmlDecl), let enc = match[1].subString?.uppercased(), enc != guessedEncoding {
-            let fin = getFinalEncoding(inferredEnc: guessedEncoding, xmlDeclEnc: enc)
-            guard IConv.getEncodingsList().contains(fin) else { throw SAXError.UnsupportedCharacterEncoding(1, 1, description: "Unsupported Character Encoding: \(fin)") }
-            return fin
+        if let regex = RegularExpression(pattern: "\\s(?:encoding)=\"([^\"]+)\"") {
+
+            if let match = regex.firstMatch(in: xmlDecl), let enc = match[1].subString?.uppercased(), enc != guessedEncoding {
+                let fin = getFinalEncoding(inferredEnc: guessedEncoding, xmlDeclEnc: enc)
+                guard IConv.getEncodingsList().contains(fin) else { throw SAXError.UnsupportedCharacterEncoding(1, 1, description: "Unsupported Character Encoding: \(fin)") }
+                return fin
+            }
         }
     }
 

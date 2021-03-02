@@ -71,7 +71,8 @@ open class SAXError: Error, CustomStringConvertible {
             }
         }
 
-        public class func ws(_ charStream: CharInputStream, found ch: Character) -> SAXError { InvalidCharacter(charStream, description: "Expected a whitespace character but found \"\(ch)\" instead.") }
+        public class func ws(_ charStream: CharInputStream, found ch: Character) -> SAXError { InvalidCharacter(charStream,
+                                                                                                                description: "Expected a whitespace character but found \"\(ch)\" instead.") }
     }
 
     public class UnsupportedCharacterEncoding: SAXError {}
@@ -93,4 +94,6 @@ open class SAXError: Error, CustomStringConvertible {
     public class MissingName: SAXError {}
 
     public class MalformedDTD: SAXError {}
+
+    public class InternalError: SAXError { public init(description: String) { super.init(0, 0, description: description) } }
 }

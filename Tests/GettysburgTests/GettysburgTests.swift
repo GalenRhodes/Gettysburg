@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import Rubicon
 @testable import Gettysburg
 
 class GettysburgTests: XCTestCase {
@@ -107,6 +108,52 @@ class GettysburgTests: XCTestCase {
                 var x: String = "\"\(chars[chars.startIndex])\""
                 for y in ((chars.startIndex + 1) ..< chars.endIndex) { x += ", \"\(chars[y])\"" }
                 print("\"\(str)\" -> \"!EL\", \"!AT\", \"!NO\", \"!EN\", \"!--\": Expected one of \(x) but found \"\(ch)\" instead.")
+            }
+        }
+    }
+
+    func testDocTypeRegex() throws {
+        let pattern = "\\A\\s*(\(rxNamePattern))\\s+(SYSTEM|PUBLIC)\\s+([\"'])(.*?)\\3(?:\\s+([\"'])(.*?)\\5)?\\s*\\z"
+        let tests   = [
+            " Person SYSTEM \"Test_UTF-16LE_ext.dtd\"",
+            "Person SYSTEM \"Test_UTF-16LE_ext.dtd\"",
+            " Person PUBLIC \"publicID\" \"Test_UTF-16LE_ext.dtd\"",
+            "Person PUBLIC \"publicID\" \"Test_UTF-16LE_ext.dtd\"",
+
+            " Person SYSTEM \"'Test_UTF-16LE_ext.dtd'\"",
+            "Person SYSTEM \"'Test_UTF-16LE_ext.dtd'\"",
+            " Person PUBLIC \"'publicID'\" \"Test_UTF-16LE_ext.dtd\"",
+            "Person PUBLIC \"publicID\" \"'Test_UTF-16LE_ext.dtd'\"",
+            "Person PUBLIC \"'publicID'\" \"'Test_UTF-16LE_ext.dtd'\"",
+
+            " Person SYSTEM 'Test_UTF-16LE_ext.dtd'",
+            "Person SYSTEM 'Test_UTF-16LE_ext.dtd'",
+            " Person PUBLIC 'publicID' \"Test_UTF-16LE_ext.dtd\"",
+            "Person PUBLIC 'publicID' \"Test_UTF-16LE_ext.dtd\"",
+            " Person PUBLIC \"publicID\" 'Test_UTF-16LE_ext.dtd'",
+            "Person PUBLIC \"publicID\" 'Test_UTF-16LE_ext.dtd'",
+            " Person PUBLIC 'publicID' 'Test_UTF-16LE_ext.dtd'",
+            "Person PUBLIC 'publicID' 'Test_UTF-16LE_ext.dtd'",
+
+            " Person SYSTEM '\"Test_UTF-16LE_ext.dtd\"'",
+            "Person SYSTEM '\"Test_UTF-16LE_ext.dtd\"'",
+            " Person PUBLIC '\"publicID\"' \"'Test_UTF-16LE_ext.dtd'\"",
+            "Person PUBLIC '\"publicID\"' \"'Test_UTF-16LE_ext.dtd'\"",
+            " Person PUBLIC \"'publicID'\" '\"Test_UTF-16LE_ext.dtd\"'",
+            "Person PUBLIC \"'publicID'\" '\"Test_UTF-16LE_ext.dtd\"'",
+            " Person PUBLIC '\"publicID\"' '\"Test_UTF-16LE_ext.dtd\"'",
+            "Person PUBLIC '\"publicID\"' '\"Test_UTF-16LE_ext.dtd\"'",
+        ]
+
+        for aTest in tests {
+            if let rx = RegularExpression(pattern: pattern, options: [ .anchorsMatchLines ]) {
+                if let match = rx.firstMatch(in: aTest) {
+                    print("======================================================================")
+                    var idx = 0
+                    for grp in match {
+                        print("Group \(idx++)> \"\(grp.subString ?? "NIL")\"")
+                    }
+                }
             }
         }
     }
