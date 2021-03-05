@@ -53,11 +53,17 @@ extension SAXParser {
     ///   - chStream: the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> the DTD was read from.
     /// - Throws: if any of the entities are malformed.
     ///
-    @inlinable func parseDTDParamEntities(_ dtd: String, position pos: (Int, Int), charStream chStream: SAXCharInputStream) throws {
+    @inlinable func parseDTDParamEntities(_ dtd: String, position pos: (Int, Int), charStream chStream: SAXCharInputStream, externalType extTp: SAXExternalType) throws {
         try RegularExpression(pattern: "\\<\\!ENTITY\\s+\\%\\s+(.*?)\\>", options: RXO)!.forEachMatch(in: dtd) { m, _ in
-            if let m = m, let r = m[1].range {
-                let (s, p) = getSubStringAndPos(dtd, range: r, position: pos, charStream: chStream)
-                try parseSingleDTDEntity(s.trimmed, type: .Parameter, position: p, charStream: chStream)
+            if let m = m {
+                guard value(extTp, isOneOf: .Public, .System) else {
+                    let p = dtd.positionOfIndex(m.range.lowerBound, position: pos, charStream: chStream)
+                    throw SAXError.MalformedDTD(p, description: "Only external DTDs can have parameter entities.")
+                }
+                if let r = m[1].range {
+                    let (s, p) = getSubStringAndPos(dtd, range: r, position: pos, charStream: chStream)
+                    try parseSingleDTDEntity(s.trimmed, type: .Parameter, position: p, charStream: chStream)
+                }
             }
             return false
         }
@@ -177,14 +183,28 @@ extension SAXParser {
                 return (ee.value ?? fullEntity)
             }
             else if let sid = ee.systemId {
-                let inStream = handler.resolveEntity(self, publicId: ee.publicId, systemId: sid)
-                let chStream = try getCharStreamFor(inputStream: inStream, systemId: sid)
-                chStream.open()
+                let chStream = try getExternalEntityInputStream(publicId: ee.publicId, systemId: sid)
                 defer { chStream.close() }
                 return try chStream.readAll()
             }
         }
 
         return fullEntity
+    }
+
+    /*===========================================================================================================================================================================*/
+    /// Get the input stream to used to read an external entity.
+    /// 
+    /// - Parameters:
+    ///   - publicId: the public ID
+    ///   - systemId: the system ID
+    /// - Returns: the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> to read the external entity from.
+    /// - Throws: if there is an I/O error or the URI is malformed.
+    ///
+    func getExternalEntityInputStream(publicId: String?, systemId: String) throws -> SAXCharInputStream {
+        let inStream = handler.resolveEntity(self, publicId: publicId, systemId: systemId)
+        let chStream = try getCharStreamFor(inputStream: inStream, systemId: systemId)
+        chStream.open()
+        return chStream
     }
 }

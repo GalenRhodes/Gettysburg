@@ -26,10 +26,6 @@ import Rubicon
 
 @inlinable func tabCalc(pos i: Int, tabSize sz: Int = 4) -> Int { (((((i - 1) + sz) / sz) * sz) + 1) }
 
-@inlinable func == <T: Equatable>(lhs: ArraySlice<T>, rhs: [T]) -> Bool { ((lhs.count == rhs.count) && (lhs == rhs[rhs.startIndex ..< rhs.endIndex])) }
-
-@inlinable func == <T: Equatable>(lhs: [T], rhs: ArraySlice<T>) -> Bool { ((lhs.count == rhs.count) && (lhs[lhs.startIndex ..< lhs.endIndex] == rhs)) }
-
 @inlinable func getCurrDirURL() -> URL { URL(fileURLWithPath: FileManager.default.currentDirectoryPath, isDirectory: true) }
 
 @inlinable func getFileURL(filename: String) -> URL { URL(fileURLWithPath: filename, relativeTo: getCurrDirURL()) }
@@ -40,6 +36,7 @@ import Rubicon
 }
 
 @inlinable func printArray(_ strings: [String?]) {
+    #if DEBUG
     var idx = 0
     for s in strings {
         if let s = s {
@@ -49,13 +46,12 @@ import Rubicon
             print("\(idx++)> NIL")
         }
     }
+    #endif
 }
 
 @inlinable func getSubStringAndPos(_ string: String, range: Range<String.Index>, position pos: (Int, Int), charStream chStream: SAXCharInputStream) -> (String, (Int, Int)) {
-    (String(string[range.lowerBound ..< range.upperBound]), string.positionOfIndex(range.lowerBound, startingLine: pos.0, startingColumn: pos.1, tabSize: chStream.tabWidth))
+    (String(string[range.lowerBound ..< range.upperBound]), string.positionOfIndex(range.lowerBound, position: pos, charStream: chStream))
 }
-
-@inlinable func regexError(_ err: Error?) -> Error { err ?? SAXError.InternalError(description: "Malformed regex pattern.") }
 
 extension SAXParser {
 

@@ -184,7 +184,7 @@ extension SAXParser {
         var ch = str[sIdx]
 
         if ch == "(" {
-            elems <+ try parseDTDElementAllowed(str, index: &sIdx, isRoot: false, position: str.positionOfIndex(sIdx, startingAt: pos, tabSize: chStream.tabWidth), charStream: chStream)
+            elems <+ try parseDTDElementAllowed(str, index: &sIdx, isRoot: false, position: str.positionOfIndex(sIdx, position: pos, charStream: chStream), charStream: chStream)
         }
         else if str[sIdx...].hasPrefix(PCDATA) {
             guard isRoot && elems.isEmpty else { throw SAXError.MalformedDTD(pos, description: errMsg) }

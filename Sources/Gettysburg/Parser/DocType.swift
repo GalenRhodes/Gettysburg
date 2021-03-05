@@ -143,7 +143,7 @@ extension SAXParser {
             print("========================================================================================================================")
         #endif
 
-        try parseDTDParamEntities(dtd, position: pos, charStream: chStream)
+        try parseDTDParamEntities(dtd, position: pos, charStream: chStream, externalType: extType)
         let dtd2 = try replaceParamEntities(in: dtd)
         #if DEBUG
             if dtd != dtd2 {

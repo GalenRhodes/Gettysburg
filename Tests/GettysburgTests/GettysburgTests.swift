@@ -90,28 +90,6 @@ class GettysburgTests: XCTestCase {
         try sax.parse()
     }
 
-    func testGetInvalidCharInfo() throws {
-        print("--------------------------------------------------------------------------------")
-        let strs = [ "X41", "!43", "!A4", "!ET", "!NO" ]
-        for str in strs {
-            let (ch, chars) = str.getInvalidCharInfo(strings: "!EL", "!AT", "!NO", "!EN", "!--")
-            if chars.isEmpty {
-                print("\"\(str)\" -> \"!EL\", \"!AT\", \"!NO\", \"!EN\", \"!--\": Character \"\(ch)\" not expected here.")
-            }
-            else if chars.count == 1 {
-                print("\"\(str)\" -> \"!EL\", \"!AT\", \"!NO\", \"!EN\", \"!--\": Expected \"\(chars[chars.startIndex])\" but found \"\(ch)\" instead.")
-            }
-            else if chars.count == 2 {
-                print("\"\(str)\" -> \"!EL\", \"!AT\", \"!NO\", \"!EN\", \"!--\": Expected \"\(chars[chars.startIndex])\" or \"\(chars[chars.index(after: chars.startIndex)])\" but found \"\(ch)\" instead.")
-            }
-            else {
-                var x: String = "\"\(chars[chars.startIndex])\""
-                for y in ((chars.startIndex + 1) ..< chars.endIndex) { x += ", \"\(chars[y])\"" }
-                print("\"\(str)\" -> \"!EL\", \"!AT\", \"!NO\", \"!EN\", \"!--\": Expected one of \(x) but found \"\(ch)\" instead.")
-            }
-        }
-    }
-
     func testDocTypeRegex() throws {
         let pattern = "\\A\\s*(\(rxNamePattern))\\s+(SYSTEM|PUBLIC)\\s+([\"'])(.*?)\\3(?:\\s+([\"'])(.*?)\\5)?\\s*\\z"
         let tests   = [

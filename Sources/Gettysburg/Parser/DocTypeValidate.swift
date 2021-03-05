@@ -67,6 +67,6 @@ extension SAXParser {
     /// - Returns: the error.
     ///
     @inlinable func getDTDError(_ string: String, index idx: String.Index, position pos: (Int, Int), charStream chStream: SAXCharInputStream, message msg: String) -> SAXError.MalformedDTD {
-        SAXError.MalformedDTD(string.positionOfIndex(idx, startingLine: pos.0, startingColumn: pos.1, tabSize: chStream.tabWidth), description: msg)
+        SAXError.MalformedDTD(string.positionOfIndex(idx, position: pos, charStream: chStream), description: msg)
     }
 }
