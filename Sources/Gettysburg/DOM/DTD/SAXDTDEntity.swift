@@ -41,6 +41,8 @@ open class SAXDTDEntity: Hashable {
         self.externType = ((publicId == nil && systemId == nil) ? .Internal : ((publicId == nil) ? .System : .Public))
     }
 
+    @inlinable func setNotation(_ list: [SAXDTDNotation]) {}
+
     public func hash(into hasher: inout Hasher) {
         hasher.combine(name)
         hasher.combine(externType)
@@ -57,21 +59,24 @@ open class SAXDTDEntity: Hashable {
 }
 
 open class SAXDTDUnparsedEntity: SAXDTDEntity {
-    public let notation: String
+    public let notationName: String
+    public var notation: SAXDTDNotation? = nil
 
     public init(name: String, publicId: String?, systemId: String, notation: String) {
-        self.notation = notation
+        notationName = notation
         super.init(name: name, entityType: .General, publicId: publicId, systemId: systemId, value: nil)
     }
 
+    @inlinable override func setNotation(_ list: [SAXDTDNotation]) { for n in list { if n.name == notationName { notation = n } } }
+
     public override func hash(into hasher: inout Hasher) {
         super.hash(into: &hasher)
-        hasher.combine(notation)
+        hasher.combine(notationName)
     }
 
     public static func == (lhs: SAXDTDUnparsedEntity, rhs: SAXDTDUnparsedEntity) -> Bool {
         if lhs === rhs { return true }
         if type(of: lhs) != type(of: rhs) { return false }
-        return lhs.name == rhs.name && lhs.externType == rhs.externType && lhs.entityType == rhs.entityType && lhs.publicId == rhs.publicId && lhs.systemId == rhs.systemId && lhs.notation == rhs.notation
+        return lhs.name == rhs.name && lhs.externType == rhs.externType && lhs.entityType == rhs.entityType && lhs.publicId == rhs.publicId && lhs.systemId == rhs.systemId && lhs.notationName == rhs.notationName
     }
 }

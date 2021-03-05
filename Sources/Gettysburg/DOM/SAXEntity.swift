@@ -21,6 +21,8 @@
  *//************************************************************************/
 
 import Foundation
+import CoreFoundation
+import Rubicon
 
 open class SAXEntity: SAXNode {
     public let publicId: String?

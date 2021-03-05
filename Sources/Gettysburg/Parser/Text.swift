@@ -47,6 +47,12 @@ extension SAXParser {
         try parseComment(charStream: charStream)
     }
 
+    /*===========================================================================================================================================================================*/
+    /// Parse and handle a comment.
+    /// 
+    /// - Parameter charStream: the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>.
+    /// - Throws: if there was an I/O error or the comment was malformed.
+    ///
     func parseComment(charStream: SAXCharInputStream) throws {
         let end = "-->".getCharacters()
         let ecc = end.count

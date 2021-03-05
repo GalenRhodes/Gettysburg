@@ -27,6 +27,7 @@
 		1117D006E0E0202D18E15828 /* SAXDTDEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D8FBA7041E289331240E /* SAXDTDEntity.swift */; };
 		1117D0A4FF07F25A60BC18D2 /* SAXHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D3A1E6C4AA50C5538A81 /* SAXHandler.swift */; };
 		1117D0F54CBF298264462A01 /* DocType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D8C45F1B0D5FC49A7BD8 /* DocType.swift */; };
+		1117D174BBFE434F80121D44 /* DocTypeNotations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DEA5C88C21F64F25E6DD /* DocTypeNotations.swift */; };
 		1117D1DB3AC44017E14C6775 /* SAXDTD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D34C3DAEB6BF41CF17F0 /* SAXDTD.swift */; };
 		1117D22191E359EA24C6A826 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DFB20447E8856673449D /* Extensions.swift */; };
 		1117D4474B91CC14AE141F54 /* Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DE9A1CF91E7263AFD24B /* Text.swift */; };
@@ -38,16 +39,19 @@
 		1117D68B62FFD1AA32F00AEB /* SAXTestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DEB2BBDD656C51384346 /* SAXTestHandler.swift */; };
 		1117D7633FB531C5DC332B16 /* SAXDTDNotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D562FCD28659D737EF8D /* SAXDTDNotation.swift */; };
 		1117D7C3FA667B4863A25898 /* SAXCharInputStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D624CCC13A7CE4FD5811 /* SAXCharInputStream.swift */; };
-		1117D83F8FAF58D0C2B39866 /* SAXElementDecl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DCD41E64577F76B87B75 /* SAXElementDecl.swift */; };
+		1117D8C6BAB6A2F446748C54 /* DocTypeElements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DABAF9E2D402F663E5AA /* DocTypeElements.swift */; };
 		1117D8DFE2AC6F4ADC667B01 /* SAXText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D52214D80D5CD20FB455 /* SAXText.swift */; };
 		1117D91388446226B32F9AA1 /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D44F455A6E1F051E1FE7 /* Tools.swift */; };
 		1117D9565EDC7735384C480F /* CharInputStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D27E52C9747092059B34 /* CharInputStream.swift */; };
 		1117DA65DD62A27F9DE76C4E /* ExternalEntities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D9D29D4438623D3D7394 /* ExternalEntities.swift */; };
 		1117DA9DA3ACFB977CAA77CA /* CharacterSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DF67151CBCFC4806850A /* CharacterSets.swift */; };
+		1117DAB0E2EA874CE03DDE2B /* DocTypeValidate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DCE61DCBFF916B5A273E /* DocTypeValidate.swift */; };
 		1117DAE28F5216597168750E /* SAXError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D597EAA818B7614CEAEF /* SAXError.swift */; };
+		1117DB58414016461A18D7A4 /* DocTypeEntities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DE5B1D767D0217F62E7D /* DocTypeEntities.swift */; };
 		1117DBACBBB748A8639285FD /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DB804342BF77458B8663 /* main.swift */; };
 		1117DCC26185D5ACA4C0B569 /* SAXNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D61D8E71863201C17818 /* SAXNode.swift */; };
 		1117DD52BDA82EF3D833AEE7 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D823F398AB0E260CA6A8 /* Enums.swift */; };
+		1117DDA641EDFC5BC290A306 /* DocTypeAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DBDE66AD86C777A2D612 /* DocTypeAttribute.swift */; };
 		1117DDAABC5C2559C3E58075 /* Gettysburg.h in Headers */ = {isa = PBXBuildFile; fileRef = 1117DA52094C2ABAE3EA2EBA /* Gettysburg.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1117DEB45A7944B62EF47A15 /* SAXDTDElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DFBD10C88123F5A86D86 /* SAXDTDElement.swift */; };
 		1117DF1999DAA2DB71B29F4A /* SAXEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D729760E6A761C072842 /* SAXEntity.swift */; };
@@ -165,11 +169,15 @@
 		1117DA52094C2ABAE3EA2EBA /* Gettysburg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gettysburg.h; sourceTree = "<group>"; };
 		1117DA824E14682604234458 /* ProcessingInstruction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProcessingInstruction.swift; sourceTree = "<group>"; };
 		1117DAA84799663DD3A40574 /* SAXDTDAttribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXDTDAttribute.swift; sourceTree = "<group>"; };
+		1117DABAF9E2D402F663E5AA /* DocTypeElements.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocTypeElements.swift; sourceTree = "<group>"; };
 		1117DAFBEFBAF2446DD9BCDC /* Element.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Element.swift; sourceTree = "<group>"; };
 		1117DB804342BF77458B8663 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		1117DCD41E64577F76B87B75 /* SAXElementDecl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXElementDecl.swift; sourceTree = "<group>"; };
+		1117DBDE66AD86C777A2D612 /* DocTypeAttribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocTypeAttribute.swift; sourceTree = "<group>"; };
+		1117DCE61DCBFF916B5A273E /* DocTypeValidate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocTypeValidate.swift; sourceTree = "<group>"; };
 		1117DD5AFC911B2020139DDF /* LinuxMain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinuxMain.swift; sourceTree = "<group>"; };
+		1117DE5B1D767D0217F62E7D /* DocTypeEntities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocTypeEntities.swift; sourceTree = "<group>"; };
 		1117DE9A1CF91E7263AFD24B /* Text.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Text.swift; sourceTree = "<group>"; };
+		1117DEA5C88C21F64F25E6DD /* DocTypeNotations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocTypeNotations.swift; sourceTree = "<group>"; };
 		1117DEB2BBDD656C51384346 /* SAXTestHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXTestHandler.swift; sourceTree = "<group>"; };
 		1117DEC96369491CED3F9649 /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		1117DEEF81A42D01ABDC174A /* SAXParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXParser.swift; sourceTree = "<group>"; };
@@ -230,6 +238,11 @@
 				1117DAFBEFBAF2446DD9BCDC /* Element.swift */,
 				1117DA824E14682604234458 /* ProcessingInstruction.swift */,
 				1117D3E6184A707D9FC4E293 /* Document.swift */,
+				1117DABAF9E2D402F663E5AA /* DocTypeElements.swift */,
+				1117DE5B1D767D0217F62E7D /* DocTypeEntities.swift */,
+				1117DEA5C88C21F64F25E6DD /* DocTypeNotations.swift */,
+				1117DBDE66AD86C777A2D612 /* DocTypeAttribute.swift */,
+				1117DCE61DCBFF916B5A273E /* DocTypeValidate.swift */,
 			);
 			path = Parser;
 			sourceTree = "<group>";
@@ -239,7 +252,6 @@
 			children = (
 				1117DFB20447E8856673449D /* Extensions.swift */,
 				1117D823F398AB0E260CA6A8 /* Enums.swift */,
-				1117DCD41E64577F76B87B75 /* SAXElementDecl.swift */,
 				1117D597EAA818B7614CEAEF /* SAXError.swift */,
 				1117D27E52C9747092059B34 /* CharInputStream.swift */,
 				1117D44F455A6E1F051E1FE7 /* Tools.swift */,
@@ -605,7 +617,6 @@
 				1117D8DFE2AC6F4ADC667B01 /* SAXText.swift in Sources */,
 				1117D22191E359EA24C6A826 /* Extensions.swift in Sources */,
 				1117DD52BDA82EF3D833AEE7 /* Enums.swift in Sources */,
-				1117D83F8FAF58D0C2B39866 /* SAXElementDecl.swift in Sources */,
 				1117DAE28F5216597168750E /* SAXError.swift in Sources */,
 				1117D9565EDC7735384C480F /* CharInputStream.swift in Sources */,
 				1117D91388446226B32F9AA1 /* Tools.swift in Sources */,
@@ -622,6 +633,11 @@
 				1117DEB45A7944B62EF47A15 /* SAXDTDElement.swift in Sources */,
 				1117D006E0E0202D18E15828 /* SAXDTDEntity.swift in Sources */,
 				1117D7633FB531C5DC332B16 /* SAXDTDNotation.swift in Sources */,
+				1117D8C6BAB6A2F446748C54 /* DocTypeElements.swift in Sources */,
+				1117DB58414016461A18D7A4 /* DocTypeEntities.swift in Sources */,
+				1117D174BBFE434F80121D44 /* DocTypeNotations.swift in Sources */,
+				1117DDA641EDFC5BC290A306 /* DocTypeAttribute.swift in Sources */,
+				1117DAB0E2EA874CE03DDE2B /* DocTypeValidate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

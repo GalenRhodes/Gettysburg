@@ -22,6 +22,7 @@
 
 import Foundation
 import CoreFoundation
+import Rubicon
 
 open class SAXText: SAXNode {
     public override var content: String { _content }

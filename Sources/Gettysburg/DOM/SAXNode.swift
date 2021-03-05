@@ -22,6 +22,7 @@
 
 import Foundation
 import CoreFoundation
+import Rubicon
 
 open class SAXNode: Hashable {
     public enum NodeType {

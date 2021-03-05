@@ -63,33 +63,48 @@ extension SAXParser {
             #endif
 
             if let regex = RegularExpression(pattern: "\\A\\<\\?(?i:xml)\\s+version=\"([^\"]*)\"(?:\\s+encoding=\"([^\"]*)\")?(?:\\s+standalone=\"([^\"]*)\")?\\s*\\?\\>\\z") {
-                guard let match = regex.firstMatch(in: xmlDecl) else { throw SAXError.MalformedXMLDecl(charStream, description: xmlDecl) }
-
-                if let s = match[1].subString {
-                    guard value(s, isOneOf: "1.0", "1.1") else { throw SAXError.MalformedXMLDecl(charStream, description: "Unsupported version: \(s)") }
-                    xmlVersion = s
-                }
-
-                if let s = match[2].subString {
-                    guard s != "" else { throw SAXError.MalformedXMLDecl(charStream, description: "Missing encoding value.") }
-                    xmlEncoding = s
-                }
-
-                if let s = match[3].subString {
-                    guard value(s, isOneOf: "yes", "no") else { throw SAXError.MalformedXMLDecl(charStream, description: "Invalid standalone value: \(s)") }
-                    xmlStandalone = (s == "yes")
-                }
-
-                #if DEBUG
-                    print("   XML Version: \(xmlVersion ?? "")")
-                    print("  XML Encoding: \(xmlEncoding ?? "")")
-                    print("XML Standalone: \(xmlStandalone ?? true)")
-                #endif
+                try extractXMLDeclValues(regex: regex, xmlDecl: xmlDecl, xmlVersion: &xmlVersion, xmlEncoding: &xmlEncoding, xmlStandalone: &xmlStandalone)
             }
         }
 
         self.xmlVersion = (xmlVersion ?? "1.0")
         self.xmlEncoding = (xmlEncoding ?? charStream.encodingName)
         self.xmlStandalone = (xmlStandalone ?? true)
+    }
+
+    /*===========================================================================================================================================================================*/
+    /// Extract the values in the XML Declaration.
+    /// 
+    /// - Parameters:
+    ///   - regex: the regular expression to use to extract the values.
+    ///   - xmlDecl: the string containing the XML Declaration.
+    ///   - xmlVersion: the string to receive the version.
+    ///   - xmlEncoding: the string to receive the encoding.
+    ///   - xmlStandalone: the boolean to receive the standalone flag.
+    /// - Throws: if the XML Declaration is malformed.
+    ///
+    private func extractXMLDeclValues(regex: RegularExpression, xmlDecl: String, xmlVersion: inout String?, xmlEncoding: inout String?, xmlStandalone: inout Bool?) throws {
+        guard let match = regex.firstMatch(in: xmlDecl) else { throw SAXError.MalformedXMLDecl(charStream, description: xmlDecl) }
+
+        if let s = match[1].subString {
+            guard value(s, isOneOf: "1.0", "1.1") else { throw SAXError.MalformedXMLDecl(charStream, description: "Unsupported version: \(s)") }
+            xmlVersion = s
+        }
+
+        if let s = match[2].subString {
+            guard s != "" else { throw SAXError.MalformedXMLDecl(charStream, description: "Missing encoding value.") }
+            xmlEncoding = s
+        }
+
+        if let s = match[3].subString {
+            guard value(s, isOneOf: "yes", "no") else { throw SAXError.MalformedXMLDecl(charStream, description: "Invalid standalone value: \(s)") }
+            xmlStandalone = (s == "yes")
+        }
+
+        #if DEBUG
+            print("   XML Version: \(xmlVersion ?? "")")
+            print("  XML Encoding: \(xmlEncoding ?? "")")
+            print("XML Standalone: \(xmlStandalone ?? true)")
+        #endif
     }
 }

@@ -41,7 +41,11 @@ class SAXTestHandler: SAXHandler {
 
     func dtdNotationDecl(_ parser: SAXParser, name: String, publicId: String?, systemId: String?) { /* TODO: Implement me... */ }
 
-    func dtdElementDecl(_ parser: SAXParser, name: String, allowedContent: SAXElementAllowedContent, content: SAXDTDElementContentList?) { /* TODO: Implement me... */ }
+    func dtdElementDecl(_ parser: SAXParser, name: String, allowedContent: SAXElementAllowedContent, content: SAXDTDElementContentList?) {
+        print(content?.debugDescription ?? "")
+        print("========================================================================================================================")
+        /* TODO: Implement me... */
+    }
 
     func dtdAttributeDecl(_ parser: SAXParser, name: String, elementName: String, type: SAXAttributeType, enumList: [String], defaultType: SAXAttributeDefaultType, defaultValue: String?) { /* TODO: Implement me... */ }
 
@@ -60,7 +64,9 @@ class SAXTestHandler: SAXHandler {
 
     func endPrefixMapping(_ parser: SAXParser, prefix: String) { /* TODO: Implement me... */ }
 
-    func beginElement(_ parser: SAXParser, localName: String, prefix: String?, namespaceURI: String?, attributes: [SAXAttribute]) { /* TODO: Implement me... */ }
+    func beginElement(_ parser: SAXParser, localName: String, prefix: String?, namespaceURI: String?, attributes: [SAXAttribute]) {
+        /* TODO: Implement me... */
+    }
 
     func endElement(_ parser: SAXParser, localName: String, prefix: String?, namespaceURI: String?) { /* TODO: Implement me... */ }
 
@@ -70,7 +76,7 @@ class SAXTestHandler: SAXHandler {
     }
 
     func getParameterEntity(_ parser: SAXParser, name: String) -> SAXEntity? {
-        fatalError("getParameterEntity(_:name:) has not been implemented")
+        return nil
         /* TODO: Implement me... */
     }
 

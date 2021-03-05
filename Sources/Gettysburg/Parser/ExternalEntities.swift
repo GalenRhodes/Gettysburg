@@ -25,6 +25,13 @@ import CoreFoundation
 import Rubicon
 
 extension SAXParser {
+    /*===========================================================================================================================================================================*/
+    /// Get a <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> for an external entity.
+    /// 
+    /// - Parameter url: the URL. If the URL is relative then it will be resolved against the Base URL of the document.
+    /// - Returns: the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>.
+    /// - Throws: if there is an I/O error.
+    ///
     func getExternalEntityCharInputStream(url: URL) throws -> SAXCharInputStream {
         guard let inStream = MarkInputStream(url: url) else { throw SAXError.IOError(0, 0, description: "Unable to open URL: \(url.absoluteString)") }
         let chStream = try SAXCharInputStream(inputStream: inStream, url: url)

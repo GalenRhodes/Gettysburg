@@ -37,51 +37,57 @@ open class SAXError: Error, CustomStringConvertible {
         self._description = description
     }
 
+    public init(_ pos: (Int, Int), description: String) {
+        lineNumber = pos.0
+        columnNumber = pos.1
+        _description = description
+    }
+
     public init(_ charStream: CharInputStream, description: String) {
         lineNumber = charStream.lineNumber
         columnNumber = charStream.columnNumber
         _description = description
     }
 
-    public class UnexpectedEndOfInput: SAXError { public init(_ charStream: CharInputStream) { super.init(charStream, description: "Unexpected End-Of-Input") } }
+    public class InternalError: SAXError { public init(description: String) { super.init(0, 0, description: description) } }
+
+    public class UnexpectedEndOfInput: SAXError {
+        public init(_ charStream: CharInputStream) { super.init(charStream, description: EOFMessage) }
+
+        public init(_ pos: (Int, Int)) { super.init(pos, description: EOFMessage) }
+
+        public init(_ line: Int, _ column: Int) { super.init(line, column, description: EOFMessage) }
+    }
 
     public class InvalidCharacter: SAXError {
-        public convenience init(_ charStream: CharInputStream, found ch: Character, expected chars: Character...) { self.init(charStream, found: ch, expected: chars) }
+        public convenience init(_ chStream: CharInputStream, found ch: Character, expected chars: Character...) { self.init(chStream.lineNumber, chStream.columnNumber, found: ch, expected: chars) }
 
-        public override init(_ charStream: CharInputStream, description: String) { super.init(charStream, description: description) }
+        public override init(_ chStream: CharInputStream, description: String) { super.init(chStream, description: description) }
 
-        public init(_ charStream: CharInputStream, found ch: Character, expected chars: [Character]) {
-            if chars.count <= 0 {
-                super.init(charStream, description: "Character \"\(ch)\" not expected here.")
-            }
-            else {
-                let sIdx = chars.startIndex
-                if chars.count == 1 {
-                    super.init(charStream, description: "Expected \"\(chars[sIdx])\" but found \"\(ch)\" instead.")
-                }
-                else if chars.count == 2 {
-                    super.init(charStream, description: "Expected \"\(chars[sIdx])\" or \"\(chars[sIdx + 1])\" but found \"\(ch)\" instead.")
-                }
-                else {
-                    let eIdx = (chars.endIndex - 1)
-                    var str  = ""
-                    for i in (sIdx ..< eIdx) { str += "\"\(chars[i])\", " }
-                    super.init(charStream, description: "Expected \(str), or \"\(chars[eIdx])\" but found \"\(ch)\" instead.")
-                }
-            }
-        }
+        public init(_ lineNumber: Int, _ columnNumber: Int, found ch: Character, expected chars: [Character]) { super.init(lineNumber, columnNumber, description: buildMessage(ch, chars)) }
 
-        public class func ws(_ charStream: CharInputStream, found ch: Character) -> SAXError { InvalidCharacter(charStream,
-                                                                                                                description: "Expected a whitespace character but found \"\(ch)\" instead.") }
+        public convenience init(_ lineNumber: Int, _ columnNumber: Int, found ch: Character, expected chars: Character...) { self.init(lineNumber, columnNumber, found: ch, expected: chars) }
+
+        public convenience init(_ pos: (Int, Int), found ch: Character, expected chars: [Character]) { self.init(pos.0, pos.1, found: ch, expected: chars) }
+
+        public convenience init(_ pos: (Int, Int), found ch: Character, expected chars: Character...) { self.init(pos.0, pos.1, found: ch, expected: chars) }
+
+        public convenience init(_ chStream: CharInputStream, found ch: Character, expected chars: [Character]) { self.init(chStream.lineNumber, chStream.columnNumber, found: ch, expected: chars) }
+
+        public class func ws(_ chStream: CharInputStream, found ch: Character) -> SAXError { InvalidCharacter(chStream, description: "Expected a whitespace character but found \"\(ch)\" instead.") }
+    }
+
+    public class MalformedURL: SAXError {
+        public init(_ url: String) { super.init(0, 0, description: malformedURLMessage(url)) }
+
+        public init(_ charStream: CharInputStream, url: String) { super.init(charStream, description: malformedURLMessage(url)) }
+
+        public init(_ pos: (Int, Int), url: String) { super.init(pos, description: malformedURLMessage(url)) }
+
+        public init(_ line: Int, _ column: Int, url: String) { super.init(line, column, description: malformedURLMessage(url)) }
     }
 
     public class UnsupportedCharacterEncoding: SAXError {}
-
-    public class MalformedURL: SAXError {
-        public init(_ url: String) { super.init(0, 0, description: "Malformed URL: \"\(url)\"") }
-
-        public init(_ charStream: CharInputStream, url: String) { super.init(charStream, description: "Malformed URL: \"\(url)\"") }
-    }
 
     public class MalformedXMLDecl: SAXError {}
 
@@ -94,6 +100,22 @@ open class SAXError: Error, CustomStringConvertible {
     public class MissingName: SAXError {}
 
     public class MalformedDTD: SAXError {}
-
-    public class InternalError: SAXError { public init(description: String) { super.init(0, 0, description: description) } }
 }
+
+@inlinable func buildList(_ chars: [Character]) -> String {
+    var str = ""
+    for i in (chars.startIndex ..< (chars.endIndex - 1)) { str += "\"\(chars[i])\", " }
+    str += "or \"\(chars[(chars.endIndex - 1)])\""
+    return str
+}
+
+@inlinable func buildMessage(_ ch: Character, _ chars: [Character]) -> String {
+    if chars.isEmpty { return "Character \"\(ch)\" not expected here." }
+    if chars.count == 1 { return "Expected \"\(chars[chars.startIndex])\" but found \"\(ch)\" instead." }
+    if chars.count == 2 { return "Expected \"\(chars[chars.startIndex])\" or \"\(chars[chars.startIndex + 1])\" but found \"\(ch)\" instead." }
+    return "Expected \(buildList(chars)) but found \"\(ch)\" instead."
+}
+
+@inlinable func malformedURLMessage(_ url: String) -> String { "Malformed URL: \"\(url)\"" }
+
+let EOFMessage = "Unexpected End-Of-Input"
