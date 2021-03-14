@@ -46,6 +46,7 @@ public enum SAXAttributeDefaultType {
 public enum SAXEntityType {
     case General
     case Parameter
+    case Unparsed
 }
 
 public enum SAXElementAllowedContent {

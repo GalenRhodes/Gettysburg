@@ -27,16 +27,17 @@ import Rubicon
 extension SAXExternalType: CustomStringConvertible {
     @inlinable public var description: String {
         switch self {
-            case .Internal:return "Internal"
-            case .Public:  return "Public"
-            case .System:  return "System"
+            case .Internal: return ""
+            case .Public:   return "PUBLIC"
+            case .System:   return "SYSTEM"
         }
     }
 
-    @inlinable static func valueFor(description desc: String) -> SAXExternalType {
+    @inlinable static func valueFor(description desc: String?) -> SAXExternalType {
         switch desc {
-            case "Public": return .Public
-            case "System": return .System
+            case "SYSTEM": return .System
+            case "PUBLIC": return .Public
+            case nil:      return .Public
             default:       return .Internal
         }
     }
@@ -102,13 +103,15 @@ extension SAXEntityType: CustomStringConvertible {
         switch self {
             case .General:   return "General"
             case .Parameter: return "Parameter"
+            case .Unparsed:  return "Unparsed"
         }
     }
 
     @inlinable static func valueFor(description desc: String) -> SAXEntityType {
         switch desc {
-            case "General": return .General
-            default:        return .Parameter
+            case "General":   return .General
+            case "Parameter": return .Parameter
+            default:          return .Unparsed
         }
     }
 }
@@ -176,10 +179,10 @@ extension SAXDTDElementContentItem.ItemMultiplicity: CustomStringConvertible {
 
     @inlinable static func valueFor(description desc: String) -> SAXDTDElementContentItem.ItemMultiplicity {
         switch desc {
-            case "Optional": return .Optional
-            case "Once": return .Once
+            case "Optional":   return .Optional
+            case "Once":       return .Once
             case "ZeroOrMore": return .ZeroOrMore
-            default: return .OneOrMore
+            default:           return .OneOrMore
         }
     }
 }
@@ -201,6 +204,14 @@ extension SAXDTDElementContentList.ItemConjunction: CustomStringConvertible {
 }
 
 extension String {
+
+    @inlinable func splitPrefix() -> (String?, String) {
+        guard let m = RegularExpression(pattern: "\\A([^:]*)\\:(.+)")?.firstMatch(in: self) else { return (nil, self.trimmed) }
+        guard let p = m[1].subString?.trimmed, let n = m[2].subString?.trimmed else { return (nil, self.trimmed) }
+        if p.isEmpty { return (nil, n) }
+        return (p, n)
+    }
+
     /*===========================================================================================================================================================================*/
     /// Get the position (line, column) of the index in the given string relative to the given starting position (line, column).
     /// 

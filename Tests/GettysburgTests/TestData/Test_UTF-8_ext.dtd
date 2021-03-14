@@ -15,7 +15,10 @@
         <!ATTLIST bob:info type CDATA #IMPLIED>
         <!ATTLIST gsr:LastName gsr:type CDATA #IMPLIED>
         <!ATTLIST bob:info id ID #REQUIRED><!-- Default can also be "#IMPLIED" -->
-        <!ELEMENT gsr:Person (gsr:LastName,gsr:FirstName,MiddleName,pgx:dob,bob:info,usa:family,(garfield|odie),ack:Batman,foo?,bar?)>
+        <!ATTLIST usa:family rho:type CDATA #IMPLIED>
+        <!ATTLIST usa:family des:type CDATA #IMPLIED>
+        <!ATTLIST usa:family type CDATA #IMPLIED>
+        <!ELEMENT gsr:Person %qt;>
         <!ELEMENT foo (ack:Batman)>
         <!ELEMENT bar (#PCDATA|usa:family)*>
         <!ELEMENT garfield EMPTY>

@@ -43,24 +43,17 @@ open class SAXNode: Hashable {
 
     public private(set) weak var parent: SAXNode? = nil
 
-    public let name: String
     public let type: NodeType
-
-    public var content: String {
-        var str:   String   = ""
-        var child: SAXNode? = firstChild
-
-        while let node = child {
-            str.append(node.content)
-            child = node.next
-        }
-
-        return str
-    }
+    public var name: SAXNSName
 
     public init(name: String, type: NodeType) {
-        self.name = name
         self.type = type
+        self.name = SAXNSName(localName: name, prefix: nil, uri: nil)
+    }
+
+    public init(name: SAXNSName, type: NodeType) {
+        self.type = type
+        self.name = name
     }
 
     open func hash(into hasher: inout Hasher) {
@@ -104,5 +97,17 @@ open class SAXNode: Hashable {
         node.prev = nil
         node.parent = nil
         return node
+    }
+
+    public var content: String {
+        var str:   String   = ""
+        var child: SAXNode? = firstChild
+
+        while let node = child {
+            str.append(node.content)
+            child = node.next
+        }
+
+        return str
     }
 }

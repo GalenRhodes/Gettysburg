@@ -24,6 +24,10 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
+@usableFromInline let DefMemLimit: Int = (1024 * 1024)
+@usableFromInline let MinMemLimit: Int = 4096
+@usableFromInline let MaxMemLimit: Int = (DefMemLimit * 4)
+
 open class SAXParser {
 
     public enum ExternalEntityResolvingPolicy {
@@ -53,6 +57,12 @@ open class SAXParser {
 
     public var allowedExternalEntityURLs:     Set<String>                   = []
     public var externalEntityResolvingPolicy: ExternalEntityResolvingPolicy = .always
+    /*===========================================================================================================================================================================*/
+    /// For performance, SAXParser tries to read as much of an XML structure into memory and then analyze it as a whole. This setting limits the number of characters read at once
+    /// to keep memory from being exhausted. If this limit is hit then an error is thrown. Normal text blocks, including CDATA sections are "chunked" if they exceed this limit so
+    /// that no error is thrown. Except for text blocks, this limit should never be breached for a well formed document. Allowed range is 4KB <= limit <= 4MB. The default is 1MB.
+    ///
+    public var structureSizeLimit:            Int                           = DefMemLimit
 
     @usableFromInline lazy var docType: SAXDTD = SAXDTD()
 
@@ -60,6 +70,8 @@ open class SAXParser {
     @usableFromInline let inputStream: MarkInputStream
     @usableFromInline let handler:     SAXHandler
     @usableFromInline let url:         URL
+
+    @inlinable var memLimit: Int { max(MinMemLimit, min(MaxMemLimit, structureSizeLimit)) }
 
     init(inputStream: InputStream, url: URL? = nil, handler: SAXHandler) throws {
         self.inputStream = ((inputStream as? MarkInputStream) ?? MarkInputStream(inputStream: inputStream))

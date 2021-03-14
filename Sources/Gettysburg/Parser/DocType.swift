@@ -36,13 +36,14 @@ extension SAXParser {
     ///
     func parseDocType() throws {
         var chars: [Character] = []
-        let tag                = try charStream.readString(count: 10, errorOnEOF: true)
+        let tag:   String      = try charStream.readString(count: 10)
+
         guard try tag.matches(pattern: "^\\<\\!DOCTYPE\\s$") else { throw SAXError.MalformedDTD(charStream, description: "Expected \"<!DOCTYPE\" but found \"\(tag)\" instead.") }
 
         while let ch = try charStream.read() {
             switch ch {
                 case "[":
-                    try handleInternalDocType(String(chars))
+                    try handleInternalDTD(String(chars))
                     return
                 case ">":
                     try handleExternalOnlyDocType(String(chars))
@@ -69,15 +70,13 @@ extension SAXParser {
         // |          | |    | ||       |  ||       |
         // element_name PUBLIC "public_ID" "system_ID"
         //
-        let pattern = "\\A\\s*(\(rxNamePattern))\\s+(SYSTEM|PUBLIC)\\s+([\"'])(.*?)\\3(?:\\s+([\"'])(.*?)\\5)?\\s*\\z"
-        guard let match = RegularExpression(pattern: pattern, options: RXO)!.firstMatch(in: string) else { throw SAXError.MalformedDTD(charStream, description: string) }
+        let p = "\\A\\s*(\(rxNamePattern))\\s+(SYSTEM|PUBLIC)\\s+([\"'])(.*?)\\3(?:\\s+([\"'])(.*?)\\5)?\\s*\\z"
+        guard let m = RegularExpression(pattern: p, options: RXO)!.firstMatch(in: string) else { throw SAXError.MalformedDTD(charStream, description: string) }
 
-        let elementName: String          = match[1].subString!
-        let extType:     SAXExternalType = ((match[2].subString == "PUBLIC") ? .Public : .System)
-        let publicId:    String?         = ((extType == .Public) ? match[4].subString : nil)
-        let systemId:    String          = match[(extType == .Public) ? 6 : 4].subString!
+        let xtp = SAXExternalType.valueFor(description: m[2].subString)
+        let sid = m[(xtp == SAXExternalType.Public) ? 6 : 4].subString!
 
-        try parseExternalDTD(elementName, extType: extType, publicId: publicId, systemId: systemId)
+        try handleIntExtDTD(try getCharStreamFor(systemId: sid), rootElementName: m[1].subString!, externalType: xtp, publicId: ((xtp == .Public) ? m[4].subString : nil), systemId: sid)
     }
 
     /*===========================================================================================================================================================================*/
@@ -86,77 +85,102 @@ extension SAXParser {
     /// - Parameter string: the string prefix of the DTD declaration.
     /// - Throws: the the DTD is malformed or there is an I/O error.
     ///
-    private func handleInternalDocType(_ string: String) throws {
+    private func handleInternalDTD(_ string: String) throws {
         let pattern = "\\A\\s*(\(rxNamePattern))(?:\\s+SYSTEM\\s+([\"'])(.+?)\\2)?\\s+\\z"
         guard let match = RegularExpression(pattern: pattern, options: RXO)?.firstMatch(in: string) else { throw SAXError.MalformedDTD(charStream, description: string) }
+        let name = match[1].subString!
+        try handleIntExtDTD(charStream, rootElementName: name, externalType: .Internal, publicId: nil, systemId: nil)
+        if let sid = match[3].subString { try handleIntExtDTD(try getCharStreamFor(systemId: sid), rootElementName: name, externalType: .System, publicId: nil, systemId: sid) }
+    }
 
-        let rootElementName: String      = match[1].subString!
-        let pos:             (Int, Int)  = (charStream.lineNumber, charStream.columnNumber)
-        var chars:           [Character] = []
+    /*===========================================================================================================================================================================*/
+    /// Handle a combination of an Internal DTD with a possible External secondary DTD.
+    /// 
+    /// - Parameters:
+    ///   - chStream: the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>.
+    ///   - elemName: the root element name.
+    ///   - extType: the external type
+    ///   - systemId: the system ID.
+    ///   - publicId: the public ID.
+    /// - Throws: if an I/O error occurs or either DTD is malformed.
+    ///
+    private func handleIntExtDTD(_ chStream: SAXCharInputStream, rootElementName elemName: String, externalType extType: SAXExternalType, publicId: String?, systemId: String?) throws {
+        var items: [DTDItem] = []
 
-        while let cx = try charStream.read() {
-            if cx == ">" && chars.last == "]" {
-                chars.removeLast()
-                try parseDTD(String(chars), pos: pos, charStream: charStream, rootElement: rootElementName, extType: .Internal)
-                if let systemId = match[3].subString { try parseExternalDTD(rootElementName, extType: .System, publicId: nil, systemId: systemId) }
+        chStream.markSet()
+        defer { chStream.markDelete() }
+
+        while let cx = try chStream.read() {
+            if cx == "<" {
+                guard let cy = try chStream.read() else { throw SAXError.UnexpectedEndOfInput(chStream) }
+                guard cy == "!" else { throw SAXError.InvalidCharacter(chStream, found: cy, expected: "!") }
+                chStream.markBackup(count: 2)
+                let pos = chStream.position
+                let str = try foo(chStream)
+                items <+ DTDItem(pos: pos, string: str)
+            }
+            else if extType == .Internal && cx == "]" {
+                guard let cy = try chStream.read() else { break }
+                guard cy == ">" else { throw SAXError.InvalidCharacter(chStream, found: cy, expected: ">") }
+                try fooItAll(chStream, extType: extType, items: items)
                 return
             }
-            chars <+ cx
+            else if !cx.isXmlWhitespace {
+                throw SAXError.InvalidCharacter(chStream, found: cx)
+            }
         }
 
-        throw SAXError.UnexpectedEndOfInput(charStream)
+        if extType == .Internal { throw SAXError.UnexpectedEndOfInput(chStream) }
+        try fooItAll(chStream, extType: extType, items: items)
     }
 
     /*===========================================================================================================================================================================*/
-    /// Parse an external DTD.
+    /// Read the DTD Item.
     /// 
-    /// - Parameters:
-    ///   - rootElement: the name of the root element.
-    ///   - extType: the external type.
-    ///   - publicId: the public ID.
-    ///   - systemId: the system ID.
-    /// - Throws: if the DTD is malformed or there is an I/O error.
+    /// 
+    /// - Parameter chStream: the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>.
+    /// - Returns: the string.
+    /// - Throws: if an I/O error occurs.
     ///
-    private func parseExternalDTD(_ rootElement: String, extType: SAXExternalType, publicId: String?, systemId: String) throws {
-        let chs: SAXCharInputStream = try getCharStreamFor(systemId: systemId)
-        let dtd: String             = try chs.readAll()
-        try parseDTD(dtd, pos: (chs.lineNumber, chs.columnNumber), charStream: chs, rootElement: rootElement, extType: extType, publicId: publicId, systemId: systemId)
+    private func foo(_ chStream: SAXCharInputStream) throws -> String {
+        var buffer: [Character] = []
+        while let ch = try chStream.read() {
+            buffer <+ ch
+            guard buffer.count <= memLimit else { throw SAXError.InternalError(description: "Too many characters.") }
+            if ch == ">" { return String(buffer) }
+        }
+        throw SAXError.UnexpectedEndOfInput(chStream)
     }
 
     /*===========================================================================================================================================================================*/
-    /// Parse the DTD string.
+    /// Foo it all.
     /// 
     /// - Parameters:
-    ///   - dtd: the string containing the DTD.
-    ///   - pos: the starting position in the document for the DTD.
-    ///   - chStream: the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> that the DTD was read from.
-    ///   - rootElement: the root element for the DTD
+    ///   - chStream: the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>.
     ///   - extType: the external type.
-    ///   - publicId: the public ID.
-    ///   - systemId: the system ID.
-    /// - Throws: if the DTD is malformed.
+    ///   - items: the list of DTD Items.
+    /// - Throws: if an error occurs.
     ///
-    private func parseDTD(_ dtd: String, pos: (Int, Int), charStream chStream: SAXCharInputStream, rootElement: String, extType: SAXExternalType, publicId: String? = nil, systemId: String? = nil) throws {
-        #if DEBUG
-            print("========================================================================================================================")
-            print(dtd)
-            print("========================================================================================================================")
-        #endif
-
-        try parseDTDParamEntities(dtd, position: pos, charStream: chStream, externalType: extType)
-        let dtd2 = try replaceParamEntities(in: dtd)
-        #if DEBUG
-            if dtd != dtd2 {
-                print(dtd2)
-                print("========================================================================================================================")
-            }
-        #endif
-
-        try validateWhitespace(dtd2, charStream: chStream, pos: pos)
-        try parseDTDEntities(dtd2, position: pos, charStream: chStream)
-        try parseDTDNotations(dtd2, position: pos, charStream: chStream)
+    private func fooItAll(_ chStream: SAXCharInputStream, extType: SAXExternalType, items: [DTDItem]) throws {
+        try parseDTDParameterEntities(chStream, extType: extType, items: items)
+        try replaceParamEntities(items: items)
+        try parseDTDGeneralEntities(chStream, extType: extType, items: items)
+        try parseDTDNotations(chStream, items: items)
         for e in docType._entities { e.setNotation(docType._notations) }
-        try parseDTDAttributes(dtd2, position: pos, charStream: chStream)
-        try parseDTDElements(dtd2, position: pos, charStream: chStream)
+        try parseDTDAttributes(chStream, items: items)
+        try parseDTDElements(chStream, items: items)
+    }
+
+    /*===========================================================================================================================================================================*/
+    /// Holds a DTD entry and it's position in the file.
+    ///
+    class DTDItem {
+        let pos:    (Int, Int)
+        var string: String
+
+        init(pos: (Int, Int), string: String) {
+            self.pos = pos
+            self.string = string
+        }
     }
 }

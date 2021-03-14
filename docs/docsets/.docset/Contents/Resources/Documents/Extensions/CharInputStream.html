@@ -17,7 +17,7 @@
     <a title="CharInputStream Extension Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">Gettysburg©</a> (16% documented)</p>
+        <p><a href="../index.html">Gettysburg©</a> (19% documented)</p>
         <p class="header-right"><a href="https://github.com/GalenRhodes/Gettysburg"><img src="../img/gh.png"/>View on GitHub</a></p>
         <p class="header-right">
           <form role="search" action="../search.json">
@@ -142,6 +142,9 @@
                 <a href="../Classes/SAXParser/ExternalEntityResolvingPolicy.html">– ExternalEntityResolvingPolicy</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Classes/SAXParser/DTDItem.html">– DTDItem</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Classes/SAXText.html">SAXText</a>
               </li>
               <li class="nav-group-task">
@@ -159,10 +162,22 @@
                 <a href="../Global%20Variables/BOM32LE.html">BOM32LE</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Global%20Variables/DefMemLimit.html">DefMemLimit</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Global%20Variables/EOFMessage.html">EOFMessage</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Global%20Variables/HEX_5F1.html">HEX_1</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables/MaxMemLimit.html">MaxMemLimit</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables/MemLimitMessage.html">MemLimitMessage</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables/MinMemLimit.html">MinMemLimit</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Global%20Variables/PCDATA.html">PCDATA</a>
@@ -184,9 +199,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Global%20Variables/XML_5FDECL_5FPREFIX_5FPATTERN.html">XML_DECL_PREFIX_PATTERN</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Global%20Variables/errMsg.html">errMsg</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Global%20Variables/rxNMTokenPattern.html">rxNMTokenPattern</a>
@@ -297,6 +309,17 @@
               </li>
             </ul>
           </li>
+          <li class="nav-group-name">
+            <a href="../Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Structs/NSMapping.html">NSMapping</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/SAXNSName.html">SAXNSName</a>
+              </li>
+            </ul>
+          </li>
         </ul>
       </nav>
       <article class="main-content">
@@ -318,6 +341,109 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:7Rubicon15CharInputStreamP10GettysburgE8positionSi_Sitvp"></a>
+                    <a name="//apple_ref/swift/Property/position" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7Rubicon15CharInputStreamP10GettysburgE8positionSi_Sitvp">position</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns the current position in the text file. (line, column).</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@inlinable</span>
+<span class="k">var</span> <span class="nv">position</span><span class="p">:</span> <span class="p">(</span><span class="kt">Int</span><span class="p">,</span> <span class="kt">Int</span><span class="p">)</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L34">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:7Rubicon15CharInputStreamP10GettysburgE11readXmlName8mustHave10errorOnEOFSSSb_SbtKF"></a>
+                    <a name="//apple_ref/swift/Method/readXmlName(mustHave:errorOnEOF:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7Rubicon15CharInputStreamP10GettysburgE11readXmlName8mustHave10errorOnEOFSSSb_SbtKF">readXmlName(mustHave:<wbr>errorOnEOF:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Read an XML Name from this <code><a href="http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html">character input stream</a></code>. This method reads characters until the
+first non-XML Name Character, such as whitespace, is encountered.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    if there is an I/O error or if <code>errorOnEOF</code> is <code>true</code> and the EOF is encountered.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@inlinable</span>
+<span class="kd">func</span> <span class="nf">readXmlName</span><span class="p">(</span><span class="nv">mustHave</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span> <span class="nv">errorOnEOF</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>mustHave</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>if <code>true</code> then at least the starting character must be read and the returned string will not be empty. If <code>false</code> the returned string might be empty.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>errorOnEOF</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>if <code>true</code> and the EOF is encountered then an error is thrown. If <code>false</code> and the EOF is encountered then the characters read so far are returned.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>the string of characters.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L46-L65">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:7Rubicon15CharInputStreamP10GettysburgE7readAllSSyKF"></a>
                     <a name="//apple_ref/swift/Method/readAll()" class="dashAnchor"></a>
                     <a class="token" href="#/s:7Rubicon15CharInputStreamP10GettysburgE7readAllSSyKF">readAll()</a>
@@ -328,7 +454,13 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        
+                        <p>NOTE: There is no real limit here. So be careful!</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    I/O error
+
+</div>
+
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
@@ -339,8 +471,12 @@
 
                         </div>
                       </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>the data read from the file.</p>
+                      </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L28-L32">Show on GitHub</a>
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L73-L78">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -348,9 +484,68 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7Rubicon15CharInputStreamP10GettysburgE9readUntil5found12excludeFoundS2S_SbtKF"></a>
-                    <a name="//apple_ref/swift/Method/readUntil(found:excludeFound:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7Rubicon15CharInputStreamP10GettysburgE9readUntil5found12excludeFoundS2S_SbtKF">readUntil(found:<wbr>excludeFound:<wbr>)</a>
+                    <a name="/s:7Rubicon15CharInputStreamP10GettysburgE7readAll8memLimitSSSi_tKF"></a>
+                    <a name="//apple_ref/swift/Method/readAll(memLimit:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7Rubicon15CharInputStreamP10GettysburgE7readAll8memLimitSSSi_tKF">readAll(memLimit:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Read all of the characters from a file.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    I/O error
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@inlinable</span>
+<span class="kd">func</span> <span class="nf">readAll</span><span class="p">(</span><span class="nv">memLimit</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>memLimit</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The maximum number of characters to read.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>the data read from the file.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L87-L91">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:7Rubicon15CharInputStreamP10GettysburgE9readUntil5found8memLimit12excludeFoundS2S_SiSbtKF"></a>
+                    <a name="//apple_ref/swift/Method/readUntil(found:memLimit:excludeFound:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7Rubicon15CharInputStreamP10GettysburgE9readUntil5found8memLimit12excludeFoundS2S_SiSbtKF">readUntil(found:<wbr>memLimit:<wbr>excludeFound:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -365,12 +560,12 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@inlinable</span>
-<span class="kd">func</span> <span class="nf">readUntil</span><span class="p">(</span><span class="nv">found</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">excludeFound</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+<span class="kd">func</span> <span class="nf">readUntil</span><span class="p">(</span><span class="nv">found</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">memLimit</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">excludeFound</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L">Show on GitHub</a>
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L93-L95">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -378,9 +573,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7Rubicon15CharInputStreamP10GettysburgE9readUntil5found12excludeFoundSSSJd_SbtKF"></a>
-                    <a name="//apple_ref/swift/Method/readUntil(found:excludeFound:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7Rubicon15CharInputStreamP10GettysburgE9readUntil5found12excludeFoundSSSJd_SbtKF">readUntil(found:<wbr>excludeFound:<wbr>)</a>
+                    <a name="/s:7Rubicon15CharInputStreamP10GettysburgE9readUntil5found8memLimit12excludeFoundSSSJd_SiSbtKF"></a>
+                    <a name="//apple_ref/swift/Method/readUntil(found:memLimit:excludeFound:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7Rubicon15CharInputStreamP10GettysburgE9readUntil5found8memLimit12excludeFoundSSSJd_SiSbtKF">readUntil(found:<wbr>memLimit:<wbr>excludeFound:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -395,12 +590,12 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@inlinable</span>
-<span class="kd">func</span> <span class="nf">readUntil</span><span class="p">(</span><span class="nv">found</span><span class="p">:</span> <span class="kt">Character</span><span class="o">...</span><span class="p">,</span> <span class="nv">excludeFound</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+<span class="kd">func</span> <span class="nf">readUntil</span><span class="p">(</span><span class="nv">found</span><span class="p">:</span> <span class="kt">Character</span><span class="o">...</span><span class="p">,</span> <span class="nv">memLimit</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">excludeFound</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L">Show on GitHub</a>
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L97-L99">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -408,9 +603,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7Rubicon15CharInputStreamP10GettysburgE9readUntil5found12excludeFoundSSSaySJG_SbtKF"></a>
-                    <a name="//apple_ref/swift/Method/readUntil(found:excludeFound:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7Rubicon15CharInputStreamP10GettysburgE9readUntil5found12excludeFoundSSSaySJG_SbtKF">readUntil(found:<wbr>excludeFound:<wbr>)</a>
+                    <a name="/s:7Rubicon15CharInputStreamP10GettysburgE9readUntil5found8memLimit12excludeFoundSSSaySJG_SiSbtKF"></a>
+                    <a name="//apple_ref/swift/Method/readUntil(found:memLimit:excludeFound:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7Rubicon15CharInputStreamP10GettysburgE9readUntil5found8memLimit12excludeFoundSSSaySJG_SiSbtKF">readUntil(found:<wbr>memLimit:<wbr>excludeFound:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -425,42 +620,12 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@inlinable</span>
-<span class="kd">func</span> <span class="nf">readUntil</span><span class="p">(</span><span class="nv">found</span><span class="p">:</span> <span class="p">[</span><span class="kt">Character</span><span class="p">],</span> <span class="nv">excludeFound</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+<span class="kd">func</span> <span class="nf">readUntil</span><span class="p">(</span><span class="nv">found</span><span class="p">:</span> <span class="p">[</span><span class="kt">Character</span><span class="p">],</span> <span class="nv">memLimit</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">excludeFound</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L38-L44">Show on GitHub</a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:7Rubicon15CharInputStreamP10GettysburgE13readTagCloseryyKF"></a>
-                    <a name="//apple_ref/swift/Method/readTagCloser()" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7Rubicon15CharInputStreamP10GettysburgE13readTagCloseryyKF">readTagCloser()</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@inlinable</span>
-<span class="kd">func</span> <span class="nf">readTagCloser</span><span class="p">()</span> <span class="k">throws</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L46-L49">Show on GitHub</a>
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L101-L107">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -478,7 +643,13 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        
+                        <p>Peek at the next character but do not remove it.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    if there is an I/O error or if the EOF is encountered.
+
+</div>
+
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
@@ -489,8 +660,12 @@
 
                         </div>
                       </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>the next character.</p>
+                      </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L51-L55">Show on GitHub</a>
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L115-L119">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -508,7 +683,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        
+                        <p>Read the next character from the <code><a href="http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html">character input stream</a></code>. Throws an error if the EOF is
+encountered.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    if there is an I/O error or if the EOF is encountered.
+
+</div>
+
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
@@ -519,8 +701,12 @@
 
                         </div>
                       </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>the next character.</p>
+                      </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L57-L60">Show on GitHub</a>
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L128-L131">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -538,7 +724,13 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        
+                        <p>Read a set number of characters from the stream and return then as a string.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    if there is an I/O error or if errorOnEOF is <code>true</code> and the EOF is encountered before the set number of characters can be read.
+
+</div>
+
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
@@ -549,8 +741,43 @@
 
                         </div>
                       </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>count</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the number of characters to read.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>errorOnEOF</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>if <code>true</code> and the EOF is encountered before the number of characters are read then an error is thrown. Otherwise the characters read are returned.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>the string.</p>
+                      </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L62-L72">Show on GitHub</a>
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L142-L152">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -558,9 +785,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7Rubicon15CharInputStreamP10GettysburgE10readString9leadingWS11mustBeOneOfSSAD17LeadingWhitespaceO_SSdtKF"></a>
-                    <a name="//apple_ref/swift/Method/readString(leadingWS:mustBeOneOf:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7Rubicon15CharInputStreamP10GettysburgE10readString9leadingWS11mustBeOneOfSSAD17LeadingWhitespaceO_SSdtKF">readString(leadingWS:<wbr>mustBeOneOf:<wbr>)</a>
+                    <a name="/s:7Rubicon15CharInputStreamP10GettysburgE9readUntil8memLimit10errorOnEOF9predicateSSSi_S2bSaySJG_SiztKXEtKF"></a>
+                    <a name="//apple_ref/swift/Method/readUntil(memLimit:errorOnEOF:predicate:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7Rubicon15CharInputStreamP10GettysburgE9readUntil8memLimit10errorOnEOF9predicateSSSi_S2bSaySJG_SiztKXEtKF">readUntil(memLimit:<wbr>errorOnEOF:<wbr>predicate:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -575,12 +802,12 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@inlinable</span>
-<span class="kd">func</span> <span class="nf">readString</span><span class="p">(</span><span class="nv">leadingWS</span><span class="p">:</span> <span class="kt"><a href="../Enums/LeadingWhitespace.html">LeadingWhitespace</a></span> <span class="o">=</span> <span class="o">.</span><span class="kt">None</span><span class="p">,</span> <span class="n">mustBeOneOf</span> <span class="nv">ex</span><span class="p">:</span> <span class="kt">String</span><span class="o">...</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+<span class="kd">func</span> <span class="nf">readUntil</span><span class="p">(</span><span class="nv">memLimit</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">errorOnEOF</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span> <span class="n">predicate</span> <span class="nv">body</span><span class="p">:</span> <span class="p">([</span><span class="kt">Character</span><span class="p">],</span> <span class="k">inout</span> <span class="kt">Int</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">Bool</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L74-L93">Show on GitHub</a>
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L154-L175">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -588,9 +815,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7Rubicon15CharInputStreamP10GettysburgE9readUntil10errorOnEOF9predicateSSSb_SbSaySJG_SiztKXEtKF"></a>
-                    <a name="//apple_ref/swift/Method/readUntil(errorOnEOF:predicate:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7Rubicon15CharInputStreamP10GettysburgE9readUntil10errorOnEOF9predicateSSSb_SbSaySJG_SiztKXEtKF">readUntil(errorOnEOF:<wbr>predicate:<wbr>)</a>
+                    <a name="/s:7Rubicon15CharInputStreamP10GettysburgE14skipWhitespace8mustHave4peekSJSb_SbtKF"></a>
+                    <a name="//apple_ref/swift/Method/skipWhitespace(mustHave:peek:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7Rubicon15CharInputStreamP10GettysburgE14skipWhitespace8mustHave4peekSJSb_SbtKF">skipWhitespace(mustHave:<wbr>peek:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -598,37 +825,12 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@inlinable</span>
-<span class="kd">func</span> <span class="nf">readUntil</span><span class="p">(</span><span class="nv">errorOnEOF</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span> <span class="n">predicate</span> <span class="nv">body</span><span class="p">:</span> <span class="p">([</span><span class="kt">Character</span><span class="p">],</span> <span class="k">inout</span> <span class="kt">Int</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">Bool</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+                        <p>Skip over whitespace characters returning the first non-whitespace character encountered.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    
+</div>
 
-                        </div>
-                      </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L95-L115">Show on GitHub</a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:7Rubicon15CharInputStreamP10GettysburgE14skipWhitespace8mustHave10returnLastSJSb_SbtKF"></a>
-                    <a name="//apple_ref/swift/Method/skipWhitespace(mustHave:returnLast:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7Rubicon15CharInputStreamP10GettysburgE14skipWhitespace8mustHave10returnLastSJSb_SbtKF">skipWhitespace(mustHave:<wbr>returnLast:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
@@ -636,12 +838,47 @@
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
 <span class="kd">@inlinable</span>
-<span class="kd">func</span> <span class="nf">skipWhitespace</span><span class="p">(</span><span class="nv">mustHave</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span> <span class="nv">returnLast</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">Character</span></code></pre>
+<span class="kd">func</span> <span class="nf">skipWhitespace</span><span class="p">(</span><span class="nv">mustHave</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span> <span class="nv">peek</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">Character</span></code></pre>
 
                         </div>
                       </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>mustHave</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>If <code>true</code> then there must be at least one whitespace character otherwise an error is thrown.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>peek</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>If <code>true</code> then the non-whitespace character is not removed from the input stream.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p></p>
+                      </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L117-L134">Show on GitHub</a>
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L186-L203">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -649,9 +886,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7Rubicon15CharInputStreamP10GettysburgE14readWhitespace10errorOnEOFSSSb_tKF"></a>
-                    <a name="//apple_ref/swift/Method/readWhitespace(errorOnEOF:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7Rubicon15CharInputStreamP10GettysburgE14readWhitespace10errorOnEOFSSSb_tKF">readWhitespace(errorOnEOF:<wbr>)</a>
+                    <a name="/s:7Rubicon15CharInputStreamP10GettysburgE19readOptQuotedString8memLimit9leadingWSSSSgSi_AD17LeadingWhitespaceOtKF"></a>
+                    <a name="//apple_ref/swift/Method/readOptQuotedString(memLimit:leadingWS:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7Rubicon15CharInputStreamP10GettysburgE19readOptQuotedString8memLimit9leadingWSSSSgSi_AD17LeadingWhitespaceOtKF">readOptQuotedString(memLimit:<wbr>leadingWS:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -659,19 +896,60 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        
+                        <p>Read an optional quoted string. If the first non-whitespace character is a single <code>&#39;</code> or double <code>&quot;</code> quote then the quoted string is returned, otherwise <code>nil</code> is returned.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    if there is an I/O error or the EOF is encountered before the closing quotation mark.
+
+</div>
+
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@inlinable</span>
-<span class="kd">func</span> <span class="nf">readWhitespace</span><span class="p">(</span><span class="nv">errorOnEOF</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+<span class="kd">func</span> <span class="nf">readOptQuotedString</span><span class="p">(</span><span class="nv">memLimit</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">leadingWS</span><span class="p">:</span> <span class="kt"><a href="../Enums/LeadingWhitespace.html">LeadingWhitespace</a></span> <span class="o">=</span> <span class="o">.</span><span class="kt">Allowed</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">String</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>memLimit</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the max number of characters to read.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>leadingWS</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p><code>None</code> ⏤ there can be no leading whitespace; <code>Allowed</code> ⏤ leading whitespace is allowed; <code>Required</code> ⏤ leading whitespace is required.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>the quoted string or <code>nil</code> is there was not one.</p>
+                      </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L136-L144">Show on GitHub</a>
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L214-L218">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -679,9 +957,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7Rubicon15CharInputStreamP10GettysburgE16readQuotedString9leadingWSSSAD17LeadingWhitespaceO_tKF"></a>
-                    <a name="//apple_ref/swift/Method/readQuotedString(leadingWS:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7Rubicon15CharInputStreamP10GettysburgE16readQuotedString9leadingWSSSAD17LeadingWhitespaceO_tKF">readQuotedString(leadingWS:<wbr>)</a>
+                    <a name="/s:7Rubicon15CharInputStreamP10GettysburgE16readQuotedString8memLimit9leadingWSSSSi_AD17LeadingWhitespaceOtKF"></a>
+                    <a name="//apple_ref/swift/Method/readQuotedString(memLimit:leadingWS:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7Rubicon15CharInputStreamP10GettysburgE16readQuotedString8memLimit9leadingWSSSSi_AD17LeadingWhitespaceOtKF">readQuotedString(memLimit:<wbr>leadingWS:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -689,19 +967,62 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        
+                        <p>Read a quoted string. Quoted strings can be delimited by double quotes <code>&quot;</code> or single quotes <code>&#39;</code> but the same quote that was used to open the quoted string has to be used
+to close it. This method assumes that any nested quotation marks are escaped in a manner that makes them NOT look like the character being used as the quotation mark. For
+example, using &ldquo;&rdquo;&ldquo; to escape a double quote (&rdquo;).</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    if there is an I/O error or the EOF is encountered before the closing quotation mark.
+
+</div>
+
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@inlinable</span>
-<span class="kd">func</span> <span class="nf">readQuotedString</span><span class="p">(</span><span class="nv">leadingWS</span><span class="p">:</span> <span class="kt"><a href="../Enums/LeadingWhitespace.html">LeadingWhitespace</a></span> <span class="o">=</span> <span class="o">.</span><span class="kt">Allowed</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+<span class="kd">func</span> <span class="nf">readQuotedString</span><span class="p">(</span><span class="nv">memLimit</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">leadingWS</span><span class="p">:</span> <span class="kt"><a href="../Enums/LeadingWhitespace.html">LeadingWhitespace</a></span> <span class="o">=</span> <span class="o">.</span><span class="kt">Allowed</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
 
                         </div>
                       </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>memLimit</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the max number of characters to read.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>leadingWS</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p><code>None</code> ⏤ there can be no leading whitespace; <code>Allowed</code> ⏤ leading whitespace is allowed; <code>Required</code> ⏤ leading whitespace is required.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>the quoted string.</p>
+                      </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L146-L151">Show on GitHub</a>
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L231-L233">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -709,9 +1030,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7Rubicon15CharInputStreamP10GettysburgE16readQuotedString5quoteSSSJ_tKF"></a>
-                    <a name="//apple_ref/swift/Method/readQuotedString(quote:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7Rubicon15CharInputStreamP10GettysburgE16readQuotedString5quoteSSSJ_tKF">readQuotedString(quote:<wbr>)</a>
+                    <a name="/s:7Rubicon15CharInputStreamP10GettysburgE16readQuotedString8memLimit9leadingWS5quoteSSSi_AD17LeadingWhitespaceOSJdtKF"></a>
+                    <a name="//apple_ref/swift/Method/readQuotedString(memLimit:leadingWS:quote:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7Rubicon15CharInputStreamP10GettysburgE16readQuotedString8memLimit9leadingWS5quoteSSSi_AD17LeadingWhitespaceOSJdtKF">readQuotedString(memLimit:<wbr>leadingWS:<wbr>quote:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -719,19 +1040,62 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        
+                        <p>Read a quoted string. You can specify any character to use as the quotation mark but the same character must be used for the open and close. This method assumes that any
+nested quotation marks are escaped in a manner that makes them NOT look like the character being used as the quotation mark. For example, using &ldquo;&rdquo;&ldquo; to escape a double
+quote (&rdquo;).</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    if an I/O error occurs.
+
+</div>
+
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@inlinable</span>
-<span class="kd">func</span> <span class="nf">readQuotedString</span><span class="p">(</span><span class="nv">quote</span><span class="p">:</span> <span class="kt">Character</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+<span class="kd">func</span> <span class="nf">readQuotedString</span><span class="p">(</span><span class="nv">memLimit</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">leadingWS</span><span class="p">:</span> <span class="kt"><a href="../Enums/LeadingWhitespace.html">LeadingWhitespace</a></span> <span class="o">=</span> <span class="o">.</span><span class="kt">Allowed</span><span class="p">,</span> <span class="nv">quote</span><span class="p">:</span> <span class="kt">Character</span><span class="o">...</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
 
                         </div>
                       </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>memLimit</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the max number of characters to read.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>quote</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the <code>character(s)</code> to use as the quotation mark.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>the string.</p>
+                      </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L153-L160">Show on GitHub</a>
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L246-L248">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -739,9 +1103,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:7Rubicon15CharInputStreamP10GettysburgE19readOptQuotedString9leadingWSSSSgAD17LeadingWhitespaceO_tKF"></a>
-                    <a name="//apple_ref/swift/Method/readOptQuotedString(leadingWS:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7Rubicon15CharInputStreamP10GettysburgE19readOptQuotedString9leadingWSSSSgAD17LeadingWhitespaceO_tKF">readOptQuotedString(leadingWS:<wbr>)</a>
+                    <a name="/s:7Rubicon15CharInputStreamP10GettysburgE16readQuotedString8memLimit9leadingWS5quoteSSSi_AD17LeadingWhitespaceOSaySJGtKF"></a>
+                    <a name="//apple_ref/swift/Method/readQuotedString(memLimit:leadingWS:quote:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7Rubicon15CharInputStreamP10GettysburgE16readQuotedString8memLimit9leadingWS5quoteSSSi_AD17LeadingWhitespaceOSaySJGtKF">readQuotedString(memLimit:<wbr>leadingWS:<wbr>quote:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -749,79 +1113,62 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        
+                        <p>Read a quoted string. You can specify any character to use as the quotation mark but the same character must be used for the open and close. This method assumes that any
+nested quotation marks are escaped in a manner that makes them NOT look like the character being used as the quotation mark. For example, using &ldquo;&rdquo;&ldquo; to escape a double
+quote (&rdquo;).</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    if an I/O error occurs.
+
+</div>
+
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@inlinable</span>
-<span class="kd">func</span> <span class="nf">readOptQuotedString</span><span class="p">(</span><span class="nv">leadingWS</span><span class="p">:</span> <span class="kt"><a href="../Enums/LeadingWhitespace.html">LeadingWhitespace</a></span> <span class="o">=</span> <span class="o">.</span><span class="kt">Allowed</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">String</span><span class="p">?</span></code></pre>
+<span class="kd">func</span> <span class="nf">readQuotedString</span><span class="p">(</span><span class="nv">memLimit</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">leadingWS</span><span class="p">:</span> <span class="kt"><a href="../Enums/LeadingWhitespace.html">LeadingWhitespace</a></span> <span class="o">=</span> <span class="o">.</span><span class="kt">Allowed</span><span class="p">,</span> <span class="nv">quote</span><span class="p">:</span> <span class="p">[</span><span class="kt">Character</span><span class="p">])</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
 
                         </div>
                       </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L162-L178">Show on GitHub</a>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>memLimit</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the max number of characters to read.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>quote</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the <code>character(s)</code> to use as the quotation mark.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:7Rubicon15CharInputStreamP10GettysburgE11readNMToken9leadingWSSSAD17LeadingWhitespaceO_tKF"></a>
-                    <a name="//apple_ref/swift/Method/readNMToken(leadingWS:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7Rubicon15CharInputStreamP10GettysburgE11readNMToken9leadingWSSSAD17LeadingWhitespaceO_tKF">readNMToken(leadingWS:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@inlinable</span>
-<span class="kd">func</span> <span class="nf">readNMToken</span><span class="p">(</span><span class="nv">leadingWS</span><span class="p">:</span> <span class="kt"><a href="../Enums/LeadingWhitespace.html">LeadingWhitespace</a></span> <span class="o">=</span> <span class="o">.</span><span class="kt">Required</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L180-L194">Show on GitHub</a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:7Rubicon15CharInputStreamP10GettysburgE8readName9leadingWSSSAD17LeadingWhitespaceO_tKF"></a>
-                    <a name="//apple_ref/swift/Method/readName(leadingWS:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7Rubicon15CharInputStreamP10GettysburgE8readName9leadingWSSSAD17LeadingWhitespaceO_tKF">readName(leadingWS:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@inlinable</span>
-<span class="kd">func</span> <span class="nf">readName</span><span class="p">(</span><span class="nv">leadingWS</span><span class="p">:</span> <span class="kt"><a href="../Enums/LeadingWhitespace.html">LeadingWhitespace</a></span> <span class="o">=</span> <span class="o">.</span><span class="kt">Required</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
-
-                        </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>the string.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L196-L210">Show on GitHub</a>
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L261-L276">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -839,7 +1186,13 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        
+                        <p>Read the next character and make sure that it is one of the given characters.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    if there is an I/O error or the character read is not one of the given characters.
+
+</div>
+
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
@@ -851,8 +1204,31 @@
 
                         </div>
                       </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>chars</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the list of possibly correct characters.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>the character read.</p>
+                      </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L">Show on GitHub</a>
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L285-L287">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -870,7 +1246,13 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        
+                        <p>Read the next character and make sure that it is one of the given characters.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    if there is an I/O error or the character read is not one of the given characters.
+
+</div>
+
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
@@ -882,39 +1264,31 @@
 
                         </div>
                       </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L214-L218">Show on GitHub</a>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>chars</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the list of possibly correct characters.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:7Rubicon15CharInputStreamP10GettysburgE9readChars6mustBeSSSaySJG_tKF"></a>
-                    <a name="//apple_ref/swift/Method/readChars(mustBe:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:7Rubicon15CharInputStreamP10GettysburgE9readChars6mustBeSSSaySJG_tKF">readChars(mustBe:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
-<span class="kd">@inlinable</span>
-<span class="kd">func</span> <span class="nf">readChars</span><span class="p">(</span><span class="n">mustBe</span> <span class="nv">chars</span><span class="p">:</span> <span class="p">[</span><span class="kt">Character</span><span class="p">])</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
-
-                        </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>the character read.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L220-L228">Show on GitHub</a>
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L296-L300">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -932,7 +1306,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        
+                        <p>Read a list of characters. Each character read must match it&rsquo;s corresponding character in the String. For example, if the string contains &ldquo;FooBar&rdquo; then the six (6)
+characters read must be &ldquo;F&rdquo;, &ldquo;o&rdquo;, &ldquo;o&rdquo;, &ldquo;B&rdquo;, &ldquo;a&rdquo;, &ldquo;r&rdquo; in that order.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    if an I/O error occurs or one of the characters read does not match it&rsquo;s corresponding character in the string.
+
+</div>
+
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
@@ -944,8 +1325,153 @@
 
                         </div>
                       </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>string</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the string to match.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>the string.</p>
+                      </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L">Show on GitHub</a>
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L310">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:7Rubicon15CharInputStreamP10GettysburgE9readChars6mustBeSSSJd_tKF"></a>
+                    <a name="//apple_ref/swift/Method/readChars(mustBe:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7Rubicon15CharInputStreamP10GettysburgE9readChars6mustBeSSSJd_tKF">readChars(mustBe:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Read a list of characters. Each character read must match it&rsquo;s corresponding character in the list. For example, if the list contains the characters &ldquo;F&rdquo;, &ldquo;o&rdquo;, &ldquo;o&rdquo;, &ldquo;B&rdquo;,
+&ldquo;a&rdquo;, &ldquo;r&rdquo; then the six (6) characters read must be &ldquo;F&rdquo;, &ldquo;o&rdquo;, &ldquo;o&rdquo;, &ldquo;B&rdquo;, &ldquo;a&rdquo;, &ldquo;r&rdquo; in that order.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    if an I/O error occurs or one of the characters read does not match it&rsquo;s corresponding character in the list.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">@inlinable</span>
+<span class="kd">func</span> <span class="nf">readChars</span><span class="p">(</span><span class="n">mustBe</span> <span class="nv">chars</span><span class="p">:</span> <span class="kt">Character</span><span class="o">...</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>chars</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the characters to match.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>a string containing the characters.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L320">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:7Rubicon15CharInputStreamP10GettysburgE9readChars6mustBeSSSaySJG_tKF"></a>
+                    <a name="//apple_ref/swift/Method/readChars(mustBe:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7Rubicon15CharInputStreamP10GettysburgE9readChars6mustBeSSSaySJG_tKF">readChars(mustBe:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Read a list of characters. Each character read must match it&rsquo;s corresponding character in the array. For example, if the array contains the characters &ldquo;F&rdquo;, &ldquo;o&rdquo;, &ldquo;o&rdquo;, &ldquo;B&rdquo;,
+&ldquo;a&rdquo;, &ldquo;r&rdquo; then the six (6) characters read must be &ldquo;F&rdquo;, &ldquo;o&rdquo;, &ldquo;o&rdquo;, &ldquo;B&rdquo;, &ldquo;a&rdquo;, &ldquo;r&rdquo; in that order.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    if an I/O error occurs or one of the characters read does not match it&rsquo;s corresponding character in the array.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">@inlinable</span>
+<span class="kd">func</span> <span class="nf">readChars</span><span class="p">(</span><span class="n">mustBe</span> <span class="nv">chars</span><span class="p">:</span> <span class="p">[</span><span class="kt">Character</span><span class="p">])</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>chars</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the characters to match.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>a string containing the characters.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/CharInputStream.swift#L330-L338">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -955,7 +1481,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2021 <a class="link" href="https://blog.projectgalen.com" target="_blank" rel="external">Galen Rhodes</a>. All rights reserved. (Last updated: 2021-03-05)</p>
+          <p>&copy; 2021 <a class="link" href="https://blog.projectgalen.com" target="_blank" rel="external">Galen Rhodes</a>. All rights reserved. (Last updated: 2021-03-14)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>

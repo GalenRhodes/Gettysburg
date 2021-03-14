@@ -22,6 +22,8 @@
 
 import Foundation
 import CoreFoundation
+import Rubicon
+
 public protocol SAXHandler {
     func beginDocument(_ parser: SAXParser)
 
@@ -43,21 +45,21 @@ public protocol SAXHandler {
 
     func dtdAttributeDecl(_ parser: SAXParser, name: String, elementName: String, type: SAXAttributeType, enumList: [String], defaultType: SAXAttributeDefaultType, defaultValue: String?)
 
-    func comment(_ parser: SAXParser, content: String)
+    func comment(_ parser: SAXParser, content: String, continued: Bool)
 
-    func text(_ parser: SAXParser, content: String)
+    func text(_ parser: SAXParser, content: String, continued: Bool)
 
-    func cdataSection(_ parser: SAXParser, content: String)
+    func cdataSection(_ parser: SAXParser, content: String, continued: Bool)
 
     func resolveEntity(_ parser: SAXParser, publicId: String?, systemId: String) -> InputStream
 
-    func beginPrefixMapping(_ parser: SAXParser, namespaceURI: String, prefix: String)
+    func beginPrefixMapping(_ parser: SAXParser, mapping: NSMapping)
 
     func endPrefixMapping(_ parser: SAXParser, prefix: String)
 
-    func beginElement(_ parser: SAXParser, localName: String, prefix: String?, namespaceURI: String?, attributes: [SAXAttribute])
+    func beginElement(_ parser: SAXParser, name: SAXNSName, attributes: [SAXAttribute])
 
-    func endElement(_ parser: SAXParser, localName: String, prefix: String?, namespaceURI: String?)
+    func endElement(_ parser: SAXParser, name: SAXNSName)
 
     func getEntity(_ parser: SAXParser, name: String) -> SAXEntity?
 

@@ -83,7 +83,7 @@ import Rubicon
     let str = try charStream.readString(count: 6, errorOnEOF: false)
 
     if try str.matches(pattern: XML_DECL_PREFIX_PATTERN) {
-        let xmlDecl = try charStream.readUntil(found: "?>")
+        let xmlDecl = try charStream.readUntil(found: "?>", memLimit: 4096)
 
         if let regex = RegularExpression(pattern: "\\s(?:encoding)=\"([^\"]+)\"") {
 

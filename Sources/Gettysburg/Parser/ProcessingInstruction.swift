@@ -32,11 +32,21 @@ extension SAXParser {
     /// - Throws: if there is an I/O error or the processing instruction is malformed.
     ///
     func parseProcessingInstruction() throws {
-        charStream.markSet()
-        defer { charStream.markDelete() }
-        let str = try charStream.readUntil(found: "?>")
-        guard let rx  = RegularExpression(pattern: "\\A(?s)([\(rxNameCharSet)]+)\\s+(.+?)\\?\\>\\z") else { throw SAXError.IOError(charStream, description: "Bad Regex") }
-        guard let match = rx.firstMatch(in: str) else { throw SAXError.MalformedProcessingInstruction(charStream, description: "<?\(str)") }
+        try parseProcessingInstruction(charStream)
+    }
+
+    /*===========================================================================================================================================================================*/
+    /// Parse and handle a processing instruction.
+    /// 
+    /// - Parameter chStream: the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>.
+    /// - Throws: if there is an I/O error or the processing instruction is malformed.
+    ///
+    func parseProcessingInstruction(_ chStream: SAXCharInputStream) throws {
+        chStream.markSet()
+        defer { chStream.markDelete() }
+        let str = try chStream.readUntil(found: "?>", memLimit: memLimit)
+        guard let rx = RegularExpression(pattern: "\\A(?s)([\(rxNameCharSet)]+)\\s+(.+?)\\?\\>\\z") else { throw SAXError.IOError(chStream, description: "Bad Regex") }
+        guard let match = rx.firstMatch(in: str) else { throw SAXError.MalformedProcessingInstruction(chStream, description: "<?\(str)") }
         handler.processingInstruction(self, target: (match[1].subString ?? ""), data: (match[2].subString ?? ""))
     }
 
@@ -55,7 +65,7 @@ extension SAXParser {
         let str:           String  = try charStream.readString(count: 6, errorOnEOF: false)
 
         if try str.matches(pattern: XML_DECL_PREFIX_PATTERN) {
-            let xmlDecl = try (str + charStream.readUntil(found: "?", ">"))
+            let xmlDecl = try (str + charStream.readUntil(found: "?", ">", memLimit: memLimit))
             charStream.markUpdate()
 
             #if DEBUG

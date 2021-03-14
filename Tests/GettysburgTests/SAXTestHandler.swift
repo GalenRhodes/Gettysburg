@@ -25,21 +25,37 @@ import Rubicon
 @testable import Gettysburg
 
 class SAXTestHandler: SAXHandler {
-    func beginDocument(_ parser: SAXParser) { /* TODO: Implement me... */ }
+    func beginDocument(_ parser: SAXParser) {
+        /* TODO: Implement me... */
+    }
 
-    func endDocument(_ parser: SAXParser) { /* TODO: Implement me... */ }
+    func endDocument(_ parser: SAXParser) {
+        /* TODO: Implement me... */
+    }
 
-    func dtdInternalDocType(_ parser: SAXParser, elementName elemName: String) { /* TODO: Implement me... */ }
+    func dtdInternalDocType(_ parser: SAXParser, elementName elemName: String) {
+        /* TODO: Implement me... */
+    }
 
-    func dtdExternalDocType(_ parser: SAXParser, elementName elemName: String, publicId: String?, systemId: String) { /* TODO: Implement me... */ }
+    func dtdExternalDocType(_ parser: SAXParser, elementName elemName: String, publicId: String?, systemId: String) {
+        /* TODO: Implement me... */
+    }
 
-    func dtdInternalEntityDecl(_ parser: SAXParser, name: String, type: SAXEntityType, content: String) { /* TODO: Implement me... */ }
+    func dtdInternalEntityDecl(_ parser: SAXParser, name: String, type: SAXEntityType, content: String) {
+        /* TODO: Implement me... */
+    }
 
-    func dtdExternalEntityDecl(_ parser: SAXParser, name: String, type: SAXEntityType, publicId: String?, systemId: String) { /* TODO: Implement me... */ }
+    func dtdExternalEntityDecl(_ parser: SAXParser, name: String, type: SAXEntityType, publicId: String?, systemId: String) {
+        /* TODO: Implement me... */
+    }
 
-    func dtdUnparsedEntityDecl(_ parser: SAXParser, name: String, publicId: String?, systemId: String, notation: String) { /* TODO: Implement me... */ }
+    func dtdUnparsedEntityDecl(_ parser: SAXParser, name: String, publicId: String?, systemId: String, notation: String) {
+        /* TODO: Implement me... */
+    }
 
-    func dtdNotationDecl(_ parser: SAXParser, name: String, publicId: String?, systemId: String?) { /* TODO: Implement me... */ }
+    func dtdNotationDecl(_ parser: SAXParser, name: String, publicId: String?, systemId: String?) {
+        /* TODO: Implement me... */
+    }
 
     func dtdElementDecl(_ parser: SAXParser, name: String, allowedContent: SAXElementAllowedContent, content: SAXDTDElementContentList?) {
         print(content?.debugDescription ?? "")
@@ -47,28 +63,42 @@ class SAXTestHandler: SAXHandler {
         /* TODO: Implement me... */
     }
 
-    func dtdAttributeDecl(_ parser: SAXParser, name: String, elementName: String, type: SAXAttributeType, enumList: [String], defaultType: SAXAttributeDefaultType, defaultValue: String?) { /* TODO: Implement me... */ }
+    func dtdAttributeDecl(_ parser: SAXParser, name: String, elementName: String, type: SAXAttributeType, enumList: [String], defaultType: SAXAttributeDefaultType, defaultValue: String?) {
+        /* TODO: Implement me... */
+    }
 
-    func comment(_ parser: SAXParser, content: String) { /* TODO: Implement me... */ }
+    func comment(_ parser: SAXParser, content: String, continued: Bool) {
+        /* TODO: Implement me... */
+    }
 
-    func text(_ parser: SAXParser, content: String) { /* TODO: Implement me... */ }
+    func text(_ parser: SAXParser, content: String, continued: Bool) {
+        /* TODO: Implement me... */
+    }
 
-    func cdataSection(_ parser: SAXParser, content: String) { /* TODO: Implement me... */ }
+    func cdataSection(_ parser: SAXParser, content: String, continued: Bool) {
+        /* TODO: Implement me... */
+    }
 
     func resolveEntity(_ parser: SAXParser, publicId: String?, systemId: String) -> InputStream {
         fatalError("resolveEntity(_:publicId:systemId:) has not been implemented")
         /* TODO: Implement me... */
     }
 
-    func beginPrefixMapping(_ parser: SAXParser, namespaceURI: String, prefix: String) { /* TODO: Implement me... */ }
-
-    func endPrefixMapping(_ parser: SAXParser, prefix: String) { /* TODO: Implement me... */ }
-
-    func beginElement(_ parser: SAXParser, localName: String, prefix: String?, namespaceURI: String?, attributes: [SAXAttribute]) {
+    func beginPrefixMapping(_ parser: SAXParser, mapping: NSMapping) {
         /* TODO: Implement me... */
     }
 
-    func endElement(_ parser: SAXParser, localName: String, prefix: String?, namespaceURI: String?) { /* TODO: Implement me... */ }
+    func endPrefixMapping(_ parser: SAXParser, prefix: String) {
+        /* TODO: Implement me... */
+    }
+
+    func beginElement(_ parser: SAXParser, name: SAXNSName, attributes: [SAXAttribute]) {
+        /* TODO: Implement me... */
+    }
+
+    func endElement(_ parser: SAXParser, name: SAXNSName) {
+        /* TODO: Implement me... */
+    }
 
     func getEntity(_ parser: SAXParser, name: String) -> SAXEntity? {
         fatalError("getEntity(_:name:) has not been implemented")
@@ -80,7 +110,9 @@ class SAXTestHandler: SAXHandler {
         /* TODO: Implement me... */
     }
 
-    func processingInstruction(_ parser: SAXParser, target: String, data: String) { /* TODO: Implement me... */ }
+    func processingInstruction(_ parser: SAXParser, target: String, data: String) {
+        /* TODO: Implement me... */
+    }
 
     func handleError(_ parser: SAXParser, error: Error) {
         print("ERROR: \(error.localizedDescription)")

@@ -31,10 +31,41 @@ extension SAXParser {
     /// 
     /// - Throws: if an I/O error occurs.
     ///
-    func parseCDATASection() throws {
+    @inlinable func parseCDATASection() throws {
         _ = try charStream.readChars(mustBe: "<![CDATA[")
-        let text = try charStream.readUntil(found: "]]>", excludeFound: true)
-        handler.cdataSection(self, content: text)
+        try parseCDATASection(charStream)
+    }
+
+    /*===========================================================================================================================================================================*/
+    /// Parse and handle a CDATA Section.
+    /// 
+    /// - Parameter chStream: the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> to read the CDATA section from.
+    /// - Throws: if an I/O error occurs.
+    ///
+    @usableFromInline func parseCDATASection(_ chStream: SAXCharInputStream) throws {
+        var cont:   Bool        = false
+        var buffer: [Character] = []
+        let end:    [Character] = "]]>".getCharacters()
+        let ecc:    Int         = end.endIndex
+
+        while let ch = try chStream.read() {
+            buffer <+ ch
+            let bcc: Int = buffer.endIndex
+            let xcc: Int = (bcc - ecc)
+
+            if xcc >= 0 && buffer[xcc ..< bcc] == end {
+                if !(cont && (xcc == 0)) { handler.cdataSection(self, content: String(buffer[0 ..< xcc]), continued: cont) }
+                return
+            }
+            else if bcc >= memLimit {
+                let r = (0 ..< (bcc - 2))
+                handler.cdataSection(self, content: String(buffer[r]), continued: cont)
+                buffer.removeSubrange(r)
+                cont = true
+            }
+        }
+
+        throw SAXError.UnexpectedEndOfInput(chStream)
     }
 
     /*===========================================================================================================================================================================*/
@@ -42,9 +73,9 @@ extension SAXParser {
     /// 
     /// - Throws: if an I/O error occurs or the comment is malformed.
     ///
-    func parseComment() throws {
+    @inlinable func parseComment() throws {
         _ = try charStream.readChars(mustBe: "<!--")
-        try parseComment(charStream: charStream)
+        try parseComment(charStream)
     }
 
     /*===========================================================================================================================================================================*/
@@ -53,26 +84,36 @@ extension SAXParser {
     /// - Parameter charStream: the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>.
     /// - Throws: if there was an I/O error or the comment was malformed.
     ///
-    func parseComment(charStream: SAXCharInputStream) throws {
-        let end = "-->".getCharacters()
-        let ecc = end.count
+    @usableFromInline func parseComment(_ chStream: SAXCharInputStream) throws {
+        var buffer: [Character]           = []
+        let end:    [Character]           = "-->".getCharacters()
+        let ecc:    Int                   = end.endIndex
+        let xcc:    Int                   = (ecc - 1)
+        let epfx:   ArraySlice<Character> = end[0 ..< xcc]
+        var cont:   Bool                  = false
 
-        let comment = try charStream.readUntil(errorOnEOF: true) { chars, bc in
-            if chars.count >= ecc {
-                let last3 = chars.last(count: ecc)
+        while let ch = try chStream.read() {
+            buffer <+ ch
+            let bcc: Int = buffer.endIndex
+            let ycc: Int = (bcc - ecc)
 
-                if last3 == end {
-                    bc = ecc
-                    return true
+            if ycc >= 0 {
+                if buffer[ycc ..< bcc] == end {
+                    if !(cont && (ycc == 0)) { handler.cdataSection(self, content: String(buffer[0 ..< ycc]), continued: cont) }
+                    return
                 }
-                else if last3[last3.startIndex] == "-" && last3[last3.startIndex + 1] == "-" {
-                    throw SAXError.InvalidCharacter(charStream, found: chars.last!, expected: ">")
+                else if buffer[ycc ..< (bcc - 1)] == epfx {
+                    throw SAXError.InvalidCharacter(chStream, found: ch, expected: end[xcc])
                 }
             }
-
-            return false
+            if bcc >= memLimit {
+                let r = (0 ..< (bcc - 2))
+                handler.cdataSection(self, content: String(buffer[r]), continued: cont)
+                buffer.removeSubrange(r)
+                cont = true
+            }
         }
 
-        handler.comment(self, content: comment)
+        throw SAXError.UnexpectedEndOfInput(chStream)
     }
 }

@@ -30,7 +30,7 @@ open class SAXDTDEntity: Hashable {
     public let entityType: SAXEntityType
     public let publicId:   String?
     public let systemId:   String?
-    public let value:      String?
+    public var value:      String?
 
     public init(name: String, entityType: SAXEntityType, publicId: String? = nil, systemId: String? = nil, value: String?) {
         self.name = name
@@ -38,7 +38,7 @@ open class SAXDTDEntity: Hashable {
         self.publicId = publicId
         self.systemId = systemId
         self.value = value
-        self.externType = ((publicId == nil && systemId == nil) ? .Internal : ((publicId == nil) ? .System : .Public))
+        externType = ((publicId == nil && systemId == nil) ? .Internal : ((publicId == nil) ? .System : .Public))
     }
 
     @inlinable func setNotation(_ list: [SAXDTDNotation]) {}
@@ -64,7 +64,7 @@ open class SAXDTDUnparsedEntity: SAXDTDEntity {
 
     public init(name: String, publicId: String?, systemId: String, notation: String) {
         notationName = notation
-        super.init(name: name, entityType: .General, publicId: publicId, systemId: systemId, value: nil)
+        super.init(name: name, entityType: .Unparsed, publicId: publicId, systemId: systemId, value: nil)
     }
 
     @inlinable override func setNotation(_ list: [SAXDTDNotation]) { for n in list { if n.name == notationName { notation = n } } }

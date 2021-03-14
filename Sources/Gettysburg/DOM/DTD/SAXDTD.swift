@@ -29,11 +29,13 @@ open class SAXDTD: Hashable {
     @inlinable public var notations:  [SAXDTDNotation] { _notations }
     @inlinable public var attributes: [SAXDTDAttribute] { _attributes }
     @inlinable public var elements:   [SAXDTDElement] { _elements }
+    @inlinable public var mappings:   [[NSMapping]] { _mappings }
 
     @usableFromInline var _entities:   [SAXDTDEntity]    = []
     @usableFromInline var _notations:  [SAXDTDNotation]  = []
     @usableFromInline var _attributes: [SAXDTDAttribute] = []
     @usableFromInline var _elements:   [SAXDTDElement]   = []
+    @usableFromInline var _mappings:   [[NSMapping]]     = []
 
     @usableFromInline init() {}
 

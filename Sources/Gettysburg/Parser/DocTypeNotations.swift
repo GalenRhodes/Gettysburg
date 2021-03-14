@@ -29,21 +29,18 @@ extension SAXParser {
     /// Parse the DTD notations.
     /// 
     /// - Parameters:
-    ///   - dtd: the string containing the DTD.
-    ///   - pos: the starting position of the DTD in the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>.
     ///   - chStream: the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> that the DTD was read from.
+    ///   - items: the array of items from the DTD.
     /// - Throws: if any of the notation declarations are malformed.
     ///
-    @inlinable func parseDTDNotations(_ dtd: String, position pos: (Int, Int), charStream chStream: SAXCharInputStream) throws {
-        try RegularExpression(pattern: "\\<\\!NOTATION\\s+(.*?)\\>", options: RXO)?.forEachMatch(in: dtd) { match, _ in
-            if let match = match {
-                let group = match[1]
-                if let range = group.range {
-                    let (s, p) = getSubStringAndPos(dtd, range: range, position: pos, charStream: chStream)
-                    try parseSingleDTDNotation(s.trimmed, position: p, charStream: chStream)
-                }
+    func parseDTDNotations(_ chStream: SAXCharInputStream, items: [DTDItem]) throws {
+        let rx = RegularExpression(pattern: "\\A\\<\\!NOTATION\\s+(.*?)\\>\\z", options: RXO)!
+
+        for i in items {
+            if let m = rx.firstMatch(in: i.string), let r = m[1].range {
+                let p = getSubStringAndPos(i.string, range: r, position: i.pos, charStream: chStream)
+                try parseSingleDTDNotation(p.0.trimmed, position: p.1, charStream: chStream)
             }
-            return false
         }
     }
 
@@ -56,7 +53,7 @@ extension SAXParser {
     ///   - chStream: the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> that the notation declaration was read from.
     ///   - error: if the notation declaration is malformed.
     ///
-    @usableFromInline func parseSingleDTDNotation(_ str: String, position pos: (Int, Int), charStream chStream: SAXCharInputStream) throws {
+    private func parseSingleDTDNotation(_ str: String, position pos: (Int, Int), charStream chStream: SAXCharInputStream) throws {
         let p = "\\A(\(rxNamePattern))\\s+(PUBLIC|SYSTEM)(?:\\s+([\"'])(.*?)\\3)(?:\\s+([\"'])(.*?)\\5)?\\z"
         guard let m = RegularExpression(pattern: p, options: RXO)?.firstMatch(in: str) else { throw SAXError.MalformedDTD(pos, description: "Malformed Notation Declaration.") }
         guard let noteName = m[1].subString else { throw SAXError.InternalError(description: "Internal Error") }

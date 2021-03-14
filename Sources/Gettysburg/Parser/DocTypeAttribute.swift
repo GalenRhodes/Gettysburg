@@ -29,18 +29,18 @@ extension SAXParser {
     /// Parse a DTD Attribute Declaration.
     /// 
     /// - Parameters:
-    ///   - dtd: the string containing the DTD.
-    ///   - pos: the starting position in the document for the DTD.
     ///   - chStream: the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> that the DTD was read from.
+    ///   - items: the array of items from the DTD.
     /// - Throws: if the attribute declaration is malformed.
     ///
-    @inlinable func parseDTDAttributes(_ dtd: String, position pos: (Int, Int), charStream chStream: SAXCharInputStream) throws {
-        try RegularExpression(pattern: "\\<\\!ATTLIST\\s+(.*?)\\>", options: RXO)?.forEachMatch(in: dtd) { match, _ in
-            if let match = match, let range = match[1].range {
-                let (s, p) = getSubStringAndPos(dtd, range: range, position: pos, charStream: chStream)
-                try parseSingleDTDAttribute(s.trimmed, position: p, charStream: chStream)
+    func parseDTDAttributes(_ chStream: SAXCharInputStream, items: [DTDItem]) throws {
+        let rx = RegularExpression(pattern: "\\A\\<\\!ATTLIST\\s+(.*?)\\>\\z", options: RXO)!
+
+        for i in items {
+            if let m = rx.firstMatch(in: i.string), let r = m[1].range {
+                let p = getSubStringAndPos(i.string, range: r, position: i.pos, charStream: chStream)
+                try parseSingleDTDAttribute(p.0.trimmed, position: p.1, charStream: chStream)
             }
-            return false
         }
     }
 
@@ -52,7 +52,7 @@ extension SAXParser {
     ///   - pos: the starting position in the document for the DTD.
     ///   - chStream: the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> that the DTD was read from.
     ///
-    @inlinable func parseSingleDTDAttribute(_ str: String, position pos: (Int, Int), charStream chStream: SAXCharInputStream) throws {
+    private func parseSingleDTDAttribute(_ str: String, position pos: (Int, Int), charStream chStream: SAXCharInputStream) throws {
         let p0: String = rxNamePattern
         let pA: String = "\\s+(CDATA|ID|IDREF|IDREFS|ENTITY|ENTITIES|NMTOKEN|NMTOKENS|NOTATION|\\(\(p0)(?:\\|\(p0))*\\))"
         let pB: String = "\\A(\(p0))\\s+(\(p0))\(pA)(?:\\s+\\#(IMPLIED|REQUIRED|FIXED))?(?:\\s+([\"'])(.*?)\\5)?\\z"
@@ -83,7 +83,7 @@ extension SAXParser {
     ///   - enumsRange: the range in the DTD that the list occupies.
     ///   - error: populated if the attribute declaration is malformed.
     ///
-    @inlinable func handleAttributeDecl(_ chStream: SAXCharInputStream, _ pos: (Int, Int), _ str: String, _ elemName: String, _ attrName: String, _ attrType: SAXAttributeType, _ defaultType: SAXAttributeDefaultType, _ defaultValue: String?, _ enums: String, _ enumsRange: Range<String.Index>) throws {
+    private func handleAttributeDecl(_ chStream: SAXCharInputStream, _ pos: (Int, Int), _ str: String, _ elemName: String, _ attrName: String, _ attrType: SAXAttributeType, _ defaultType: SAXAttributeDefaultType, _ defaultValue: String?, _ enums: String, _ enumsRange: Range<String.Index>) throws {
         let enumList = try getEnumList(enums: enums, enumsRange: enumsRange, chStream: chStream, pos: pos, str: str, attrType: attrType)
         docType._attributes <+ SAXDTDAttribute(attrType: attrType, name: attrName, element: elemName, enumValues: enumList, defaultType: defaultType, defaultValue: defaultValue)
         handler.dtdAttributeDecl(self, name: attrName, elementName: elemName, type: attrType, enumList: enumList, defaultType: defaultType, defaultValue: defaultValue)
@@ -102,7 +102,7 @@ extension SAXParser {
     ///   - error: populated if the enumeration list is malformed.
     /// - Returns: an array of strings.
     ///
-    @inlinable func getEnumList(enums: String, enumsRange: Range<String.Index>, chStream: SAXCharInputStream, pos: (Int, Int), str: String, attrType: SAXAttributeType) throws -> [String] {
+    private func getEnumList(enums: String, enumsRange: Range<String.Index>, chStream: SAXCharInputStream, pos: (Int, Int), str: String, attrType: SAXAttributeType) throws -> [String] {
         let errorMsg: String   = "Attribute declaration missing enumerated list."
         let pat2:     String   = "\\A\\((.+?)\\)\\z"
         var enumList: [String] = []

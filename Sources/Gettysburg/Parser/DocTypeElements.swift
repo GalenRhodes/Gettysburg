@@ -24,28 +24,25 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-@usableFromInline let errMsg: String = "Malformed element allowed content list."
+private let errMsg: String = "Malformed element allowed content list."
 
 extension SAXParser {
     /*===========================================================================================================================================================================*/
     /// Parse Element Declaration.
     /// 
     /// - Parameters:
-    ///   - dtd: The string containing the DTD.
-    ///   - pos: the position of the DTD in the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>.
-    ///   - chStream: the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>.
+    ///   - chStream: the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> that the DTD was read from.
+    ///   - items: the array of items from the DTD.
     /// - Throws: if the element declaration is malformed.
     ///
-    @inlinable func parseDTDElements(_ dtd: String, position pos: (Int, Int), charStream chStream: SAXCharInputStream) throws {
-        let pat = "\\<\\!ELEMENT\\s+(.*?)\\>"
+    func parseDTDElements(_ chStream: SAXCharInputStream, items: [DTDItem]) throws {
+        let rx = RegularExpression(pattern: "\\A\\<\\!ELEMENT\\s+(.*?)\\>\\z", options: RXO)!
 
-        try RegularExpression(pattern: pat, options: RXO)?.forEachMatch(in: dtd) { m, _ in
-            if let m = m, let r = m[1].range {
-                let (s, p) = getSubStringAndPos(dtd, range: r, position: pos, charStream: chStream)
-                try parseSingleDTDElement(s.trimmed, position: p, charStream: chStream)
+        for i in items {
+            if let m = rx.firstMatch(in: i.string), let r = m[1].range {
+                let p = getSubStringAndPos(i.string, range: r, position: i.pos, charStream: chStream)
+                try parseSingleDTDElement(p.0.trimmed, position: p.1, charStream: chStream)
             }
-
-            return false
         }
     }
 
@@ -58,7 +55,7 @@ extension SAXParser {
     ///   - chStream: the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>.
     /// - Throws: if the element declaration is malformed.
     ///
-    @usableFromInline func parseSingleDTDElement(_ elemDecl: String, position pos: (Int, Int), charStream chStream: SAXCharInputStream) throws {
+    private func parseSingleDTDElement(_ elemDecl: String, position pos: (Int, Int), charStream chStream: SAXCharInputStream) throws {
         let pat1 = "\\A(\(rxNamePattern))\\s+(EMPTY|ANY|(?:\\(.+\\)[*+]?))\\z"
 
         guard let m = RegularExpression(pattern: pat1, options: RXO)?.firstMatch(in: elemDecl) else { throw SAXError.MalformedDTD(pos, description: "Element declaration is malformed.") }
@@ -86,7 +83,7 @@ extension SAXParser {
     /// - Returns: the allowed content list.
     /// - Throws: if the allowed content list is malformed.
     ///
-    @inlinable func getAllowedContentList(_ c: String, position p: (Int, Int), charStream chStream: SAXCharInputStream, allowed ac: SAXElementAllowedContent) throws -> SAXDTDElementContentList? {
+    private func getAllowedContentList(_ c: String, position p: (Int, Int), charStream chStream: SAXCharInputStream, allowed ac: SAXElementAllowedContent) throws -> SAXDTDElementContentList? {
         var idx = c.startIndex
         switch ac {
             case .PCData:           return SAXDTDElementContentList(multiplicity: .Once, conjunction: .Or, items: [ SAXDTDElementContentPCData() ])
@@ -107,7 +104,7 @@ extension SAXParser {
     /// - Returns: the root allowed content list.
     /// - Throws: if the content string is malformed.
     ///
-    @usableFromInline func parseDTDElementAllowed(_ str: String, index sIdx: inout String.Index, isRoot: Bool, position pos: (Int, Int), charStream chStream: SAXCharInputStream) throws -> SAXDTDElementContentList {
+    private func parseDTDElementAllowed(_ str: String, index sIdx: inout String.Index, isRoot: Bool, position pos: (Int, Int), charStream chStream: SAXCharInputStream) throws -> SAXDTDElementContentList {
         var elems:  [SAXDTDElementContentItem]                = []
         var conj:   SAXDTDElementContentList.ItemConjunction? = nil
         var ch:     Character                                 = str[sIdx]
@@ -158,7 +155,7 @@ extension SAXParser {
     ///   - conj: the conjunction used for the list.
     /// - Throws: if the current conjunction does not match the one previously set for this list.
     ///
-    @inlinable final func checkConjunction(_ str: String, position pos: (Int, Int), index idx: inout String.Index, conjunction conj: inout SAXDTDElementContentList.ItemConjunction?) throws {
+    private func checkConjunction(_ str: String, position pos: (Int, Int), index idx: inout String.Index, conjunction conj: inout SAXDTDElementContentList.ItemConjunction?) throws {
         if value(str[idx], isOneOf: "|", ",") {
             let oc: SAXDTDElementContentList.ItemConjunction = ((str[idx] == "|") ? .Or : .And)
             str.formIndex(after: &idx)
@@ -180,7 +177,7 @@ extension SAXParser {
     ///   - sIdx: the index.
     /// - Throws: if the item is malformed.
     ///
-    @inlinable func parseDTDElementItem(_ str: String, charStream chStream: SAXCharInputStream, position pos: (Int, Int), isRoot: Bool, elements elems: inout [SAXDTDElementContentItem], conjunction conj: inout SAXDTDElementContentList.ItemConjunction?, index sIdx: inout String.Index) throws {
+    private func parseDTDElementItem(_ str: String, charStream chStream: SAXCharInputStream, position pos: (Int, Int), isRoot: Bool, elements elems: inout [SAXDTDElementContentItem], conjunction conj: inout SAXDTDElementContentList.ItemConjunction?, index sIdx: inout String.Index) throws {
         var ch = str[sIdx]
 
         if ch == "(" {
@@ -219,7 +216,7 @@ extension SAXParser {
     ///   - idx: the index of the character in the string to examine.
     /// - Returns: the multiplicity.
     ///
-    @inlinable final func getMultiplicity(_ str: String, index idx: inout String.Index) -> SAXDTDElementContentItem.ItemMultiplicity {
+    private func getMultiplicity(_ str: String, index idx: inout String.Index) -> SAXDTDElementContentItem.ItemMultiplicity {
         let mult: SAXDTDElementContentList.ItemMultiplicity
 
         if idx < str.endIndex && value(str[idx], isOneOf: "?", "*", "+") {
