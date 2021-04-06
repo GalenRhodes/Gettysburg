@@ -41,7 +41,7 @@ open class SAXDTDEntity: Hashable {
         externType = ((publicId == nil && systemId == nil) ? .Internal : ((publicId == nil) ? .System : .Public))
     }
 
-    @inlinable func setNotation(_ list: [SAXDTDNotation]) {}
+    func setNotation(_ list: [SAXDTDNotation]) {}
 
     public func hash(into hasher: inout Hasher) {
         hasher.combine(name)
@@ -67,7 +67,7 @@ open class SAXDTDUnparsedEntity: SAXDTDEntity {
         super.init(name: name, entityType: .Unparsed, publicId: publicId, systemId: systemId, value: nil)
     }
 
-    @inlinable override func setNotation(_ list: [SAXDTDNotation]) { for n in list { if n.name == notationName { notation = n } } }
+    override func setNotation(_ list: [SAXDTDNotation]) { for n in list { if n.name == notationName { notation = n } } }
 
     public override func hash(into hasher: inout Hasher) {
         super.hash(into: &hasher)

@@ -51,7 +51,7 @@ public protocol SAXHandler {
 
     func cdataSection(_ parser: SAXParser, content: String, continued: Bool)
 
-    func resolveEntity(_ parser: SAXParser, publicId: String?, systemId: String) -> InputStream
+    func resolveEntity(_ parser: SAXParser, publicId: String?, systemId: String) -> InputStream?
 
     func beginPrefixMapping(_ parser: SAXParser, mapping: NSMapping)
 
@@ -61,9 +61,9 @@ public protocol SAXHandler {
 
     func endElement(_ parser: SAXParser, name: SAXNSName)
 
-    func getEntity(_ parser: SAXParser, name: String) -> SAXEntity?
+    func getEntity(_ parser: SAXParser, name: String) -> Any?
 
-    func getParameterEntity(_ parser: SAXParser, name: String) -> SAXEntity?
+    func getParameterEntity(_ parser: SAXParser, name: String) -> Any?
 
     func processingInstruction(_ parser: SAXParser, target: String, data: String)
 

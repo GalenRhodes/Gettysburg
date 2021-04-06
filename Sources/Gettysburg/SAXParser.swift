@@ -24,9 +24,9 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-@usableFromInline let DefMemLimit: Int = (1024 * 1024)
-@usableFromInline let MinMemLimit: Int = 4096
-@usableFromInline let MaxMemLimit: Int = (DefMemLimit * 4)
+let DefMemLimit: Int = (1024 * 1024)
+let MinMemLimit: Int = 4096
+let MaxMemLimit: Int = (DefMemLimit * 4)
 
 open class SAXParser {
 
@@ -37,10 +37,11 @@ open class SAXParser {
         case sameOriginOnly
     }
 
-    public var lineNumber:   Int { ((charStream == nil) ? 1 : charStream.lineNumber) }
-    public var columnNumber: Int { ((charStream == nil) ? 1 : charStream.columnNumber) }
-    public var baseURL:      URL { ((charStream == nil) ? url.deletingLastPathComponent() : charStream.baseURL) }
-    public var filename:     String { ((charStream == nil) ? url.lastPathComponent : charStream.filename) }
+    //@f:0
+    public var position: TextPosition { ((charStream == nil) ? (1, 1) : charStream.position)                         }
+    public var baseURL:  URL          { ((charStream == nil) ? url.deletingLastPathComponent() : charStream.baseURL) }
+    public var filename: String       { ((charStream == nil) ? url.lastPathComponent : charStream.filename)          }
+    //@f:1
 
     /*===========================================================================================================================================================================*/
     /// This value is not valid until after parsing has started.
@@ -64,24 +65,19 @@ open class SAXParser {
     ///
     public var structureSizeLimit:            Int                           = DefMemLimit
 
-    @usableFromInline lazy var docType: SAXDTD = SAXDTD()
-
-    @usableFromInline var charStream:  SAXCharInputStream! = nil
-    @usableFromInline let inputStream: MarkInputStream
-    @usableFromInline let handler:     SAXHandler
-    @usableFromInline let url:         URL
-
-    @inlinable var memLimit: Int { max(MinMemLimit, min(MaxMemLimit, structureSizeLimit)) }
+    //@f:0
+    var memLimit:               Int                 { max(MinMemLimit, min(MaxMemLimit, structureSizeLimit)) }
+    let docType:                SAXDTD              = SAXDTD()
+    var charStream:             SAXCharInputStream! = nil
+    let inputStream:            MarkInputStream
+    let handler:                SAXHandler
+    let url:                    URL
+    //@f:1
 
     init(inputStream: InputStream, url: URL? = nil, handler: SAXHandler) throws {
         self.inputStream = ((inputStream as? MarkInputStream) ?? MarkInputStream(inputStream: inputStream))
         self.handler = handler
-        self.url = (url?.absoluteURL ?? getFileURL(filename: "\(UUID().uuidString).xml"))
-    }
-
-    func createCharStream() throws {
-        charStream = try SAXCharInputStream(inputStream: inputStream, url: url)
-        charStream.open()
+        self.url = (url?.absoluteURL ?? GetFileURL(filename: "\(UUID().uuidString).xml"))
     }
 
     /*===========================================================================================================================================================================*/
@@ -90,15 +86,15 @@ open class SAXParser {
     /// - Throws: if an I/O error occurs or the document is malformed.
     ///
     open func parse() throws {
-        try createCharStream()
+        charStream = try SAXParserCharInputStream(inputStream: inputStream, url: url, parser: self)
         defer { charStream.close() }
 
-        try parseXMLDecl()
+        try parseXMLDecl(charStream)
         handler.beginDocument(self)
         //-------------------------------
         // Now parse out the document...
         //-------------------------------
-        try parseDocument()
+        try parseDocument(charStream)
         //-----------------------------------------
         // We're finished so let the handler know.
         //-----------------------------------------

@@ -62,7 +62,7 @@ class GettysburgTests: XCTestCase {
 
         for name in names {
             let fname = "Tests/GettysburgTests/TestData/Test_\(name).xml"
-            let url   = getFileURL(filename: fname)
+            let url   = GetFileURL(filename: fname)
 
             guard let istr = InputStream(url: url) else { throw SAXError.MalformedURL(url.absoluteString) }
             let sax = try SAXParser(inputStream: istr, url: URL(string: fname), handler: SAXTestHandler())
@@ -84,7 +84,7 @@ class GettysburgTests: XCTestCase {
         print("--------------------------------------------------------------------------------")
         let name  = "UTF-8"
         let fname = "Tests/GettysburgTests/TestData/Test_\(name).xml"
-        let url   = getFileURL(filename: fname)
+        let url   = GetFileURL(filename: fname)
         guard let istr = InputStream(url: url) else { throw SAXError.MalformedURL(url.absoluteString) }
         let sax = try SAXParser(inputStream: istr, url: url, handler: SAXTestHandler())
         try sax.parse()

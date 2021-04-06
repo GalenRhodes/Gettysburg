@@ -79,7 +79,7 @@ class SAXTestHandler: SAXHandler {
         /* TODO: Implement me... */
     }
 
-    func resolveEntity(_ parser: SAXParser, publicId: String?, systemId: String) -> InputStream {
+    func resolveEntity(_ parser: SAXParser, publicId: String?, systemId: String) -> InputStream? {
         fatalError("resolveEntity(_:publicId:systemId:) has not been implemented")
         /* TODO: Implement me... */
     }
@@ -100,12 +100,12 @@ class SAXTestHandler: SAXHandler {
         /* TODO: Implement me... */
     }
 
-    func getEntity(_ parser: SAXParser, name: String) -> SAXEntity? {
+    func getEntity(_ parser: SAXParser, name: String) -> Any? {
         fatalError("getEntity(_:name:) has not been implemented")
         /* TODO: Implement me... */
     }
 
-    func getParameterEntity(_ parser: SAXParser, name: String) -> SAXEntity? {
+    func getParameterEntity(_ parser: SAXParser, name: String) -> Any? {
         return nil
         /* TODO: Implement me... */
     }

@@ -29,7 +29,7 @@ open class SAXDTDNotation: Hashable {
     public let publicId: String?
     public let systemId: String?
 
-    @usableFromInline init(name: String, publicId: String?, systemId: String?) {
+    init(name: String, publicId: String?, systemId: String?) {
         self.name = name
         self.publicId = publicId
         self.systemId = systemId

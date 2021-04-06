@@ -25,70 +25,70 @@ import CoreFoundation
 import Rubicon
 
 extension SAXParser {
-
     /*===========================================================================================================================================================================*/
     /// Parse the document.
     /// 
+    /// - Parameter chStream: the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>.
     /// - Throws: if an I/O error occurs or the document is malformed.
     ///
-    func parseDocument() throws {
+    func parseDocument(_ chStream: SAXCharInputStream) throws {
         do {
             var foundRootElement: Bool = false
             var foundDocType:     Bool = false
 
-            charStream.markSet()
-            defer { charStream.markDelete() }
+            chStream.markSet()
+            defer { chStream.markDelete() }
 
-            while var ch = try charStream.read() {
+            while var ch = try chStream.read() {
                 if ch == "<" {
-                    ch = try charStream.readNoNil()
+                    ch = try chStream.readNoNil()
 
                     if ch == "!" {
                         //--------------------
                         // Comment or DocType
                         //--------------------
-                        ch = try charStream.peek()
+                        ch = try chStream.peek()
                         switch ch {
                             case "-":
-                                charStream.markBackup(count: 2)
-                                try parseComment()
+                                chStream.markBackup(count: 2)
+                                try parseComment(chStream)
                             case "D":
-                                charStream.markBackup(count: 2)
-                                if foundRootElement { throw SAXError.MalformedDocument(charStream, description: "DOCTYPE not expected here.") }
-                                if foundDocType { throw SAXError.MalformedDocument(charStream, description: "DOCTYPE already encountered.") }
+                                chStream.markBackup(count: 2)
+                                if foundRootElement { throw SAXError.MalformedDocument(chStream, description: "DOCTYPE not expected here.") }
+                                if foundDocType { throw SAXError.MalformedDocument(chStream, description: "DOCTYPE already encountered.") }
                                 foundDocType = true
-                                try parseDocType()
+                                try parseDocType(chStream)
                             default:
-                                throw SAXError.InvalidCharacter(charStream, found: ch, expected: "-", "D")
+                                throw SAXError.InvalidCharacter(chStream, found: ch, expected: "-", "D")
                         }
                     }
                     else if ch == "?" {
                         //------------------------
                         // Processing Instruction
                         //------------------------
-                        try parseProcessingInstruction()
+                        try parseProcessingInstruction(chStream)
                     }
                     else if ch.isXmlNameStartChar {
                         //--------------
                         // Root Element
                         //--------------
-                        charStream.markBackup(count: 2)
-                        if foundRootElement { throw SAXError.MalformedDocument(charStream, description: "Document already has a root element.") }
+                        chStream.markBackup(count: 2)
+                        if foundRootElement { throw SAXError.MalformedDocument(chStream, description: "Document already has a root element.") }
                         foundRootElement = true
-                        try parseElement()
+                        try parseElement(chStream)
                     }
                     else {
                         //-------------------
                         // Invalid Character
                         //-------------------
-                        throw SAXError.InvalidCharacter(charStream, found: ch, expected: [])
+                        throw SAXError.InvalidCharacter(chStream, found: ch, expected: [])
                     }
                 }
                 else if !ch.isXmlWhitespace {
-                    throw SAXError.InvalidCharacter(charStream, found: ch, expected: "<", "␠", "␉", "␍", "␊", "␤")
+                    throw SAXError.InvalidCharacter(chStream, found: ch, expected: "<", "␠", "␉", "␍", "␊", "␤")
                 }
 
-                charStream.markUpdate()
+                chStream.markUpdate()
             }
         }
         catch let e {

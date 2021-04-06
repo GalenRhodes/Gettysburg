@@ -25,7 +25,7 @@ import CoreFoundation
 import Rubicon
 
 extension SAXExternalType: CustomStringConvertible {
-    @inlinable public var description: String {
+    public var description: String {
         switch self {
             case .Internal: return ""
             case .Public:   return "PUBLIC"
@@ -33,7 +33,7 @@ extension SAXExternalType: CustomStringConvertible {
         }
     }
 
-    @inlinable static func valueFor(description desc: String?) -> SAXExternalType {
+    static func valueFor(description desc: String?) -> SAXExternalType {
         switch desc {
             case "SYSTEM": return .System
             case "PUBLIC": return .Public
@@ -44,7 +44,7 @@ extension SAXExternalType: CustomStringConvertible {
 }
 
 extension SAXAttributeDefaultType: CustomStringConvertible {
-    @inlinable public var description: String {
+    public var description: String {
         switch self {
             case .Optional: return "Optional"
             case .Required: return "Required"
@@ -53,7 +53,7 @@ extension SAXAttributeDefaultType: CustomStringConvertible {
         }
     }
 
-    @inlinable static func valueFor(description desc: String?) -> SAXAttributeDefaultType {
+    static func valueFor(description desc: String?) -> SAXAttributeDefaultType {
         if let d = desc {
             switch d {
                 case "REQUIRED": return .Required
@@ -67,7 +67,7 @@ extension SAXAttributeDefaultType: CustomStringConvertible {
 }
 
 extension SAXAttributeType: CustomStringConvertible {
-    @inlinable public var description: String {
+    public var description: String {
         switch self {
             case .CData:      return "CData"
             case .ID:         return "ID"
@@ -82,7 +82,7 @@ extension SAXAttributeType: CustomStringConvertible {
         }
     }
 
-    @inlinable static func valueFor(description desc: String) -> SAXAttributeType {
+    static func valueFor(description desc: String) -> SAXAttributeType {
         switch desc {
             case "CDATA":    return .CData
             case "ID":       return .ID
@@ -99,7 +99,7 @@ extension SAXAttributeType: CustomStringConvertible {
 }
 
 extension SAXEntityType: CustomStringConvertible {
-    @inlinable public var description: String {
+    public var description: String {
         switch self {
             case .General:   return "General"
             case .Parameter: return "Parameter"
@@ -107,7 +107,7 @@ extension SAXEntityType: CustomStringConvertible {
         }
     }
 
-    @inlinable static func valueFor(description desc: String) -> SAXEntityType {
+    static func valueFor(description desc: String) -> SAXEntityType {
         switch desc {
             case "General":   return .General
             case "Parameter": return .Parameter
@@ -117,7 +117,7 @@ extension SAXEntityType: CustomStringConvertible {
 }
 
 extension SAXElementAllowedContent: CustomStringConvertible {
-    @inlinable public var description: String {
+    public var description: String {
         switch self {
             case .Empty:    return "Empty"
             case .Elements: return "Elements"
@@ -127,7 +127,7 @@ extension SAXElementAllowedContent: CustomStringConvertible {
         }
     }
 
-    @inlinable static func valueFor(description desc: String?) -> SAXElementAllowedContent {
+    static func valueFor(description desc: String?) -> SAXElementAllowedContent {
         if let d = desc {
             switch d {
                 case "EMPTY":       return .Empty
@@ -141,7 +141,7 @@ extension SAXElementAllowedContent: CustomStringConvertible {
 }
 
 extension SAXDTDElementContentItem.ItemType: CustomStringConvertible {
-    @inlinable public var description: String {
+    public var description: String {
         switch self {
             case .Element: return "Element"
             case .List:    return "List"
@@ -149,7 +149,7 @@ extension SAXDTDElementContentItem.ItemType: CustomStringConvertible {
         }
     }
 
-    @inlinable static func valueFor(description desc: String) -> SAXDTDElementContentItem.ItemType {
+    static func valueFor(description desc: String) -> SAXDTDElementContentItem.ItemType {
         switch desc {
             case "Element": return .Element
             case "List":    return .List
@@ -159,7 +159,7 @@ extension SAXDTDElementContentItem.ItemType: CustomStringConvertible {
 }
 
 extension SAXDTDElementContentItem.ItemMultiplicity: CustomStringConvertible {
-    @inlinable public var description: String {
+    public var description: String {
         switch self {
             case .Optional: return "Optional"
             case .Once: return "Once"
@@ -168,7 +168,7 @@ extension SAXDTDElementContentItem.ItemMultiplicity: CustomStringConvertible {
         }
     }
 
-    @inlinable public var symbolChar: String {
+    public var symbolChar: String {
         switch self {
             case .Optional:   return "?"
             case .Once:       return ""
@@ -177,7 +177,7 @@ extension SAXDTDElementContentItem.ItemMultiplicity: CustomStringConvertible {
         }
     }
 
-    @inlinable static func valueFor(description desc: String) -> SAXDTDElementContentItem.ItemMultiplicity {
+    static func valueFor(description desc: String) -> SAXDTDElementContentItem.ItemMultiplicity {
         switch desc {
             case "Optional":   return .Optional
             case "Once":       return .Once
@@ -188,14 +188,14 @@ extension SAXDTDElementContentItem.ItemMultiplicity: CustomStringConvertible {
 }
 
 extension SAXDTDElementContentList.ItemConjunction: CustomStringConvertible {
-    @inlinable public var description: String {
+    public var description: String {
         switch self {
             case .And: return "And"
             case .Or:  return "Or"
         }
     }
 
-    @inlinable static func valueFor(description desc: String) -> SAXDTDElementContentList.ItemConjunction {
+    static func valueFor(description desc: String) -> SAXDTDElementContentList.ItemConjunction {
         switch desc {
             case "And": return .And
             default:    return .Or
@@ -205,11 +205,15 @@ extension SAXDTDElementContentList.ItemConjunction: CustomStringConvertible {
 
 extension String {
 
-    @inlinable func splitPrefix() -> (String?, String) {
-        guard let m = RegularExpression(pattern: "\\A([^:]*)\\:(.+)")?.firstMatch(in: self) else { return (nil, self.trimmed) }
-        guard let p = m[1].subString?.trimmed, let n = m[2].subString?.trimmed else { return (nil, self.trimmed) }
-        if p.isEmpty { return (nil, n) }
-        return (p, n)
+    /*===========================================================================================================================================================================*/
+    /// Assuming this string is a fully qualified name, return a tuple containing the prefix and local name from this string.
+    /// 
+    /// - Returns: the prefix and local name.  `nil` is returned for the prefix if none is found.
+    ///
+    func splitPrefix() -> (String?, String) {
+        guard let idx = firstIndex(of: ":") else { return (nil, self) }
+        guard idx > startIndex else { return (nil, String(self[index(after: startIndex) ..< endIndex])) }
+        return (String(self[startIndex ..< idx]), String(self[index(after: idx) ..< endIndex]))
     }
 
     /*===========================================================================================================================================================================*/
@@ -221,8 +225,21 @@ extension String {
     ///   - strm: the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> the string was read from to get the tab size.
     /// - Returns: the position (line, column) of the index within the string.
     ///
-    @inlinable func positionOfIndex(_ idx: Index, position pos: (Int, Int), charStream strm: SAXCharInputStream) -> (Int, Int) {
+    func positionOfIndex(_ idx: Index, position pos: TextPosition, charStream strm: SAXCharInputStream) -> TextPosition {
         positionOfIndex(idx, position: pos, tabSize: strm.tabWidth)
+    }
+
+    /*===========================================================================================================================================================================*/
+    /// Given a range of characters within this string, return both the substring and it's starting position (line, column).
+    /// 
+    /// - Parameters:
+    ///   - range: the range.
+    ///   - pos: the starting position of this string.
+    ///   - chStream: the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> this string came from. Used to get the tab width.
+    /// - Returns: a tuple containing the substring and (line, column) tuple.
+    ///
+    func subStringAndPos(range: Range<String.Index>, position pos: TextPosition, charStream chStream: SAXCharInputStream) -> (String, TextPosition) {
+        (String(self[range.lowerBound ..< range.upperBound]), positionOfIndex(range.lowerBound, position: pos, charStream: chStream))
     }
 
 }

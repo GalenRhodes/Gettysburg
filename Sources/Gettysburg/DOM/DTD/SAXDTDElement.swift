@@ -71,7 +71,7 @@ open class SAXDTDElementContentItem: Hashable, CustomStringConvertible, CustomDe
     public var description:      String { debugDescription }
     public var debugDescription: String { "" }
 
-    @usableFromInline init(type: ItemType, multiplicity: ItemMultiplicity) {
+    init(type: ItemType, multiplicity: ItemMultiplicity) {
         self.type = type
         self.multiplicity = multiplicity
     }
@@ -109,7 +109,7 @@ open class SAXDTDElementContentList: SAXDTDElementContentItem {
         return "\(str))\(multiplicity.symbolChar)"
     }
 
-    @usableFromInline init(multiplicity: ItemMultiplicity, conjunction: ItemConjunction, items: [SAXDTDElementContentItem]) {
+    init(multiplicity: ItemMultiplicity, conjunction: ItemConjunction, items: [SAXDTDElementContentItem]) {
         self.conjunction = conjunction
         self.items = items
         super.init(type: .List, multiplicity: multiplicity)
@@ -132,7 +132,7 @@ open class SAXDTDElementContentElement: SAXDTDElementContentItem {
     public let elementName: String
     public override var debugDescription: String { "\(elementName)\(multiplicity.symbolChar)" }
 
-    @usableFromInline init(multiplicity: ItemMultiplicity, elementName: String) {
+    init(multiplicity: ItemMultiplicity, elementName: String) {
         self.elementName = elementName
         super.init(type: .Element, multiplicity: multiplicity)
     }
@@ -150,7 +150,7 @@ open class SAXDTDElementContentElement: SAXDTDElementContentItem {
 }
 
 open class SAXDTDElementContentPCData: SAXDTDElementContentItem {
-    @usableFromInline init() { super.init(type: .PCData, multiplicity: .Optional) }
+    init() { super.init(type: .PCData, multiplicity: .Optional) }
 
     public static func == (lhs: SAXDTDElementContentPCData, rhs: SAXDTDElementContentPCData) -> Bool {
         if lhs === rhs { return true }

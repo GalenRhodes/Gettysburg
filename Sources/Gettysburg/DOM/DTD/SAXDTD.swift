@@ -24,20 +24,20 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-open class SAXDTD: Hashable {
-    @inlinable public var entities:   [SAXDTDEntity] { _entities }
-    @inlinable public var notations:  [SAXDTDNotation] { _notations }
-    @inlinable public var attributes: [SAXDTDAttribute] { _attributes }
-    @inlinable public var elements:   [SAXDTDElement] { _elements }
-    @inlinable public var mappings:   [[NSMapping]] { _mappings }
+public struct SAXDTD: Hashable {
+    public var entities:   [SAXDTDEntity] { _entities }
+    public var notations:  [SAXDTDNotation] { _notations }
+    public var attributes: [SAXDTDAttribute] { _attributes }
+    public var elements:   [SAXDTDElement] { _elements }
+    public var mappings:   [[NSMapping]] { _mappings }
 
-    @usableFromInline var _entities:   [SAXDTDEntity]    = []
-    @usableFromInline var _notations:  [SAXDTDNotation]  = []
-    @usableFromInline var _attributes: [SAXDTDAttribute] = []
-    @usableFromInline var _elements:   [SAXDTDElement]   = []
-    @usableFromInline var _mappings:   [[NSMapping]]     = []
+    var _entities:   [SAXDTDEntity]    = []
+    var _notations:  [SAXDTDNotation]  = []
+    var _attributes: [SAXDTDAttribute] = []
+    var _elements:   [SAXDTDElement]   = []
+    var _mappings:   [[NSMapping]]     = []
 
-    @usableFromInline init() {}
+    init() {}
 
     public func hash(into hasher: inout Hasher) {
         hasher.combine(_entities)
@@ -47,8 +47,6 @@ open class SAXDTD: Hashable {
     }
 
     public static func == (lhs: SAXDTD, rhs: SAXDTD) -> Bool {
-        if lhs === rhs { return true }
-        if type(of: lhs) != type(of: rhs) { return false }
         return lhs._entities == rhs._entities && lhs._notations == rhs._notations && lhs._attributes == rhs._attributes && lhs._elements == rhs._elements
     }
 }

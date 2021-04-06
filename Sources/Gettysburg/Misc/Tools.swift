@@ -24,76 +24,112 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-@inlinable func tabCalc(pos i: Int, tabSize sz: Int = 4) -> Int { (((((i - 1) + sz) / sz) * sz) + 1) }
+public typealias KVPair = (key: String, value: String)
+public typealias XMLDeclData = (version: String?, encoding: String?, standalone: Bool?)
 
-@inlinable func getCurrDirURL() -> URL { URL(fileURLWithPath: FileManager.default.currentDirectoryPath, isDirectory: true) }
+/*===============================================================================================================================================================================*/
+/// Get a URL for the current working directory.
+/// 
+/// - Returns: the current working directory as a URL.
+///
+func GetCurrDirURL() -> URL { URL(fileURLWithPath: FileManager.default.currentDirectoryPath, isDirectory: true) }
 
-@inlinable func getFileURL(filename: String) -> URL { URL(fileURLWithPath: filename, relativeTo: getCurrDirURL()) }
+/*===============================================================================================================================================================================*/
+/// Get a URL for the given filename.  If the filename is relative it will be made absolute relative to the current working directory.
+/// 
+/// - Parameter filename: the filename.
+/// - Returns: the filename as an absolute URL.
+///
+func GetFileURL(filename: String) -> URL { URL(fileURLWithPath: filename, relativeTo: GetCurrDirURL()) }
 
-@inlinable func getURL(string: String) throws -> URL {
-    guard let url = URL(string: string, relativeTo: getCurrDirURL()) else { throw SAXError.MalformedURL(string) }
+/*===============================================================================================================================================================================*/
+/// Get a URL for it's given string form. The difference between this function and calling the <code>[foundation class
+/// URL's](https://developer.apple.com/documentation/foundation/url)</code> constructor
+/// <code>[`URL(string:)`](https://developer.apple.com/documentation/foundation/url/3126806-init)</code> is that this function will throw an error if the URL is malformed rather
+/// than returning `nil` and if the URL is relative it will make it an absolute file URL relative to the current working directory.
+/// 
+/// - Parameter string: the string containing the URL.
+/// - Returns: the URL.
+/// - Throws: if the URL is malformed.
+///
+func GetURL(string: String) throws -> URL {
+    guard let url = URL(string: string, relativeTo: GetCurrDirURL()) else { throw SAXError.MalformedURL(string) }
     return url
 }
 
-@inlinable func printArray(_ strings: [String?]) {
+/*===============================================================================================================================================================================*/
+/// Print out an array of strings to STDOUT. Used for debugging.
+/// 
+/// - Parameter strings: the array of strings.
+///
+func PrintArray(_ strings: [String?]) {
     #if DEBUG
-    var idx = 0
-    for s in strings {
-        if let s = s {
-            print("\(idx++)> \"\(s)\"")
+        var idx = 0
+        for s in strings {
+            if let s = s { print("\(idx++)> \"\(s)\"") }
+            else { print("\(idx++)> NIL") }
         }
-        else {
-            print("\(idx++)> NIL")
-        }
-    }
     #endif
-}
-
-@inlinable func getSubStringAndPos(_ string: String, range: Range<String.Index>, position pos: (Int, Int), charStream chStream: SAXCharInputStream) -> (String, (Int, Int)) {
-    (String(string[range.lowerBound ..< range.upperBound]), string.positionOfIndex(range.lowerBound, position: pos, charStream: chStream))
 }
 
 extension SAXParser {
 
-    @inlinable func getCharStreamFor(systemId: String) throws -> SAXCharInputStream { try getCharStreamFor(systemId: systemId, sourceCharStream: charStream) }
-
-    @inlinable func getCharStreamFor(systemId: String, sourceCharStream chStream: SAXCharInputStream) throws -> SAXCharInputStream {
-        let url = try getParserURL(string: systemId)
-        guard let inStream = MarkInputStream(url: url) else { throw SAXError.IOError(chStream, description: "Failed to open URL \"\(systemId)\".") }
-        return try skipOverXmlDeclaration(try SAXCharInputStream(inputStream: inStream, url: url))
+    /*===========================================================================================================================================================================*/
+    /// Get a URL for it's given string form. The difference between this method and calling the <code>[foundation class
+    /// URL's](https://developer.apple.com/documentation/foundation/url)</code> constructor
+    /// <code>[`URL(string:)`](https://developer.apple.com/documentation/foundation/url/3126806-init)</code> is that this function will throw an error if the URL is malformed
+    /// rather than returning `nil` and if the URL is relative it will make it absolute relative to the base URL of the current document being parsed.
+    /// 
+    /// - Parameter string: the string containing the URL.
+    /// - Returns: the URL.
+    /// - Throws: if the URL is malformed.
+    ///
+    func getParserURL(string: String, sourceCharStream chStream: SAXCharInputStream) throws -> URL {
+        guard let url = URL(string: string, relativeTo: chStream.baseURL) else { throw SAXError.MalformedURL(charStream, url: string) }
+        return url
     }
 
-    @inlinable func getCharStreamFor(inputStream: InputStream, systemId: String) throws -> SAXCharInputStream {
-        let url = try getParserURL(string: systemId)
-        return try skipOverXmlDeclaration(try SAXCharInputStream(inputStream: MarkInputStream(inputStream: inputStream), url: url))
-    }
-
-    @inlinable func skipOverXmlDeclaration(_ chStream: SAXCharInputStream) throws -> SAXCharInputStream {
+    /*===========================================================================================================================================================================*/
+    /// Skip over the XML Declaration if it exists.
+    /// 
+    /// - Parameter chStream: the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>.
+    /// - Returns: the same <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>.
+    /// - Throws: if an I/O error occurs.
+    ///
+    func skipOverXmlDeclaration(_ chStream: SAXCharInputStream) throws -> SAXCharInputStream {
         chStream.open()
         chStream.markSet()
-        defer { chStream.markReturn() }
 
         let str = try chStream.readString(count: 6)
 
-        if try str.matches(pattern: "\\A\\<\\?(?i)xml\\s") {
-            var lch: Character = " "
-
-            while let ch = try chStream.read() {
-                if ch == ">" && lch == "?" {
-                    chStream.markUpdate()
-                    return chStream
-                }
-                lch = ch
-            }
-
-            throw SAXError.UnexpectedEndOfInput(chStream)
+        guard try str.matches(pattern: XML_DECL_PREFIX_PATTERN) else {
+            chStream.markReturn()
+            return chStream
         }
 
-        return chStream
-    }
+        chStream.markDelete()
 
-    @inlinable func getParserURL(string: String) throws -> URL {
-        guard let url = URL(string: string, relativeTo: baseURL) else { throw SAXError.MalformedURL(charStream, url: string) }
-        return url
+        if var lch: Character = try chStream.read() {
+            while let ch = try chStream.read() {
+                if ch == ">" && lch == "?" { return chStream }
+                lch = ch
+            }
+        }
+
+        throw SAXError.UnexpectedEndOfInput(chStream)
     }
+}
+
+/*===============================================================================================================================================================================*/
+/// Given a URL, get the Base URL and the filename.
+/// 
+/// - Parameter url: the URL.
+/// - Returns: a tuple with the given URL, the Base URL, and the filename. If the given URL was relative then it is made absolute with respect to the current working directory.
+/// - Throws: if the URL is malformed.
+///
+func GetBaseURLAndFilename(url: URL) throws -> (URL, URL, String) {
+    let burl     = try GetURL(string: url.absoluteString)
+    let baseURL  = burl.deletingLastPathComponent()
+    let filename = burl.lastPathComponent
+    return (burl, baseURL, filename)
 }
