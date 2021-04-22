@@ -19,278 +19,211 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-public class SAXParserCharInputStream: SAXCharInputStream {
-    @usableFromInline typealias StreamStackItem = (TextPosition, SAXChildCharInputStream)
-
+/*===============================================================================================================================================================================*/
+/// The final product...
+///
+public final class SAXParserCharInputStream: SAXCharInputStream {
     //@f:0
-    public            let parser:            SAXParser
-    public      final var isEOF:             Bool                    { lock.withLock { (streamStatus == .atEnd)                                              } }
-    public      final var hasCharsAvailable: Bool                    { lock.withLock { hasChars                                                              } }
-    public      final var streamError:       Error?                  { lock.withLock { ((status == .open) ? error : nil)                                     } }
-    public      final var markCount:         Int                     { lock.withLock { mstk.count                                                            } }
-    public      final var position:          TextPosition            { lock.withLock { pos                                                                   } }
-    public      final var streamStatus:      Stream.Status           { lock.withLock { (isOpen ? (hasError ? .error : (hasChars ? .open : .atEnd)) : status) } }
-    public      final var filename:          String                  { lock.withLock { charStream.filename                                                   } }
-    public      final var encodingName:      String                  { lock.withLock { charStream.encodingName                                               } }
-    public      final var baseURL:           URL                     { lock.withLock { charStream.baseURL                                                    } }
-    public      final var url:               URL                     { lock.withLock { charStream.url                                                        } }
-    public      final var tabWidth:          Int8                    { get { lock.withLock { tab } } set { lock.withLock { tab = newValue } }                  }
+    public let parser:            SAXParser
+    public var tabWidth:          Int8          { get { charStream.tabWidth } set { charStream.tabWidth = newValue }    }
+    public var baseURL:           URL           { charStream.baseURL                                                    }
+    public var url:               URL           { charStream.url                                                        }
+    public var filename:          String        { charStream.filename                                                   }
+    public var encodingName:      String        { charStream.encodingName                                               }
+    public var markCount:         Int           { mStack.count                                                          }
+    public var position:          TextPosition  { pos                                                                   }
+    public var streamError:       Error?        { (isOpen ? error : nil)                                                }
+    public var streamStatus:      Stream.Status { (isOpen ? (hasError ? .error : (hasChars ? .open : .atEnd)) : status) }
+    public var isEOF:             Bool          { (streamStatus == .atEnd)                                              }
+    public var hasCharsAvailable: Bool          { (isGood && hasChars)                                                  }
 
-    @usableFromInline let lock:              RecursiveLock           = RecursiveLock()
-    @usableFromInline var pos:               TextPosition            = (0, 0)
-    @usableFromInline var status:            Stream.Status           = .notOpen
-    @usableFromInline var error:             Error?                  = nil
-    @usableFromInline var tab:               Int8                    = 4
-    @usableFromInline var buffer:            [Character]             = []
-    @usableFromInline var mstk:              [MarkItem]              = []
-    @usableFromInline var sstk:              [StreamStackItem]       = []
-    @usableFromInline var charStream:        SAXChildCharInputStream
+    private var charStream: MultiSAXSimpleCharInputStreamImpl
+    private var pos:        TextPosition             = (0, 0)
+    private var error:      Error?                   = nil
+    private var status:     Stream.Status            = .notOpen
+    private var mStack:     [MarkStackItem]          = []
+    private var buffer:     [CharPos]                = []
+    private var lock:       RecursiveLock            = RecursiveLock()
 
-    @inlinable  final var isOpen:            Bool                    { (status == .open)     }
-    @inlinable  final var hasError:          Bool                    { (error != nil)        }
-    @inlinable  final var isGood:            Bool                    { (isOpen && !hasError) }
+    private var isOpen:   Bool { (status == .open)                                   }
+    private var isGood:   Bool { (isOpen && !hasError)                               }
+    private var hasError: Bool { (error != nil)                                      }
+    private var hasChars: Bool { (buffer.isNotEmpty || charStream.hasCharsAvailable) }
     //@f:1
 
-    public init(inputStream: InputStream, url: URL, parser: SAXParser) throws {
-        charStream = try SAXIConvCharInputStream(inputStream: inputStream, url: url)
-        self.parser = parser
+    public init(_ inputStream: InputStream, url: URL, parser p: SAXParser) throws {
+        let inputStream = ((inputStream as? MarkInputStream) ?? MarkInputStream(inputStream: inputStream))
+        charStream = try MultiSAXSimpleCharInputStreamImpl(inputStream, url)
+        parser = p
     }
 
-    deinit { _close() }
-
-    public final func open() {
+    public func open() {
         lock.withLock {
             if status == .notOpen {
                 charStream.open()
-                pos = (1, 1)
                 error = charStream.streamError
+                pos = charStream.position
                 status = .open
             }
         }
     }
 
-    public final func close() {
+    public func close() {
         lock.withLock {
-            _close()
+            if status == .open {
+                status = .closed
+                pos = (0, 0)
+                error = nil
+                charStream.close()
+                buffer.removeAll()
+                for mi in mStack { mi.data.removeAll() }
+                mStack.removeAll()
+            }
         }
     }
 
-    public final func read() throws -> Character? {
+    public func read() throws -> Character? {
         try lock.withLock {
             guard isOpen else { return nil }
-            if let e = error { throw e }
+            if let er = error { throw er }
+            if let cp = buffer.popFirst() { return pushChar(cp) }
 
             do {
-                if let ch = buffer.popFirst() { return pushChar(char: ch) }
-                repeat { if let ch = try charStream.read() { return pushChar(char: ch) } }
-                while popStream()
+                if let cp = try charStream.read() { return pushChar(cp) }
                 return nil
             }
-            catch let e { error = e; throw e }
+            catch let e {
+                error = e
+                throw e
+            }
         }
     }
 
-    public final func read(chars: inout [Character], maxLength: Int) throws -> Int {
+    public func append(to chars: inout [Character], maxLength: Int) throws -> Int {
         try lock.withLock {
-            if !chars.isEmpty { chars.removeAll(keepingCapacity: true) }
-            return try _append(to: &chars, maxLength: maxLength)
+            guard isOpen && maxLength != 0 else { return 0 }
+            if let er = error { throw er }
+
+            let ln = fixLength(maxLength)
+            var cc = min(ln, buffer.count)
+
+            if cc > 0 {
+                pushChars(to: &chars, from: buffer[0 ..< cc])
+                buffer.removeSubrange(0 ..< cc)
+            }
+
+            do {
+                while cc < ln {
+                    var cps: [CharPos] = []
+                    let rcc: Int       = try charStream.append(to: &cps, maxLength: min(1024, (ln - cc)))
+                    guard rcc > 0 else { break }
+                    pushChars(to: &chars, from: cps)
+                    cc += rcc
+                }
+
+                return cc
+            }
+            catch let e {
+                error = e
+                throw e
+            }
         }
     }
 
-    public final func append(to chars: inout [Character], maxLength: Int) throws -> Int {
-        try lock.withLock {
-            try _append(to: &chars, maxLength: maxLength)
-        }
-    }
+    public func markSet() { lock.withLock { markSetP() } }
 
-    public final func markSet() {
+    public func markDelete() { lock.withLock { if isGood, let mi = mStack.popLast() { markErase(mi) } } }
+
+    public func markReturn() { lock.withLock { if isGood, let mi = mStack.popLast() { markReturn(mi) } } }
+
+    public func markReset() {
         lock.withLock {
-            _markSet()
+            guard isGood else { return }
+            if let mi = mStack.last { markReturn(mi) }
+            else { markSetP() }
         }
     }
 
-    public final func markDelete() {
+    public func markUpdate() {
         lock.withLock {
-            _markDelete()
+            guard isGood else { return }
+            if let mi = mStack.last { mi.pos = pos; markErase(mi) }
+            else { markSetP() }
         }
     }
 
-    public final func markReturn() {
+    public func markBackup(count: Int) -> Int {
         lock.withLock {
-            _markReturn()
-        }
-    }
+            guard (isGood && (count > 0)), let mi = mStack.last else { return 0 }
 
-    public final func markReset() {
-        lock.withLock {
-            _markReturn()
-            _markSet()
-        }
-    }
-
-    public final func markUpdate() {
-        lock.withLock {
-            _markDelete()
-            _markSet()
-        }
-    }
-
-    @discardableResult public final func markBackup(count: Int) -> Int {
-        lock.withLock {
-            guard isGood else { return 0 }
-            guard let mi = mstk.last else { return 0 }
             let cc = min(count, mi.data.count)
-            guard cc > 0 else { return 0 }
-            let idx   = (mi.data.endIndex - cc)
-            let range = (idx ..< mi.data.endIndex)
-            pos = mi.data[idx].0
-            buffer.insert(contentsOf: mi.data[range].map({ $0.1 }), at: 0)
-            buffer.removeSubrange(range)
+            let i2 = mi.data.endIndex
+            let i1 = (i2 - cc)
+            let rn = (i1 ..< i2)
+
+            pos = mi.data[i1].pos
+            buffer.insert(contentsOf: mi.data[rn], at: 0)
+            mi.data.removeSubrange(rn)
+
             return cc
         }
     }
 
-    public final func stackNew(inputStream: InputStream, url: URL) throws {
+    public func stackNew(string: String, url: URL) throws {
+        try lock.withLock { charStream.pushStream(try SAXSimpleStringCharInputStream(string, url)) }
+    }
+
+    public func stackNew(inputStream: InputStream, url: URL) throws {
+        try lock.withLock { charStream.pushStream(try SAXSimpleIConvCharInputStream(inputStream: inputStream, url: url)) }
+    }
+
+    public func stackNew(data: Data, url: URL) throws {
+        try lock.withLock { charStream.pushStream(try SAXSimpleStringCharInputStream(data, url, skipXMLDeclaration: true)) }
+    }
+
+    public func stackNew(url: URL) throws {
+        try lock.withLock { charStream.pushStream(try SAXSimpleIConvCharInputStream(url: url)) }
+    }
+
+    public func stackNew(systemId: String) throws {
         try lock.withLock {
-            do { pushStream(try SAXIConvCharInputStream(inputStream: inputStream, url: url)) }
-            catch let e { error = e; throw e }
+            guard let url = URL(string: systemId, relativeTo: baseURL) else { throw SAXError.MalformedURL(pos, url: systemId) }
+            charStream.pushStream(try SAXSimpleIConvCharInputStream(url: url))
         }
     }
 
-    public final func stackNew(string: String, url: URL) throws {
-        try lock.withLock {
-            do { pushStream(try SAXStringCharInputStream(string: string, url: url)) }
-            catch let e { error = e; throw e }
-        }
+    private func markSetP() {
+        mStack <+ MarkStackItem(pos: pos)
     }
 
-    public final func stackNew(data: Data, url: URL) throws {
-        try lock.withLock {
-            do { pushStream(try SAXIConvCharInputStream(inputStream: InputStream(data: data), url: url)) }
-            catch let e { error = e; throw e }
-        }
+    private func markErase(_ mi: MarkStackItem) {
+        mi.data.removeAll()
     }
 
-    public final func stackNew(url: URL) throws {
-        try lock.withLock {
-            do { try _stackNew(url: url) }
-            catch let e { error = e; throw e }
-        }
+    private func markReturn(_ mi: MarkStackItem) {
+        buffer.append(contentsOf: mi.data)
+        pos = mi.pos
+        markErase(mi)
     }
 
-    public final func stackNew(systemId: String) throws {
-        try lock.withLock {
-            do {
-                guard let url = URL(string: systemId, relativeTo: baseURL) else { throw SAXError.MalformedURL(pos, url: systemId) }
-                try _stackNew(url: url)
-            }
-            catch let e { error = e; throw e }
-        }
+    private func pushChar(_ ch: CharPos) -> Character {
+        if let mi = mStack.last { mi.data <+ ch }
+        pos = ch.pos
+        return ch.char
     }
 
-    @inlinable final func _stackNew(url: URL) throws {
-        guard let inputStream = InputStream(url: url) else { throw SAXError.MalformedURL(pos, url: url.absoluteString) }
-        pushStream(try SAXIConvCharInputStream(inputStream: inputStream, url: url))
+    private func pushChars<T>(to chars: inout [Character], from cps: T) where T: RandomAccessCollection, T.Element == CharPos {
+        guard cps.isNotEmpty else { return }
+        chars.append(contentsOf: cps.map { $0.char })
+        pos = cps.last!.pos
+        if let mi = mStack.last { mi.data.append(contentsOf: cps) }
     }
 
-    @inlinable var hasChars: Bool {
-        guard isGood && buffer.isEmpty else { return isGood }
-        repeat {
-            if charStream.hasCharsAvailable { return true }
-        }
-        while popStream()
-        return false
-    }
+    private class MarkStackItem {
+        var data: [CharPos] = []
+        var pos:  TextPosition
 
-    @discardableResult @inlinable func popStream() -> Bool {
-        guard let item = sstk.popLast() else { return false }
-        charStream.close()
-        (pos, charStream) = item
-        return true
+        init(pos: TextPosition) { self.pos = pos }
     }
-
-    @inlinable final func pushStream(_ stream: SAXChildCharInputStream) {
-        sstk <+ (pos, charStream)
-        pos = (1, 1)
-        charStream = stream
-        charStream.open()
-    }
-
-    @inlinable final func pushChar(char: Character) -> Character {
-        if let mi = mstk.last { mi.data <+ (pos, char) }
-        textPositionUpdate(char, pos: &pos, tabWidth: tab)
-        return char
-    }
-
-    @inlinable final func _close() {
-        if status == .open {
-            status = .closed
-            charStream.close()
-            for s in sstk { s.1.close() }
-            for m in mstk { m.data.removeAll(keepingCapacity: false) }
-            sstk.removeAll(keepingCapacity: false)
-            mstk.removeAll(keepingCapacity: false)
-            buffer.removeAll(keepingCapacity: false)
-            pos = (0, 0)
-            error = nil
-        }
-    }
-
-    @inlinable final func _markSet() {
-        if isGood { mstk <+ MarkItem(pos) }
-    }
-
-    @inlinable final func _markDelete() {
-        if isGood { _ = mstk.popLast() }
-    }
-
-    @inlinable final func _markReturn() {
-        if isGood, let mi = mstk.popLast() { pos = mi.pos; buffer.insert(contentsOf: mi.data.map({ $0.1 }), at: 0) }
-    }
-
-    @inlinable final func _append(to chars: inout [Character], maxLength: Int) throws -> Int {
-        guard maxLength != 0 && isOpen else { return 0 }
-        if let e = error { throw e }
-
-        do {
-            let ix = chars.endIndex
-            let ln = ((maxLength < 0) ? Int.max : maxLength)
-            let cc = _appendFromBuffer(chars: &chars, maxLength: ln)
-            try _appendFromStream(chars: &chars, maxLength: ln, bufferCount: cc)
-            pushChars(chars: chars, startIndex: ix)
-            return chars.distance(from: ix, to: chars.endIndex)
-        }
-        catch let e { error = e; throw e }
-    }
-
-    @inlinable final func _appendFromStream(chars: inout [Character], maxLength ln: Int, bufferCount bc: Int) throws {
-        var cc = bc
-        while (cc < ln) && hasChars { cc += try charStream.append(to: &chars, maxLength: (ln - cc)) }
-    }
-
-    @inlinable final func _appendFromBuffer(chars: inout [Character], maxLength ln: Int) -> Int {
-        let cc = min(ln, buffer.count)
-        if cc > 0 {
-            chars.append(contentsOf: buffer[0 ..< cc])
-            buffer.removeSubrange(0 ..< cc)
-        }
-        return cc
-    }
-
-    @inlinable final func pushChars(chars: [Character], startIndex ix: Int) {
-        if let mi = mstk.last { pushChars(chars: chars, startIndex: ix) { mi.data <+ (pos, $0); textPositionUpdate($0, pos: &pos, tabWidth: tab) } }
-        else { pushChars(chars: chars, startIndex: ix) { textPositionUpdate($0, pos: &pos, tabWidth: tab) } }
-    }
-
-    @inlinable final func pushChars(chars: [Character], startIndex ix: Int, _ body: (Character) -> Void) {
-        for ch in chars[ix ..< chars.endIndex] { body(ch) }
-    }
-
-    //@f:0
-    @usableFromInline class MarkItem {
-        @usableFromInline let pos:  TextPosition
-        @usableFromInline var data: [(TextPosition, Character)] = []
-        @usableFromInline init(_ pos: TextPosition) { self.pos = pos }
-    }
-    //@f:1
 }
+

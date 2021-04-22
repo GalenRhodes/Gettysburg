@@ -56,28 +56,28 @@ open class SAXParser {
     ///
     public internal(set) var xmlStandalone: Bool   = true
 
-    public var allowedExternalEntityURLs:     Set<String>                   = []
-    public var externalEntityResolvingPolicy: ExternalEntityResolvingPolicy = .always
+    public var   allowedExternalEntityURLs:     Set<String>                   = []
+    public var   externalEntityResolvingPolicy: ExternalEntityResolvingPolicy = .always
+
+    //@f:0
     /*===========================================================================================================================================================================*/
     /// For performance, SAXParser tries to read as much of an XML structure into memory and then analyze it as a whole. This setting limits the number of characters read at once
     /// to keep memory from being exhausted. If this limit is hit then an error is thrown. Normal text blocks, including CDATA sections are "chunked" if they exceed this limit so
     /// that no error is thrown. Except for text blocks, this limit should never be breached for a well formed document. Allowed range is 4KB <= limit <= 4MB. The default is 1MB.
     ///
-    public var structureSizeLimit:            Int                           = DefMemLimit
-
-    //@f:0
-    var memLimit:               Int                 { max(MinMemLimit, min(MaxMemLimit, structureSizeLimit)) }
-    let docType:                SAXDTD              = SAXDTD()
-    var charStream:             SAXCharInputStream! = nil
-    let inputStream:            MarkInputStream
-    let handler:                SAXHandler
-    let url:                    URL
+    internal let memLimit:    Int
+    internal let docType:     SAXDTD              = SAXDTD()
+    internal var charStream:  SAXCharInputStream! = nil
+    internal let inputStream: MarkInputStream
+    internal let handler:     SAXHandler
+    internal let url:         URL
     //@f:1
 
-    init(inputStream: InputStream, url: URL? = nil, handler: SAXHandler) throws {
+    init(inputStream: InputStream, url: URL? = nil, handler: SAXHandler, memLimit: Int = DefMemLimit) throws {
         self.inputStream = ((inputStream as? MarkInputStream) ?? MarkInputStream(inputStream: inputStream))
         self.handler = handler
         self.url = (url?.absoluteURL ?? GetFileURL(filename: "\(UUID().uuidString).xml"))
+        self.memLimit = max(MinMemLimit, min(MaxMemLimit, memLimit))
     }
 
     /*===========================================================================================================================================================================*/
@@ -86,7 +86,7 @@ open class SAXParser {
     /// - Throws: if an I/O error occurs or the document is malformed.
     ///
     open func parse() throws {
-        charStream = try SAXParserCharInputStream(inputStream: inputStream, url: url, parser: self)
+        charStream = try SAXParserCharInputStream(inputStream, url: url, parser: self)
         defer { charStream.close() }
 
         try parseXMLDecl(charStream)

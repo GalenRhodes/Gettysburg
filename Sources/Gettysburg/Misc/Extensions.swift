@@ -243,3 +243,7 @@ extension String {
     }
 
 }
+
+extension BidirectionalCollection {
+    var isNotEmpty: Bool { !isEmpty }
+}

@@ -10,6 +10,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/Sources/Gettysburg/IO/backend/SAXSimpleStringCharInputStream.swift">
+          <value>
+            <Attribute>
+              <option name="separator" value=":" />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/Sources/Gettysburg/Misc/SAXError.swift">
           <value>
             <Attribute>

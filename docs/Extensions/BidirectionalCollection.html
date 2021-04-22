@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>SAXIConvCharInputStream Class Reference</title>
+    <title>BidirectionalCollection Extension Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset='utf-8'>
@@ -13,8 +13,8 @@
     <script src="../js/jazzy.search.js" defer></script>
   </head>
   <body>
-    <a name="//apple_ref/swift/Class/SAXIConvCharInputStream" class="dashAnchor"></a>
-    <a title="SAXIConvCharInputStream Class Reference"></a>
+    <a name="//apple_ref/swift/Extension/BidirectionalCollection" class="dashAnchor"></a>
+    <a title="BidirectionalCollection Extension Reference"></a>
     <header>
       <div class="content-wrapper">
         <p><a href="../index.html">Gettysburg©</a> (27% documented)</p>
@@ -30,7 +30,7 @@
       <p id="breadcrumbs">
         <a href="../index.html"> Reference</a>
         <img id="carat" src="../img/carat.png" />
-        SAXIConvCharInputStream Class Reference
+        BidirectionalCollection Extension Reference
       </p>
     </div>
     <div class="content-wrapper">
@@ -124,9 +124,6 @@
                 <a href="../Classes/SAXError/EntityError.html">– EntityError</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Classes/SAXIConvCharInputStream.html">SAXIConvCharInputStream</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Classes/SAXNode.html">SAXNode</a>
               </li>
               <li class="nav-group-task">
@@ -140,12 +137,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/SAXParserCharInputStream.html">SAXParserCharInputStream</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Classes/SAXParserCharInputStream/MarkItem.html">– MarkItem</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Classes/SAXStringCharInputStream.html">SAXStringCharInputStream</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/SAXText.html">SAXText</a>
@@ -238,6 +229,9 @@
             <a href="../Extensions.html">Extensions</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
+                <a href="../Extensions/BidirectionalCollection.html">BidirectionalCollection</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Extensions/CharInputStream.html">CharInputStream</a>
               </li>
               <li class="nav-group-task">
@@ -281,9 +275,6 @@
                 <a href="../Protocols/SAXCharInputStream.html">SAXCharInputStream</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Protocols/SAXChildCharInputStream.html">SAXChildCharInputStream</a>
-              </li>
-              <li class="nav-group-task">
                 <a href="../Protocols/SAXHandler.html">SAXHandler</a>
               </li>
             </ul>
@@ -318,20 +309,15 @@
       <article class="main-content">
         <section>
           <section class="section">
-            <h1>SAXIConvCharInputStream</h1>
+            <h1>BidirectionalCollection</h1>
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">SAXIConvCharInputStream</span> <span class="p">:</span> <span class="kt">SimpleIConvCharInputStream</span><span class="p">,</span> <span class="kt"><a href="../Protocols/SAXChildCharInputStream.html">SAXChildCharInputStream</a></span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">BidirectionalCollection</span></code></pre>
 
                 </div>
               </div>
-            <p><code><a href="../Classes/SAXParser.html">SAXParser</a></code> version of the <code><a href="http://galenrhodes.com/Rubicon/Classes/SimpleIConvCharInputStream.html">SimpleIConvCharInputStream</a></code> that adds a number of features
-needed by the <code><a href="../Classes/SAXParser.html">SAXParser</a></code>.</p>
-
-              <div class="slightly-smaller">
-                <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/IO/SAXIConvCharInputStream.swift#L26-L37">Show on GitHub</a>
-              </div>
+            
           </section>
           <section class="section task-group-section">
             <div class="task-group">
@@ -339,9 +325,9 @@ needed by the <code><a href="../Classes/SAXParser.html">SAXParser</a></code>.</p
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:10Gettysburg23SAXChildCharInputStreamP7baseURL10Foundation0G0Vvp"></a>
-                    <a name="//apple_ref/swift/Property/baseURL" class="dashAnchor"></a>
-                    <a class="token" href="#/s:10Gettysburg23SAXChildCharInputStreamP7baseURL10Foundation0G0Vvp">baseURL</a>
+                    <a name="/s:SK10GettysburgE10isNotEmptySbvp"></a>
+                    <a name="//apple_ref/swift/Property/isNotEmpty" class="dashAnchor"></a>
+                    <a class="token" href="#/s:SK10GettysburgE10isNotEmptySbvp">isNotEmpty</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -355,99 +341,12 @@ needed by the <code><a href="../Classes/SAXParser.html">SAXParser</a></code>.</p
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">baseURL</span><span class="p">:</span> <span class="kt">URL</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">isNotEmpty</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/IO/SAXIConvCharInputStream.swift#L26">Show on GitHub</a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:10Gettysburg23SAXChildCharInputStreamP3url10Foundation3URLVvp"></a>
-                    <a name="//apple_ref/swift/Property/url" class="dashAnchor"></a>
-                    <a class="token" href="#/s:10Gettysburg23SAXChildCharInputStreamP3url10Foundation3URLVvp">url</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/IO/SAXIConvCharInputStream.swift#L30">Show on GitHub</a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:10Gettysburg23SAXChildCharInputStreamP8filenameSSvp"></a>
-                    <a name="//apple_ref/swift/Property/filename" class="dashAnchor"></a>
-                    <a class="token" href="#/s:10Gettysburg23SAXChildCharInputStreamP8filenameSSvp">filename</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">filename</span><span class="p">:</span> <span class="kt">String</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/IO/SAXIConvCharInputStream.swift#L34">Show on GitHub</a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:10Gettysburg23SAXIConvCharInputStreamC05inputE03urlACSo07NSInputE0C_10Foundation3URLVtKcfc"></a>
-                    <a name="//apple_ref/swift/Method/init(inputStream:url:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:10Gettysburg23SAXIConvCharInputStreamC05inputE03urlACSo07NSInputE0C_10Foundation3URLVtKcfc">init(inputStream:<wbr>url:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">inputStream</span><span class="p">:</span> <span class="kt">InputStream</span><span class="p">,</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">)</span> <span class="k">throws</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/IO/SAXIConvCharInputStream.swift#L31-L36">Show on GitHub</a>
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/Extensions.swift#L">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -457,7 +356,7 @@ needed by the <code><a href="../Classes/SAXParser.html">SAXParser</a></code>.</p
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2021 <a class="link" href="https://blog.projectgalen.com" target="_blank" rel="external">Galen Rhodes</a>. All rights reserved. (Last updated: 2021-04-06)</p>
+          <p>&copy; 2021 <a class="link" href="https://blog.projectgalen.com" target="_blank" rel="external">Galen Rhodes</a>. All rights reserved. (Last updated: 2021-04-12)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>

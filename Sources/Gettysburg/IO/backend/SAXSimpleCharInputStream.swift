@@ -1,9 +1,9 @@
-/*
+/*=============================================================================================================================================================================*//*
  *     PROJECT: Gettysburg
- *    FILENAME: SAXStringCharInputStream.swift
+ *    FILENAME: SAXSimpleCharInputStream.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
- *        DATE: 3/28/21
+ *        DATE: 4/14/21
  *
  * Copyright © 2021 Galen Rhodes. All rights reserved.
  *
@@ -19,16 +19,28 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-/*===============================================================================================================================================================================*/
-/// A class implementing the `SAXCharInputStream` protocol that reads characters from a String.
-///
-public class SAXStringCharInputStream: SimpleStringCharInputStream, SAXChildCharInputStream {
-    public let baseURL:  URL
-    public let url:      URL
-    public let filename: String
+typealias CharPos = (char: Character, pos: TextPosition)
 
-    public init(string: String, url: URL) throws {
-        (self.url, baseURL, filename) = try GetBaseURLAndFilename(url: url)
-        super.init(string: string)
-    }
+protocol SAXSimpleCharInputStream {
+    //@f:0
+    var url:               URL           {   get   }
+    var baseURL:           URL           {   get   }
+    var filename:          String        {   get   }
+    var isEOF:             Bool          {   get   }
+    var hasCharsAvailable: Bool          {   get   }
+    var encodingName:      String        {   get   }
+    var streamStatus:      Stream.Status {   get   }
+    var streamError:       Error?        {   get   }
+    var position:          TextPosition  {   get   }
+    var tabWidth:          Int8          { get set }
+    //@f:1
+
+    func read() throws -> CharPos?
+
+    func append(to chars: inout [CharPos], maxLength: Int) throws -> Int
+
+    func open()
+
+    func close()
 }
+
