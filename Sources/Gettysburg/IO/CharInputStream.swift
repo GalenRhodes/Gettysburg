@@ -19,6 +19,14 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
+public let UTF_8:    String = "UTF-8"
+public let UTF_16:   String = "UTF-16"
+public let UTF_16BE: String = "\(UTF_16)BE"
+public let UTF_16LE: String = "\(UTF_16)LE"
+public let UTF_32:   String = "UTF-32"
+public let UTF_32BE: String = "\(UTF_32)BE"
+public let UTF_32LE: String = "\(UTF_32)LE"
+
 extension CharInputStream {
 
     /*===========================================================================================================================================================================*/

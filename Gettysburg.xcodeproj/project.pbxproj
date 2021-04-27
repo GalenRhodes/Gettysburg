@@ -57,6 +57,9 @@
 		1117DDAABC5C2559C3E58075 /* Gettysburg.h in Headers */ = {isa = PBXBuildFile; fileRef = 1117DA52094C2ABAE3EA2EBA /* Gettysburg.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1117DEB45A7944B62EF47A15 /* SAXDTDElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DFBD10C88123F5A86D86 /* SAXDTDElement.swift */; };
 		1117DFF887C85EEA1E0DAEDF /* Element.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DAFBEFBAF2446DD9BCDC /* Element.swift */; };
+		830E3C952631AC0600F3835F /* Rubicon in Frameworks */ = {isa = PBXBuildFile; productRef = 83A6F52125C476F100C95BE8 /* Rubicon */; };
+		830E3C962631AC0600F3835F /* PGDocFixer in Frameworks */ = {isa = PBXBuildFile; productRef = 83CFA5E22556E70C005498FC /* PGDocFixer */; };
+		830E3C972631AC0600F3835F /* Rubicon in Frameworks */ = {isa = PBXBuildFile; productRef = 8356BB2625D0378F00E41DFC /* Rubicon */; };
 		8356BB3C25D038AA00E41DFC /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D86804A3FA8399671C13 /* main.swift */; };
 		8356BB4425D03A8100E41DFC /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 83DD3B8425B9CBEE0083BC1C /* libiconv.tbd */; };
 		83CFA5BA2556E331005498FC /* Gettysburg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83CFA5B02556E331005498FC /* Gettysburg.framework */; };
@@ -203,6 +206,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8356BB4425D03A8100E41DFC /* libiconv.tbd in Frameworks */,
+				830E3C972631AC0600F3835F /* Rubicon in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -211,6 +215,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				83F8D67425C4816A004DD445 /* libiconv.tbd in Frameworks */,
+				830E3C952631AC0600F3835F /* Rubicon in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -226,6 +231,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				830E3C962631AC0600F3835F /* PGDocFixer in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -482,7 +488,7 @@
 			);
 			name = EntityTool;
 			packageProductDependencies = (
-				8356BB2625D0378F00E41DFC,
+				8356BB2625D0378F00E41DFC /* Rubicon */,
 			);
 			productName = EntityTool;
 			productReference = 8356BB1A25D0375F00E41DFC /* EntityTool */;
@@ -503,7 +509,7 @@
 			);
 			name = Gettysburg;
 			packageProductDependencies = (
-				83A6F52125C476F100C95BE8,
+				83A6F52125C476F100C95BE8 /* Rubicon */,
 			);
 			productName = Gettysburg;
 			productReference = 83CFA5B02556E331005498FC /* Gettysburg.framework */;
@@ -542,7 +548,7 @@
 			);
 			name = DocFixer;
 			packageProductDependencies = (
-				83CFA5E22556E70C005498FC,
+				83CFA5E22556E70C005498FC /* PGDocFixer */,
 			);
 			productName = DocFixer;
 			productReference = 83CFA5D72556E6C4005498FC /* DocFixer */;
@@ -584,8 +590,8 @@
 			);
 			mainGroup = 83CFA5A62556E331005498FC;
 			packageReferences = (
-				83CFA5E12556E70C005498FC,
-				838D394625B88044009FF043,
+				83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer" */,
+				838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon" */,
 			);
 			productRefGroup = 83CFA5B12556E331005498FC /* Products */;
 			projectDirPath = "";
@@ -1050,15 +1056,15 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		838D394625B88044009FF043 = {
+		838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/GalenRhodes/Rubicon.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.2.0;
+				minimumVersion = 0.2.8;
 			};
 		};
-		83CFA5E12556E70C005498FC = {
+		83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/GalenRhodes/PGDocFixer.git";
 			requirement = {
@@ -1069,19 +1075,19 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		8356BB2625D0378F00E41DFC = {
+		8356BB2625D0378F00E41DFC /* Rubicon */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 838D394625B88044009FF043;
+			package = 838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon" */;
 			productName = Rubicon;
 		};
-		83A6F52125C476F100C95BE8 = {
+		83A6F52125C476F100C95BE8 /* Rubicon */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 838D394625B88044009FF043;
+			package = 838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon" */;
 			productName = Rubicon;
 		};
-		83CFA5E22556E70C005498FC = {
+		83CFA5E22556E70C005498FC /* PGDocFixer */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 83CFA5E12556E70C005498FC;
+			package = 83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer" */;
 			productName = PGDocFixer;
 		};
 /* End XCSwiftPackageProductDependency section */

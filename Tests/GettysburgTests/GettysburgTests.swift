@@ -17,123 +17,33 @@ class GettysburgTests: XCTestCase {
 
     override func tearDownWithError() throws {}
 
-    func testInitURL1() throws {
-        let istr = InputStream(data: Data())
-        let sax  = try SAXParser(inputStream: istr, url: nil, handler: SAXTestHandler())
+    func testParser() throws {
+        do {
+            let filename = "\(testDataDir)/Test_UTF-8.xml"
+            let fileUrl = GetFileURL(filename: filename)
 
-        print("--------------------------------------------------------------------------------")
-        print("      URL: \"\(sax.url.absoluteString)\"")
-        print(" Base URL: \"\(sax.baseURL.absoluteString)\"")
-        print("File Name: \"\(sax.filename)\"")
-    }
+            guard let strm = InputStream(url: fileUrl) else { throw StreamError.FileNotFound(description: fileUrl.absoluteString) }
 
-    func testInitURL2() throws {
-        let istr = InputStream(data: Data())
-        let sax  = try SAXParser(inputStream: istr, url: URL(string: "http://galenrhodes/swift.xml"), handler: SAXTestHandler())
+            let parser = try SAXParser(inputStream: strm, url: fileUrl, handler: SAXTestHandler())
 
-        print("--------------------------------------------------------------------------------")
-        print("      URL: \"\(sax.url.absoluteString)\"")
-        print(" Base URL: \"\(sax.baseURL.absoluteString)\"")
-        print("File Name: \"\(sax.filename)\"")
-    }
-
-    func testInitURL3() throws {
-        let istr = InputStream(data: Data())
-        let sax  = try SAXParser(inputStream: istr, url: URL(string: "swift.xml", relativeTo: URL(string: "http://galenrhodes")), handler: SAXTestHandler())
-
-        print("--------------------------------------------------------------------------------")
-        print("      URL: \"\(sax.url.absoluteString)\"")
-        print(" Base URL: \"\(sax.baseURL.absoluteString)\"")
-        print("File Name: \"\(sax.filename)\"")
-    }
-
-    func testInitURL4() throws {
-        let istr = InputStream(data: Data())
-        let sax  = try SAXParser(inputStream: istr, url: URL(string: "swift.xml"), handler: SAXTestHandler())
-
-        print("--------------------------------------------------------------------------------")
-        print("      URL: \"\(sax.url.absoluteString)\"")
-        print(" Base URL: \"\(sax.baseURL.absoluteString)\"")
-        print("File Name: \"\(sax.filename)\"")
-    }
-
-    func testInitURL5() throws {
-        let names: [String] = [ "UTF-8", "UTF-16BE", "UTF-16BE_ext", "UTF-32LE", "WINDOWS-1252" ]
-
-        for name in names {
-            let fname = "Tests/GettysburgTests/TestData/Test_\(name).xml"
-            let url   = GetFileURL(filename: fname)
-
-            guard let istr = InputStream(url: url) else { throw SAXError.MalformedURL(url.absoluteString) }
-            let sax = try SAXParser(inputStream: istr, url: URL(string: fname), handler: SAXTestHandler())
-
-            print("================================================================================")
-            print("      URL: \"\(sax.url.absoluteString)\"")
-            print(" Base URL: \"\(sax.baseURL.absoluteString)\"")
-            print("File Name: \"\(sax.filename)\"")
-            try sax.createCharStream()
-            print("--------------------------------------------------------------------------------")
-            print("          URL: \"\(sax.url.absoluteString)\"")
-            print("     Base URL: \"\(sax.baseURL.absoluteString)\"")
-            print("    File Name: \"\(sax.filename)\"")
-            print("File Encoding: \"\(sax.charStream.encodingName)\"")
+            try parser.parse()
+        }
+        catch let e {
+            XCTFail("ERROR: \(e)")
         }
     }
 
-    func testParse() throws {
-        print("--------------------------------------------------------------------------------")
-        let name  = "UTF-8"
-        let fname = "Tests/GettysburgTests/TestData/Test_\(name).xml"
-        let url   = GetFileURL(filename: fname)
-        guard let istr = InputStream(url: url) else { throw SAXError.MalformedURL(url.absoluteString) }
-        let sax = try SAXParser(inputStream: istr, url: url, handler: SAXTestHandler())
-        try sax.parse()
-    }
+    func testSAXSimpleIConvCharInputStream() throws {
+        let filename = "\(testDataDir)/Test_UTF-8.xml"
+        let fileUrl  = GetFileURL(filename: filename)
 
-    func testDocTypeRegex() throws {
-        let pattern = "\\A\\s*(\(rxNamePattern))\\s+(SYSTEM|PUBLIC)\\s+([\"'])(.*?)\\3(?:\\s+([\"'])(.*?)\\5)?\\s*\\z"
-        let tests   = [
-            " Person SYSTEM \"Test_UTF-16LE_ext.dtd\"",
-            "Person SYSTEM \"Test_UTF-16LE_ext.dtd\"",
-            " Person PUBLIC \"publicID\" \"Test_UTF-16LE_ext.dtd\"",
-            "Person PUBLIC \"publicID\" \"Test_UTF-16LE_ext.dtd\"",
+        guard let stream = InputStream(url: fileUrl) else { throw StreamError.FileNotFound(description: fileUrl.absoluteString) }
+        let iConvStream = try SAXSimpleIConvCharInputStream(inputStream: stream, url: fileUrl, skipXmlDecl: false)
+        iConvStream.open()
+        var data: [CharPos] = []
 
-            " Person SYSTEM \"'Test_UTF-16LE_ext.dtd'\"",
-            "Person SYSTEM \"'Test_UTF-16LE_ext.dtd'\"",
-            " Person PUBLIC \"'publicID'\" \"Test_UTF-16LE_ext.dtd\"",
-            "Person PUBLIC \"publicID\" \"'Test_UTF-16LE_ext.dtd'\"",
-            "Person PUBLIC \"'publicID'\" \"'Test_UTF-16LE_ext.dtd'\"",
-
-            " Person SYSTEM 'Test_UTF-16LE_ext.dtd'",
-            "Person SYSTEM 'Test_UTF-16LE_ext.dtd'",
-            " Person PUBLIC 'publicID' \"Test_UTF-16LE_ext.dtd\"",
-            "Person PUBLIC 'publicID' \"Test_UTF-16LE_ext.dtd\"",
-            " Person PUBLIC \"publicID\" 'Test_UTF-16LE_ext.dtd'",
-            "Person PUBLIC \"publicID\" 'Test_UTF-16LE_ext.dtd'",
-            " Person PUBLIC 'publicID' 'Test_UTF-16LE_ext.dtd'",
-            "Person PUBLIC 'publicID' 'Test_UTF-16LE_ext.dtd'",
-
-            " Person SYSTEM '\"Test_UTF-16LE_ext.dtd\"'",
-            "Person SYSTEM '\"Test_UTF-16LE_ext.dtd\"'",
-            " Person PUBLIC '\"publicID\"' \"'Test_UTF-16LE_ext.dtd'\"",
-            "Person PUBLIC '\"publicID\"' \"'Test_UTF-16LE_ext.dtd'\"",
-            " Person PUBLIC \"'publicID'\" '\"Test_UTF-16LE_ext.dtd\"'",
-            "Person PUBLIC \"'publicID'\" '\"Test_UTF-16LE_ext.dtd\"'",
-            " Person PUBLIC '\"publicID\"' '\"Test_UTF-16LE_ext.dtd\"'",
-            "Person PUBLIC '\"publicID\"' '\"Test_UTF-16LE_ext.dtd\"'",
-        ]
-
-        for aTest in tests {
-            if let rx = RegularExpression(pattern: pattern, options: [ .anchorsMatchLines ]) {
-                if let match = rx.firstMatch(in: aTest) {
-                    print("======================================================================")
-                    var idx = 0
-                    for grp in match {
-                        print("Group \(idx++)> \"\(grp.subString ?? "NIL")\"")
-                    }
-                }
-            }
-        }
+        guard try iConvStream.append(to: &data, maxLength: 1000) > 0 else { throw StreamError.UnexpectedEndOfInput() }
+        print("\(String(data.map { $0.char }))")
     }
 
     //    func testPerformanceExample() throws {

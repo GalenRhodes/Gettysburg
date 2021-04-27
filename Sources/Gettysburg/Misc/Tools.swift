@@ -43,17 +43,19 @@ func GetCurrDirURL() -> URL { URL(fileURLWithPath: FileManager.default.currentDi
 func GetFileURL(filename: String) -> URL { URL(fileURLWithPath: filename, relativeTo: GetCurrDirURL()) }
 
 /*===============================================================================================================================================================================*/
-/// Get a URL for it's given string form. The difference between this function and calling the <code>[foundation class
+/// Get a `URL` for it's given string form. The difference between this function and calling the <code>[foundation class
 /// URL's](https://developer.apple.com/documentation/foundation/url)</code> constructor
 /// <code>[`URL(string:)`](https://developer.apple.com/documentation/foundation/url/3126806-init)</code> is that this function will throw an error if the URL is malformed rather
-/// than returning `nil` and if the URL is relative it will make it an absolute file URL relative to the current working directory.
+/// than returning `nil` and if the URL is relative and `nil` is passed for the `relativeTo` base URL then it will use the current working directory.
 /// 
-/// - Parameter string: the string containing the URL.
+/// - Parameters:
+///   - string: the string containing the URL.
+///   - relativeTo: If the URL defined by the given string is relative then...
 /// - Returns: the URL.
 /// - Throws: if the URL is malformed.
 ///
-func GetURL(string: String) throws -> URL {
-    guard let url = URL(string: string, relativeTo: GetCurrDirURL()) else { throw SAXError.MalformedURL(string) }
+func GetURL(string: String, relativeTo: URL? = nil) throws -> URL {
+    guard let url = URL(string: string, relativeTo: (relativeTo ?? GetCurrDirURL())) else { throw SAXError.MalformedURL(string) }
     return url
 }
 
@@ -70,54 +72,6 @@ func PrintArray(_ strings: [String?]) {
             else { print("\(idx++)> NIL") }
         }
     #endif
-}
-
-extension SAXParser {
-
-    /*===========================================================================================================================================================================*/
-    /// Get a URL for it's given string form. The difference between this method and calling the <code>[foundation class
-    /// URL's](https://developer.apple.com/documentation/foundation/url)</code> constructor
-    /// <code>[`URL(string:)`](https://developer.apple.com/documentation/foundation/url/3126806-init)</code> is that this function will throw an error if the URL is malformed
-    /// rather than returning `nil` and if the URL is relative it will make it absolute relative to the base URL of the current document being parsed.
-    /// 
-    /// - Parameter string: the string containing the URL.
-    /// - Returns: the URL.
-    /// - Throws: if the URL is malformed.
-    ///
-    func getParserURL(string: String, sourceCharStream chStream: SAXCharInputStream) throws -> URL {
-        guard let url = URL(string: string, relativeTo: chStream.baseURL) else { throw SAXError.MalformedURL(charStream, url: string) }
-        return url
-    }
-
-    /*===========================================================================================================================================================================*/
-    /// Skip over the XML Declaration if it exists.
-    /// 
-    /// - Parameter chStream: the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>.
-    /// - Returns: the same <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code>.
-    /// - Throws: if an I/O error occurs.
-    ///
-    func skipOverXmlDeclaration(_ chStream: SAXCharInputStream) throws -> SAXCharInputStream {
-        chStream.open()
-        chStream.markSet()
-
-        let str = try chStream.readString(count: 6)
-
-        guard try str.matches(pattern: XML_DECL_PREFIX_PATTERN) else {
-            chStream.markReturn()
-            return chStream
-        }
-
-        chStream.markDelete()
-
-        if var lch: Character = try chStream.read() {
-            while let ch = try chStream.read() {
-                if ch == ">" && lch == "?" { return chStream }
-                lch = ch
-            }
-        }
-
-        throw SAXError.UnexpectedEndOfInput(chStream)
-    }
 }
 
 /*===============================================================================================================================================================================*/

@@ -28,7 +28,7 @@
             </BuildableReference>
             <SelectedTests>
                <Test
-                  Identifier = "GettysburgTests/testParse">
+                  Identifier = "GettysburgTests/testSAXSimpleIConvCharInputStream">
                </Test>
             </SelectedTests>
          </TestableReference>

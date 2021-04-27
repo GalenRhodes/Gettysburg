@@ -1,4 +1,4 @@
-/*=============================================================================================================================================================================*//*
+/*
  *     PROJECT: Gettysburg
  *    FILENAME: SAXSimpleCharInputStream.swift
  *         IDE: AppCode
@@ -43,4 +43,3 @@ protocol SAXSimpleCharInputStream {
 
     func close()
 }
-

@@ -38,11 +38,17 @@ open class SAXParser {
     }
 
     //@f:0
-    public var position: TextPosition { ((charStream == nil) ? (1, 1) : charStream.position)                         }
-    public var baseURL:  URL          { ((charStream == nil) ? url.deletingLastPathComponent() : charStream.baseURL) }
-    public var filename: String       { ((charStream == nil) ? url.lastPathComponent : charStream.filename)          }
-    //@f:1
+    public var position:                      TextPosition                  { charStream.position     }
+    public var baseURL:                       URL                           { charStream.baseURL      }
+    public var filename:                      String                        { charStream.filename     }
 
+    public var allowedExternalEntityURLs:     Set<String>                   = []
+    public var externalEntityResolvingPolicy: ExternalEntityResolvingPolicy = .always
+
+    /*===========================================================================================================================================================================*/
+    /// This value is not valid until after parsing has started.
+    ///
+    public               var xmlEncoding:   String { charStream.encodingName }
     /*===========================================================================================================================================================================*/
     /// This value is not valid until after parsing has started.
     ///
@@ -50,43 +56,52 @@ open class SAXParser {
     /*===========================================================================================================================================================================*/
     /// This value is not valid until after parsing has started.
     ///
-    public internal(set) var xmlEncoding:   String = ""
-    /*===========================================================================================================================================================================*/
-    /// This value is not valid until after parsing has started.
-    ///
     public internal(set) var xmlStandalone: Bool   = true
 
-    public var   allowedExternalEntityURLs:     Set<String>                   = []
-    public var   externalEntityResolvingPolicy: ExternalEntityResolvingPolicy = .always
-
-    //@f:0
     /*===========================================================================================================================================================================*/
     /// For performance, SAXParser tries to read as much of an XML structure into memory and then analyze it as a whole. This setting limits the number of characters read at once
     /// to keep memory from being exhausted. If this limit is hit then an error is thrown. Normal text blocks, including CDATA sections are "chunked" if they exceed this limit so
     /// that no error is thrown. Except for text blocks, this limit should never be breached for a well formed document. Allowed range is 4KB <= limit <= 4MB. The default is 1MB.
     ///
-    internal let memLimit:    Int
-    internal let docType:     SAXDTD              = SAXDTD()
-    internal var charStream:  SAXCharInputStream! = nil
-    internal let inputStream: MarkInputStream
-    internal let handler:     SAXHandler
-    internal let url:         URL
+    let memLimit:    Int                       = DefMemLimit
+    let docType:     SAXDTD                    = SAXDTD()
+    var charStream:  SAXParserCharInputStream! = nil
+    let handler:     SAXHandler
+
+    var url:         URL                       { charStream.url }
     //@f:1
 
-    init(inputStream: InputStream, url: URL? = nil, handler: SAXHandler, memLimit: Int = DefMemLimit) throws {
-        self.inputStream = ((inputStream as? MarkInputStream) ?? MarkInputStream(inputStream: inputStream))
+    public init(inputStream: InputStream, url: URL? = nil, handler: SAXHandler) throws {
         self.handler = handler
-        self.url = (url?.absoluteURL ?? GetFileURL(filename: "\(UUID().uuidString).xml"))
-        self.memLimit = max(MinMemLimit, min(MaxMemLimit, memLimit))
+        self.charStream = try SAXParserCharInputStream(inputStream: inputStream, url: (url ?? GetFileURL(filename: "inputstream_\(UUID().uuidString).xml")), parser: self)
+    }
+
+    public convenience init(filename: String, handler: SAXHandler) throws {
+        guard let strm = InputStream(fileAtPath: filename) else { throw StreamError.FileNotFound(description: filename) }
+        try self.init(inputStream: strm, url: GetFileURL(filename: filename), handler: handler)
+    }
+
+    public convenience init(url: URL, handler: SAXHandler) throws {
+        guard let strm = InputStream(url: url) else { throw StreamError.FileNotFound(description: url.description) }
+        try self.init(inputStream: strm, url: url, handler: handler)
+    }
+
+    public convenience init(data: Data, url: URL? = nil, handler: SAXHandler) throws {
+        try self.init(inputStream: InputStream(data: data), url: (url ?? GetFileURL(filename: "data_\(UUID().uuidString).xml")), handler: handler)
+    }
+
+    public convenience init(string: String, url: URL? = nil, handler: SAXHandler) throws {
+        let data: Data = Data(string.utf8)
+        try self.init(inputStream: InputStream(data: data), url: (url ?? GetFileURL(filename: "string_\(UUID().uuidString).xml")), handler: handler)
     }
 
     /*===========================================================================================================================================================================*/
     /// Parse the document.
-    /// 
+    ///
     /// - Throws: if an I/O error occurs or the document is malformed.
     ///
     open func parse() throws {
-        charStream = try SAXParserCharInputStream(inputStream, url: url, parser: self)
+        charStream.open()
         defer { charStream.close() }
 
         try parseXMLDecl(charStream)

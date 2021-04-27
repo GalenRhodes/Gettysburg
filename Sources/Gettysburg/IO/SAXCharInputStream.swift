@@ -25,10 +25,6 @@ import CoreFoundation
 import Rubicon
 
 /*===============================================================================================================================================================================*/
-/// A Regular Expression pattern for identifying the XML Declaration.
-///
-let XML_DECL_PREFIX_PATTERN: String      = "\\A\\<\\?(?i:xml)\\s"
-/*===============================================================================================================================================================================*/
 /// The list of allowed whitespace characters.
 ///
 let XML_WS_CHAR_DESCRIPTION: [Character] = [ "␠", "␉", "␊", "␍", "␤" ]

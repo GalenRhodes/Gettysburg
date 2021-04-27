@@ -53,7 +53,6 @@ extension SAXParser {
     func parseXMLDecl(_ chStream: SAXCharInputStream) throws {
         let data = try parseXMLDecl(chStream, mustHave: .Version)
         xmlVersion = (data.version ?? "1.0")
-        xmlEncoding = (data.encoding ?? chStream.encodingName)
         xmlStandalone = (data.standalone ?? true)
     }
 
@@ -71,7 +70,7 @@ extension SAXParser {
         let str = try chStream.readString(count: 6, errorOnEOF: false)
 
         if str.count == 6 {
-            if try str.matches(pattern: XML_DECL_PREFIX_PATTERN) {
+            if try str.matches(pattern: XmlDeclPrefixPattern) {
                 try parseXMLDeclBody(chStream, data: &data)
             }
             else if try str.matches(pattern: "\\A\\<\\?(?i:xml)\\?") {

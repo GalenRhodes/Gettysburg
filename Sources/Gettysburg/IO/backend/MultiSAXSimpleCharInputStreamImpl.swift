@@ -1,4 +1,4 @@
-/*=============================================================================================================================================================================*//*
+/*
  *     PROJECT: Gettysburg
  *    FILENAME: MultiSAXSimpleCharInputStreamImpl.swift
  *         IDE: AppCode
@@ -24,135 +24,136 @@ import Rubicon
 ///
 class MultiSAXSimpleCharInputStreamImpl: SAXSimpleCharInputStream {
     //@f:0
-    internal var streamStatus:      Stream.Status { (isOpen ? (hasError ? .error : (hasChars ? .open : .atEnd)) : status) }
-    internal var isEOF:             Bool          { (streamStatus == .atEnd)                                              }
-    internal var hasCharsAvailable: Bool          { (isGood && hasChars)                                                  }
-    internal var tabWidth:          Int8          { get { charStream.tabWidth } set{ charStream.tabWidth = newValue }     }
-    internal var streamError:       Error?        { error                                                                 }
-    internal var encodingName:      String        { charStream.encodingName                                               }
-    internal var url:               URL           { charStream.url                                                        }
-    internal var baseURL:           URL           { charStream.baseURL                                                    }
-    internal var filename:          String        { charStream.filename                                                   }
-    internal var position:          TextPosition  { charStream.position                                                   }
+    var url:               URL           { lock.withLock { charStream.url                                                    } }
+    var baseURL:           URL           { lock.withLock { charStream.baseURL                                                } }
+    var filename:          String        { lock.withLock { charStream.filename                                               } }
+    var encodingName:      String        { lock.withLock { charStream.encodingName                                           } }
+    var tabWidth:          Int8          { get { lock.withLock { charStream.tabWidth } } set {}                                }
+    var position:          TextPosition  { lock.withLock { (isOpen ? charStream.position : (0, 0))                           } }
 
-    private var sStack:     [SAXSimpleCharInputStream] = []
-    private var status:     Stream.Status              = .notOpen
-    private var error:      Error?                     = nil
-    private var charStream: SAXSimpleCharInputStream
+    var isEOF:             Bool          { (streamStatus == .atEnd)                                                            }
+    var hasCharsAvailable: Bool          { (streamStatus == .open)                                                             }
+    var streamError:       Error?        { lock.withLock { (isOpen ? error : nil)                                            } }
+    var streamStatus:      Stream.Status { lock.withLock { (isOpen ? (nErr ? (hasChars ? .open : .atEnd) : .error) : status) } }
 
-    private var hasError: Bool { (error != nil)        }
-    private var isOpen:   Bool { (status == .open)     }
-    private var isGood:   Bool { (isOpen && !hasError) }
+    private var charStream:  SAXSimpleCharInputStream
+    private var status:      Stream.Status              = .notOpen
+    private var lock:        MutexLock                  = MutexLock()
+    private var error:       Error?                     = nil
+    private var streamStack: [SAXSimpleCharInputStream] = []
+
+    private var isOpen:      Bool                       { (status == .open) }
+    private var nErr:        Bool                       { (error == nil)    }
     //@f:1
 
-    init(_ inputStream: InputStream, _ url: URL) throws {
-        self.charStream = try SAXSimpleIConvCharInputStream(inputStream: inputStream, url: url)
+    init(_ inputStream: InputStream, url: URL, skipXmlDecl: Bool) throws {
+        charStream = try SAXSimpleIConvCharInputStream(inputStream: inputStream, url: url, skipXmlDecl: skipXmlDecl)
     }
 
-    deinit { close() }
+    init(_ string: String, url: URL) throws {
+        charStream = try SAXSimpleStringCharInputStream(string, url)
+    }
+
+    init(_ data: Data, url: URL, skipXMLDecl: Bool) throws {
+        charStream = try SAXSimpleStringCharInputStream(data, url, skipXMLDeclaration: skipXMLDecl)
+    }
+
+    init(_ url: URL, skipXMLDecl: Bool) throws {
+        guard let stream = InputStream(url: url) else { throw StreamError.FileNotFound(description: url.absoluteString) }
+        charStream = try SAXSimpleIConvCharInputStream(inputStream: stream, url: url, skipXmlDecl: skipXMLDecl)
+    }
 
     func read() throws -> CharPos? {
-        if let e = error { throw e }
-        guard isOpen else { return nil }
-
-        do {
-            repeat {
-                if let ch = try charStream.read() { return ch }
-            }
-            while popStream()
-            return nil
-        }
-        catch let e {
-            error = e
-            throw e
+        try lock.withLock {
+            guard isOpen && nErr && hasChars else { return try defReturn(nil) }
+            do { return try charStream.read() }
+            catch let e { try handleCaught(e) }
         }
     }
 
     func append(to chars: inout [CharPos], maxLength: Int) throws -> Int {
-        if let e = error { throw e }
-        guard isOpen && maxLength != 0 else { return 0 }
+        try lock.withLock {
+            guard isOpen && nErr && hasChars else { return try defReturn(0) }
+            do {
+                var cc = 0
+                let ln = fixLength(maxLength)
 
-        do {
-            let ln = fixLength(maxLength)
-            var cc = 0
+                while cc < ln {
+                    let x = try charStream.append(to: &chars, maxLength: (ln - cc))
+                    if x > 0 { cc += x }
+                    else { guard popStream() else { break } }
+                }
 
-            while cc < ln {
-                let x = try rd(&chars, (ln - cc))
-                guard x > 0 else { break }
-                cc += x
+                return cc
             }
-
-            return cc
-        }
-        catch let e {
-            error = e
-            throw e
+            catch let e { try handleCaught(e) }
         }
     }
 
     func open() {
-        if status == .notOpen {
-            openChildStream()
-            sStack.removeAll()
+        lock.withLock {
+            guard (status == .notOpen) else { return }
+            if charStream.streamStatus == .notOpen { charStream.open() }
             error = nil
             status = .open
         }
     }
 
     func close() {
-        if status == .open {
-            status = .closed
+        lock.withLock {
+            guard isOpen else { return }
+            repeat { charStream.close() } while popStream()
             error = nil
-            for s in sStack { s.close() }
-            sStack.removeAll()
-            charStream.close()
+            status = .closed
         }
     }
 
-    func pushStream(_ charStream: SAXSimpleCharInputStream) {
-        if isGood {
-            sStack <+ self.charStream
-            let tw = self.charStream.tabWidth
-            self.charStream = charStream
-            self.charStream.tabWidth = tw
-            openChildStream()
+    func pushStream(_ cs: SAXSimpleCharInputStream) throws {
+        try lock.withLock {
+            if cs.streamStatus == .notOpen { cs.open() }
+            if let e = cs.streamError { throw e }
+            streamStack <+ charStream
+            charStream = cs
         }
+    }
+
+    func pushStream(_ inputStream: InputStream, url: URL) throws {
+        try pushStream(SAXSimpleIConvCharInputStream(inputStream: inputStream, url: url, skipXmlDecl: true))
+    }
+
+    func pushStream(_ url: URL) throws {
+        try pushStream(SAXSimpleIConvCharInputStream(url: url, skipXmlDecl: true))
+    }
+
+    func pushStream(_ string: String, url: URL) throws {
+        try pushStream(SAXSimpleStringCharInputStream(string, url))
+    }
+
+    func pushStream(_ data: Data, url: URL) throws {
+        try pushStream(SAXSimpleStringCharInputStream(data, url, skipXMLDeclaration: true))
     }
 
     private func popStream() -> Bool {
-        guard isGood else { return false }
-        guard let st = sStack.popLast() else { return false }
-        let tw = charStream.tabWidth
+        guard let s = streamStack.popLast() else { return false }
         charStream.close()
-        charStream = st
-        charStream.tabWidth = tw
+        charStream = s
+        error = charStream.streamError
         return true
     }
 
-    private func rd(_ chars: inout [CharPos], _ maxLength: Int) throws -> Int {
-        repeat {
-            let x = try charStream.append(to: &chars, maxLength: maxLength)
-            if x > 0 { return x }
-        }
-        while popStream()
-        return 0
-    }
-
-    private func openChildStream() {
-        charStream.open()
-        if let e = charStream.streamError { error = e }
-    }
-
     private var hasChars: Bool {
-        guard isGood else { return false }
-        var has = charStream.hasCharsAvailable
+        repeat { if charStream.hasCharsAvailable { return true } }
+        while popStream()
+        return false
+    }
 
-        while !has {
-            guard popStream() else { return false }
-            has = charStream.hasCharsAvailable
-        }
+    private func handleCaught(_ e: Error) throws -> Never {
+        error = e
+        throw e
+    }
 
-        return has
+    private func defReturn<T>(_ retValue: T) throws -> T {
+        if let e = error { throw e }
+        return retValue
     }
 }
-

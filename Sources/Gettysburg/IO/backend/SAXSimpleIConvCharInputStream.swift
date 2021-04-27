@@ -1,4 +1,4 @@
-/*=============================================================================================================================================================================*//*
+/*
  *     PROJECT: Gettysburg
  *    FILENAME: SAXSimpleCharInputStreamImpl.swift
  *         IDE: AppCode
@@ -20,36 +20,46 @@ import CoreFoundation
 import Rubicon
 
 /*===============================================================================================================================================================================*/
+/// A Regular Expression pattern for identifying the XML Declaration.
+///
+let XmlDeclPrefixPattern:     String = "\\A\\<\\?(?i:xml)\\s"
+let EncodingParameterPattern: String = "\\s(?:encoding)=\"([^\"]+)\""
+let ProcInstrCloser:          String = "?>"
+let MaxReadAhead                     = 65536
+let ReadBlockSize                    = 1024
+
+/*===============================================================================================================================================================================*/
 /// The root of all evil!!!!!
 ///
 class SAXSimpleIConvCharInputStream: SAXSimpleCharInputStream {
     //@f:0
-    internal let url:               URL
-    internal let baseURL:           URL
-    internal let filename:          String
-    internal var tabWidth:          Int8          { get { lock.withLock { tab } } set { lock.withLock { tab = newValue }                                                    } }
-    internal var isEOF:             Bool          { (streamStatus == .atEnd)                                                                                                  }
-    internal var hasCharsAvailable: Bool          { lock.withLock { (isOpen && hasChars)                                                                                    } }
-    internal var encodingName:      String        { lock.withLock { charStream.encodingName                                                                                 } }
-    internal var streamStatus:      Stream.Status { lock.withLock { (isOpen ? (buffer.isEmpty ? ((error == nil) ? (isRunning ? .open : .atEnd) : .error) : .open) : status) } }
-    internal var streamError:       Error?        { lock.withLock { ((isOpen && hasError) ? error : nil)                                                                    } }
-    internal var position:          TextPosition  { lock.withLock { pos                                                                                                     } }
+    let url:      URL
+    let baseURL:  URL
+    let filename: String
+
+    var tabWidth:          Int8          { get { lock.withLock { tab } } set {}                                                                            }
+    var isEOF:             Bool          { lock.withLock { (isOpen && buffer.isEmpty && nErr && !isRunning)                                              } }
+    var hasCharsAvailable: Bool          { lock.withLock { (isOpen && (!buffer.isEmpty || (isRunning && nErr)))                                          } }
+    var encodingName:      String        { lock.withLock { charStream.encodingName                                                                       } }
+    var streamStatus:      Stream.Status { lock.withLock { (isOpen ? (buffer.isEmpty ? (nErr ? (isRunning ? .open : .atEnd) : .error) : .open) : status) } }
+    var streamError:       Error?        { lock.withLock { ((isOpen && buffer.isEmpty) ? error : nil)                                                    } }
+    var position:          TextPosition  { lock.withLock { pos                                                                                           } }
 
     private      let charStream:  SimpleCharInputStream
-    private      let lock:        Conditional           = Conditional()
-    private      var tab:         Int8                  = 4
-    private      var pos:         TextPosition          = (0, 0)
-    private      var error:       Error?                = nil
-    private      var status:      Stream.Status         = .notOpen
-    private      var buffer:      [Character]           = []
-    private      var isRunning:   Bool                  = false
-    private      var isWaiting:   Bool                  = false
     private      let skipXmlDecl: Bool
-    private lazy var queue:       DispatchQueue         = DispatchQueue(label: UUID().uuidString, qos: .utility, autoreleaseFrequency: .workItem)
+    private      let lock:        Conditional       = Conditional()
+    private      let tab:         Int8              = 4
+    private      var status:      Stream.Status     = .notOpen
+    private      var error:       Error?            = nil
+    private      var pos:         TextPosition      = (1, 1)
+    private      var buffer:      [CharPos]         = []
+    private      var isRunning:   Bool              = false
+    private      let isReading:   AtomicValue<Bool> = AtomicValue<Bool>(initialValue: false)
+    private lazy var queue:       DispatchQueue     = DispatchQueue(label: UUID().uuidString, qos: .utility, autoreleaseFrequency: .workItem)
 
-    private      var isOpen:      Bool                  { (status == .open)                                         }
-    private      var hasChars:    Bool                  { (buffer.isNotEmpty || (isRunning && (error == nil)))      }
-    private      var hasError:    Bool                  { (buffer.isEmpty && (error != nil))                        }
+    private      var isOpen:      Bool              { (status == .open)                               }
+    private      var nErr:        Bool              { (error == nil)                                  }
+    private      var wait:        Bool              { (isOpen && buffer.isEmpty && nErr && isRunning) }
     //@f:1
 
     init(charStream: SimpleCharInputStream, url: URL, skipXmlDecl: Bool = false) throws {
@@ -64,102 +74,149 @@ class SAXSimpleIConvCharInputStream: SAXSimpleCharInputStream {
     }
 
     convenience init(url: URL, skipXmlDecl: Bool = false) throws {
-        guard let input = MarkInputStream(url: url) else { throw SAXError.MalformedURL(url.absoluteString) }
+        guard let input = MarkInputStream(url: url) else { throw StreamError.FileNotFound(description: url.absoluteString) }
         try self.init(inputStream: input, url: url, skipXmlDecl: skipXmlDecl)
+    }
+
+    convenience init(filename: String, skipXmlDecl: Bool) throws {
+        try self.init(url: GetFileURL(filename: filename), skipXmlDecl: skipXmlDecl)
     }
 
     deinit { close() }
 
-    private var keepWaiting: Bool { (isOpen && buffer.isEmpty && isRunning && (error == nil)) }
-
     func read() throws -> CharPos? {
-        try lock.withLock {
-            while keepWaiting { lock.broadcastWait() }
-            guard isOpen else { return nil }
-            guard let ch = buffer.popFirst() else {
-                if let e = error { throw e }
-                return nil
+        try isReading.waitUntil(valueIs: { !$0 }, thenWithValueSetTo: true) {
+            try lock.withLock {
+                while wait { lock.broadcastWait() }
+                guard isOpen else { return nil }
+                guard let ch = buffer.popFirst() else { if let e = error { throw e }; return nil }
+
+                pos = nextCharPosition(currentPosition: ch.pos, character: ch.char, tabWidth: tab)
+                return ch
             }
-            let r = (ch, pos)
-            textPositionUpdate(ch, pos: &pos, tabWidth: tab)
-            return r
         }
     }
 
     func append(to chars: inout [CharPos], maxLength: Int) throws -> Int {
-        try lock.withLock {
-            var cc = 0
-            let ln = fixLength(maxLength)
+        try isReading.waitUntil(valueIs: { !$0 }, thenWithValueSetTo: true) {
+            try lock.withLock {
+                let ln = fixLength(maxLength)
+                var cc = 0
 
-            while cc < ln {
-                while keepWaiting { lock.broadcastWait() }
-                guard isOpen else { break }
-                guard buffer.count > 0 else {
-                    if let e = error { throw e }
-                    break
+                while cc < ln {
+                    while wait { lock.broadcastWait() }
+                    guard isOpen else { break }
+
+                    let bc = buffer.count
+                    guard bc > 0 else { if let e = error { throw e }; break }
+
+                    let sz = min(bc, (ln - cc))
+                    let ch = buffer[sz - 1]
+                    let rn = (0 ..< sz)
+
+                    chars.append(contentsOf: buffer[rn])
+                    buffer.removeSubrange(rn)
+                    pos = nextCharPosition(currentPosition: ch.pos, character: ch.char, tabWidth: tab)
+                    cc += sz
                 }
-                let i = min((ln - cc), buffer.count)
-                let r = (0 ..< i)
-                for ch in buffer[r] {
-                    chars <+ (ch, pos)
-                    textPositionUpdate(ch, pos: &pos, tabWidth: tab)
-                }
-                buffer.removeSubrange(r)
-                cc += i
+
+                return cc
             }
-
-            return cc
         }
     }
 
     func open() {
         lock.withLock {
-            if status == .notOpen {
-                error = nil
-                pos = (1, 1)
-                status = .open
-                isRunning = true
-                isWaiting = false
-                buffer.removeAll()
-                queue.async { [weak self] in if let s = self { s.readThread() } }
-            }
+            guard (status == .notOpen) else { return }
+            buffer.removeAll(keepingCapacity: true)
+            isRunning = true
+            isReading.value = false
+            status = .open
+            pos = (1, 1)
+            error = nil
+            queue.async { [weak self] in if let s = self { s.readThread() } }
         }
     }
 
     func close() {
         lock.withLock {
-            if status == .open {
-                status = .closed
-                isWaiting = false
-                while isRunning { lock.broadcastWait() }
-                buffer.removeAll()
-                pos = (0, 0)
-                error = nil
-            }
+            guard isOpen else { return }
+            status = .closed
+            while isRunning { lock.broadcastWait() }
+            buffer.removeAll(keepingCapacity: false)
+            pos = (0, 0)
+            error = nil
         }
     }
-
-    private var isGood: Bool { (isOpen && (error == nil)) }
 
     private func readThread() {
         lock.withLock {
             do {
+                defer { isRunning = false }
+
+                guard isOpen else { return }
                 if charStream.streamStatus == .notOpen { charStream.open() }
-                defer {
-                    isRunning = false
-                    charStream.close()
-                }
+                defer { charStream.close() }
+                if let er = charStream.streamError { throw er }
 
-                if let e = charStream.streamError { throw e }
+                var readBlock: [Character]  = []
+                var readPos:   TextPosition = (1, 1)
 
-                while isGood {
-                    while isGood && (isWaiting || buffer.count >= 65_536) { lock.broadcastWait() }
-                    guard try isGood && (charStream.append(to: &buffer, maxLength: 1_024) > 0) else { break }
+                if skipXmlDecl { readPos = try skipXmlDeclaration() }
+
+                while true {
+                    while isOpen && (buffer.count >= MaxReadAhead) { lock.broadcastWait() }
+                    guard isOpen else { break }
+                    let cc = try charStream.read(chars: &readBlock, maxLength: ReadBlockSize)
+                    guard cc > 0 else { break }
+                    copyToBuffer(readBlock, &readPos)
+                    if isReading.value { lock.broadcastWait() }
                 }
             }
             catch let e {
                 error = e
+                #if DEBUG
+                    print("Caught error: \(e)")
+                #endif
             }
+        }
+    }
+
+    private func skipXmlDeclaration() throws -> TextPosition {
+        var chars: [Character]  = []
+        var rpos:  TextPosition = (1, 1)
+
+        for _ in (0 ..< 6) {
+            guard let ch = try charStream.read() else {
+                rpos = (1, 1)
+                copyToBuffer(chars, &rpos)
+                return rpos
+            }
+            chars <+ ch
+            textPositionUpdate(ch, pos: &rpos, tabWidth: tab)
+        }
+
+        if try String(chars).matches(pattern: XmlDeclPrefixPattern) {
+            var lastChar: Character = chars.last!
+            repeat {
+                guard let ch = try charStream.read() else { throw SAXError.UnexpectedEndOfInput(rpos) }
+                textPositionUpdate(ch, pos: &rpos, tabWidth: tab)
+                if ch == ">" && lastChar == "?" { return rpos }
+                lastChar = ch
+            }
+            while true
+        }
+        else {
+            rpos = (1, 1)
+            copyToBuffer(chars, &rpos)
+            return rpos
+        }
+    }
+
+    private func copyToBuffer(_ readBlock: [Character], _ readPos: inout TextPosition) {
+        readBlock.forEach { ch in
+            buffer <+ (ch, readPos)
+            textPositionUpdate(ch, pos: &readPos, tabWidth: tab)
         }
     }
 }
@@ -197,16 +254,16 @@ private func guessCharacterEncoding(_ inputStream: MarkInputStream) throws -> St
     var buffer: [UInt8] = [ 0, 0, 0, 0 ]
     guard inputStream.read(&buffer, maxLength: 4) == 4 else { throw inputStream.streamError ?? StreamError.UnexpectedEndOfInput() }
 
-    if buffer == BOM32BE || buffer == BOM32LE { return "UTF-32" }
-    if buffer[0 ..< 2] == BOM32BE[2 ..< 4] || buffer[0 ..< 2] == BOM32LE[0 ..< 2] { return "UTF-16" }
+    if buffer == BOM32BE || buffer == BOM32LE { return UTF_32 }
+    if buffer[0 ..< 2] == BOM32BE[2 ..< 4] || buffer[0 ..< 2] == BOM32LE[0 ..< 2] { return UTF_16 }
 
-    if buffer[0] == 0 && buffer[1] == 0 && buffer[3] != 0 { return "UTF-32BE" }
-    if buffer[0] != 0 && buffer[2] == 0 && buffer[3] == 0 { return "UTF-32LE" }
+    if buffer[0] == 0 && buffer[1] == 0 && buffer[3] != 0 { return UTF_32BE }
+    if buffer[0] != 0 && buffer[2] == 0 && buffer[3] == 0 { return UTF_32LE }
 
-    if buffer[0] == 0 && buffer[1] != 0 && buffer[2] == 0 && buffer[3] != 0 { return "UTF-16BE" }
-    if buffer[0] != 0 && buffer[1] == 0 && buffer[2] != 0 && buffer[3] == 0 { return "UTF-16LE" }
+    if buffer[0] == 0 && buffer[1] != 0 && buffer[2] == 0 && buffer[3] != 0 { return UTF_16BE }
+    if buffer[0] != 0 && buffer[1] == 0 && buffer[2] != 0 && buffer[3] == 0 { return UTF_16LE }
 
-    return "UTF-8"
+    return UTF_8
 }
 
 /*===============================================================================================================================================================================*/
@@ -224,26 +281,18 @@ private func getCharacterEncodingFromXMLDecl(_ inputStream: MarkInputStream, gue
     defer { inputStream.markReturn() }
 
     let charStream = IConvCharInputStream(inputStream: inputStream, encodingName: guessedEncoding, autoClose: false)
-
     charStream.open()
     defer { charStream.close() }
 
-    let str = try charStream.readString(count: 6, errorOnEOF: false)
+    guard try charStream.readString(count: 6, errorOnEOF: false).matches(pattern: XmlDeclPrefixPattern) else { return guessedEncoding }
+    guard let regex = RegularExpression(pattern: EncodingParameterPattern) else { return guessedEncoding }
+    guard let match = regex.firstMatch(in: try charStream.readUntil(found: ProcInstrCloser)) else { return guessedEncoding }
+    guard let enc = match[1].subString?.uppercased() else { return guessedEncoding }
+    guard (enc != guessedEncoding) else { return guessedEncoding }
 
-    if try str.matches(pattern: XML_DECL_PREFIX_PATTERN) {
-        let xmlDecl = try charStream.readUntil(found: "?>")
-
-        if let regex = RegularExpression(pattern: "\\s(?:encoding)=\"([^\"]+)\"") {
-
-            if let match = regex.firstMatch(in: xmlDecl), let enc = match[1].subString?.uppercased(), enc != guessedEncoding {
-                let fin = getFinalEncoding(guessedEncoding: guessedEncoding, xmlDeclEncoding: enc)
-                guard IConv.encodingsList.contains(fin) else { throw SAXError.UnsupportedCharacterEncoding(1, 1, description: "Unsupported Character Encoding: \(fin)") }
-                return fin
-            }
-        }
-    }
-
-    return guessedEncoding
+    let fin = getFinalEncoding(guessedEncoding: guessedEncoding, xmlDeclEncoding: enc)
+    guard IConv.encodingsList.contains(fin) else { throw SAXError.UnsupportedCharacterEncoding(1, 1, description: "Unsupported Character Encoding: \(fin)") }
+    return fin
 }
 
 /*===============================================================================================================================================================================*/
@@ -256,8 +305,8 @@ private func getCharacterEncodingFromXMLDecl(_ inputStream: MarkInputStream, gue
 ///
 private func getFinalEncoding(guessedEncoding: String, xmlDeclEncoding: String) -> String {
     switch guessedEncoding {
-        case "UTF-32", "UTF-32BE", "UTF-32LE": return (xmlDeclEncoding.hasPrefix("UTF-32") ? guessedEncoding : xmlDeclEncoding);
-        case "UTF-16", "UTF-16BE", "UTF-16LE": return (xmlDeclEncoding.hasPrefix("UTF-16") ? guessedEncoding : xmlDeclEncoding);
+        case UTF_32, UTF_32BE, UTF_32LE: return (xmlDeclEncoding.hasPrefix(UTF_32) ? guessedEncoding : xmlDeclEncoding);
+        case UTF_16, UTF_16BE, UTF_16LE: return (xmlDeclEncoding.hasPrefix(UTF_16) ? guessedEncoding : xmlDeclEncoding);
         default: return xmlDeclEncoding
     }
 }

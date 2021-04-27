@@ -1,4 +1,4 @@
-/*=============================================================================================================================================================================*//*
+/*
  *     PROJECT: Gettysburg
  *    FILENAME: SAXSimpleStringCharInputStream.swift
  *         IDE: AppCode
@@ -27,7 +27,7 @@ class SAXSimpleStringCharInputStream: SAXSimpleCharInputStream {
     public              let baseURL:           URL
     public              let filename:          String
     public              let streamError:       Error?        = nil
-    public              let encodingName:      String        = "UTF-32"
+    public              let encodingName:      String        = UTF_32
     public              var tabWidth:          Int8          = 4
     public              var isEOF:             Bool          { (isOpen && !hasChars)                     }
     public              var hasCharsAvailable: Bool          { (isOpen && hasChars)                      }
@@ -53,7 +53,7 @@ class SAXSimpleStringCharInputStream: SAXSimpleCharInputStream {
     convenience init(_ data: Data, _ url: URL, skipXMLDeclaration: Bool = true) throws {
         let enc = try getCharacterEncoding(MarkInputStream(data: data))
         let str = try data.withUnsafeBytes { (buffer: UnsafeRawBufferPointer) -> String in
-            let icv = IConv(toEncoding: "UTF-8", fromEncoding: enc, ignoreErrors: true, enableTransliterate: true)
+            let icv = IConv(toEncoding: UTF_8, fromEncoding: enc, ignoreErrors: true, enableTransliterate: true)
             guard let inBuff: EasyByteBuffer = EasyByteBuffer(buffer: buffer) else { return "" }
             let outBuff               = EasyByteBuffer(length: ((inBuff.length * uint32Stride) + uint32Stride))
             let result: IConv.Results = icv.convert(input: inBuff, output: outBuff)
