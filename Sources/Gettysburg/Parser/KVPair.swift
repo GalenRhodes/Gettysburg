@@ -1,6 +1,6 @@
 /*******************************************************************************************************************************************************************************//*
  *     PROJECT: Gettysburg
- *    FILENAME: SAXAttribute.swift
+ *    FILENAME: KVPair.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
  *        DATE: 6/1/21
@@ -19,16 +19,22 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-open class SAXAttribute: SAXNode {
-    public var name:          String { _name.name }
-    public let value:         String
-    public var owningElement: SAXNode?
-    public let isSpecified:   Bool
+@frozen public struct KVPair: Hashable, CustomStringConvertible, Comparable {
+    public let            key:         String
+    public let            value:       String
+    @inlinable public var description: String { "(\"\(key)\", \"(value)\"" }
 
-    public init(owningElement: SAXNode? = nil, name: SAXNSName, value: String, isSpecified: Bool) {
-        self.owningElement = owningElement
+    public init(key: String, value: String) {
+        self.key = key
         self.value = value
-        self.isSpecified = isSpecified
-        super.init(name: name)
     }
+
+    @inlinable public func hash(into hasher: inout Hasher) {
+        hasher.combine(key)
+        hasher.combine(value)
+    }
+
+    @inlinable public static func == (lhs: KVPair, rhs: KVPair) -> Bool { ((lhs.key == rhs.key) && (lhs.value == rhs.value)) }
+
+    @inlinable public static func < (lhs: KVPair, rhs: KVPair) -> Bool { ((lhs.key < rhs.key) || ((lhs.key == rhs.key) && (lhs.value < rhs.value))) }
 }

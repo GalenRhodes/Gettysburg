@@ -1,6 +1,6 @@
 /*******************************************************************************************************************************************************************************//*
  *     PROJECT: Gettysburg
- *    FILENAME: SAXAttribute.swift
+ *    FILENAME: XMLDeclData.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
  *        DATE: 6/1/21
@@ -19,16 +19,32 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-open class SAXAttribute: SAXNode {
-    public var name:          String { _name.name }
-    public let value:         String
-    public var owningElement: SAXNode?
-    public let isSpecified:   Bool
-
-    public init(owningElement: SAXNode? = nil, name: SAXNSName, value: String, isSpecified: Bool) {
-        self.owningElement = owningElement
-        self.value = value
-        self.isSpecified = isSpecified
-        super.init(name: name)
+@frozen public struct XMLDeclData: Hashable, Comparable, CustomStringConvertible {
+    public let            version:     String?
+    public let            encoding:    String?
+    public let            standalone:  Bool?
+    @inlinable public var description: String {
+        var s: String = "<xml?"
+        if let v = version { s.append(" version=\"\(v)\"") }
+        if let e = encoding { s.append(" encoding=\"\(e)\"") }
+        if let a = standalone { s.append(" standalone=\"\(a)\"") }
+        s.append("?>")
+        return s
     }
+
+    public init(version: String?, encoding: String?, standalone: Bool?) {
+        self.version = version
+        self.encoding = encoding
+        self.standalone = standalone
+    }
+
+    @inlinable public func hash(into hasher: inout Hasher) {
+        hasher.combine(version)
+        hasher.combine(encoding)
+        hasher.combine(standalone)
+    }
+
+    @inlinable public static func == (lhs: XMLDeclData, rhs: XMLDeclData) -> Bool { ((lhs.version == rhs.version) && (lhs.encoding == rhs.encoding) && (lhs.standalone == rhs.standalone)) }
+
+    @inlinable public static func < (lhs: XMLDeclData, rhs: XMLDeclData) -> Bool { (lhs.description < rhs.description) }
 }

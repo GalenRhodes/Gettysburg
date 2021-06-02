@@ -22,13 +22,13 @@ import Rubicon
 /*===============================================================================================================================================================================*/
 /// Holds a qualified namespace name along with it's associated URI.
 ///
-public struct SAXNSName: Hashable {
+@frozen public struct SAXNSName: Hashable, Comparable, CustomStringConvertible {
 
-    public let localName: String
-    public let prefix:    String?
-    public let uri:       String?
-
-    public var name: String { ((uri != nil && prefix != nil) ? "\(prefix!):\(localName)" : localName) }
+    public let            localName:   String
+    public let            prefix:      String?
+    public let            uri:         String?
+    @inlinable public var name:        String { ((uri != nil && prefix != nil) ? "\(prefix!):\(localName)" : localName) }
+    @inlinable public var description: String { name }
 
     init(localName: String, prefix: String?, uri: String?) {
         self.localName = localName
@@ -48,35 +48,49 @@ public struct SAXNSName: Hashable {
         }
     }
 
-    public func hash(into hasher: inout Hasher) {
+    @inlinable public func hash(into hasher: inout Hasher) {
         hasher.combine(localName)
         hasher.combine(prefix)
         hasher.combine(uri)
     }
 
-    public static func == (lhs: SAXNSName, rhs: SAXNSName) -> Bool {
-        lhs.localName == rhs.localName && lhs.prefix == rhs.prefix && lhs.uri == rhs.uri
+    public static func < (lhs: SAXNSName, rhs: SAXNSName) -> Bool {
+        if let luri = lhs.uri, let lpfx = lhs.prefix, let ruri = rhs.uri, let rpfx = rhs.prefix {
+            return ((lhs.localName < rhs.localName) || ((lhs.localName == rhs.localName) && (lpfx < rpfx)) || ((lhs.localName == rhs.localName) && (lpfx == rpfx) && (luri < ruri)))
+        }
+        else if let _ = lhs.uri, let _ = lhs.prefix {
+            return false
+        }
+        else if let _ = rhs.uri, let _ = rhs.prefix {
+            return true
+        }
+        else {
+            return (lhs.localName < rhs.localName)
+        }
     }
+
+    @inlinable public static func == (lhs: SAXNSName, rhs: SAXNSName) -> Bool { ((lhs.localName == rhs.localName) && (lhs.prefix == rhs.prefix) && (lhs.uri == rhs.uri)) }
 }
 
 /*===============================================================================================================================================================================*/
 /// Holds a `prefix` to `uri` mapping.
 ///
-public struct NSMapping: Hashable {
-    public let prefix: String
-    public let uri:    String
+@frozen public struct NSMapping: Hashable, Comparable, CustomStringConvertible {
+    public let            prefix:      String
+    public let            uri:         String
+    @inlinable public var description: String { "xmlns:\(prefix)=\"\(uri)\"" }
 
     init(prefix: String, uri: String) {
         self.prefix = prefix
         self.uri = uri
     }
 
-    public func hash(into hasher: inout Hasher) {
+    @inlinable public func hash(into hasher: inout Hasher) {
         hasher.combine(prefix)
         hasher.combine(uri)
     }
 
-    public static func == (lhs: NSMapping, rhs: NSMapping) -> Bool {
-        lhs.prefix == rhs.prefix && lhs.uri == rhs.uri
-    }
+    @inlinable public static func == (lhs: NSMapping, rhs: NSMapping) -> Bool { ((lhs.prefix == rhs.prefix) && (lhs.uri == rhs.uri)) }
+
+    @inlinable public static func < (lhs: NSMapping, rhs: NSMapping) -> Bool { ((lhs.prefix < rhs.prefix) || ((lhs.prefix == rhs.prefix) && (lhs.uri < rhs.uri))) }
 }

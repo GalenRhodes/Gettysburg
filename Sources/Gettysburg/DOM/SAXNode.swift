@@ -1,113 +1,95 @@
-/************************************************************************//**
+/*******************************************************************************************************************************************************************************//*
  *     PROJECT: Gettysburg
  *    FILENAME: SAXNode.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
- *        DATE: 2/16/21
+ *        DATE: 6/1/21
  *
  * Copyright © 2021 Galen Rhodes. All rights reserved.
  *
- * Permission to use, copy, modify, and distribute this software for any
- * purpose with or without fee is hereby granted, provided that the above
- * copyright notice and this permission notice appear in all copies.
+ * Permission to use, copy, modify, and distribute this software for any purpose with or without fee is hereby granted, provided that the above copyright notice and this
+ * permission notice appear in all copies.
  *
- * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
- * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
- * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
- * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
- * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
- * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
- *//************************************************************************/
+ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO
+ * EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN
+ * AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ *//******************************************************************************************************************************************************************************/
 
 import Foundation
 import CoreFoundation
 import Rubicon
 
-open class SAXNode: Hashable {
-    public enum NodeType {
-        case Text
-        case Comment
-        case CData
-        case Element
-        case Attribute
-        case ProcessingInstruction
-        case Entity
-        case EntityRef
+open class SAXNode {
+    public var parentNode:   SAXNode?
+    public var nextNode:     SAXNode?
+    public var prevNode:     SAXNode?
+    public var firstNode:    SAXNode?
+    public var lastNode:     SAXNode?
+    public var nodeName:     String { _name.name }
+    public var localName:    String { _name.localName }
+    public var prefix:       String? { _name.prefix }
+    public var namespaceURI: String? { _name.uri }
+
+    var _name: SAXNSName
+
+    init(name: SAXNSName) { self._name = name }
+
+    public convenience init() {
+        self.init(name: SAXNSName(localName: "#node", prefix: nil, uri: nil))
     }
 
-    public private(set) var next:       SAXNode? = nil
-    public private(set) var prev:       SAXNode? = nil
-    public private(set) var firstChild: SAXNode? = nil
-    public private(set) var lastChild:  SAXNode? = nil
-
-    public private(set) weak var parent: SAXNode? = nil
-
-    public let type: NodeType
-    public var name: SAXNSName
-
-    public init(name: String, type: NodeType) {
-        self.type = type
-        self.name = SAXNSName(localName: name, prefix: nil, uri: nil)
-    }
-
-    public init(name: SAXNSName, type: NodeType) {
-        self.type = type
-        self.name = name
-    }
-
-    open func hash(into hasher: inout Hasher) {
-        hasher.combine(name)
-        hasher.combine(type)
-    }
-
-    public static func == (lhs: SAXNode, rhs: SAXNode) -> Bool {
-        if lhs === rhs { return true }
-        if Swift.type(of: lhs) != Swift.type(of: rhs) { return false }
-        return lhs.name == rhs.name && lhs.type == rhs.type
-    }
-
-    @discardableResult open func append(node: SAXNode) -> SAXNode {
-        node.parent?.remove(child: node)
-        node.parent = self
-        node.next = nil
-        node.prev = lastChild
-        lastChild?.next = node
-        lastChild = node
-        if firstChild == nil { firstChild = node }
-        return node
-    }
-
-    @discardableResult open func insert(node: SAXNode, before child: SAXNode?) -> SAXNode {
-        guard let child = child else { return append(node: node) }
-        node.parent?.remove(child: node)
-        node.parent = self
-        node.next = child
-        node.prev = child.prev
-        child.prev = node
-        if firstChild === child { firstChild = node }
-        return node
-    }
-
-    @discardableResult open func remove(child node: SAXNode) -> SAXNode {
-        guard node.parent === self else { return node }
-        node.prev?.next = node.next
-        node.next?.prev = node.prev
-        node.next = nil
-        node.prev = nil
-        node.parent = nil
-        return node
-    }
-
-    public var content: String {
-        var str:   String   = ""
-        var child: SAXNode? = firstChild
-
-        while let node = child {
-            str.append(node.content)
-            child = node.next
+    public var children: [SAXNode] {
+        var array: [SAXNode] = []
+        var node = firstNode
+        while let n = node {
+            array <+ n
+            node = n.nextNode
         }
+        return array
+    }
 
-        return str
+    func remove(node: SAXNode) {
+        guard node.parentNode === self else { fatalError() }
+        if let prev = node.prevNode {
+            prev.nextNode = node.nextNode
+            node.nextNode?.prevNode = prev
+        }
+        if let next = node.nextNode {
+            next.prevNode = node.prevNode
+            next.prevNode?.nextNode = next
+        }
+        if firstNode === node { firstNode = node.nextNode }
+        if lastNode === node { lastNode = node.prevNode }
+        node.parentNode = nil
+        node.prevNode = nil
+        node.nextNode = nil
+    }
+
+    func insert(node: SAXNode, after: SAXNode?) {
+        if let after = after {
+            guard after.parentNode === self else { fatalError() }
+            if let p = node.parentNode { p.remove(node: node) }
+            node.parentNode = self
+            node.prevNode = after
+            node.nextNode = after.nextNode
+            after.nextNode = node
+            if lastNode === after { lastNode = node }
+        }
+        else {
+            append(node: node)
+        }
+    }
+
+    func append(node: SAXNode) {
+        if let p = node.parentNode { p.remove(node: node) }
+        node.parentNode = self
+        node.nextNode = nil
+        node.prevNode = lastNode
+        lastNode?.nextNode = node
+        lastNode = node
+        if firstNode == nil {
+            firstNode = node
+            while let p = firstNode?.prevNode { firstNode = p }
+        }
     }
 }

@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/GalenRhodes/RingBuffer",
         "state": {
           "branch": null,
-          "revision": "dd5c8d8c50df36ee05f52394dc45969e9275d064",
-          "version": "1.0.8"
+          "revision": "50d346abc7f4d402a3d63e5c30221500e1230250",
+          "version": "1.0.9"
         }
       },
       {
@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/GalenRhodes/Rubicon.git",
         "state": {
           "branch": null,
-          "revision": "3d9cd8b6a69427c372b75ae695ca7e23e7f68b85",
-          "version": "0.2.8"
+          "revision": "fec1c5a6acc26bc5fa4c6db7ae0adab67e81778b",
+          "version": "0.2.29"
         }
       }
     ]

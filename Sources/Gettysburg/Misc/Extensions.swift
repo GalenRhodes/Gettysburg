@@ -24,6 +24,8 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
+public let PCDATA: String = "#PCDATA"
+
 extension SAXExternalType: CustomStringConvertible {
     public var description: String {
         switch self {
@@ -161,10 +163,10 @@ extension SAXDTDElementContentItem.ItemType: CustomStringConvertible {
 extension SAXDTDElementContentItem.ItemMultiplicity: CustomStringConvertible {
     public var description: String {
         switch self {
-            case .Optional: return "Optional"
-            case .Once: return "Once"
+            case .Optional:   return "Optional"
+            case .Once:       return "Once"
             case .ZeroOrMore: return "ZeroOrMore"
-            case .OneOrMore: return "OneOrMore"
+            case .OneOrMore:  return "OneOrMore"
         }
     }
 
@@ -207,7 +209,7 @@ extension String {
 
     /*===========================================================================================================================================================================*/
     /// Assuming this string is a fully qualified name, return a tuple containing the prefix and local name from this string.
-    /// 
+    ///
     /// - Returns: the prefix and local name.  `nil` is returned for the prefix if none is found.
     ///
     func splitPrefix() -> (String?, String) {
@@ -215,33 +217,6 @@ extension String {
         guard idx > startIndex else { return (nil, String(self[index(after: startIndex) ..< endIndex])) }
         return (String(self[startIndex ..< idx]), String(self[index(after: idx) ..< endIndex]))
     }
-
-    /*===========================================================================================================================================================================*/
-    /// Get the position (line, column) of the index in the given string relative to the given starting position (line, column).
-    /// 
-    /// - Parameters:
-    ///   - idx: the index.
-    ///   - position: the starting position.
-    ///   - strm: the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> the string was read from to get the tab size.
-    /// - Returns: the position (line, column) of the index within the string.
-    ///
-    func positionOfIndex(_ idx: Index, position pos: TextPosition, charStream strm: SAXCharInputStream) -> TextPosition {
-        positionOfIndex(idx, position: pos, tabSize: strm.tabWidth)
-    }
-
-    /*===========================================================================================================================================================================*/
-    /// Given a range of characters within this string, return both the substring and it's starting position (line, column).
-    /// 
-    /// - Parameters:
-    ///   - range: the range.
-    ///   - pos: the starting position of this string.
-    ///   - chStream: the <code>[character input stream](http://galenrhodes.com/Rubicon/Protocols/CharInputStream.html)</code> this string came from. Used to get the tab width.
-    /// - Returns: a tuple containing the substring and (line, column) tuple.
-    ///
-    func subStringAndPos(range: Range<String.Index>, position pos: TextPosition, charStream chStream: SAXCharInputStream) -> (String, TextPosition) {
-        (String(self[range.lowerBound ..< range.upperBound]), positionOfIndex(range.lowerBound, position: pos, charStream: chStream))
-    }
-
 }
 
 extension BidirectionalCollection {
