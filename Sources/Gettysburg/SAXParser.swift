@@ -20,7 +20,6 @@ import CoreFoundation
 import Rubicon
 
 open class SAXParser {
-    @usableFromInline typealias Token = (prefixText: String?, token: String?)
 
     public internal(set) var xmlVersion:      String = "1.0"
     public internal(set) var xmlEncoding:     String = "UTF-8"
@@ -52,12 +51,6 @@ open class SAXParser {
     public convenience init(data: Data, url: URL? = nil, handler: SAXHandler) throws {
         let _url = (url ?? URL(fileURLWithPath: "temp_\(UUID().uuidString).xml", isDirectory: false, relativeTo: GetCurrDirURL()))
         try self.init(inputStream: InputStream(data: data), url: _url, handler: handler)
-    }
-
-    private static func getRX(pattern: String, options: [RegularExpression.Options] = []) -> RegularExpression {
-        var error: Error? = nil
-        guard let rx = RegularExpression(pattern: pattern, options: options, error: &error) else { fatalError("Invalid REGEX Pattern: \(error!.localizedDescription)") }
-        return rx
     }
 
     /*===========================================================================================================================================================================*/
@@ -221,36 +214,102 @@ open class SAXParser {
         guard try getChar(errorOnEOF: true, allowed: ">") != nil else { throw SAXError.MalformedXmlDecl(markBackup(), description: "Unexpected Character.") }
     }
 
+    /*===========================================================================================================================================================================*/
+    /// Read the next character from the input stream.
+    ///
+    /// - Returns: The next character or `nil` if the EOF has been found.
+    /// - Throws: If an I/O error occurs.
+    ///
     @inlinable final func read() throws -> Character? { try inputStream.read() }
 
+    /*===========================================================================================================================================================================*/
+    /// Read, but do not remove, the next character from the input stream.
+    ///
+    /// - Returns: The next character or `nil` if the EOF has been found.
+    /// - Throws: If an I/O error occurs.
+    ///
     @inlinable final func peek() throws -> Character? { try inputStream.peek() }
 
+    /*===========================================================================================================================================================================*/
+    /// Read the next `count` characters from the input stream.
+    ///
+    /// - Parameters:
+    ///   - chars: The array to receive the characters. Any characters already in the array will be removed.
+    ///   - count: The maximum number of characters to read.
+    /// - Returns: The actual number of characters read which might be less than `count` if EOF is found.
+    /// - Throws: If an I/O error occurs.
+    ///
     @inlinable final func read(chars: inout [Character], count: Int) throws -> Int { try inputStream.read(chars: &chars, maxLength: count) }
 
+    /*===========================================================================================================================================================================*/
+    /// Read the next `count` characters from the input stream and append them to the given character array.
+    ///
+    /// - Parameters:
+    ///   - chars: The array to receive the characters. Any characters already in the array will be preserved.
+    ///   - count: The maximum number of characters to read.
+    /// - Returns: The actual number of characters read which might be less than `count` if EOF is found.
+    /// - Throws: If an I/O error occurs.
+    ///
     @inlinable final func append(to chars: inout [Character], count: Int) throws -> Int { try inputStream.append(to: &chars, maxLength: count) }
 
+    /*===========================================================================================================================================================================*/
+    /// Mark Set
+    ///
     @inlinable final func markSet() { inputStream.markSet() }
 
+    /*===========================================================================================================================================================================*/
+    /// Mark Delete
+    ///
+    /// - Returns: The input stream.
+    ///
     @discardableResult @inlinable final func markDelete() -> SAXCharInputStream { inputStream.markDelete(); return inputStream }
 
+    /*===========================================================================================================================================================================*/
+    /// Mark Return
+    ///
+    /// - Returns: The input stream.
+    ///
     @discardableResult @inlinable final func markReturn() -> SAXCharInputStream { inputStream.markReturn(); return inputStream }
 
+    /*===========================================================================================================================================================================*/
+    /// Mark Reset
+    ///
+    /// - Returns: The input stream.
+    ///
     @discardableResult @inlinable final func markReset() -> SAXCharInputStream { inputStream.markReset(); return inputStream }
 
+    /*===========================================================================================================================================================================*/
+    /// Mark Update
+    ///
+    /// - Returns: The input stream.
+    ///
     @discardableResult @inlinable final func markUpdate() -> SAXCharInputStream { inputStream.markUpdate(); return inputStream }
 
+    /*===========================================================================================================================================================================*/
+    /// Mark Backup
+    ///
+    /// - Parameter count: The number of characters to back up.
+    /// - Returns: The number of characters actually backed up.
+    ///
     @discardableResult @inlinable final func markBackup(count: Int = 1) -> SAXCharInputStream { inputStream.markBackup(count: count); return inputStream }
 
-    @discardableResult @inlinable final func getChar(errorOnEOF: Bool = false, allowed chars: Character...) throws -> Character? {
-        try getChar(errorOnEOF: errorOnEOF) { ch in
-            chars.contains(ch)
-        }
-    }
+    /*===========================================================================================================================================================================*/
+    /// Get and return the next character in the input stream only if it is one of the allowed characters.
+    ///
+    /// - Parameters:
+    ///   - errorOnEOF: If `true` then an error will be thrown if the EOF is found. The default is `false`.
+    ///   - chars: The allowed characters.
+    /// - Returns: The character or `nil` if the next character would not have been one of the allowed characters or if `errorOnEOF` is `true` and there was no next character.
+    /// - Throws: If there was an I/O error or `errorOnEOF` is `true` and the EOF was found.
+    ///
+    @discardableResult @inlinable final func getChar(errorOnEOF: Bool = false, allowed chars: Character...) throws -> Character? { try getChar(errorOnEOF: errorOnEOF) { chars.contains($0) } }
 
     /*===========================================================================================================================================================================*/
     /// Get and return the next character in the input stream only if it passes the test.
     ///
-    /// - Parameter test: The closure used to test the character.
+    /// - Parameters:
+    ///   - errorOnEOF: If `true` then an error will be thrown if the EOF is found. The default is `false`.
+    ///   - test: The closure used to test the character.
     /// - Returns: The character or `nil` if the character did not pass the test.
     /// - Throws: If an I/O error occurs.
     ///
@@ -263,20 +322,38 @@ open class SAXParser {
         return try read()
     }
 
+    /*===========================================================================================================================================================================*/
+    /// Read and return any whitespace characters that are next in the input stream.
+    ///
+    /// - Returns: A string containing the whitespace characters. May be an empty string.
+    /// - Throws: If an I/O error occurs.
+    ///
     @discardableResult func readWhitespace() throws -> String {
         var buffer: [Character] = []
         while let ch = try getChar(test: { $0.isXmlWhitespace }) { buffer <+ ch }
         return String(buffer)
     }
 
+    /*===========================================================================================================================================================================*/
+    /// Read the next identifier from the input stream. An identifer starts with an XML Name Start Char and then zero or more XML Name Chars.
+    ///
+    /// - Returns: The identifier or `nil` if there is no identifier.
+    /// - Throws: If an I/O error occurs.
+    ///
     func nextIdentifier() throws -> String? {
         try readWhitespace()
-        guard let ch1 = try getChar(test: { $0.isXmlNameStartChar }) else  { return nil }
+        guard let ch1 = try getChar(test: { $0.isXmlNameStartChar }) else { return nil }
         var buffer: [Character] = [ ch1 ]
         while let ch2 = try getChar(test: { $0.isXmlNameChar }) { buffer <+ ch2 }
         return (buffer.isEmpty ? nil : String(buffer))
     }
 
+    /*===========================================================================================================================================================================*/
+    /// Read the next quoted value from the input stream.
+    ///
+    /// - Returns: The value without the quotes.
+    /// - Throws: If an I/O error occurs or if the EOF is found before the closing quote.
+    ///
     func nextQuotedValue() throws -> String? {
         guard let quote = try getChar(allowed: "\"", "'") else { return nil }
         var buffer: [Character] = []
@@ -287,6 +364,12 @@ open class SAXParser {
         throw SAXError.UnexpectedEndOfInput()
     }
 
+    /*===========================================================================================================================================================================*/
+    /// Read the next parameter. A parameter consists of an identifier and a quoted value separated by an equals sign (=).
+    ///
+    /// - Returns: An instance of KVPair or `nil` if there is no parameter.
+    /// - Throws: If an I/O error occurs or if the EOF is found before the closing quote on the parameter quoted value.
+    ///
     func nextParameter() throws -> KVPair? {
         try readWhitespace()
         guard let key = try nextIdentifier() else { return nil }
@@ -296,6 +379,12 @@ open class SAXParser {
         return KVPair(key: key, value: replaceEntities(string: value))
     }
 
+    /*===========================================================================================================================================================================*/
+    /// Replace all of the defined entities in a string. Any entity that is undefined is left in place.
+    ///
+    /// - Parameter string: The string.
+    /// - Returns: The new string with all the defined entities replaced.
+    ///
     func replaceEntities(string: String) -> String {
         let res = GetRegularExpression(pattern: "\\&(\\w+);").stringByReplacingMatches(in: string) { match in
             guard let eName = match[1].subString else { return match.subString }
