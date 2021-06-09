@@ -66,15 +66,15 @@ class SAXTestHandler: SAXHandler {
         /* TODO: Implement me... */
     }
 
-    func comment(_ parser: SAXParser, content: String, continued: Bool) {
+    func comment(_ parser: SAXParser, content: String) {
         /* TODO: Implement me... */
     }
 
-    func text(_ parser: SAXParser, content: String, continued: Bool) {
+    func text(_ parser: SAXParser, content: String) {
         /* TODO: Implement me... */
     }
 
-    func cdataSection(_ parser: SAXParser, content: String, continued: Bool) {
+    func cdataSection(_ parser: SAXParser, content: String) {
         /* TODO: Implement me... */
     }
 
@@ -113,7 +113,8 @@ class SAXTestHandler: SAXHandler {
         /* TODO: Implement me... */
     }
 
-    func handleError(_ parser: SAXParser, error: Error) {
+    func handleError(_ parser: SAXParser, error: Error) -> Bool {
         print("ERROR: \(error.localizedDescription)")
+        return true
     }
 }

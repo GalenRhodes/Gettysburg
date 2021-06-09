@@ -32,6 +32,24 @@ class GettysburgTests: XCTestCase {
         }
     }
 
+    func testSAXParser() throws {
+        do {
+            let filename = "\(testDataDir)/Test_UTF-8.xml"
+            let fileUrl  = GetFileURL(filename: filename)
+
+            nDebug(.None, "File URL: \"\(fileUrl)\"")
+            guard let inputStream = MarkInputStream(url: fileUrl) else { XCTFail("Could not open file \"\(fileUrl)\""); return }
+
+            let handler: SAXTestHandler = SAXTestHandler()
+            let parser:  SAXParser      = try SAXParser(inputStream: inputStream, url: fileUrl, handler: handler)
+
+            try parser.parse()
+        }
+        catch let e {
+            XCTFail("ERROR: \(e.localizedDescription)")
+        }
+    }
+
     //    func testPerformanceExample() throws {
     //        // This is an example of a performance test case.
     //        self.measure {

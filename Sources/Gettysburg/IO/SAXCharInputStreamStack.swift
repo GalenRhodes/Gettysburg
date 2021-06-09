@@ -21,59 +21,81 @@ import Rubicon
 
 open class SAXCharInputStreamStack: SAXCharInputStream {
     //@f:0
-    @inlinable public var url:               URL           { lock.withLock { inputStream.url                                                                        } }
-    @inlinable public var baseURL:           URL           { lock.withLock { inputStream.baseURL                                                                    } }
-    @inlinable public var filename:          String        { lock.withLock { inputStream.filename                                                                   } }
-    @inlinable public var docPosition:       DocPosition   { lock.withLock { isOpen ? inputStream.docPosition : DocPosition(line: 0, column: 0)                     } }
-    @inlinable public var markCount:         Int           { lock.withLock { isOpen ? inputStream.markCount : 0                                                     } }
-    @inlinable public var position:          TextPosition  { lock.withLock { isOpen ? inputStream.position : (0, 0)                                                 } }
-    @inlinable public var encodingName:      String        { lock.withLock { inputStream.encodingName                                                               } }
-    @inlinable public var streamError:       Error?        { lock.withLock { isOpen ? inputStream.streamError : nil                                                 } }
-    @inlinable public var streamStatus:      Stream.Status { lock.withLock { isOpen ? inputStream.streamStatus : status                                             } }
-    @inlinable public var isEOF:             Bool          { lock.withLock { isOpen && inputStream.isEOF                                                            } }
-    @inlinable public var hasCharsAvailable: Bool          { lock.withLock { isOpen && inputStream.hasCharsAvailable                                                } }
-    @inlinable public var tabWidth:          Int8          { get { lock.withLock { inputStream.tabWidth } } set { lock.withLock { inputStream.tabWidth = newValue } } }
+    @inlinable public var url:               URL           { withLock { inputStream.url                                                                        } }
+    @inlinable public var baseURL:           URL           { withLock { inputStream.baseURL                                                                    } }
+    @inlinable public var filename:          String        { withLock { inputStream.filename                                                                   } }
+    @inlinable public var docPosition:       DocPosition   { withLock { isOpen ? inputStream.docPosition : DocPosition(line: 0, column: 0)                     } }
+    @inlinable public var markCount:         Int           { withLock { isOpen ? inputStream.markCount : 0                                                     } }
+    @inlinable public var position:          TextPosition  { withLock { isOpen ? inputStream.position : (0, 0)                                                 } }
+    @inlinable public var encodingName:      String        { withLock { inputStream.encodingName                                                               } }
+    @inlinable public var streamError:       Error?        { withLock { isOpen ? inputStream.streamError : nil                                                 } }
+    @inlinable public var streamStatus:      Stream.Status { withLock { isOpen ? inputStream.streamStatus : status                                             } }
+    @inlinable public var isEOF:             Bool          { withLock { isOpen && inputStream.isEOF                                                            } }
+    @inlinable public var hasCharsAvailable: Bool          { withLock { isOpen && inputStream.hasCharsAvailable                                                } }
+    @inlinable public var tabWidth:          Int8          { get { withLock { inputStream.tabWidth } } set { withLock { inputStream.tabWidth = newValue } } }
 
     @usableFromInline var inputStream: SAXCharInputStream
     @usableFromInline var streamStack: [SAXCharInputStream] = []
-    @usableFromInline let lock:        MutexLock            = MutexLock()
+    @usableFromInline let lck:         MutexLock            = MutexLock()
     @usableFromInline var status:      Stream.Status        = .notOpen
     @inlinable        var isOpen:      Bool                 { status == .open }
     //@f:1
 
     public init(initialInputStream: InputStream, url: URL) throws { self.inputStream = try SAXIConvCharInputStream(inputStream: initialInputStream, url: url) }
 
-    @inlinable public func open() {
-        lock.withLock {
+    @inlinable public final func peek() throws -> Character? { try withLock { try inputStream.peek() } }
+
+    @inlinable public final func lock() { lck.lock() }
+
+    @inlinable public final func unlock() { lck.unlock() }
+
+    @inlinable public final func withLock<T>(_ body: () throws -> T) rethrows -> T { try lck.withLock(body) }
+
+    @inlinable public final func open() {
+        withLock {
             guard status == .notOpen else { return }
             status = .open
             if inputStream.streamStatus == .notOpen { inputStream.open() }
         }
     }
 
-    @inlinable public func close() {
-        lock.withLock {
+    @inlinable public final func close() {
+        withLock {
             guard status == .open else { return }
             status = .closed
             inputStream.close()
+            while let s = streamStack.popLast() {
+                inputStream = s
+                inputStream.close()
+            }
         }
     }
 
-    @inlinable public func read() throws -> Character? { try lock.withLock { isOpen ? try inputStream.read() : nil } }
+    @inlinable public final func read() throws -> Character? { try withLock { isOpen ? try inputStream.read() : nil } }
 
-    @inlinable public func append(to chars: inout [Character], maxLength: Int) throws -> Int { try lock.withLock { isOpen ? try inputStream.append(to: &chars, maxLength: maxLength) : 0 } }
+    @inlinable public final func append(to chars: inout [Character], maxLength: Int) throws -> Int { try withLock { isOpen ? try inputStream.append(to: &chars, maxLength: maxLength) : 0 } }
 
-    @inlinable public func markSet() { lock.withLock { if isOpen { inputStream.markSet() } } }
+    @inlinable public final func markSet() { withLock { if isOpen { inputStream.markSet() } } }
 
-    @inlinable public func markReturn() { lock.withLock { if isOpen { inputStream.markReturn() } } }
+    @inlinable public final func markReturn() { withLock { if isOpen { inputStream.markReturn() } } }
 
-    @inlinable public func markDelete() { lock.withLock { if isOpen { inputStream.markDelete() } } }
+    @inlinable public final func markDelete() { withLock { if isOpen { inputStream.markDelete() } } }
 
-    @inlinable public func markReset() { lock.withLock { if isOpen { inputStream.markReset() } } }
+    @inlinable public final func markReset() { withLock { if isOpen { inputStream.markReset() } } }
 
-    @inlinable public func markUpdate() { lock.withLock { if isOpen { inputStream.markUpdate() } } }
+    @inlinable public final func markUpdate() { withLock { if isOpen { inputStream.markUpdate() } } }
 
-    @inlinable public func markBackup(count: Int = 1) -> Int { lock.withLock { isOpen ? inputStream.markBackup(count: count) : 0 } }
+    @discardableResult @inlinable public final func markBackup(count: Int = 1) -> Int {
+        withLock {
+            if isOpen {
+                return inputStream.markBackup(count: count)
+            }
+            else {
+                return 0
+            }
+            // isOpen ? inputStream.markBackup(count: count) : 0
+        }
+    }
 
     open func pushStream(url: URL) throws {
         guard let inputStream = InputStream(url: url) else { throw SAXError.MalformedURL(description: url.absoluteString) }
@@ -94,7 +116,7 @@ open class SAXCharInputStreamStack: SAXCharInputStream {
     }
 
     open func pushStream(inputStream: SAXCharInputStream) {
-        lock.withLock {
+        withLock {
             guard isOpen else { return }
             streamStack <+ self.inputStream
             self.inputStream = inputStream
@@ -103,7 +125,7 @@ open class SAXCharInputStreamStack: SAXCharInputStream {
     }
 
     open func popStream() -> Bool {
-        lock.withLock {
+        withLock {
             guard isOpen, let s = streamStack.popLast() else { return false }
             inputStream.close()
             inputStream = s

@@ -209,7 +209,7 @@ extension String {
 
     /*===========================================================================================================================================================================*/
     /// Assuming this string is a fully qualified name, return a tuple containing the prefix and local name from this string.
-    ///
+    /// 
     /// - Returns: the prefix and local name.  `nil` is returned for the prefix if none is found.
     ///
     func splitPrefix() -> (String?, String) {

@@ -26,14 +26,14 @@ import Rubicon
 
 /*===============================================================================================================================================================================*/
 /// Get a URL for the current working directory.
-///
+/// 
 /// - Returns: the current working directory as a URL.
 ///
 func GetCurrDirURL() -> URL { URL(fileURLWithPath: FileManager.default.currentDirectoryPath, isDirectory: true) }
 
 /*===============================================================================================================================================================================*/
 /// Get a URL for the given filename.  If the filename is relative it will be made absolute relative to the current working directory.
-///
+/// 
 /// - Parameter filename: the filename.
 /// - Returns: the filename as an absolute URL.
 ///
@@ -44,7 +44,7 @@ func GetFileURL(filename: String) -> URL { URL(fileURLWithPath: filename, relati
 /// URL's](https://developer.apple.com/documentation/foundation/url)</code> constructor
 /// <code>[`URL(string:)`](https://developer.apple.com/documentation/foundation/url/3126806-init)</code> is that this function will throw an error if the URL is malformed rather
 /// than returning `nil` and if the URL is relative and `nil` is passed for the `relativeTo` base URL then it will use the current working directory.
-///
+/// 
 /// - Parameters:
 ///   - string: the string containing the URL.
 ///   - relativeTo: If the URL defined by the given string is relative then...
@@ -58,7 +58,7 @@ func GetURL(string: String, relativeTo: URL? = nil) throws -> URL {
 
 /*===============================================================================================================================================================================*/
 /// Print out an array of strings to STDOUT. Used for debugging.
-///
+/// 
 /// - Parameter strings: the array of strings.
 ///
 func PrintArray(_ strings: [String?]) {
@@ -73,7 +73,7 @@ func PrintArray(_ strings: [String?]) {
 
 /*===============================================================================================================================================================================*/
 /// Given a URL, get the Base URL and the filename.
-///
+/// 
 /// - Parameter url: the URL.
 /// - Returns: a tuple with the given URL, the Base URL, and the filename. If the given URL was relative then it is made absolute with respect to the current working directory.
 /// - Throws: if the URL is malformed.
@@ -91,37 +91,45 @@ let UTF16BEBOM: [UInt8] = [ 0xfe, 0xff ]
 let UTF16LEBOM: [UInt8] = [ 0xff, 0xfe ]
 let UTF8BOM:    [UInt8] = [ 0xef, 0xbb, 0xbf ]
 
+/*===============================================================================================================================================================================*/
 /// Determin the encoding used in a file by sampling the bytes and/or reading the XML Declaration.
-///
+/// 
 /// - Parameter inputStream: The MarkInputStream.
 /// - Returns: The encoding name.
 /// - Throws: If an  I/O error occurs or the encoding is not supported.
 ///
 func getEncodingName(inputStream: MarkInputStream) throws -> String {
+    nDebug(.In, "Mark Count: \(inputStream.markCount)")
+    defer { nDebug(.Out, "Mark Count: \(inputStream.markCount)") }
+    return try _getEncodingName(inputStream: inputStream)
+}
+
+func _getEncodingName(inputStream: MarkInputStream) throws -> String {
     var buffer: [UInt8] = [ 0, 0, 0, 0 ]
 
     inputStream.open()
     inputStream.markSet()
+    defer { inputStream.markReturn() }
     guard inputStream.read(&buffer, maxLength: 4) == 4 else { throw SAXError.UnexpectedEndOfInput(description: "Not enough data to determine the character encoding.") }
 
     if buffer == UTF32BEBOM {
-        inputStream.markDelete()
+        inputStream.markUpdate()
         return "UTF-32BE"
     }
     else if buffer == UTF32LEBOM {
-        inputStream.markDelete()
+        inputStream.markUpdate()
         return "UTF-32LE"
     }
     else if buffer[0 ..< 2] == UTF16BEBOM {
-        inputStream.markDelete()
+        inputStream.markUpdate()
         return "UTF-16BE"
     }
     else if buffer[0 ..< 2] == UTF16LEBOM {
-        inputStream.markDelete()
+        inputStream.markUpdate()
         return "UTF-16LE"
     }
     else if buffer[0 ..< 3] == UTF8BOM {
-        inputStream.markDelete()
+        inputStream.markUpdate()
         return "UTF-8"
     }
     else {
@@ -132,18 +140,13 @@ func getEncodingName(inputStream: MarkInputStream) throws -> String {
 
 func hardGuess(_ encodingName: String, _ inputStream: MarkInputStream) throws -> String {
     // NOTE: At this point the encoding is only guessed at.  We'll need to look for an XML Declaration element to hopefully give us more information.
-    let pt: String   = "<\\?[xX][mM][lL](?:\\s+version=\"[^\"]*\")?(?:\\s+encoding=\"([^\"]+)\")?(?:\\s+standalone=\"[^\"]*\")?\\s*\\?>"
     let _inputStream = SimpleIConvCharInputStream(inputStream: inputStream, encodingName: encodingName, autoClose: false)
     _inputStream.open()
-
-    defer {
-        _inputStream.close()
-        inputStream.markReturn()
-    }
+    defer { _inputStream.close() }
 
     var chars: [Character] = []
     guard try _inputStream.read(chars: &chars, maxLength: 6) == 6 else { return encodingName }
-    guard String(chars).lowercased().hasPrefix("<?xml") && chars[5].isXmlWhitespace else { return encodingName }
+    guard chars.matches(pattern: "<\\?(?i:xml)\\s") else { return encodingName }
 
     // We have an XML Declaration element.  Read it, parse it, determine the encoding.
     repeat {
@@ -155,12 +158,12 @@ func hardGuess(_ encodingName: String, _ inputStream: MarkInputStream) throws ->
         }
     } while true
 
-    guard let rx: RegularExpression = RegularExpression(pattern: pt, options: [ .dotMatchesLineSeparators ]) else { fatalError("Bad regular expression.") }
-    guard let m = rx.firstMatch(in: String(chars)), let enc = m[1].subString else { return encodingName }
-    // We got an encoding, now let's see if we support it.
-    let list = IConv.encodingsList
-    guard list.contains(enc.uppercased()) else { throw SAXError.UnknownEncoding(description: "Uknown encoding: \(enc)") }
-    return enc.uppercased()
+    // Now let's see if it contains the encoding.
+    guard let m = GetRegularExpression(pattern: "\\sencoding=\"([^\"]+)\"").firstMatch(in: String(chars)), let enc = m[1].subString else { return encodingName }
+    // We definitely got an encoding name, now let's see if we support it.
+    let uEnc = enc.uppercased()
+    guard IConv.encodingsList.contains(uEnc) else { throw SAXError.UnknownEncoding(description: "Uknown encoding: \(enc)") }
+    return uEnc
 }
 
 func guessEncodingName(_ buffer: [UInt8]) -> String {
@@ -169,4 +172,57 @@ func guessEncodingName(_ buffer: [UInt8]) -> String {
     else if (buffer[0] == 0 && buffer[1] == 0 && buffer[3] != 0) { return "UTF-32BE" }
     else if (buffer[0] != 0 && buffer[2] == 0 && buffer[3] == 0) { return "UTF-32LE" }
     else { return "UTF-8" }
+}
+
+@usableFromInline struct ItemStore<T> {
+    @usableFromInline var items: [String: T]   = [:]
+    @usableFromInline let lock:  ReadWriteLock = ReadWriteLock()
+
+    init() {}
+
+    @inlinable subscript(key: String) -> T? {
+        get { lock.withReadLock { items[key] } }
+        set { lock.withWriteLock { items[key] = newValue } }
+    }
+}
+
+@usableFromInline var regexStore: ItemStore<RegularExpression> = ItemStore<RegularExpression>()
+
+extension RegularExpression.Options {
+    @inlinable var name: Character {
+        switch self {
+            case .caseInsensitive:            return "i"
+            case .allowCommentsAndWhitespace: return "x"
+            case .dotMatchesLineSeparators:   return "s"
+            case .anchorsMatchLines:          return "m"
+            case .useUnicodeWordBoundaries:   return "w"
+            case .ignoreMetacharacters:       return "c"
+            case .useUnixLineSeparators:      return "u"
+        }
+    }
+
+    @inlinable static func optionsString(_ options: [Self]) -> String {
+        var out: String = "("
+        for o in options { out.append(o.name) }
+        out.append(")")
+        return out
+    }
+}
+
+@inlinable func GetRegularExpression(pattern: String, options: [RegularExpression.Options] = []) -> RegularExpression {
+    let key = "\(RegularExpression.Options.optionsString(options))Ð\(pattern)"
+    if let rx = regexStore[key] { return rx }
+    var err: Error? = nil
+    guard let rx = RegularExpression(pattern: pattern, options: options, error: &err) else { fatalError("Invalid REGEX Pattern: \(err!.localizedDescription)") }
+    regexStore[key] = rx
+    return rx
+}
+
+extension Array where Element == Character {
+
+    @inlinable public func matches(pattern: String) -> Bool {
+        let str: String                    = String(self)
+        let m:   [RegularExpression.Match] = GetRegularExpression(pattern: pattern).matches(in: str)
+        return ((m.count == 1) && (str.fullRange == m[0].range))
+    }
 }

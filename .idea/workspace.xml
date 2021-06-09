@@ -5,46 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="60b0239b-d5a7-4057-9e21-57829d56877e" name="Default Changelist" comment="Cleanup.">
-      <change afterPath="$PROJECT_DIR$/.idea/runConfigurations/Gettysburg_Tests___testSAXSimpleIConvCharInputStream.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/SAXElement.swift" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/IO/SAXCharInputStreamStack.swift" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/Parser/KVPair.swift" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/Parser/XMLDeclData.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/Gettysburg_Tests.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.pbxproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved" beforeDir="false" afterPath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gettysburg.xcodeproj/xcshareddata/xcschemes/Gettysburg Tests.xcscheme" beforeDir="false" afterPath="$PROJECT_DIR$/Gettysburg.xcodeproj/xcshareddata/xcschemes/Gettysburg Tests - testSAXSimpleIConvCharInputStream.xcscheme" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Package.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Package.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DTD/SAXDTD.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DTD/SAXDTDAttribute.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DTD/SAXDTDElement.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DTD/SAXDTDEntity.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DTD/SAXDTDNotation.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/SAXAttribute.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/SAXAttribute.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/SAXNode.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/SAXNode.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/SAXText.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/IO/CharInputStream.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/IO/SAXCharInputStream.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/IO/SAXCharInputStream.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/IO/SAXParserCharInputStream.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/IO/backend/MultiSAXSimpleCharInputStreamImpl.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/IO/backend/SAXSimpleCharInputStream.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/IO/backend/SAXSimpleIConvCharInputStream.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/IO/backend/SAXSimpleStringCharInputStream.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Misc/Extensions.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Misc/Extensions.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/IO/SAXCharInputStreamStack.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/IO/SAXCharInputStreamStack.swift" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Misc/SAXError.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Misc/SAXError.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Misc/SAXNSName.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Misc/SAXNSName.swift" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Misc/Tools.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Misc/Tools.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Parser/DocType.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Parser/Document.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Parser/Element.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Parser/ElementBody.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DocType/SAXDTDElementContentItem.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Parser/Entities.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Parser/ProcessingInstruction.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Parser/Text.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Parser/KVPair.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Parser/KVPair.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAXHandler.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAXHandler.swift" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAXParser.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAXParser.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Validation/CharacterSets.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Validation/CharacterSets.swift" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Tests/GettysburgTests/GettysburgTests.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/GettysburgTests/GettysburgTests.swift" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Tests/GettysburgTests/SAXTestHandler.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/GettysburgTests/SAXTestHandler.swift" afterDir="false" />
     </list>
@@ -123,10 +92,10 @@
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="Errors" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
-  <component name="RunManager" selected="XCTest.Gettysburg Tests - testParser">
-    <configuration name="Gettysburg Tests - testParser" type="OCUnitRunConfiguration" factoryName="XCTest/Kiwi" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$(SRCROOT)" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Gettysburg" TARGET_NAME="GettysburgTests" CONFIG_NAME="Debug" SCHEME_NAME="Gettysburg Tests - testParser" IS_LOCATION_SIMULATION_ALLOWED="true" LOCATION_SCENARIO_ID="com.apple.dt.IDEFoundation.CurrentLocationScenarioIdentifier" LOCATION_SCENARIO_TYPE="1" APPLICATION_LANGUAGE="IDELaunchSchemeLanguageUseSystemLanguage" APPLICATION_REGION="" TEST_CLASS="GettysburgTests" TEST_METHOD="testSAXSimpleIConvCharInputStream" TEST_MODE="SUITE_TEST" XCODE_TESTS_HASH_CODE="-802716462">
+  <component name="RunManager" selected="Application.DocFixer">
+    <configuration name="Gettysburg Tests - testParser" type="OCUnitRunConfiguration" factoryName="XCTest/Kiwi" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$(SRCROOT)" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Gettysburg" TARGET_NAME="GettysburgTests" CONFIG_NAME="Debug" SCHEME_NAME="Gettysburg Tests - testParser" IS_LOCATION_SIMULATION_ALLOWED="true" LOCATION_SCENARIO_ID="com.apple.dt.IDEFoundation.CurrentLocationScenarioIdentifier" LOCATION_SCENARIO_TYPE="1" APPLICATION_LANGUAGE="IDELaunchSchemeLanguageUseSystemLanguage" APPLICATION_REGION="" TEST_CLASS="GettysburgTests" TEST_METHOD="testSAXParser" TEST_MODE="SUITE_TEST" XCODE_TESTS_HASH_CODE="-673014936">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -232,7 +201,10 @@
       <workItem from="1619523913552" duration="10677000" />
       <workItem from="1620920556831" duration="276000" />
       <workItem from="1622557318225" duration="12752000" />
-      <workItem from="1622624614741" duration="22912000" />
+      <workItem from="1622624614741" duration="22993000" />
+      <workItem from="1622721225567" duration="11466000" />
+      <workItem from="1623160145538" duration="10572000" />
+      <workItem from="1623182009165" duration="11111000" />
     </task>
     <task id="LOCAL-00001" summary="Changed documentation style.">
       <created>1611343621921</created>
@@ -430,7 +402,14 @@
       <option name="project" value="LOCAL" />
       <updated>1619528034550</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="Cleanup.">
+      <created>1622660916780</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1622660916780</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

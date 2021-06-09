@@ -45,11 +45,11 @@ public protocol SAXHandler {
 
     func dtdAttributeDecl(_ parser: SAXParser, name: String, elementName: String, type: SAXAttributeType, enumList: [String], defaultType: SAXAttributeDefaultType, defaultValue: String?)
 
-    func comment(_ parser: SAXParser, content: String, continued: Bool)
+    func comment(_ parser: SAXParser, content: String)
 
-    func text(_ parser: SAXParser, content: String, continued: Bool)
+    func text(_ parser: SAXParser, content: String)
 
-    func cdataSection(_ parser: SAXParser, content: String, continued: Bool)
+    func cdataSection(_ parser: SAXParser, content: String)
 
     func resolveEntity(_ parser: SAXParser, publicId: String?, systemId: String) -> InputStream?
 
@@ -67,5 +67,5 @@ public protocol SAXHandler {
 
     func processingInstruction(_ parser: SAXParser, target: String, data: String)
 
-    func handleError(_ parser: SAXParser, error: Error)
+    func handleError(_ parser: SAXParser, error: Error) -> Bool
 }

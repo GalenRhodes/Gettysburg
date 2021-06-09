@@ -25,20 +25,19 @@ import CoreFoundation
 import Rubicon
 
 open class SAXError: Error, CustomStringConvertible, Hashable {
-    public let position: DocPosition
+    public let position:    DocPosition
     public let description: String
 
-    public init(position: DocPosition, description: String) {
-        self.position = position
-        self.description = description
+    public init(_ p: DocPosition, description d: String) {
+        self.position = p
+        self.description = d
     }
 
-    public init(position: TextPosition, description: String) {
-        self.position = DocPosition(position: position)
-        self.description = description
-    }
+    public convenience init(_ p: TextPosition, description d: String) { self.init(DocPosition(position: p), description: d) }
 
-    public convenience init(description: String) { self.init(position: DocPosition(line: 0, column: 0), description: description) }
+    public convenience init(_ i: SAXCharInputStream, description d: String) { self.init(i.docPosition, description: d) }
+
+    public convenience init(description d: String) { self.init(DocPosition(line: 0, column: 0), description: d) }
 
     public func hash(into hasher: inout Hasher) {
         hasher.combine(position)
@@ -49,7 +48,19 @@ open class SAXError: Error, CustomStringConvertible, Hashable {
 
     public class MalformedURL: SAXError {}
 
-    public class UnexpectedEndOfInput: SAXError {}
+    public class UnexpectedEndOfInput: SAXError { public convenience init() { self.init(description: "Unexpected End-of-Input.") } }
 
     public class UnknownEncoding: SAXError {}
+
+    public class NoHandler: SAXError {}
+
+    public class MalformedDocument: SAXError {}
+
+    public class MalformedParameter: SAXError {}
+
+    public class MalformedXmlDecl: SAXError {}
+
+    public class MalformedComment: SAXError {}
+
+    public class MalformedProcessingInstruction: SAXError {}
 }

@@ -558,8 +558,8 @@
 			);
 			mainGroup = 83CFA5A62556E331005498FC;
 			packageReferences = (
-				83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer.git" */,
-				838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon.git" */,
+				83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer" */,
+				838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon" */,
 			);
 			productRefGroup = 83CFA5B12556E331005498FC /* Products */;
 			projectDirPath = "";
@@ -1012,15 +1012,15 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon.git" */ = {
+		838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/GalenRhodes/Rubicon.git";
 			requirement = {
 				kind = upToNextMinorVersion;
-				minimumVersion = 0.2.29;
+				minimumVersion = 0.2.37;
 			};
 		};
-		83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer.git" */ = {
+		83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/GalenRhodes/PGDocFixer.git";
 			requirement = {
@@ -1033,22 +1033,22 @@
 /* Begin XCSwiftPackageProductDependency section */
 		8356BB2625D0378F00E41DFC /* Rubicon */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon.git" */;
+			package = 838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon" */;
 			productName = Rubicon;
 		};
 		83A6F52125C476F100C95BE8 /* Rubicon */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon.git" */;
+			package = 838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon" */;
 			productName = Rubicon;
 		};
 		83CFA5E22556E70C005498FC /* PGDocFixer */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer.git" */;
+			package = 83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer" */;
 			productName = PGDocFixer;
 		};
 		83EC590D266785E200936213 /* Rubicon */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon.git" */;
+			package = 838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon" */;
 			productName = Rubicon;
 		};
 /* End XCSwiftPackageProductDependency section */

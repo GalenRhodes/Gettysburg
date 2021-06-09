@@ -22,7 +22,7 @@ import Rubicon
 @frozen public struct KVPair: Hashable, CustomStringConvertible, Comparable {
     public let            key:         String
     public let            value:       String
-    @inlinable public var description: String { "(\"\(key)\", \"(value)\"" }
+    @inlinable public var description: String { "(\"\(key)\", \"\(value)\")" }
 
     public init(key: String, value: String) {
         self.key = key
