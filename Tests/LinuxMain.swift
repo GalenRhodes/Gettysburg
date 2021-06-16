@@ -2,6 +2,5 @@ import XCTest
 
 import GettysburgTests
 
-var tests = [ XCTestCaseEntry ]()
-tests += GettysburgTests.testSAXParser()
+var tests: [XCTestCaseEntry] = [ testCase(GettysburgTests.allTests) ]
 XCTMain(tests)

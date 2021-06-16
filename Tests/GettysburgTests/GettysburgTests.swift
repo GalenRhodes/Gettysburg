@@ -10,6 +10,9 @@ import Rubicon
 @testable import Gettysburg
 
 class GettysburgTests: XCTestCase {
+    static var allTests = {
+        return [ ("testSAXSimpleIConvCharInputStream", testSAXSimpleIConvCharInputStream), ("testSAXParser", testSAXParser), ]
+    }
 
     let testDataDir: String = "Tests/GettysburgTests/TestData"
 
