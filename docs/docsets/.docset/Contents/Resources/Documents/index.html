@@ -96,7 +96,7 @@
                 <a href="Classes/SAXError/MalformedComment.html">– MalformedComment</a>
               </li>
               <li class="nav-group-task">
-                <a href="Classes/SAXError/MalformedProcessingInstruction.html">– MalformedProcessingInstruction</a>
+                <a href="Classes/SAXError/MalformedProcInst.html">– MalformedProcInst</a>
               </li>
               <li class="nav-group-task">
                 <a href="Classes/SAXIConvCharInputStream.html">SAXIConvCharInputStream</a>
@@ -163,6 +163,9 @@
               <li class="nav-group-task">
                 <a href="Global%20Variables/rxNameStartCharSet.html">rxNameStartCharSet</a>
               </li>
+              <li class="nav-group-task">
+                <a href="Global%20Variables/rxWhitespacePattern.html">rxWhitespacePattern</a>
+              </li>
             </ul>
           </li>
           <li class="nav-group-name">
@@ -196,9 +199,6 @@
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
                 <a href="Extensions/Array.html">Array</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Extensions/BidirectionalCollection.html">BidirectionalCollection</a>
               </li>
               <li class="nav-group-task">
                 <a href="Extensions/Character.html">Character</a>
@@ -289,6 +289,17 @@
               </li>
             </ul>
           </li>
+          <li class="nav-group-name">
+            <a href="Typealiases.html">Type Aliases</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Typealiases/SAXRawAttribList.html">SAXRawAttribList</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Typealiases/SAXRawAttribute.html">SAXRawAttribute</a>
+              </li>
+            </ul>
+          </li>
         </ul>
       </nav>
       <article class="main-content">
@@ -306,40 +317,24 @@
 <p>The <a href="https://www.w3.org/TR/REC-xml/#charencoding">XML specification states</a>:</p>
 
 <blockquote>
-<p>Entities encoded in UTF-16 must and entities encoded in UTF-8 may begin with the Byte Order Mark described by Annex H of
-[ISO/IEC 10646:2000], section 16.8 of <a href="https://home.unicode.org">Unicode</a> (the ZERO WIDTH NO-BREAK SPACE character, #xFEFF).
-This is an encoding signature, not part of either the markup or the character data of the XML document. XML processors must
-be able to use this character to differentiate between UTF-8 and UTF-16 encoded documents.</p>
+<p>Entities encoded in UTF-16 must and entities encoded in UTF-8 may begin with the Byte Order Mark described by Annex H of [ISO/IEC 10646:2000], section 16.8 of <a href="https://home.unicode.org">Unicode</a> (the ZERO WIDTH NO-BREAK SPACE character, #xFEFF).
+This is an encoding signature, not part of either the markup or the character data of the XML document. XML processors must be able to use this character to differentiate between UTF-8 and UTF-16 encoded documents.</p>
 
-<p>If the replacement text of an external entity is to begin with the character U+FEFF, and no text declaration is present, then
-a Byte Order Mark MUST be present, whether the entity is encoded in UTF-8 or UTF-16.</p>
+<p>If the replacement text of an external entity is to begin with the character U+FEFF, and no text declaration is present, then a Byte Order Mark MUST be present, whether the entity is encoded in UTF-8 or UTF-16.</p>
 
-<p>Although an XML processor is required to read only entities in the UTF-8 and UTF-16 encodings, it is recognized that other
-encodings are used around the world, and it may be desired for XML processors to read entities that use them. In the absence
-of external character encoding information (such as MIME headers), parsed entities which are stored in an encoding other than
-UTF-8 or UTF-16 must begin with a text declaration (see 4.3.1 The Text Declaration) containing an encoding declaration</p>
+<p>Although an XML processor is required to read only entities in the UTF-8 and UTF-16 encodings, it is recognized that other encodings are used around the world, and it may be desired for XML processors to read entities that use them. In the absence of external character encoding information (such as MIME headers), parsed entities which are stored in an encoding other than UTF-8 or UTF-16 must begin with a text declaration (see 4.3.1 The Text Declaration) containing an encoding declaration</p>
 </blockquote>
 
-<p>In short, we&rsquo;re supposed to start out assuming the possibility of UTF-8 or UTF-16 and then if there is an XML Declaration we should
-see the encoding field in that, if it has one, to determine the actual character encoding used in the document.</p>
+<p>In short, we&rsquo;re supposed to start out assuming the possibility of UTF-8 or UTF-16 and then if there is an XML Declaration we should see the encoding field in that, if it has one, to determine the actual character encoding used in the document.</p>
 
-<p>Gettysburg will actually attempt to detect and handle UTF-8, UTF-16, and UTF-32 character encodings (with or without a 
-byte-order-mark). Gettysburg will also handle other character encodings as long as there is an
-<a href="https://www.w3.org/TR/REC-xml/#sec-prolog-dtd">XML Declaration</a> in the document specifying what the proper character encoding 
-should be. That XML Declaration should be in either UTF-8, UTF-16, or UTF-32 encoding. Also, the encoding specified in the XML 
-Declaration should match the byte-width of the XML Declaration itself. In other words, don&rsquo;t start off with UTF-16 and then 
-specify UTF-8 in the XML Declaration. Even if everything AFTER the XML Declaration is in UTF-8 this is considered a malformed 
-and invalid XML document.</p>
+<p>Gettysburg will actually attempt to detect and handle UTF-8, UTF-16, <strong>and UTF-32</strong> character encodings (with or without a byte-order-mark). Gettysburg will also handle other character encodings as long as there is an <a href="https://www.w3.org/TR/REC-xml/#sec-prolog-dtd">XML Declaration</a> in the document specifying what the proper character encoding should be. That XML Declaration should be in either UTF-8, UTF-16, or UTF-32 encoding. Also, the encoding specified in the XML Declaration should match the byte-width of the XML Declaration itself. In other words, don&rsquo;t start off with UTF-16 and then specify UTF-8 in the XML Declaration. Even if everything AFTER the XML Declaration is in UTF-8 this is considered a malformed and invalid XML document.  Gettysburg will also honor a MIME header which indicates character encoding if one is present.</p>
 
-<p>The same applies to external entities and DTDs (which are considered a special case of external entities). Character encodings other
-than UTF-8, UTF-16, and UTF-32 will be supported as long as there is a
-<a href="https://www.w3.org/TR/REC-xml/#sec-TextDecl">Text Declaration (XML specification sections 4.3.1 - 4.3.3)</a> at the beginning of 
-the external entity or DTD.                                                                                                      </p>
+<p>The same applies to external entities and DTDs (which are considered a special case of external entities). Character encodings other than UTF-8, UTF-16, and UTF-32 will be supported as long as there is a <a href="https://www.w3.org/TR/REC-xml/#sec-TextDecl">Text Declaration (XML specification sections 4.3.1 - 4.3.3)</a> at the beginning of the external entity or DTD.</p>
 
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2021 <a class="link" href="https://blog.projectgalen.com" target="_blank" rel="external">Galen Rhodes</a>. All rights reserved. (Last updated: 2021-06-09)</p>
+          <p>&copy; 2021 <a class="link" href="https://blog.projectgalen.com" target="_blank" rel="external">Galen Rhodes</a>. All rights reserved. (Last updated: 2021-06-15)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>

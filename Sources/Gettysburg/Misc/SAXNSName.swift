@@ -32,8 +32,20 @@ import Rubicon
 
     init(localName: String, prefix: String?, uri: String?) {
         self.localName = localName
-        self.prefix = ((uri == nil) ? nil : prefix)
-        self.uri = uri
+        if uri == nil {
+            self.prefix = nil
+            self.uri = nil
+        }
+        else {
+            self.prefix = prefix
+            self.uri = uri
+        }
+    }
+
+    init(name: String) {
+        localName = name
+        prefix = nil
+        uri = nil
     }
 
     init(qName: String, uri: String?) {
@@ -78,19 +90,19 @@ import Rubicon
 @frozen public struct NSMapping: Hashable, Comparable, CustomStringConvertible {
     public let            prefix:      String
     public let            uri:         String
-    @inlinable public var description: String { "xmlns:\(prefix)=\"\(uri)\"" }
+    @inlinable public var description: String { isDefault ? "xmlns=\"\(uri.encodeEntities())\"" : "xmlns:\(prefix)=\"\(uri.encodeEntities())\"" }
+    @inlinable public var isDefault:   Bool { prefix.isEmpty }
 
     init(prefix: String, uri: String) {
-        self.prefix = prefix
+        self.prefix = prefix.trimmed
         self.uri = uri
     }
 
     @inlinable public func hash(into hasher: inout Hasher) {
         hasher.combine(prefix)
-        hasher.combine(uri)
     }
 
-    @inlinable public static func == (lhs: NSMapping, rhs: NSMapping) -> Bool { ((lhs.prefix == rhs.prefix) && (lhs.uri == rhs.uri)) }
+    @inlinable public static func == (lhs: NSMapping, rhs: NSMapping) -> Bool { (lhs.prefix == rhs.prefix) }
 
-    @inlinable public static func < (lhs: NSMapping, rhs: NSMapping) -> Bool { ((lhs.prefix < rhs.prefix) || ((lhs.prefix == rhs.prefix) && (lhs.uri < rhs.uri))) }
+    @inlinable public static func < (lhs: NSMapping, rhs: NSMapping) -> Bool { (lhs.prefix < rhs.prefix) }
 }

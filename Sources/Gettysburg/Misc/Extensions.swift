@@ -27,7 +27,7 @@ import Rubicon
 public let PCDATA: String = "#PCDATA"
 
 extension SAXExternalType: CustomStringConvertible {
-    public var description: String {
+    @inlinable public var description: String {
         switch self {
             case .Internal: return ""
             case .Public:   return "PUBLIC"
@@ -35,7 +35,7 @@ extension SAXExternalType: CustomStringConvertible {
         }
     }
 
-    static func valueFor(description desc: String?) -> SAXExternalType {
+    @inlinable public static func valueFor(description desc: String?) -> SAXExternalType {
         switch desc {
             case "SYSTEM": return .System
             case "PUBLIC": return .Public
@@ -46,7 +46,7 @@ extension SAXExternalType: CustomStringConvertible {
 }
 
 extension SAXAttributeDefaultType: CustomStringConvertible {
-    public var description: String {
+    @inlinable public var description: String {
         switch self {
             case .Optional: return "Optional"
             case .Required: return "Required"
@@ -55,7 +55,7 @@ extension SAXAttributeDefaultType: CustomStringConvertible {
         }
     }
 
-    static func valueFor(description desc: String?) -> SAXAttributeDefaultType {
+    @inlinable public static func valueFor(description desc: String?) -> SAXAttributeDefaultType {
         if let d = desc {
             switch d {
                 case "REQUIRED": return .Required
@@ -69,7 +69,7 @@ extension SAXAttributeDefaultType: CustomStringConvertible {
 }
 
 extension SAXAttributeType: CustomStringConvertible {
-    public var description: String {
+    @inlinable public var description: String {
         switch self {
             case .CData:      return "CData"
             case .ID:         return "ID"
@@ -84,7 +84,7 @@ extension SAXAttributeType: CustomStringConvertible {
         }
     }
 
-    static func valueFor(description desc: String) -> SAXAttributeType {
+    @inlinable public static func valueFor(description desc: String) -> SAXAttributeType {
         switch desc {
             case "CDATA":    return .CData
             case "ID":       return .ID
@@ -101,7 +101,7 @@ extension SAXAttributeType: CustomStringConvertible {
 }
 
 extension SAXEntityType: CustomStringConvertible {
-    public var description: String {
+    @inlinable public var description: String {
         switch self {
             case .General:   return "General"
             case .Parameter: return "Parameter"
@@ -109,7 +109,7 @@ extension SAXEntityType: CustomStringConvertible {
         }
     }
 
-    static func valueFor(description desc: String) -> SAXEntityType {
+    @inlinable public static func valueFor(description desc: String) -> SAXEntityType {
         switch desc {
             case "General":   return .General
             case "Parameter": return .Parameter
@@ -119,7 +119,7 @@ extension SAXEntityType: CustomStringConvertible {
 }
 
 extension SAXElementAllowedContent: CustomStringConvertible {
-    public var description: String {
+    @inlinable public var description: String {
         switch self {
             case .Empty:    return "Empty"
             case .Elements: return "Elements"
@@ -129,7 +129,7 @@ extension SAXElementAllowedContent: CustomStringConvertible {
         }
     }
 
-    static func valueFor(description desc: String?) -> SAXElementAllowedContent {
+    @inlinable public static func valueFor(description desc: String?) -> SAXElementAllowedContent {
         if let d = desc {
             switch d {
                 case "EMPTY":       return .Empty
@@ -143,7 +143,7 @@ extension SAXElementAllowedContent: CustomStringConvertible {
 }
 
 extension SAXDTDElementContentItem.ItemType: CustomStringConvertible {
-    public var description: String {
+    @inlinable public var description: String {
         switch self {
             case .Element: return "Element"
             case .List:    return "List"
@@ -151,7 +151,7 @@ extension SAXDTDElementContentItem.ItemType: CustomStringConvertible {
         }
     }
 
-    static func valueFor(description desc: String) -> SAXDTDElementContentItem.ItemType {
+    @inlinable public static func valueFor(description desc: String) -> SAXDTDElementContentItem.ItemType {
         switch desc {
             case "Element": return .Element
             case "List":    return .List
@@ -161,7 +161,7 @@ extension SAXDTDElementContentItem.ItemType: CustomStringConvertible {
 }
 
 extension SAXDTDElementContentItem.ItemMultiplicity: CustomStringConvertible {
-    public var description: String {
+    @inlinable public var description: String {
         switch self {
             case .Optional:   return "Optional"
             case .Once:       return "Once"
@@ -170,7 +170,7 @@ extension SAXDTDElementContentItem.ItemMultiplicity: CustomStringConvertible {
         }
     }
 
-    public var symbolChar: String {
+    @inlinable public var symbolChar: String {
         switch self {
             case .Optional:   return "?"
             case .Once:       return ""
@@ -179,7 +179,7 @@ extension SAXDTDElementContentItem.ItemMultiplicity: CustomStringConvertible {
         }
     }
 
-    static func valueFor(description desc: String) -> SAXDTDElementContentItem.ItemMultiplicity {
+    @inlinable public static func valueFor(description desc: String) -> SAXDTDElementContentItem.ItemMultiplicity {
         switch desc {
             case "Optional":   return .Optional
             case "Once":       return .Once
@@ -190,14 +190,14 @@ extension SAXDTDElementContentItem.ItemMultiplicity: CustomStringConvertible {
 }
 
 extension SAXDTDElementContentList.ItemConjunction: CustomStringConvertible {
-    public var description: String {
+    @inlinable public var description: String {
         switch self {
             case .And: return "And"
             case .Or:  return "Or"
         }
     }
 
-    static func valueFor(description desc: String) -> SAXDTDElementContentList.ItemConjunction {
+    @inlinable public static func valueFor(description desc: String) -> SAXDTDElementContentList.ItemConjunction {
         switch desc {
             case "And": return .And
             default:    return .Or
@@ -207,18 +207,41 @@ extension SAXDTDElementContentList.ItemConjunction: CustomStringConvertible {
 
 extension String {
 
+    @inlinable public var isTrimmedNotEmpty: Bool { self.trimmed.isNotEmpty }
+    @inlinable public var isTrimmedEmpty:    Bool { self.trimmed.isEmpty }
+
     /*===========================================================================================================================================================================*/
     /// Assuming this string is a fully qualified name, return a tuple containing the prefix and local name from this string.
-    /// 
+    ///
     /// - Returns: the prefix and local name.  `nil` is returned for the prefix if none is found.
     ///
-    func splitPrefix() -> (String?, String) {
+    @inlinable public func splitPrefix() -> (String?, String) {
         guard let idx = firstIndex(of: ":") else { return (nil, self) }
         guard idx > startIndex else { return (nil, String(self[index(after: startIndex) ..< endIndex])) }
         return (String(self[startIndex ..< idx]), String(self[index(after: idx) ..< endIndex]))
     }
+
+    @inlinable public func encodeEntities() -> String {
+        var out: String = ""
+        for ch in self {
+            switch ch {
+                case "<":  out.append("&lt;")
+                case ">":  out.append("&gt;")
+                case "\"": out.append("&quot;")
+                case "'":  out.append("&apos;")
+                case "&":  out.append("&amp;")
+                default:   out.append(ch)
+            }
+        }
+        return out
+    }
 }
 
-extension BidirectionalCollection {
-    var isNotEmpty: Bool { !isEmpty }
+extension Collection where Element == Character {
+
+    @inlinable public func lowercased() -> [Character] {
+        var out: [Character] = []
+        forEach { out.append(contentsOf: $0.lowercased()) }
+        return out
+    }
 }

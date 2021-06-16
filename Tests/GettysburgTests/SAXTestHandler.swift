@@ -91,7 +91,7 @@ class SAXTestHandler: SAXHandler {
         /* TODO: Implement me... */
     }
 
-    func beginElement(_ parser: SAXParser, name: SAXNSName, attributes: [SAXAttribute]) {
+    func beginElement(_ parser: SAXParser, name: SAXNSName, attributes: SAXRawAttribList) {
         /* TODO: Implement me... */
     }
 

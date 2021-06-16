@@ -26,14 +26,14 @@ import Rubicon
 
 /*===============================================================================================================================================================================*/
 /// Get a URL for the current working directory.
-/// 
+///
 /// - Returns: the current working directory as a URL.
 ///
 func GetCurrDirURL() -> URL { URL(fileURLWithPath: FileManager.default.currentDirectoryPath, isDirectory: true) }
 
 /*===============================================================================================================================================================================*/
 /// Get a URL for the given filename.  If the filename is relative it will be made absolute relative to the current working directory.
-/// 
+///
 /// - Parameter filename: the filename.
 /// - Returns: the filename as an absolute URL.
 ///
@@ -44,7 +44,7 @@ func GetFileURL(filename: String) -> URL { URL(fileURLWithPath: filename, relati
 /// URL's](https://developer.apple.com/documentation/foundation/url)</code> constructor
 /// <code>[`URL(string:)`](https://developer.apple.com/documentation/foundation/url/3126806-init)</code> is that this function will throw an error if the URL is malformed rather
 /// than returning `nil` and if the URL is relative and `nil` is passed for the `relativeTo` base URL then it will use the current working directory.
-/// 
+///
 /// - Parameters:
 ///   - string: the string containing the URL.
 ///   - relativeTo: If the URL defined by the given string is relative then...
@@ -52,13 +52,13 @@ func GetFileURL(filename: String) -> URL { URL(fileURLWithPath: filename, relati
 /// - Throws: if the URL is malformed.
 ///
 func GetURL(string: String, relativeTo: URL? = nil) throws -> URL {
-    guard let url = URL(string: string, relativeTo: (relativeTo ?? GetCurrDirURL())) else { throw SAXError.MalformedURL(description: string) }
+    guard let url = URL(string: string, relativeTo: (relativeTo ?? GetCurrDirURL())) else { throw SAXError.getMalformedURL(description: string) }
     return url
 }
 
 /*===============================================================================================================================================================================*/
 /// Print out an array of strings to STDOUT. Used for debugging.
-/// 
+///
 /// - Parameter strings: the array of strings.
 ///
 func PrintArray(_ strings: [String?]) {
@@ -73,7 +73,7 @@ func PrintArray(_ strings: [String?]) {
 
 /*===============================================================================================================================================================================*/
 /// Given a URL, get the Base URL and the filename.
-/// 
+///
 /// - Parameter url: the URL.
 /// - Returns: a tuple with the given URL, the Base URL, and the filename. If the given URL was relative then it is made absolute with respect to the current working directory.
 /// - Throws: if the URL is malformed.
@@ -93,7 +93,7 @@ let UTF8BOM:    [UInt8] = [ 0xef, 0xbb, 0xbf ]
 
 /*===============================================================================================================================================================================*/
 /// Determin the encoding used in a file by sampling the bytes and/or reading the XML Declaration.
-/// 
+///
 /// - Parameter inputStream: The MarkInputStream.
 /// - Returns: The encoding name.
 /// - Throws: If an  I/O error occurs or the encoding is not supported.
@@ -110,7 +110,7 @@ func _getEncodingName(inputStream: MarkInputStream) throws -> String {
     inputStream.open()
     inputStream.markSet()
     defer { inputStream.markReturn() }
-    guard inputStream.read(&buffer, maxLength: 4) == 4 else { throw SAXError.UnexpectedEndOfInput(description: "Not enough data to determine the character encoding.") }
+    guard inputStream.read(&buffer, maxLength: 4) == 4 else { throw SAXError.getUnexpectedEndOfInput(description: "Not enough data to determine the character encoding.") }
 
     if buffer == UTF32BEBOM {
         inputStream.markUpdate()
@@ -162,7 +162,7 @@ func hardGuess(_ encodingName: String, _ inputStream: MarkInputStream) throws ->
     guard let m = GetRegularExpression(pattern: "\\sencoding=\"([^\"]+)\"").firstMatch(in: String(chars)), let enc = m[1].subString else { return encodingName }
     // We definitely got an encoding name, now let's see if we support it.
     let uEnc = enc.uppercased()
-    guard IConv.encodingsList.contains(uEnc) else { throw SAXError.UnknownEncoding(description: "Uknown encoding: \(enc)") }
+    guard IConv.encodingsList.contains(uEnc) else { throw SAXError.getUnknownEncoding(description: "Uknown encoding: \(enc)") }
     return uEnc
 }
 

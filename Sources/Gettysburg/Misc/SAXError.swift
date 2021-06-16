@@ -24,43 +24,69 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-open class SAXError: Error, CustomStringConvertible, Hashable {
-    public let position:    DocPosition
-    public let description: String
+public enum SAXError: Error {
+    case MalformedURL(position: TextPosition, description: String)
+    case UnexpectedEndOfInput(position: TextPosition, description: String)
+    case UnknownEncoding(position: TextPosition, description: String)
+    case NoHandler(position: TextPosition, description: String)
+    case MalformedDocument(position: TextPosition, description: String)
+    case MalformedParameter(position: TextPosition, description: String)
+    case MalformedXmlDecl(position: TextPosition, description: String)
+    case MalformedComment(position: TextPosition, description: String)
+    case MalformedProcInst(position: TextPosition, description: String)
+    case MalformedCDATASection(position: TextPosition, description: String)
+    case MissingWhitespace(position: TextPosition, description: String)
+    case MalformedDocType(position: TextPosition, description: String)
 
-    public init(_ p: DocPosition, description d: String) {
-        self.position = p
-        self.description = d
+    @inlinable static func getMalformedDocType(_ inputStream: SAXCharInputStream, description: String) -> SAXError {
+        return SAXError.MalformedDocType(position: inputStream.position, description: description)
     }
 
-    public convenience init(_ p: TextPosition, description d: String) { self.init(DocPosition(position: p), description: d) }
-
-    public convenience init(_ i: SAXCharInputStream, description d: String) { self.init(i.docPosition, description: d) }
-
-    public convenience init(description d: String) { self.init(DocPosition(line: 0, column: 0), description: d) }
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(position)
-        hasher.combine(description)
+    @inlinable static func getMalformedURL(_ inputStream: SAXCharInputStream, description: String) -> SAXError {
+        return SAXError.MalformedURL(position: inputStream.position, description: description)
     }
 
-    public static func == (lhs: SAXError, rhs: SAXError) -> Bool { ((type(of: lhs) == type(of: rhs)) && (lhs.position == rhs.position) && (lhs.description == rhs.description)) }
+    @inlinable static func getMalformedURL(description: String) -> SAXError {
+        return SAXError.MalformedURL(position: TextPosition(lineNumber: 0, columnNumber: 0), description: description)
+    }
 
-    public class MalformedURL: SAXError {}
+    @inlinable static func getUnexpectedEndOfInput(description: String = "Unexpected end-of-input.") -> SAXError {
+        return SAXError.UnexpectedEndOfInput(position: TextPosition(lineNumber: 0, columnNumber: 0), description: description)
+    }
 
-    public class UnexpectedEndOfInput: SAXError { public convenience init() { self.init(description: "Unexpected End-of-Input.") } }
+    @inlinable static func getUnknownEncoding(description: String) -> SAXError {
+        return SAXError.UnknownEncoding(position: TextPosition(lineNumber: 0, columnNumber: 0), description: description)
+    }
 
-    public class UnknownEncoding: SAXError {}
+    @inlinable static func getNoHandler(_ inputStream: SAXCharInputStream, description: String) -> SAXError {
+        return SAXError.NoHandler(position: inputStream.position, description: description)
+    }
 
-    public class NoHandler: SAXError {}
+    @inlinable static func getMalformedDocument(_ inputStream: SAXCharInputStream, description: String) -> SAXError {
+        return SAXError.MalformedDocument(position: inputStream.position, description: description)
+    }
 
-    public class MalformedDocument: SAXError {}
+    @inlinable static func getMalformedParameter(_ inputStream: SAXCharInputStream, description: String) -> SAXError {
+        return SAXError.MalformedParameter(position: inputStream.position, description: description)
+    }
 
-    public class MalformedParameter: SAXError {}
+    @inlinable static func getMalformedXmlDecl(_ inputStream: SAXCharInputStream, description: String) -> SAXError {
+        return SAXError.MalformedXmlDecl(position: inputStream.position, description: description)
+    }
 
-    public class MalformedXmlDecl: SAXError {}
+    @inlinable static func getMalformedComment(_ inputStream: SAXCharInputStream, description: String) -> SAXError {
+        return SAXError.MalformedComment(position: inputStream.position, description: description)
+    }
 
-    public class MalformedComment: SAXError {}
+    @inlinable static func getMalformedProcInst(_ inputStream: SAXCharInputStream, description: String) -> SAXError {
+        return SAXError.MalformedProcInst(position: inputStream.position, description: description)
+    }
 
-    public class MalformedProcessingInstruction: SAXError {}
+    @inlinable static func getMalformedCDATASection(_ inputStream: SAXCharInputStream, description: String) -> SAXError {
+        return SAXError.MalformedCDATASection(position: inputStream.position, description: description)
+    }
+
+    @inlinable static func getMissingWhitespace(_ inputStream: SAXCharInputStream, description: String = "Whitespace was expected.") -> SAXError {
+        return SAXError.MissingWhitespace(position: inputStream.position, description: description)
+    }
 }

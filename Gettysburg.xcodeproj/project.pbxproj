@@ -1017,7 +1017,7 @@
 			repositoryURL = "https://github.com/GalenRhodes/Rubicon.git";
 			requirement = {
 				kind = upToNextMinorVersion;
-				minimumVersion = 0.2.37;
+				minimumVersion = 0.2.42;
 			};
 		};
 		83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer" */ = {

@@ -98,7 +98,7 @@ open class SAXCharInputStreamStack: SAXCharInputStream {
     }
 
     open func pushStream(url: URL) throws {
-        guard let inputStream = InputStream(url: url) else { throw SAXError.MalformedURL(description: url.absoluteString) }
+        guard let inputStream = InputStream(url: url) else { throw SAXError.getMalformedURL(description: url.absoluteString) }
         pushStream(inputStream: try SAXIConvCharInputStream(inputStream: inputStream, url: url))
     }
 

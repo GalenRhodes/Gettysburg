@@ -97,7 +97,7 @@
                 <a href="../Classes/SAXError/MalformedComment.html">– MalformedComment</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Classes/SAXError/MalformedProcessingInstruction.html">– MalformedProcessingInstruction</a>
+                <a href="../Classes/SAXError/MalformedProcInst.html">– MalformedProcInst</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/SAXIConvCharInputStream.html">SAXIConvCharInputStream</a>
@@ -164,6 +164,9 @@
               <li class="nav-group-task">
                 <a href="../Global%20Variables/rxNameStartCharSet.html">rxNameStartCharSet</a>
               </li>
+              <li class="nav-group-task">
+                <a href="../Global%20Variables/rxWhitespacePattern.html">rxWhitespacePattern</a>
+              </li>
             </ul>
           </li>
           <li class="nav-group-name">
@@ -197,9 +200,6 @@
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
                 <a href="../Extensions/Array.html">Array</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Extensions/BidirectionalCollection.html">BidirectionalCollection</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Extensions/Character.html">Character</a>
@@ -290,6 +290,17 @@
               </li>
             </ul>
           </li>
+          <li class="nav-group-name">
+            <a href="../Typealiases.html">Type Aliases</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Typealiases/SAXRawAttribList.html">SAXRawAttribList</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases/SAXRawAttribute.html">SAXRawAttribute</a>
+              </li>
+            </ul>
+          </li>
         </ul>
       </nav>
       <article class="main-content">
@@ -307,7 +318,7 @@
             <p>Holds a <code>prefix</code> to <code>uri</code> mapping.</p>
 
               <div class="slightly-smaller">
-                <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/SAXNSName.swift#L78-L96">Show on GitHub</a>
+                <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/SAXNSName.swift#L90-L108">Show on GitHub</a>
               </div>
           </section>
           <section class="section task-group-section">
@@ -404,6 +415,36 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:10Gettysburg9NSMappingV9isDefaultSbvp"></a>
+                    <a name="//apple_ref/swift/Property/isDefault" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Gettysburg9NSMappingV9isDefaultSbvp">isDefault</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@inlinable</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">isDefault</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/SAXNSName.swift#L">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:10Gettysburg9NSMappingV6prefix3uriACSS_SStcfc"></a>
                     <a name="//apple_ref/swift/Method/init(prefix:uri:)" class="dashAnchor"></a>
                     <a class="token" href="#/s:10Gettysburg9NSMappingV6prefix3uriACSS_SStcfc">init(prefix:<wbr>uri:<wbr>)</a>
@@ -425,7 +466,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/SAXNSName.swift#L83-L86">Show on GitHub</a>
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/SAXNSName.swift#L96-L99">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -455,7 +496,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/SAXNSName.swift#L88-L91">Show on GitHub</a>
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Misc/SAXNSName.swift#L101-L103">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -525,7 +566,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2021 <a class="link" href="https://blog.projectgalen.com" target="_blank" rel="external">Galen Rhodes</a>. All rights reserved. (Last updated: 2021-06-09)</p>
+          <p>&copy; 2021 <a class="link" href="https://blog.projectgalen.com" target="_blank" rel="external">Galen Rhodes</a>. All rights reserved. (Last updated: 2021-06-15)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>
