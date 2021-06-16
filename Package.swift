@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.4
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -14,7 +14,7 @@ let package = Package(
         .package(name: "Rubicon", url: "https://github.com/GalenRhodes/Rubicon.git", .upToNextMinor(from: "0.2.42")),
     ],
     targets: [
-        .target(name: "Gettysburg", dependencies: [ "Rubicon" ], resources: [ .copy("Info.plist") ]),
-        .testTarget(name: "GettysburgTests", dependencies: [ "Gettysburg" ], resources: [ .copy("Info.plist"), .copy("TestData") ]),
+        .target(name: "Gettysburg", dependencies: [ "Rubicon" ], exclude: [ "Info.plist", ]),
+        .testTarget(name: "GettysburgTests", dependencies: [ "Gettysburg" ], exclude: [ "Info.plist", ], resources: [ .copy("TestData") ]),
     ])
 //@f:1
