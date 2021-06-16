@@ -29,7 +29,7 @@ import Rubicon
 ///
 /// - Returns: the current working directory as a URL.
 ///
-func GetCurrDirURL() -> URL { URL(fileURLWithPath: FileManager.default.currentDirectoryPath, isDirectory: true) }
+@inlinable func GetCurrDirURL() -> URL { URL(fileURLWithPath: FileManager.default.currentDirectoryPath, isDirectory: true) }
 
 /*===============================================================================================================================================================================*/
 /// Get a URL for the given filename.  If the filename is relative it will be made absolute relative to the current working directory.
@@ -37,7 +37,7 @@ func GetCurrDirURL() -> URL { URL(fileURLWithPath: FileManager.default.currentDi
 /// - Parameter filename: the filename.
 /// - Returns: the filename as an absolute URL.
 ///
-func GetFileURL(filename: String) -> URL { URL(fileURLWithPath: filename, relativeTo: GetCurrDirURL()) }
+@inlinable func GetFileURL(filename: String) -> URL { URL(fileURLWithPath: filename, relativeTo: GetCurrDirURL()) }
 
 /*===============================================================================================================================================================================*/
 /// Get a `URL` for it's given string form. The difference between this function and calling the <code>[foundation class
@@ -51,7 +51,7 @@ func GetFileURL(filename: String) -> URL { URL(fileURLWithPath: filename, relati
 /// - Returns: the URL.
 /// - Throws: if the URL is malformed.
 ///
-func GetURL(string: String, relativeTo: URL? = nil) throws -> URL {
+@inlinable func GetURL(string: String, relativeTo: URL? = nil) throws -> URL {
     guard let url = URL(string: string, relativeTo: (relativeTo ?? GetCurrDirURL())) else { throw SAXError.getMalformedURL(description: string) }
     return url
 }
@@ -61,7 +61,7 @@ func GetURL(string: String, relativeTo: URL? = nil) throws -> URL {
 ///
 /// - Parameter strings: the array of strings.
 ///
-func PrintArray(_ strings: [String?]) {
+@usableFromInline func PrintArray(_ strings: [String?]) {
     #if DEBUG
         var idx = 0
         for s in strings {
@@ -78,7 +78,7 @@ func PrintArray(_ strings: [String?]) {
 /// - Returns: a tuple with the given URL, the Base URL, and the filename. If the given URL was relative then it is made absolute with respect to the current working directory.
 /// - Throws: if the URL is malformed.
 ///
-func GetBaseURLAndFilename(url: URL) throws -> (URL, URL, String) {
+@inlinable func GetBaseURLAndFilename(url: URL) throws -> (URL, URL, String) {
     let burl     = try GetURL(string: url.absoluteString)
     let baseURL  = burl.deletingLastPathComponent()
     let filename = burl.lastPathComponent
@@ -98,13 +98,13 @@ let UTF8BOM:    [UInt8] = [ 0xef, 0xbb, 0xbf ]
 /// - Returns: The encoding name.
 /// - Throws: If an  I/O error occurs or the encoding is not supported.
 ///
-func getEncodingName(inputStream: MarkInputStream) throws -> String {
+@usableFromInline func getEncodingName(inputStream: MarkInputStream) throws -> String {
     nDebug(.In, "Mark Count: \(inputStream.markCount)")
     defer { nDebug(.Out, "Mark Count: \(inputStream.markCount)") }
     return try _getEncodingName(inputStream: inputStream)
 }
 
-func _getEncodingName(inputStream: MarkInputStream) throws -> String {
+@usableFromInline func _getEncodingName(inputStream: MarkInputStream) throws -> String {
     var buffer: [UInt8] = [ 0, 0, 0, 0 ]
 
     inputStream.open()
@@ -138,7 +138,7 @@ func _getEncodingName(inputStream: MarkInputStream) throws -> String {
     }
 }
 
-func hardGuess(_ encodingName: String, _ inputStream: MarkInputStream) throws -> String {
+@usableFromInline func hardGuess(_ encodingName: String, _ inputStream: MarkInputStream) throws -> String {
     // NOTE: At this point the encoding is only guessed at.  We'll need to look for an XML Declaration element to hopefully give us more information.
     let _inputStream = SimpleIConvCharInputStream(inputStream: inputStream, encodingName: encodingName, autoClose: false)
     _inputStream.open()
@@ -166,7 +166,7 @@ func hardGuess(_ encodingName: String, _ inputStream: MarkInputStream) throws ->
     return uEnc
 }
 
-func guessEncodingName(_ buffer: [UInt8]) -> String {
+@usableFromInline func guessEncodingName(_ buffer: [UInt8]) -> String {
     if (buffer[0] == 0 && buffer[1] != 0) || (buffer[2] == 0 && buffer[3] != 0) { return "UTF-16BE" }
     else if (buffer[0] != 0 && buffer[1] == 0) || (buffer[2] != 0 && buffer[3] == 0) { return "UTF-16LE" }
     else if (buffer[0] == 0 && buffer[1] == 0 && buffer[3] != 0) { return "UTF-32BE" }
@@ -226,3 +226,21 @@ extension Array where Element == Character {
         return ((m.count == 1) && (str.fullRange == m[0].range))
     }
 }
+
+@inlinable func GetExternalFile(parentStream: SAXCharInputStream, url: URL) throws -> String { try GetExternalFile(position: parentStream.position, url: url) }
+
+@usableFromInline func GetExternalFile(position: TextPosition = (0, 0), url: URL) throws -> String {
+    guard let byteInputStream = InputStream(url: url) else { throw SAXError.MalformedURL(position: position, description: url.absoluteString) }
+    let charInputStream = try SAXIConvCharInputStream(inputStream: byteInputStream, url: url)
+    var buffer: [Character] = []
+    _ = try charInputStream.read(chars: &buffer, maxLength: Int.max)
+    return String(buffer)
+}
+
+@inlinable func GetPosition(from str: String, range: Range<String.Index>, startingAt pos: TextPosition) -> TextPosition {
+    var p = pos
+    str[range].forEach { ch in textPositionUpdate(ch, pos: &p, tabWidth: 4) }
+    return p
+}
+
+@inlinable func AdvancePosition(from str: String, range: Range<String.Index>, position pos: inout TextPosition) { pos = GetPosition(from: str, range: range, startingAt: pos) }

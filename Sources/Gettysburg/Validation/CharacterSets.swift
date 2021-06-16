@@ -79,3 +79,7 @@ extension String {
     }
 }
 //@f:1
+
+extension CharacterSet {
+    static var XMLWhitespace: CharacterSet { CharacterSet(charactersIn: UnicodeScalar(0) ..< UnicodeScalar(0x21)).union(CharacterSet(charactersIn: UnicodeScalar(0x7f) ..< UnicodeScalar(0x80))) }
+}

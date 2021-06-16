@@ -76,7 +76,7 @@ open class SAXParser {
             var hasDocType:  Bool = false
             var hasRootElem: Bool = false
 
-            while let ch = try read() {
+            while let ch = try inputStream.read() {
                 switch ch {
                     case "<": try handleRootNodeItem(&hasDocType, &hasRootElem)
                     default:  guard ch.isXmlWhitespace else { throw unexpectedCharacterError(character: ch) }
@@ -98,11 +98,11 @@ open class SAXParser {
     /// - Throws: If an I/O error occurs or the root node item is malformed.
     ///
     func handleRootNodeItem(_ hasDocType: inout Bool, _ hasRootElem: inout Bool) throws {
-        guard let ch = try read() else { throw SAXError.getUnexpectedEndOfInput() }
+        guard let ch = try inputStream.read() else { throw SAXError.getUnexpectedEndOfInput() }
 
         switch ch {
             case "!":
-                guard let ch = try read() else { throw SAXError.getUnexpectedEndOfInput() }
+                guard let ch = try inputStream.read() else { throw SAXError.getUnexpectedEndOfInput() }
                 switch ch {
                     case "-":
                         markBackup(count: 3)
@@ -127,11 +127,147 @@ open class SAXParser {
         }
     }
 
+    /*===========================================================================================================================================================================*/
     func handleDocType() throws {
         var buffer: [Character] = []
-        guard try read(chars: &buffer, count: 10) == 10 else { throw SAXError.getUnexpectedEndOfInput() }
+        guard try inputStream.read(chars: &buffer, maxLength: 10) == 10 else { throw SAXError.getUnexpectedEndOfInput() }
         guard try String(buffer).matches(pattern: "^\\<\\!DOCTYPE\\s+") else { throw SAXError.getMalformedDocType(markReset(), description: "Not a DOCTYPE element: \"\(String(buffer))\"") }
-        guard let elem = try nextIdentifier(leadingWhitespace: .Allowed)
+        guard let elem = try nextIdentifier(leadingWhitespace: .Allowed) else { throw SAXError.getMalformedDocType(markReset(), description: "Missing root element.") }
+        guard let ch = try read(leadingWhitespace: .Required) else { throw SAXError.getUnexpectedEndOfInput() }
+        switch ch {
+            case "[": try handleInternalDocType(rootElement: elem)
+            case "S": markBackup(); try handleExternalSystemDocType(rootElement: elem)
+            case "P": markBackup(); try handleExternalPublicDocType(rootElement: elem)
+            default: throw SAXError.getMalformedDocType(markBackup(), description: unexpectedCharMessage(character: ch))
+        }
+    }
+
+    /*===========================================================================================================================================================================*/
+    func handleExternalSystemDocType(rootElement elem: String) throws {
+        guard let tp = try nextIdentifier(leadingWhitespace: .None) else { throw SAXError.getMalformedDocType(markReset(), description: "Missing external type.") }
+        guard tp == "SYSTEM" else { throw SAXError.getMalformedDocType(markReset(), description: "Incorrect external type: \"\(tp)\"") }
+        let url = try readSystemID()
+        let ws  = try readWhitespace()
+        guard let ch = try inputStream.read() else { throw SAXError.getUnexpectedEndOfInput() }
+
+        if ch == "[" {
+            guard ws else { throw SAXError.getMissingWhitespace(markBackup()) }
+            try handleInternalDocType(rootElement: elem)
+        }
+        else if ch != ">" {
+            throw SAXError.getMalformedDocType(markBackup(), description: unexpectedCharMessage(character: ch))
+        }
+
+        let body = try GetExternalFile(parentStream: inputStream, url: url)
+        try parseDocType(rootElement: elem, body: body, url: url)
+    }
+
+    /*===========================================================================================================================================================================*/
+    func handleExternalPublicDocType(rootElement elem: String) throws {
+        markUpdate()
+        guard let tp = try nextIdentifier(leadingWhitespace: .None) else { throw SAXError.getMalformedDocType(markReset(), description: "Missing external type.") }
+        guard tp == "PUBLIC" else { throw SAXError.getMalformedDocType(markReset(), description: "Incorrect external type: \"\(tp)\"") }
+        guard let pid = try nextQuotedValue(leadingWhitespace: .Required) else { throw SAXError.getMalformedURL(inputStream, description: "Missing public ID.") }
+        let url = try readSystemID()
+        guard let ch = try read(leadingWhitespace: .Allowed) else { throw SAXError.getUnexpectedEndOfInput() }
+        guard ch == ">" else { throw SAXError.getMalformedDocType(markBackup(), description: unexpectedCharMessage(character: ch)) }
+        let body = try GetExternalFile(parentStream: inputStream, url: url)
+        try parseDocType(rootElement: elem, body: body, name: pid, url: url)
+    }
+
+    /*===========================================================================================================================================================================*/
+    func handleInternalDocType(rootElement elem: String) throws {
+        var buffer: [Character]  = []
+        let pos:    TextPosition = inputStream.position
+
+        while let ch = try inputStream.read() {
+            if ch == "]" {
+                guard let ch = try inputStream.read() else { throw SAXError.getUnexpectedEndOfInput() }
+                if ch == ">" { return try parseDocType(rootElement: elem, body: String(buffer), position: pos) }
+                buffer <+ "]"
+                buffer <+ ch
+            }
+            buffer <+ ch
+        }
+
+        throw SAXError.getUnexpectedEndOfInput()
+    }
+
+    /*===========================================================================================================================================================================*/
+    func parseDocType(rootElement elem: String, body: String, name: String? = nil, url: URL? = nil, position pos: TextPosition = (0, 0)) throws {
+        let pattern             = "<!--(.*?)-->|<!(ELEMENT|ENTITY|ATTLIST|NOTATION)(?:\\s+([^>]*))?>"
+        let regex               = GetRegularExpression(pattern: pattern, options: [ .dotMatchesLineSeparators ])
+        var last:  String.Index = body.startIndex
+        var error: Error?       = nil
+        var pos                 = pos
+
+        regex.forEachMatch(in: body) { match, _, stop in
+            if let match = match {
+                do {
+                    body[last ..< match.range.lowerBound].forEach { ch in
+                        guard ch.isXmlWhitespace else { throw SAXError.MalformedDocType(position: pos, description: unexpectedCharMessage(character: ch)) }
+                        textPositionUpdate(ch, pos: &pos, tabWidth: 4)
+                    }
+
+                    if let rComment = match[1].range {
+                        let comment = String(body[rComment])
+                        try _foo01(body: body, startIndex: match.range.lowerBound, comment: comment, rComment: rComment, position: pos)
+                        handler.comment(self, content: comment)
+                    }
+                    else if let rType = match[2].range {
+                        if let rData = match[3].range {
+                            let rToData = (match.range.lowerBound ..< rData.lowerBound)
+                            let pData   = GetPosition(from: body, range: rToData, startingAt: pos)
+
+                            switch body[rType] {
+                                case "ELEMENT": try parseDocTypeElement(rootElement: elem, body: String(body[rData]), name: name, url: url, position: pData)
+                                case "ENTITY":  try parseDocTypeEntity(rootElement: elem, body: String(body[rData]), name: name, url: url, position: pData)
+                                case "ATTLIST": try parseDocTypeAttList(rootElement: elem, body: String(body[rData]), name: name, url: url, position: pData)
+                                default:        try parseDocTypeNotation(rootElement: elem, body: String(body[rData]), name: name, url: url, position: pData)
+                            }
+                        }
+                        else {
+                            throw SAXError.MalformedDocType(position: pos, description: "Empty DTD \(body[rType]) Decl.")
+                        }
+                    }
+
+                    AdvancePosition(from: body, range: match.range, position: &pos)
+                    last = match.range.upperBound
+                }
+                catch let e {
+                    error = e
+                    stop = true
+                }
+            }
+        }
+
+        if let e = error { throw e }
+    }
+
+    /*===========================================================================================================================================================================*/
+    func _foo01(body: String, startIndex: String.Index, comment: String, rComment: Range<String.Index>, position pos: TextPosition) throws {
+        if let rx = comment.range(of: "--") {
+            let d = comment.distance(from: startIndex, to: rx.lowerBound)
+            let p = GetPosition(from: body, range: startIndex ..< body.index(startIndex, offsetBy: d), startingAt: pos)
+            throw SAXError.MalformedComment(position: p, description: "Comment cannot contain double minus (-) signs.")
+        }
+        else if comment.hasSuffix("-") {
+            let p = GetPosition(from: body, range: startIndex ..< rComment.lowerBound, startingAt: pos)
+            throw SAXError.MalformedComment(position: p, description: "Comment cannot contain double minus (-) signs.")
+        }
+    }
+
+    /*===========================================================================================================================================================================*/
+    func parseDocTypeElement(rootElement elem: String, body: String, name: String? = nil, url: URL? = nil, position pos: TextPosition) throws {}
+
+    /*===========================================================================================================================================================================*/
+    func parseDocTypeEntity(rootElement elem: String, body: String, name: String? = nil, url: URL? = nil, position pos: TextPosition) throws {}
+
+    /*===========================================================================================================================================================================*/
+    func parseDocTypeAttList(rootElement elem: String, body: String, name: String? = nil, url: URL? = nil, position pos: TextPosition) throws {}
+
+    /*===========================================================================================================================================================================*/
+    func parseDocTypeNotation(rootElement elem: String, body: String, name: String? = nil, url: URL? = nil, position pos: TextPosition) throws {
     }
 
     /*===========================================================================================================================================================================*/
@@ -140,7 +276,7 @@ open class SAXParser {
     /// - Throws: If there is an I/O error or the element is malformed.
     ///
     func handleNestedElement() throws {
-        guard let ch = try read() else { return }
+        guard let ch = try inputStream.read() else { return }
         guard ch == "<" else { throw unexpectedCharacterError(character: ch) }
         guard let tagName = try nextIdentifier() else { throw SAXError.getMalformedDocument(markReset(), description: "Missing element tag name.") }
         try handleElementAttributes(tagName: tagName)
@@ -160,10 +296,8 @@ open class SAXParser {
         var attribs: SAXRawAttribList = []
 
         repeat {
-            markUpdate()
             let ws = try readWhitespace()
-
-            guard let ch = try read() else { throw SAXError.getUnexpectedEndOfInput() }
+            guard let ch = try inputStream.read() else { throw SAXError.getUnexpectedEndOfInput() }
 
             if ch == ">" {
                 try callElementBeginHandler(tagName: tagName, attributes: attribs)
@@ -172,18 +306,17 @@ open class SAXParser {
                 return
             }
             else if ch == "/" {
-                guard let ch = try read() else { throw SAXError.getUnexpectedEndOfInput() }
-                guard ch == ">" else { throw unexpectedCharacterError(character: ch) }
+                guard try getChar(errorOnEOF: true, allowed: ">") != nil else { throw unexpectedCharacterError() }
                 try callElementBeginHandler(tagName: tagName, attributes: attribs)
                 try callElementEndHandler(tagName: tagName)
                 // This is an empty element and has no body.
                 return
             }
             else if ch.isXmlNameStartChar {
-                guard ws.isNotEmpty else { throw SAXError.getMalformedDocument(markBackup(), description: "Whitespace was expected.") }
+                guard ws else { throw SAXError.getMalformedDocument(markBackup(), description: "Whitespace was expected.") }
                 markBackup()
                 guard let key = try nextIdentifier() else { throw SAXError.getMalformedDocument(markBackup(), description: "Missing Attribute Name") }
-                guard let ch = try read() else { throw SAXError.getUnexpectedEndOfInput() }
+                guard let ch = try inputStream.read() else { throw SAXError.getUnexpectedEndOfInput() }
                 guard ch == "=" else { throw unexpectedCharacterError(character: ch) }
                 guard let value = try nextQuotedValue() else { throw SAXError.getMalformedDocument(markBackup(), description: "Missing Attribute Value") }
                 attribs <+ (SAXNSName(name: key), value)
@@ -247,7 +380,7 @@ open class SAXParser {
         defer { markDelete() }
         var text: [Character] = []
 
-        while var ch = try read() {
+        while var ch = try inputStream.read() {
             switch ch {
                 case "<":
                     handler.text(self, content: String(text))
@@ -293,7 +426,7 @@ open class SAXParser {
     ///
     func handleClosingTag(tagName: String) throws {
         var buffer: [Character] = []
-        guard try read(chars: &buffer, count: 3) == 3 else { throw SAXError.getUnexpectedEndOfInput() }
+        guard try inputStream.read(chars: &buffer, maxLength: 3) == 3 else { throw SAXError.getUnexpectedEndOfInput() }
 
         var ch = buffer.popLast()!
         guard buffer == "</" else { throw SAXError.getMalformedDocument(markBackup(count: 3), description: "Invalid closing tag.") }
@@ -321,11 +454,11 @@ open class SAXParser {
         let openMarkerCount: Int         = openMarker.count
         var buffer:          [Character] = []
 
-        guard try read(chars: &buffer, count: openMarkerCount) == openMarkerCount else { throw SAXError.getUnexpectedEndOfInput() }
+        guard try inputStream.read(chars: &buffer, maxLength: openMarkerCount) == openMarkerCount else { throw SAXError.getUnexpectedEndOfInput() }
         guard buffer == openMarker else { throw SAXError.getMalformedCDATASection(markBackup(count: openMarkerCount), description: "Not a CDATA Section starting tag: \"\(String(buffer))\"") }
 
         buffer.removeAll()
-        while let ch = try read() {
+        while let ch = try inputStream.read() {
             if ch == ">" && buffer.last(count: 2) == "]]" {
                 buffer.removeLast(2)
                 handler.cdataSection(self, content: String(buffer))
@@ -336,12 +469,19 @@ open class SAXParser {
         throw SAXError.getUnexpectedEndOfInput()
     }
 
+    /// Get an Unexpected Character message.
+    ///
+    /// - Parameter ch: The character that was unexpected.
+    /// - Returns: The message.
+    ///
+    @inlinable func unexpectedCharMessage(character ch: Character) -> String { "Unexpected character: \"\(ch)\"" }
+
     /// Get an `Unexpected Character` error.
     ///
     /// - Parameter ch: The character that was unexpected.
     /// - Returns: The error.
     ///
-    @inlinable func unexpectedCharacterError(character ch: Character) -> SAXError { SAXError.getMalformedDocument(markBackup(), description: "Unexpected character: \"\(ch)\"") }
+    @inlinable func unexpectedCharacterError(character ch: Character) -> SAXError { SAXError.getMalformedDocument(markBackup(), description: unexpectedCharMessage(character: ch)) }
 
     /// Get an `Unexpected Character` error.
     ///
@@ -375,9 +515,9 @@ open class SAXParser {
     func readProcessingInstruction() throws -> (target: String, data: String) {
         var buffer: [Character] = []
 
-        guard try read(chars: &buffer, count: 3) == 3, buffer[0 ..< 2] == "<?" else { throw SAXError.getMalformedProcInst(markReset(), description: String(buffer)) }
+        guard try inputStream.read(chars: &buffer, maxLength: 3) == 3, buffer[0 ..< 2] == "<?" else { throw SAXError.getMalformedProcInst(markReset(), description: String(buffer)) }
 
-        while let ch = try read() {
+        while let ch = try inputStream.read() {
             buffer <+ ch
             if buffer.last(count: 2) == "?>" {
                 let pi = String(buffer)
@@ -399,11 +539,11 @@ open class SAXParser {
         let dd:     [Character] = [ "-", "-" ]
         var buffer: [Character] = []
 
-        guard try read(chars: &buffer, count: 4) == 4 else { throw SAXError.getUnexpectedEndOfInput() }
+        guard try inputStream.read(chars: &buffer, maxLength: 4) == 4 else { throw SAXError.getUnexpectedEndOfInput() }
         guard buffer == "<!--" else { throw SAXError.getMalformedComment(markReset(), description: "Bad comment opening: \"\(String(buffer))\"") }
 
         markUpdate()
-        guard try read(chars: &buffer, count: 3) == 3 else { throw SAXError.getUnexpectedEndOfInput() }
+        guard try inputStream.read(chars: &buffer, maxLength: 3) == 3 else { throw SAXError.getUnexpectedEndOfInput() }
 
         if buffer == "-->" {
             // Handle an empty comment node.
@@ -412,11 +552,11 @@ open class SAXParser {
             return
         }
 
-        guard buffer[0 ..< 2] == dd else { throw unexpectedCharacterError(character: "-") }
+        guard buffer[0 ..< 2] == dd else { throw SAXError.getMalformedComment(markBackup(count: 2), description: "Comment cannot contain double minus (-) signs.") }
 
-        while let ch = try read() {
+        while let ch = try inputStream.read() {
             if buffer.last(count: 2) == dd {
-                guard ch == ">" else { throw unexpectedCharacterError(character: "-") }
+                guard ch == ">" else { throw SAXError.getMalformedComment(markBackup(count: 2), description: "Comment cannot contain double minus (-) signs.") }
                 handler.comment(self, content: String(buffer[buffer.startIndex ..< (buffer.endIndex - 2)]))
                 return
             }
@@ -488,8 +628,8 @@ open class SAXParser {
     /// - Returns: The next character
     /// - Throws: If an I/O error occurs or if the EOF has been found.
     ///
-    @inlinable final func readX() throws -> Character {
-        guard let ch = try inputStream.read() else { throw SAXError.getUnexpectedEndOfInput() }
+    @inlinable final func readX(leadingWhitespace lws: LeadingWhitespace = .None) throws -> Character {
+        guard let ch = try read(leadingWhitespace: lws) else { throw SAXError.getUnexpectedEndOfInput() }
         return ch
     }
 
@@ -499,42 +639,15 @@ open class SAXParser {
     /// - Returns: The next character or `nil` if the EOF has been found.
     /// - Throws: If an I/O error occurs.
     ///
-    @inlinable final func read() throws -> Character? { try inputStream.read() }
-
-    /*===========================================================================================================================================================================*/
-    /// Read, but do not remove, the next character from the input stream.
-    ///
-    /// - Returns: The next character or `nil` if the EOF has been found.
-    /// - Throws: If an I/O error occurs.
-    ///
-    @inlinable final func peek() throws -> Character? { try inputStream.peek() }
-
-    /*===========================================================================================================================================================================*/
-    /// Read the next `count` characters from the input stream.
-    ///
-    /// - Parameters:
-    ///   - chars: The array to receive the characters. Any characters already in the array will be removed.
-    ///   - count: The maximum number of characters to read.
-    /// - Returns: The actual number of characters read which might be less than `count` if EOF is found.
-    /// - Throws: If an I/O error occurs.
-    ///
-    @inlinable final func read(chars: inout [Character], count: Int) throws -> Int { try inputStream.read(chars: &chars, maxLength: count) }
-
-    /*===========================================================================================================================================================================*/
-    /// Read the next `count` characters from the input stream and append them to the given character array.
-    ///
-    /// - Parameters:
-    ///   - chars: The array to receive the characters. Any characters already in the array will be preserved.
-    ///   - count: The maximum number of characters to read.
-    /// - Returns: The actual number of characters read which might be less than `count` if EOF is found.
-    /// - Throws: If an I/O error occurs.
-    ///
-    @inlinable final func append(to chars: inout [Character], count: Int) throws -> Int { try inputStream.append(to: &chars, maxLength: count) }
+    @inlinable final func read(leadingWhitespace lws: LeadingWhitespace = .None) throws -> Character? {
+        if lws != .None { try readWhitespace(isRequired: (lws == .Required)) }
+        return try inputStream.read()
+    }
 
     /*===========================================================================================================================================================================*/
     /// Mark Set
     ///
-    @inlinable final func markSet() { inputStream.markSet() }
+    @discardableResult @inlinable final func markSet() -> SAXCharInputStream { inputStream.markSet(); return inputStream }
 
     /*===========================================================================================================================================================================*/
     /// Mark Delete
@@ -581,7 +694,9 @@ open class SAXParser {
     /// - Returns: The character or `nil` if the next character would not have been one of the allowed characters or if `errorOnEOF` is `true` and there was no next character.
     /// - Throws: If there was an I/O error or `errorOnEOF` is `true` and the EOF was found.
     ///
-    @discardableResult @inlinable final func getChar(errorOnEOF: Bool = false, allowed chars: Character...) throws -> Character? { try getChar(errorOnEOF: errorOnEOF) { chars.contains($0) } }
+    @discardableResult @inlinable final func getChar(errorOnEOF: Bool = false, leadingWhitespace lws: LeadingWhitespace = .None, allowed chars: Character...) throws -> Character? {
+        try getChar(errorOnEOF: errorOnEOF, leadingWhitespace: lws) { chars.contains($0) }
+    }
 
     /*===========================================================================================================================================================================*/
     /// Get and return the next character in the input stream only if it passes the test.
@@ -592,28 +707,41 @@ open class SAXParser {
     /// - Returns: The character or `nil` if the character did not pass the test.
     /// - Throws: If an I/O error occurs.
     ///
-    @discardableResult @inlinable final func getChar(errorOnEOF: Bool = false, test: (Character) throws -> Bool) throws -> Character? {
-        guard let ch = try peek() else {
+    @discardableResult @inlinable final func getChar(errorOnEOF: Bool = false, leadingWhitespace lws: LeadingWhitespace = .None, test: (Character) throws -> Bool) throws -> Character? {
+        if lws != .None { try readWhitespace(isRequired: (lws == .Required)) }
+        guard let ch = try inputStream.peek() else {
             if errorOnEOF { throw SAXError.getUnexpectedEndOfInput() }
             return nil
         }
         guard try test(ch) else { return nil }
-        return try read()
+        return try inputStream.read()
+    }
+
+    /*===========================================================================================================================================================================*/
+    @inlinable final func readSystemID(leadingWhitespace lws: LeadingWhitespace = .Required) throws -> URL {
+        guard let ur = try nextQuotedValue(leadingWhitespace: lws) else { throw SAXError.getMalformedDocType(markReset(), description: "Missing System ID") }
+        return try GetURL(string: ur)
     }
 
     /*===========================================================================================================================================================================*/
     /// Read and return any whitespace characters that are next in the input stream.
     ///
+    /// - Parameter isRequired: If `true` then at least one whitespace character is required.
     /// - Returns: A string containing the whitespace characters. May be an empty string.
-    /// - Throws: If an I/O error occurs.
+    /// - Throws: If an I/O error occurs or `isRequired` is true and no whitespace characters were found.
     ///
-    @discardableResult func readWhitespace() throws -> String {
-        var buffer: [Character] = []
-        while let ch = try read() {
-            guard ch.isXmlWhitespace else { markBackup(); break }
-            buffer <+ ch
+    @discardableResult @usableFromInline func readWhitespace(isRequired f: Bool = false) throws -> Bool {
+        markUpdate()
+        if let ch = try inputStream.read() {
+            // We got at least one character.
+            if ch.isXmlWhitespace {
+                // We got at least one whitespace character.
+                while let ch = try inputStream.read(), ch.isXmlWhitespace {}
+                return true
+            }
+            if f { throw SAXError.getMissingWhitespace(markBackup()) }
         }
-        return String(buffer)
+        return false
     }
 
     /*===========================================================================================================================================================================*/
@@ -622,16 +750,13 @@ open class SAXParser {
     /// - Returns: The identifier or `nil` if there is no identifier.
     /// - Throws: If an I/O error occurs.
     ///
-    func nextIdentifier(leadingWhitespace: LeadingWhitespace = .Allowed) throws -> String? {
-        if leadingWhitespace != .None {
-            let ws = try readWhitespace()
-            guard leadingWhitespace == .Allowed || ws.isNotEmpty else { throw SAXError.getMissingWhitespace(inputStream) }
-        }
-
-        guard let ch1 = try read(), ch1.isXmlNameStartChar else { markBackup(); return nil }
+    @usableFromInline func nextIdentifier(leadingWhitespace lws: LeadingWhitespace = .Allowed) throws -> String? {
+        if lws != .None { try readWhitespace(isRequired: (lws == .Required)) }
+        markUpdate()
+        guard let ch1 = try inputStream.read(), ch1.isXmlNameStartChar else { markBackup(); return nil }
         var buffer: [Character] = [ ch1 ]
 
-        while let ch2 = try read() {
+        while let ch2 = try inputStream.read() {
             guard ch2.isXmlNameChar else { markBackup(); break }
             buffer <+ ch2
         }
@@ -645,12 +770,11 @@ open class SAXParser {
     /// - Returns: The value without the quotes.
     /// - Throws: If an I/O error occurs or if the EOF is found before the closing quote.
     ///
-    func nextQuotedValue() throws -> String? {
-        guard let quote = try getChar(allowed: "\"", "'") else { return nil }
-
+    @usableFromInline func nextQuotedValue(leadingWhitespace lws: LeadingWhitespace = .None) throws -> String? {
+        guard let quote = try getChar(leadingWhitespace: lws, allowed: "\"", "'") else { return nil }
         var buffer: [Character] = []
 
-        while let ch = try read() {
+        while let ch = try inputStream.read() {
             if ch == quote { return String(buffer) }
             else if ch == "&" { buffer.append(contentsOf: try readEntityChar()) }
             else { buffer <+ ch }
@@ -665,9 +789,9 @@ open class SAXParser {
     /// - Returns: An instance of KVPair or `nil` if there is no parameter.
     /// - Throws: If an I/O error occurs or if the EOF is found before the closing quote on the parameter quoted value.
     ///
-    func nextParameter(leadingWhitespace: LeadingWhitespace = .Allowed) throws -> KVPair? {
-        guard let key = try nextIdentifier(leadingWhitespace: leadingWhitespace) else { return nil }
-        let ch = try read()
+    @usableFromInline func nextParameter(leadingWhitespace lws: LeadingWhitespace = .Allowed) throws -> KVPair? {
+        guard let key = try nextIdentifier(leadingWhitespace: lws) else { return nil }
+        let ch = try inputStream.read()
         guard ch == "=" else { return nil }
         guard let value = try nextQuotedValue() else { return nil }
         return KVPair(key: key, value: value)
@@ -679,13 +803,13 @@ open class SAXParser {
     /// - Returns: The entity character.
     /// - Throws: If an I/O error occurs.
     ///
-    final func readEntityChar() throws -> String {
+    @usableFromInline func readEntityChar() throws -> String {
         markSet()
         defer { markDelete() }
 
         var buffer: [Character] = []
 
-        while let ch = try read() {
+        while let ch = try inputStream.read() {
             if ch == ";" {
                 switch String(buffer) {
                     case "quot": return "\""

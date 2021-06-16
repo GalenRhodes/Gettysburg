@@ -235,6 +235,15 @@ extension String {
         }
         return out
     }
+
+    public func deQuoted() -> String {
+        guard count > 1 else { return self }
+        let ch = self[startIndex]
+        guard value(ch, isOneOf: "\"", "'") else { return self }
+        let ei = index(before: endIndex)
+        guard self[ei] == ch else { return self }
+        return String(self[index(after: startIndex) ..< ei])
+    }
 }
 
 extension Collection where Element == Character {
