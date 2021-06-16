@@ -2,4 +2,4 @@ import XCTest
 
 import GettysburgTests
 
-XCTMain([ testCase(GettysburgTests.allTests) ])
+XCTMain([ testCase(GettysburgTests.GettysburgTests.allTests) ])
