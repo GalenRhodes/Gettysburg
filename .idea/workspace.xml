@@ -6,12 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="60b0239b-d5a7-4057-9e21-57829d56877e" name="Default Changelist" comment="More.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Misc/Enums.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Misc/Enums.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Misc/Extensions.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Misc/Extensions.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Misc/Tools.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Misc/Tools.swift" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAXParser.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAXParser.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Validation/CharacterSets.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Validation/CharacterSets.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tests/GettysburgTests/TestData/Test_UTF-8.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/GettysburgTests/TestData/Test_UTF-8.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -204,7 +199,7 @@
       <workItem from="1623672894674" duration="2811000" />
       <workItem from="1623691151489" duration="6070000" />
       <workItem from="1623758125347" duration="22612000" />
-      <workItem from="1623843958385" duration="15074000" />
+      <workItem from="1623843958385" duration="15100000" />
     </task>
     <task id="LOCAL-00001" summary="Changed documentation style.">
       <created>1611343621921</created>
@@ -437,7 +432,14 @@
       <option name="project" value="LOCAL" />
       <updated>1623844007257</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="More.">
+      <created>1623864107903</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1623864107903</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
