@@ -26,14 +26,14 @@ import Rubicon
 
 /*===============================================================================================================================================================================*/
 /// Get a URL for the current working directory.
-/// 
+///
 /// - Returns: the current working directory as a URL.
 ///
 @inlinable func GetCurrDirURL() -> URL { URL(fileURLWithPath: FileManager.default.currentDirectoryPath, isDirectory: true) }
 
 /*===============================================================================================================================================================================*/
 /// Get a URL for the given filename.  If the filename is relative it will be made absolute relative to the current working directory.
-/// 
+///
 /// - Parameter filename: the filename.
 /// - Returns: the filename as an absolute URL.
 ///
@@ -44,7 +44,7 @@ import Rubicon
 /// URL's](https://developer.apple.com/documentation/foundation/url)</code> constructor
 /// <code>[`URL(string:)`](https://developer.apple.com/documentation/foundation/url/3126806-init)</code> is that this function will throw an error if the URL is malformed rather
 /// than returning `nil` and if the URL is relative and `nil` is passed for the `relativeTo` base URL then it will use the current working directory.
-/// 
+///
 /// - Parameters:
 ///   - string: the string containing the URL.
 ///   - relativeTo: If the URL defined by the given string is relative then...
@@ -58,7 +58,7 @@ import Rubicon
 
 /*===============================================================================================================================================================================*/
 /// Print out an array of strings to STDOUT. Used for debugging.
-/// 
+///
 /// - Parameter strings: the array of strings.
 ///
 @usableFromInline func PrintArray(_ strings: [String?]) {
@@ -73,7 +73,7 @@ import Rubicon
 
 /*===============================================================================================================================================================================*/
 /// Given a URL, get the Base URL and the filename.
-/// 
+///
 /// - Parameter url: the URL.
 /// - Returns: a tuple with the given URL, the Base URL, and the filename. If the given URL was relative then it is made absolute with respect to the current working directory.
 /// - Throws: if the URL is malformed.
@@ -93,7 +93,7 @@ let UTF8BOM:    [UInt8] = [ 0xef, 0xbb, 0xbf ]
 
 /*===============================================================================================================================================================================*/
 /// Determin the encoding used in a file by sampling the bytes and/or reading the XML Declaration.
-/// 
+///
 /// - Parameter inputStream: The MarkInputStream.
 /// - Returns: The encoding name.
 /// - Throws: If an  I/O error occurs or the encoding is not supported.
@@ -140,12 +140,16 @@ let UTF8BOM:    [UInt8] = [ 0xef, 0xbb, 0xbf ]
 
 @usableFromInline func hardGuess(_ encodingName: String, _ inputStream: MarkInputStream) throws -> String {
     // NOTE: At this point the encoding is only guessed at.  We'll need to look for an XML Declaration element to hopefully give us more information.
+    nDebug(.None, "Taking a hard guess starting out with: \"\(encodingName)\"")
     let _inputStream = SimpleIConvCharInputStream(inputStream: inputStream, encodingName: encodingName, autoClose: false)
+    nDebug(.None, "Create SimpleIConvCharInputStream...")
     _inputStream.open()
+    nDebug(.None, "Opened SimpleIConvCharInputStream...")
     defer { _inputStream.close() }
 
     var chars: [Character] = []
     guard try _inputStream.read(chars: &chars, maxLength: 6) == 6 else { return encodingName }
+    nDebug(.None, "Read the first 6 characters: \"\(String(chars))\"")
     guard chars.matches(pattern: "<\\?(?i:xml)\\s") else { return encodingName }
 
     // We have an XML Declaration element.  Read it, parse it, determine the encoding.
