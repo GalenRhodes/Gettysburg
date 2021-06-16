@@ -29,8 +29,9 @@ public class GettysburgTests: XCTestCase {
             let filename = "\(testDataDir)/Test_UTF-8.xml"
             let fileUrl  = GetFileURL(filename: filename)
 
-            nDebug(.In, "File URL: \"\(fileUrl)\"")
-            guard let inputStream = MarkInputStream(url: fileUrl) else { XCTFail("Could not open file \"\(fileUrl)\""); return }
+            nDebug(.In, "File URL: \"\(fileUrl.absoluteString)\"")
+            guard let inputStream = MarkInputStream(url: fileUrl) else { XCTFail("Could not open file \"\(fileUrl.absoluteString)\""); return }
+            nDebug(.None, "File Opened: \"\(fileUrl.absoluteString)\"")
             let encodingName = try hardGuess("UTF-8", inputStream)
             nDebug(.Out, "Encoding Name: \"\(encodingName)\"")
         }
