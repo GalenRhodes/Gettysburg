@@ -148,6 +148,7 @@ let UTF8BOM:    [UInt8] = [ 0xef, 0xbb, 0xbf ]
     defer { _inputStream.close() }
 
     var chars: [Character] = []
+    nDebug(.None, "Attempting to read the first 6 characters.")
     guard try _inputStream.read(chars: &chars, maxLength: 6) == 6 else { return encodingName }
     nDebug(.None, "Read the first 6 characters: \"\(String(chars))\"")
     guard chars.matches(pattern: "<\\?(?i:xml)\\s") else { return encodingName }
