@@ -10,9 +10,15 @@ import Rubicon
 @testable import Gettysburg
 
 public class GettysburgTests: XCTestCase {
-    public static var allTests: [(String, (GettysburgTests) -> () throws -> Void)] { [ ("testSAXSimpleIConvCharInputStream", testSAXSimpleIConvCharInputStream), ("testSAXParser", testSAXParser), ] }
 
-    let testDataDir: String = "Tests/GettysburgTests/TestData"
+    #if os(macOS) || os(tvOS) || os(iOS) || os(watchOS)
+        let testDataDir: String = "Tests/GettysburgTests/TestData"
+    #else
+        public static var allTests: [(String, (GettysburgTests) -> () throws -> Void)] {
+            [ ("testSAXSimpleIConvCharInputStream", testSAXSimpleIConvCharInputStream), ("testSAXParser", testSAXParser), ]
+        }
+        let testDataDir: String = ".build/debug/Gettysburg_GettysburgTests.resources/TestData"
+    #endif
 
     public override func setUpWithError() throws {}
 
