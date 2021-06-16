@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="60b0239b-d5a7-4057-9e21-57829d56877e" name="Default Changelist" comment="More.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/GettysburgTests/GettysburgTests.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/GettysburgTests/GettysburgTests.swift" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Tests/LinuxMain.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/LinuxMain.swift" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -199,7 +200,7 @@
       <workItem from="1623672894674" duration="2811000" />
       <workItem from="1623691151489" duration="6070000" />
       <workItem from="1623758125347" duration="22612000" />
-      <workItem from="1623843958385" duration="17609000" />
+      <workItem from="1623843958385" duration="17731000" />
     </task>
     <task id="LOCAL-00001" summary="Changed documentation style.">
       <created>1611343621921</created>
@@ -474,7 +475,14 @@
       <option name="project" value="LOCAL" />
       <updated>1623866586288</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="More.">
+      <created>1623866700802</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1623866700802</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

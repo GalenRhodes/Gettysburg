@@ -9,14 +9,14 @@ import XCTest
 import Rubicon
 @testable import Gettysburg
 
-class GettysburgTests: XCTestCase {
-    static var allTests: [(String, (GettysburgTests) -> () throws -> Void)] { [ ("testSAXSimpleIConvCharInputStream", testSAXSimpleIConvCharInputStream), ("testSAXParser", testSAXParser), ] }
+public class GettysburgTests: XCTestCase {
+    public static var allTests: [(String, (GettysburgTests) -> () throws -> Void)] { [ ("testSAXSimpleIConvCharInputStream", testSAXSimpleIConvCharInputStream), ("testSAXParser", testSAXParser), ] }
 
     let testDataDir: String = "Tests/GettysburgTests/TestData"
 
-    override func setUpWithError() throws {}
+    public override func setUpWithError() throws {}
 
-    override func tearDownWithError() throws {}
+    public override func tearDownWithError() throws {}
 
     func testSAXSimpleIConvCharInputStream() throws {
         do {
