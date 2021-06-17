@@ -114,7 +114,7 @@ class SAXTestHandler: SAXHandler {
     }
 
     func handleError(_ parser: SAXParser, error: Error) -> Bool {
-        print("ERROR: \(error.localizedDescription)")
+        print("ERROR: \(error)")
         return true
     }
 }

@@ -26,7 +26,7 @@ open class SAXCharInputStreamStack: SAXCharInputStream {
     @inlinable public var filename:          String        { withLock { inputStream.filename                                                                   } }
     @inlinable public var docPosition:       DocPosition   { withLock { isOpen ? inputStream.docPosition : DocPosition(line: 0, column: 0)                     } }
     @inlinable public var markCount:         Int           { withLock { isOpen ? inputStream.markCount : 0                                                     } }
-    @inlinable public var position:          TextPosition  { withLock { isOpen ? inputStream.position : (0, 0)                                                 } }
+    @inlinable public var position:          TextPosition  { withLock { isOpen ? inputStream.position : TextPosition(lineNumber: 0, columnNumber: 0)           } }
     @inlinable public var encodingName:      String        { withLock { inputStream.encodingName                                                               } }
     @inlinable public var streamError:       Error?        { withLock { isOpen ? inputStream.streamError : nil                                                 } }
     @inlinable public var streamStatus:      Stream.Status { withLock { isOpen ? inputStream.streamStatus : status                                             } }
@@ -41,7 +41,11 @@ open class SAXCharInputStreamStack: SAXCharInputStream {
     @inlinable        var isOpen:      Bool                 { status == .open }
     //@f:1
 
-    public init(initialInputStream: InputStream, url: URL) throws { self.inputStream = try SAXIConvCharInputStream(inputStream: initialInputStream, url: url) }
+    public init(initialInputStream: InputStream, url: URL) throws {
+        self.inputStream = try SAXIConvCharInputStream(inputStream: initialInputStream, url: url)
+        print("Encoding: \(self.inputStream.encodingName)")
+        print("==============================================")
+    }
 
     @inlinable public final func peek() throws -> Character? { try withLock { try inputStream.peek() } }
 

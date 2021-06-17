@@ -164,7 +164,9 @@ let UTF8BOM:    [UInt8] = [ 0xef, 0xbb, 0xbf ]
     } while true
 
     // Now let's see if it contains the encoding.
-    guard let m = GetRegularExpression(pattern: "\\sencoding=\"([^\"]+)\"").firstMatch(in: String(chars)), let enc = m[1].subString else { return encodingName }
+    let decl = String(chars)
+    nDebug(.None, "XML Decl: \"\(decl)\"")
+    guard let m = GetRegularExpression(pattern: "\\sencoding=\"([^\"]+)\"").firstMatch(in: decl), let enc = m[1].subString else { return encodingName }
     // We definitely got an encoding name, now let's see if we support it.
     let uEnc = enc.uppercased()
     guard IConv.encodingsList.contains(uEnc) else { throw SAXError.getUnknownEncoding(description: "Uknown encoding: \(enc)") }

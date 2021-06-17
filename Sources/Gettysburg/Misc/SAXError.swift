@@ -37,6 +37,26 @@ public enum SAXError: Error {
     case MalformedCDATASection(position: TextPosition, description: String)
     case MissingWhitespace(position: TextPosition, description: String)
     case MalformedDocType(position: TextPosition, description: String)
+    case MalformedNotationDecl(position: TextPosition, description: String)
+    case MalformedElementDecl(position: TextPosition, description: String)
+    case MalformedAttListDecl(position: TextPosition, description: String)
+    case MalformedEntityDecl(position: TextPosition, description: String)
+
+    @inlinable static func getMalformedNotationDecl(_ inputStream: SAXCharInputStream, description: String) -> SAXError {
+        return SAXError.MalformedNotationDecl(position: inputStream.position, description: description)
+    }
+
+    @inlinable static func getMalformedElementDecl(_ inputStream: SAXCharInputStream, description: String) -> SAXError {
+        return SAXError.MalformedElementDecl(position: inputStream.position, description: description)
+    }
+
+    @inlinable static func getMalformedAttListDecl(_ inputStream: SAXCharInputStream, description: String) -> SAXError {
+        return SAXError.MalformedAttListDecl(position: inputStream.position, description: description)
+    }
+
+    @inlinable static func getMalformedEntityDecl(_ inputStream: SAXCharInputStream, description: String) -> SAXError {
+        return SAXError.MalformedEntityDecl(position: inputStream.position, description: description)
+    }
 
     @inlinable static func getMalformedDocType(_ inputStream: SAXCharInputStream, description: String) -> SAXError {
         return SAXError.MalformedDocType(position: inputStream.position, description: description)

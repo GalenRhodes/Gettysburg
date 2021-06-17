@@ -37,6 +37,9 @@ let rxNameCharSet:       String          = "\(rxNameStartCharSet)0123456789\\u00
 let rxNamePattern:       String          = "(?:[\(rxNameStartCharSet)][\(rxNameCharSet)]*)"
 let rxNMTokenPattern:    String          = "(?:[\(rxNameCharSet)]+)"
 let rxWhitespacePattern: String          = "(?:[\\u0000-\\u0020\\u007f]*)"
+let rxQuotedString:      String          = "(\"[^\"]*\"|'[^']*')"
+let rxEntity:            String          = "\\&(\(rxNamePattern));"
+let rxPEntity:           String          = "\\%(\(rxNamePattern));"
 
 /*===============================================================================================================================================================================*/
 /// Array of unicode scalars for hexadecimal characters.

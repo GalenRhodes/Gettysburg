@@ -11,13 +11,11 @@ import Rubicon
 
 public class GettysburgTests: XCTestCase {
 
-    #if os(macOS) || os(tvOS) || os(iOS) || os(watchOS)
-        let testDataDir: String = "Tests/GettysburgTests/TestData"
-    #else
+    let testDataDir: String = "Tests/GettysburgTests/TestData"
+    #if !os(macOS) || os(tvOS) || os(iOS) || os(watchOS)
         public static var allTests: [(String, (GettysburgTests) -> () throws -> Void)] {
             [ ("testSAXSimpleIConvCharInputStream", testSAXSimpleIConvCharInputStream), ("testSAXParser", testSAXParser), ]
         }
-        let testDataDir: String = ".build/debug/Gettysburg_GettysburgTests.resources/TestData"
     #endif
 
     public override func setUpWithError() throws {}
@@ -41,6 +39,8 @@ public class GettysburgTests: XCTestCase {
     }
 
     func testSAXParser() throws {
+        nDebug(.In, "Starting: testSAXParser")
+        defer { nDebug(.Out, "Ending: testSAXParser") }
         do {
             let filename = "\(testDataDir)/Test_UTF-8.xml"
             let fileUrl  = GetFileURL(filename: filename)
@@ -50,7 +50,7 @@ public class GettysburgTests: XCTestCase {
 
             let handler: SAXTestHandler = SAXTestHandler()
             let parser:  SAXParser      = try SAXParser(inputStream: inputStream, url: fileUrl, handler: handler)
-
+            nDebug(.None, "Beginning Parse...")
             try parser.parse()
         }
         catch let e {

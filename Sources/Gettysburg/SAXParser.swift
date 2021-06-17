@@ -39,6 +39,8 @@ open class SAXParser {
     @usableFromInline var _xmlIsStandalone: Bool            = true
 
     public init(inputStream: InputStream, url: URL, handler: SAXHandler) throws {
+        nDebug(.In, "SAXParser.init")
+        defer { nDebug(.Out, "SAXParser.init") }
         self.inputStream = try SAXCharInputStreamStack(initialInputStream: inputStream, url: url)
         self._xmlEncoding = self.inputStream.encodingName
         self.handler = handler
@@ -61,7 +63,7 @@ open class SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Parse the XML document from the given input stream.
-    /// 
+    ///
     /// - Throws: If an error occured.
     ///
     open func parse() throws {
@@ -91,7 +93,7 @@ open class SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Parse a root node item.
-    /// 
+    ///
     /// - Parameters:
     ///   - hasDocType: A flag that indicates the DOCTYPE node has already been found.
     ///   - hasRootElem: A flag that indicates the root element node has already been found.
@@ -213,12 +215,13 @@ open class SAXParser {
                         if let rData = match[3].range {
                             let rToData = (match.range.lowerBound ..< rData.lowerBound)
                             let pData   = GetPosition(from: body, range: rToData, startingAt: pos)
+                            let sData   = String(body[rData]).trimmingCharacters(in: .XMLWhitespace)
 
-                            switch body[rType] {
-                                case "ELEMENT": try parseDocTypeElement(rootElement: elem, body: String(body[rData]), name: name, url: url, position: pData)
-                                case "ENTITY":  try parseDocTypeEntity(rootElement: elem, body: String(body[rData]), name: name, url: url, position: pData)
-                                case "ATTLIST": try parseDocTypeAttList(rootElement: elem, body: String(body[rData]), name: name, url: url, position: pData)
-                                default:        try parseDocTypeNotation(rootElement: elem, body: String(body[rData]), name: name, url: url, position: pData)
+                            switch sData[rType] {
+                                case "ELEMENT": try parseDocTypeElement(rootElement: elem, body: sData, name: name, url: url, position: pData)
+                                case "ENTITY":  try parseDocTypeEntity(rootElement: elem, body: sData, name: name, url: url, position: pData)
+                                case "ATTLIST": try parseDocTypeAttList(rootElement: elem, body: sData, name: name, url: url, position: pData)
+                                default:        try parseDocTypeNotation(rootElement: elem, body: sData, name: name, url: url, position: pData)
                             }
                         }
                         else {
@@ -253,16 +256,61 @@ open class SAXParser {
 
     func parseDocTypeElement(rootElement elem: String, body: String, name: String? = nil, url: URL? = nil, position pos: TextPosition) throws {}
 
-    func parseDocTypeEntity(rootElement elem: String, body: String, name: String? = nil, url: URL? = nil, position pos: TextPosition) throws {}
-
     func parseDocTypeAttList(rootElement elem: String, body: String, name: String? = nil, url: URL? = nil, position pos: TextPosition) throws {}
 
+    func parseDocTypeEntity(rootElement elem: String, body: String, name: String? = nil, url: URL? = nil, position pos: TextPosition) throws {
+        let p0 = "(\(rxNamePattern))"
+        let p1 = "\\s+\(rxQuotedString)"
+        let p2 = "(?:\(p1))"
+        let p3 = "\\s+(?:(?:(SYSTEM)|(PUBLIC)\(p1))\(p1))"
+        let p4 = "(?:\\s+(NDATA)\\s+\(p0))?"
+        let p5 = "(?:\(p3)\(p4))"
+        let p6 = "(?:\(p3))"
+        let p7 = "\(p0)(?:\(p2)|\(p5))"
+        let p8 = "(\\%)\\s+\(p0)(?:\(p2)|\(p6))"
+        let p  = "(?:\(p7)|\(p8))"
+        guard let m = GetRegularExpression(pattern: p).firstMatch(in: body) else { throw SAXError.MalformedEntityDecl(position: pos, description: "<!ENTITY \(body)>") }
+
+        let i:    Int           = (m[1].subString == nil ? 10 : 1)
+        let type: SAXEntityType = ((i == 1) ? .General : .Parameter)
+        guard let name = m[i].subString else { throw SAXError.MalformedEntityDecl(position: pos, description: "<!ENTITY \(body)>") }
+
+        if let value = m[i + 1].subString?.deQuoted() {
+            handler.dtdInternalEntityDecl(self, name: name, type: type, content: value)
+        }
+        else if (i == 1 && m[7].subString == "NDATA"), let sid = m[6].subString?.deQuoted(), let note = m[8].subString?.deQuoted() {
+            handler.dtdUnparsedEntityDecl(self, name: name, publicId: m[5].subString?.deQuoted(), systemId: sid, notation: note)
+        }
+        else if (m[i + 2].subString == "SYSTEM" || m[i + 3].subString == "PUBLIC"), let sid = m[i + 5].subString?.deQuoted() {
+            handler.dtdExternalEntityDecl(self, name: name, type: type, publicId: m[i + 4].subString?.deQuoted(), systemId: sid)
+        }
+        else {
+            throw SAXError.MalformedEntityDecl(position: pos, description: "<!ENTITY \(body)>")
+        }
+    }
+
     func parseDocTypeNotation(rootElement elem: String, body: String, name: String? = nil, url: URL? = nil, position pos: TextPosition) throws {
+        let p = "(\(rxNamePattern))\\s+(SYSTEM|PUBLIC)\\s+(\(rxQuotedString))(?:\\s+(\(rxQuotedString)))?"
+        guard let m = GetRegularExpression(pattern: p).firstMatch(in: body) else { throw SAXError.MalformedNotationDecl(position: pos, description: "<!NOTATION \(body)>") }
+        let name = m[1].subString!
+        let type = m[2].subString!
+        let prm1 = m[3].subString!.deQuoted()
+        let prm2 = m[4].subString?.deQuoted()
+
+        switch type {
+            case "SYSTEM":
+                guard prm2 == nil else { throw SAXError.MalformedNotationDecl(position: pos, description: "Extra parameter in system notation: \"\(prm2!)\"") }
+                handler.dtdNotationDecl(self, name: name, publicId: nil, systemId: prm1)
+            case "PUBLIC":
+                handler.dtdNotationDecl(self, name: name, publicId: prm1, systemId: prm2)
+            default:
+                throw SAXError.MalformedNotationDecl(position: pos, description: "Invalid notation type: \"\(type)\"")
+        }
     }
 
     /*===========================================================================================================================================================================*/
     /// Parse a nested element.
-    /// 
+    ///
     /// - Throws: If there is an I/O error or the element is malformed.
     ///
     func handleNestedElement() throws {
@@ -278,7 +326,7 @@ open class SAXParser {
     /// <SomeElement attr1="value1" attr2="value2">
     /// ```
     /// Everything after `<SomeElement ` up to the closing character, `>`, are the element attributes.
-    /// 
+    ///
     /// - Parameter tagName: The name of the element.
     /// - Throws: If an I/O error occurs or if the element tag is malformed.
     ///
@@ -317,7 +365,7 @@ open class SAXParser {
     /*===========================================================================================================================================================================*/
     /// Call the handler's `beginPrefixMapping(_:mapping:)` and `beginElement(_:name:attributes:)` methods. If needed, one or more calls to `beginPrefixMapping(_:mapping:)` will
     /// be made **BEFORE** the call to `beginElement(_:name:attributes:)`.
-    /// 
+    ///
     /// - Parameters:
     ///   - tagName: The name of the element.
     ///   - attr: The attributes of the element.
@@ -348,7 +396,7 @@ open class SAXParser {
     /*===========================================================================================================================================================================*/
     /// Call the handler's `endElement(_:name:)` and `endPrefixMapping(_:prefix:)` methods. If needed, one or more calls to `endPrefixMapping(_:prefix:)` will be made **AFTER**
     /// the call to `endElement(_:name:)`.
-    /// 
+    ///
     /// - Parameter tagName: The name of the element.
     /// - Throws: If an I/O error occurs.
     ///
@@ -359,7 +407,7 @@ open class SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Handle the body of an element.
-    /// 
+    ///
     /// - Parameters:
     ///   - tagName: The name of the element.
     ///   - attr: The attributes of the element.
@@ -411,7 +459,7 @@ open class SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Handle an element closing tag.
-    /// 
+    ///
     /// - Parameter tagName: The name of the tag it should be.
     /// - Throws: If an I/O error occurs, the closing tag is malformed, or the name of the closing tag is not correct.
     ///
@@ -438,7 +486,7 @@ open class SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Handle a CDATA section.
-    /// 
+    ///
     /// - Throws: If an I/O error occurs or the CDATA section is malformed.
     ///
     func handleCDataSection() throws {
@@ -463,7 +511,7 @@ open class SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Get an Unexpected Character message.
-    /// 
+    ///
     /// - Parameter ch: The character that was unexpected.
     /// - Returns: The message.
     ///
@@ -471,7 +519,7 @@ open class SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Get an `Unexpected Character` error.
-    /// 
+    ///
     /// - Parameter ch: The character that was unexpected.
     /// - Returns: The error.
     ///
@@ -479,7 +527,7 @@ open class SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Get an `Unexpected Character` error.
-    /// 
+    ///
     /// - Returns: The error.
     ///
     @inlinable func unexpectedCharacterError() -> SAXError {
@@ -494,7 +542,7 @@ open class SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Parse a processing instruction.
-    /// 
+    ///
     /// - Throws: If there is an I/O error or the comment is malformed.
     ///
     func handleProcessingInstruction() throws {
@@ -504,7 +552,7 @@ open class SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Read a processing instruction from the input stream.
-    /// 
+    ///
     /// - Returns: A tuple containing the processing instruction target and data.
     /// - Throws: If an I/O error occurs or the processing instruction is malformed.
     ///
@@ -528,7 +576,7 @@ open class SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Parse a comment.
-    /// 
+    ///
     /// - Throws: If there is an I/O error or the comment is malformed.
     ///
     func handleComment() throws {
@@ -562,7 +610,7 @@ open class SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Parse the document's XML Declaration.
-    /// 
+    ///
     /// - Throws: If an I/O error occured or the XML Declaration was malformed.
     ///
     func getXmlDeclaration() throws {
@@ -618,7 +666,7 @@ open class SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Read the next character from the input stream.
-    /// 
+    ///
     /// - Returns: The next character
     /// - Throws: If an I/O error occurs or if the EOF has been found.
     ///
@@ -629,7 +677,7 @@ open class SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Read the next character from the input stream.
-    /// 
+    ///
     /// - Returns: The next character or `nil` if the EOF has been found.
     /// - Throws: If an I/O error occurs.
     ///
@@ -645,35 +693,35 @@ open class SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Mark Delete
-    /// 
+    ///
     /// - Returns: The input stream.
     ///
     @discardableResult @inlinable final func markDelete() -> SAXCharInputStream { inputStream.markDelete(); return inputStream }
 
     /*===========================================================================================================================================================================*/
     /// Mark Return
-    /// 
+    ///
     /// - Returns: The input stream.
     ///
     @discardableResult @inlinable final func markReturn() -> SAXCharInputStream { inputStream.markReturn(); return inputStream }
 
     /*===========================================================================================================================================================================*/
     /// Mark Reset
-    /// 
+    ///
     /// - Returns: The input stream.
     ///
     @discardableResult @inlinable final func markReset() -> SAXCharInputStream { inputStream.markReset(); return inputStream }
 
     /*===========================================================================================================================================================================*/
     /// Mark Update
-    /// 
+    ///
     /// - Returns: The input stream.
     ///
     @discardableResult @inlinable final func markUpdate() -> SAXCharInputStream { inputStream.markUpdate(); return inputStream }
 
     /*===========================================================================================================================================================================*/
     /// Mark Backup
-    /// 
+    ///
     /// - Parameter count: The number of characters to back up.
     /// - Returns: The number of characters actually backed up.
     ///
@@ -681,7 +729,7 @@ open class SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Get and return the next character in the input stream only if it is one of the allowed characters.
-    /// 
+    ///
     /// - Parameters:
     ///   - errorOnEOF: If `true` then an error will be thrown if the EOF is found. The default is `false`.
     ///   - chars: The allowed characters.
@@ -694,7 +742,7 @@ open class SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Get and return the next character in the input stream only if it passes the test.
-    /// 
+    ///
     /// - Parameters:
     ///   - errorOnEOF: If `true` then an error will be thrown if the EOF is found. The default is `false`.
     ///   - test: The closure used to test the character.
@@ -718,7 +766,7 @@ open class SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Read and return any whitespace characters that are next in the input stream.
-    /// 
+    ///
     /// - Parameter isRequired: If `true` then at least one whitespace character is required.
     /// - Returns: A string containing the whitespace characters. May be an empty string.
     /// - Throws: If an I/O error occurs or `isRequired` is `true` and no whitespace characters were found.
@@ -730,8 +778,10 @@ open class SAXParser {
             if ch.isXmlWhitespace {
                 // We got at least one whitespace character.
                 while let ch = try inputStream.read(), ch.isXmlWhitespace {}
+                markBackup()
                 return true
             }
+            markBackup()
             if f { throw SAXError.getMissingWhitespace(markBackup()) }
         }
         return false
@@ -739,7 +789,7 @@ open class SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Read the next identifier from the input stream. An identifer starts with an XML Name Start Char and then zero or more XML Name Chars.
-    /// 
+    ///
     /// - Returns: The identifier or `nil` if there is no identifier.
     /// - Throws: If an I/O error occurs.
     ///
@@ -759,7 +809,7 @@ open class SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Read the next quoted value from the input stream.
-    /// 
+    ///
     /// - Returns: The value without the quotes.
     /// - Throws: If an I/O error occurs or if the EOF is found before the closing quote.
     ///
@@ -778,7 +828,7 @@ open class SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Read the next parameter. A parameter consists of an identifier and a quoted value separated by an equals sign (=).
-    /// 
+    ///
     /// - Returns: An instance of KVPair or `nil` if there is no parameter.
     /// - Throws: If an I/O error occurs or if the EOF is found before the closing quote on the parameter quoted value.
     ///
@@ -792,7 +842,7 @@ open class SAXParser {
 
     /*===========================================================================================================================================================================*/
     /// Complete an entity character by reading the name from the input stream and returning it's character value.
-    /// 
+    ///
     /// - Returns: The entity character.
     /// - Throws: If an I/O error occurs.
     ///
