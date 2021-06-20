@@ -57,7 +57,7 @@ class SAXTestHandler: SAXHandler {
         /* TODO: Implement me... */
     }
 
-    func dtdElementDecl(_ parser: SAXParser, name: String, allowedContent: SAXElementAllowedContent, content: SAXDTDElementContentList?) {
+    func dtdElementDecl(_ parser: SAXParser, name: String, allowedContent: SAXElementAllowedContent, content: SAXDTDElemContList?) {
         print("========================================================================================================================")
         /* TODO: Implement me... */
     }

@@ -38,6 +38,7 @@ open class SAXParser {
     @usableFromInline var _xmlEncoding:     String          = "UTF-8"
     @usableFromInline var _xmlIsStandalone: Bool            = true
 
+    /*===========================================================================================================================================================================*/
     public init(inputStream: InputStream, url: URL, handler: SAXHandler) throws {
         nDebug(.In, "SAXParser.init")
         defer { nDebug(.Out, "SAXParser.init") }
@@ -46,16 +47,19 @@ open class SAXParser {
         self.handler = handler
     }
 
+    /*===========================================================================================================================================================================*/
     public convenience init(url: URL, handler: SAXHandler) throws {
         guard let _is = InputStream(url: url) else { throw StreamError.FileNotFound(description: url.absoluteString) }
         try self.init(inputStream: _is, url: url.absoluteURL, handler: handler)
     }
 
+    /*===========================================================================================================================================================================*/
     public convenience init(fileAtPath: String, handler: SAXHandler) throws {
         guard let _is = InputStream(fileAtPath: fileAtPath) else { throw StreamError.FileNotFound(description: fileAtPath) }
         try self.init(inputStream: _is, url: GetFileURL(filename: fileAtPath), handler: handler)
     }
 
+    /*===========================================================================================================================================================================*/
     public convenience init(data: Data, url: URL? = nil, handler: SAXHandler) throws {
         let _url = (url ?? URL(fileURLWithPath: "temp_\(UUID().uuidString).xml", isDirectory: false, relativeTo: GetCurrDirURL()))
         try self.init(inputStream: InputStream(data: data), url: _url, handler: handler)
@@ -99,7 +103,7 @@ open class SAXParser {
     ///   - hasRootElem: A flag that indicates the root element node has already been found.
     /// - Throws: If an I/O error occurs or the root node item is malformed.
     ///
-    func handleRootNodeItem(_ hasDocType: inout Bool, _ hasRootElem: inout Bool) throws {
+    private func handleRootNodeItem(_ hasDocType: inout Bool, _ hasRootElem: inout Bool) throws {
         guard let ch = try inputStream.read() else { throw SAXError.getUnexpectedEndOfInput() }
 
         switch ch {
@@ -129,7 +133,8 @@ open class SAXParser {
         }
     }
 
-    func handleDocType() throws {
+    /*===========================================================================================================================================================================*/
+    private func handleDocType() throws {
         var buffer: [Character] = []
         guard try inputStream.read(chars: &buffer, maxLength: 10) == 10 else { throw SAXError.getUnexpectedEndOfInput() }
         guard try String(buffer).matches(pattern: "^\\<\\!DOCTYPE\\s+") else { throw SAXError.getMalformedDocType(markReset(), description: "Not a DOCTYPE element: \"\(String(buffer))\"") }
@@ -143,7 +148,8 @@ open class SAXParser {
         }
     }
 
-    func handleExternalSystemDocType(rootElement elem: String) throws {
+    /*===========================================================================================================================================================================*/
+    private func handleExternalSystemDocType(rootElement elem: String) throws {
         guard let tp = try nextIdentifier(leadingWhitespace: .None) else { throw SAXError.getMalformedDocType(markReset(), description: "Missing external type.") }
         guard tp == "SYSTEM" else { throw SAXError.getMalformedDocType(markReset(), description: "Incorrect external type: \"\(tp)\"") }
         let url = try readSystemID()
@@ -162,7 +168,8 @@ open class SAXParser {
         try parseDocType(rootElement: elem, body: body, url: url)
     }
 
-    func handleExternalPublicDocType(rootElement elem: String) throws {
+    /*===========================================================================================================================================================================*/
+    private func handleExternalPublicDocType(rootElement elem: String) throws {
         markUpdate()
         guard let tp = try nextIdentifier(leadingWhitespace: .None) else { throw SAXError.getMalformedDocType(markReset(), description: "Missing external type.") }
         guard tp == "PUBLIC" else { throw SAXError.getMalformedDocType(markReset(), description: "Incorrect external type: \"\(tp)\"") }
@@ -174,7 +181,8 @@ open class SAXParser {
         try parseDocType(rootElement: elem, body: body, name: pid, url: url)
     }
 
-    func handleInternalDocType(rootElement elem: String) throws {
+    /*===========================================================================================================================================================================*/
+    private func handleInternalDocType(rootElement elem: String) throws {
         var buffer: [Character]  = []
         let pos:    TextPosition = inputStream.position
 
@@ -191,7 +199,8 @@ open class SAXParser {
         throw SAXError.getUnexpectedEndOfInput()
     }
 
-    func parseDocType(rootElement elem: String, body: String, name: String? = nil, url: URL? = nil, position pos: TextPosition = (0, 0)) throws {
+    /*===========================================================================================================================================================================*/
+    private func parseDocType(rootElement elem: String, body: String, name: String? = nil, url: URL? = nil, position pos: TextPosition = (0, 0)) throws {
         let pattern             = "<!--(.*?)-->|<!(ELEMENT|ENTITY|ATTLIST|NOTATION)(?:\\s+([^>]*))?>"
         let regex               = GetRegularExpression(pattern: pattern, options: [ .dotMatchesLineSeparators ])
         var last:  String.Index = body.startIndex
@@ -212,12 +221,13 @@ open class SAXParser {
                         handler.comment(self, content: comment)
                     }
                     else if let rType = match[2].range {
+                        let type = String(body[rType])
                         if let rData = match[3].range {
                             let rToData = (match.range.lowerBound ..< rData.lowerBound)
                             let pData   = GetPosition(from: body, range: rToData, startingAt: pos)
                             let sData   = String(body[rData]).trimmingCharacters(in: .XMLWhitespace)
 
-                            switch sData[rType] {
+                            switch type {
                                 case "ELEMENT": try parseDocTypeElement(rootElement: elem, body: sData, name: name, url: url, position: pData)
                                 case "ENTITY":  try parseDocTypeEntity(rootElement: elem, body: sData, name: name, url: url, position: pData)
                                 case "ATTLIST": try parseDocTypeAttList(rootElement: elem, body: sData, name: name, url: url, position: pData)
@@ -225,7 +235,7 @@ open class SAXParser {
                             }
                         }
                         else {
-                            throw SAXError.MalformedDocType(position: pos, description: "Empty DTD \(body[rType]) Decl.")
+                            throw SAXError.MalformedDocType(position: pos, description: "Empty DTD \(type) Decl.")
                         }
                     }
 
@@ -242,7 +252,8 @@ open class SAXParser {
         if let e = error { throw e }
     }
 
-    func _foo01(body: String, startIndex: String.Index, comment: String, rComment: Range<String.Index>, position pos: TextPosition) throws {
+    /*===========================================================================================================================================================================*/
+    private func _foo01(body: String, startIndex: String.Index, comment: String, rComment: Range<String.Index>, position pos: TextPosition) throws {
         if let rx = comment.range(of: "--") {
             let d = comment.distance(from: startIndex, to: rx.lowerBound)
             let p = GetPosition(from: body, range: startIndex ..< body.index(startIndex, offsetBy: d), startingAt: pos)
@@ -254,11 +265,36 @@ open class SAXParser {
         }
     }
 
-    func parseDocTypeElement(rootElement elem: String, body: String, name: String? = nil, url: URL? = nil, position pos: TextPosition) throws {}
+    /*===========================================================================================================================================================================*/
+    private func parseDocTypeElement(rootElement elem: String, body: String, name: String? = nil, url: URL? = nil, position pos: TextPosition) throws {
+        let p = "(\(rxNamePattern))\\s+(EMPTY|ANY|\\([^>]+)"
+        guard let m = GetRegularExpression(pattern: p).firstMatch(in: body) else { throw SAXError.MalformedEntityDecl(position: pos, description: "<!ELEMENT \(body)>") }
+        guard let name = m[1].subString else { fatalError("Incorrect ELEMENT REGEX") }
+        guard let elst = m[2].subString else { fatalError("Incorrect ELEMENT REGEX") }
+        let type = SAXElementAllowedContent.valueFor(description: elst)
+        let elems = (value(type, isOneOf: .Elements, .Mixed) ? try ParseDTDElementContentList(position: pos, list: elst) : nil)
+        handler.dtdElementDecl(self, name: name, allowedContent: type, content: elems)
+    }
 
-    func parseDocTypeAttList(rootElement elem: String, body: String, name: String? = nil, url: URL? = nil, position pos: TextPosition) throws {}
+    /*===========================================================================================================================================================================*/
+    private func parseDocTypeAttList(rootElement elem: String, body: String, name: String? = nil, url: URL? = nil, position pos: TextPosition) throws {
+        let p0 = "(\(rxNamePattern))"
+        let p1 = "(?:\\([^|)]+(?:\\|[^|)]+)*\\))"
+        let p2 = "(CDATA|ID|IDREF|IDREFS|ENTITY|ENTITIES|NMTOKEN|NMTOKENS|NOTATION|\(p1))"
+        let p3 = "(\\#REQUIRED|\\#IMPLIED|(?:(?:(#FIXED)\\s+)?\(rxQuotedString)))"
+        let p  = "\(p0)\\s+\(p0)\\s+\(p2)\\s+\(p3)"
 
-    func parseDocTypeEntity(rootElement elem: String, body: String, name: String? = nil, url: URL? = nil, position pos: TextPosition) throws {
+        guard let m = GetRegularExpression(pattern: p).firstMatch(in: body) else { throw SAXError.MalformedEntityDecl(position: pos, description: "<!ATTLIST \(body)>") }
+        guard let elem = m[1].subString else { fatalError("Incorrect ATTLIST REGEX") }
+        guard let name = m[2].subString else { fatalError("Incorrect ATTLIST REGEX") }
+        guard let tpNm = m[3].subString, let type = SAXAttributeType.valueFor(description: tpNm) else { fatalError("Incorrect ATTLIST REGEX") }
+        guard let defv = m[5].subString ?? m[4].subString else { fatalError("Incorrect ATTLIST REGEX") }
+
+        handler.dtdAttributeDecl(self, name: name, elementName: elem, type: type, enumList: type.enumList(tpNm), defaultType: .valueFor(description: defv), defaultValue: m[6].subString)
+    }
+
+    /*===========================================================================================================================================================================*/
+    private func parseDocTypeEntity(rootElement elem: String, body: String, name: String? = nil, url: URL? = nil, position pos: TextPosition) throws {
         let p0 = "(\(rxNamePattern))"
         let p1 = "\\s+\(rxQuotedString)"
         let p2 = "(?:\(p1))"
@@ -289,12 +325,13 @@ open class SAXParser {
         }
     }
 
-    func parseDocTypeNotation(rootElement elem: String, body: String, name: String? = nil, url: URL? = nil, position pos: TextPosition) throws {
+    /*===========================================================================================================================================================================*/
+    private func parseDocTypeNotation(rootElement elem: String, body: String, name: String? = nil, url: URL? = nil, position pos: TextPosition) throws {
         let p = "(\(rxNamePattern))\\s+(SYSTEM|PUBLIC)\\s+(\(rxQuotedString))(?:\\s+(\(rxQuotedString)))?"
         guard let m = GetRegularExpression(pattern: p).firstMatch(in: body) else { throw SAXError.MalformedNotationDecl(position: pos, description: "<!NOTATION \(body)>") }
-        let name = m[1].subString!
-        let type = m[2].subString!
-        let prm1 = m[3].subString!.deQuoted()
+        guard let name = m[1].subString else { fatalError("Incorrect NOTATION REGEX") }
+        guard let type = m[2].subString else { fatalError("Incorrect NOTATION REGEX") }
+        guard let prm1 = m[3].subString?.deQuoted() else { fatalError("Incorrect NOTATION REGEX") }
         let prm2 = m[4].subString?.deQuoted()
 
         switch type {
@@ -313,7 +350,7 @@ open class SAXParser {
     ///
     /// - Throws: If there is an I/O error or the element is malformed.
     ///
-    func handleNestedElement() throws {
+    private func handleNestedElement() throws {
         guard let ch = try inputStream.read() else { return }
         guard ch == "<" else { throw unexpectedCharacterError(character: ch) }
         guard let tagName = try nextIdentifier() else { throw SAXError.getMalformedDocument(markReset(), description: "Missing element tag name.") }
@@ -330,7 +367,7 @@ open class SAXParser {
     /// - Parameter tagName: The name of the element.
     /// - Throws: If an I/O error occurs or if the element tag is malformed.
     ///
-    func handleElementAttributes(tagName: String) throws {
+    private func handleElementAttributes(tagName: String) throws {
         var attribs: SAXRawAttribList = []
 
         repeat {
@@ -371,7 +408,7 @@ open class SAXParser {
     ///   - attr: The attributes of the element.
     /// - Throws: If an I/O error occurs.
     ///
-    func callElementBeginHandler(tagName: String, attributes attribs: SAXRawAttribList) throws {
+    private func callElementBeginHandler(tagName: String, attributes attribs: SAXRawAttribList) throws {
         // Go through the attributes and see if there are any namespaces that need to be processed.
         var fAttribs: SAXRawAttribList = []
         var mappings: NSMappingList    = NSMappingList()
@@ -400,7 +437,7 @@ open class SAXParser {
     /// - Parameter tagName: The name of the element.
     /// - Throws: If an I/O error occurs.
     ///
-    func callElementEndHandler(tagName: String) throws {
+    private func callElementEndHandler(tagName: String) throws {
         handler.endElement(self, name: SAXNSName(name: tagName))
         if let e = namespaceStack.popLast() { for m in e.sorted().reversed() { handler.endPrefixMapping(self, prefix: m.prefix) } }
     }
@@ -413,7 +450,7 @@ open class SAXParser {
     ///   - attr: The attributes of the element.
     /// - Throws: If an I/O error occurs or anything in the body of the element is malformed.
     ///
-    func handleElementBody(tagName: String, attributes attr: SAXRawAttribList) throws {
+    private func handleElementBody(tagName: String, attributes attr: SAXRawAttribList) throws {
         markSet()
         defer { markDelete() }
         var text: [Character] = []
@@ -463,7 +500,7 @@ open class SAXParser {
     /// - Parameter tagName: The name of the tag it should be.
     /// - Throws: If an I/O error occurs, the closing tag is malformed, or the name of the closing tag is not correct.
     ///
-    func handleClosingTag(tagName: String) throws {
+    private func handleClosingTag(tagName: String) throws {
         var buffer: [Character] = []
         guard try inputStream.read(chars: &buffer, maxLength: 3) == 3 else { throw SAXError.getUnexpectedEndOfInput() }
 
@@ -489,7 +526,7 @@ open class SAXParser {
     ///
     /// - Throws: If an I/O error occurs or the CDATA section is malformed.
     ///
-    func handleCDataSection() throws {
+    private func handleCDataSection() throws {
         let openMarker:      String      = "<![CDATA["
         let openMarkerCount: Int         = openMarker.count
         var buffer:          [Character] = []
@@ -545,7 +582,7 @@ open class SAXParser {
     ///
     /// - Throws: If there is an I/O error or the comment is malformed.
     ///
-    func handleProcessingInstruction() throws {
+    private func handleProcessingInstruction() throws {
         let pi = try readProcessingInstruction()
         handler.processingInstruction(self, target: pi.target, data: pi.data)
     }
@@ -556,7 +593,7 @@ open class SAXParser {
     /// - Returns: A tuple containing the processing instruction target and data.
     /// - Throws: If an I/O error occurs or the processing instruction is malformed.
     ///
-    func readProcessingInstruction() throws -> (target: String, data: String) {
+    private func readProcessingInstruction() throws -> (target: String, data: String) {
         var buffer: [Character] = []
 
         guard try inputStream.read(chars: &buffer, maxLength: 3) == 3, buffer[0 ..< 2] == "<?" else { throw SAXError.getMalformedProcInst(markReset(), description: String(buffer)) }
@@ -579,7 +616,7 @@ open class SAXParser {
     ///
     /// - Throws: If there is an I/O error or the comment is malformed.
     ///
-    func handleComment() throws {
+    private func handleComment() throws {
         let dd:     [Character] = [ "-", "-" ]
         var buffer: [Character] = []
 
@@ -613,7 +650,7 @@ open class SAXParser {
     ///
     /// - Throws: If an I/O error occured or the XML Declaration was malformed.
     ///
-    func getXmlDeclaration() throws {
+    private func getXmlDeclaration() throws {
         markSet()
         defer { markDelete() }
 
@@ -621,7 +658,7 @@ open class SAXParser {
         if pi.bad { throw SAXError.getMalformedXmlDecl(markReset(), description: "<?\(pi.target) \(pi.data)?>") }
     }
 
-    func _getXmlDeclaration() throws -> (bad: Bool, target: String, data: String) {
+    private func _getXmlDeclaration() throws -> (bad: Bool, target: String, data: String) {
         do {
             var bad: Bool = false
             let pi        = try readProcessingInstruction()

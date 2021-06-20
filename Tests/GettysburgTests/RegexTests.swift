@@ -37,6 +37,38 @@ public class RegexTests: XCTestCase {
 
     public override func tearDownWithError() throws {}
 
+    func testElementDeclRegex() throws {
+        let test = """
+                   <!ELEMENT gsr:Person (gsr:LastName,gsr:FirstName,MiddleName,(garfield|odie),pgx:dob,bob:info,ack:Batman,usa:family,foo?,bar?,foobar?,gsr:goat?,gsr:lamb?,gsr:duck?,gsr:cow?,pgx:goat?,pgx:lamb?,pgx:duck?,pgx:cow?)>
+                   <!ELEMENT foo (ack:Batman)>
+                   <!ELEMENT foobar (ack:Batman+)>
+                   <!ELEMENT bar (#PCDATA|usa:family)*>
+                   <!ELEMENT pgx:goat (ack:Batman|ack:nickname|usa:family+)+>
+                   <!ELEMENT pgx:lamb (ack:Batman|ack:nickname|usa:family+)?>
+                   <!ELEMENT pgx:duck (ack:Batman|ack:nickname|usa:family+)*>
+                   <!ELEMENT pgx:cow  (ack:Batman|ack:nickname|usa:family+)>
+                   <!ELEMENT gsr:goat (ack:Batman,ack:nickname,usa:family+)+>
+                   <!ELEMENT gsr:lamb (ack:Batman,ack:nickname,usa:family+)?>
+                   <!ELEMENT gsr:duck (ack:Batman,ack:nickname,usa:family+)*>
+                   <!ELEMENT gsr:cow  (ack:Batman,ack:nickname,usa:family+)>
+                   <!ELEMENT garfield EMPTY>
+                   <!ELEMENT odie ANY>
+                   <!ELEMENT gsr:LastName (#PCDATA)*>
+                   <!ELEMENT gsr:FirstName (#PCDATA|ack:nickname|ack:Batman)*>
+                   <!ELEMENT MiddleName (#PCDATA)>
+                   <!ELEMENT usa:family ((pgx:dob|ack:nickname),(ack:Batman+|bob:dob|bob:info)?)>
+                   <!ELEMENT bob:info (bob:dob,ack:nickname*)>
+                   <!ELEMENT bob:dob (#PCDATA)>
+                   <!ELEMENT pgx:dob (#PCDATA)>
+                   <!ELEMENT ack:nickname (#PCDATA)>
+                   <!ELEMENT ack:Batman (#PCDATA)>
+                   """
+
+
+        let p = "(\(rxNamePattern))\\s+(EMPTY|ANY|\\([^>]+)"
+        try doRegexTest(declName: "ELEMENT", testData: test, pattern: p)
+    }
+
     func testEntityDeclRegex() throws {
         let p0 = "(\(rxNamePattern))"
         let p1 = "\\s+\(rxQuotedString)"
@@ -73,12 +105,10 @@ public class RegexTests: XCTestCase {
 
     func testAttrDeclRegex() throws {
         let p0 = "(\(rxNamePattern))"
-        let p1 = "\\s+\(rxQuotedString)"
-        let p2 = "(?:\\([^|)]+(?:\\|[^|)]+)*\\))"
-        let p3 = "(CDATA|ID|IDREF|IDREFS|ENTITY|ENTITIES|NMTOKEN|NMTOKENS|NOTATION|\(p2))"
-        let p4 = "(\\#REQUIRED|\\#IMPLIED|(?:(?:#FIXED\\s+)?\(rxQuotedString)))"
-
-        let p = "\(p0)\\s+\(p0)\\s+\(p3)\\s+\(p4)"
+        let p1 = "(?:\\([^|)]+(?:\\|[^|)]+)*\\))"
+        let p2 = "(CDATA|ID|IDREF|IDREFS|ENTITY|ENTITIES|NMTOKEN|NMTOKENS|NOTATION|\(p1))"
+        let p3 = "(\\#REQUIRED|\\#IMPLIED|(?:(?:(#FIXED)\\s+)?\(rxQuotedString)))"
+        let p  = "\(p0)\\s+\(p0)\\s+\(p2)\\s+\(p3)"
 
         let test = """
                    <!ATTLIST MiddleName preferred (YES|NO) "NO">

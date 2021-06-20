@@ -37,7 +37,7 @@ public enum SAXAttributeType {
 }
 
 public enum SAXAttributeDefaultType {
-    case Optional
+    case Value
     case Required
     case Implied
     case Fixed

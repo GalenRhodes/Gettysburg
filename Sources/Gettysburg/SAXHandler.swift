@@ -44,7 +44,7 @@ public protocol SAXHandler {
 
     func dtdNotationDecl(_ parser: SAXParser, name: String, publicId: String?, systemId: String?)
 
-    func dtdElementDecl(_ parser: SAXParser, name: String, allowedContent: SAXElementAllowedContent, content: SAXDTDElementContentList?)
+    func dtdElementDecl(_ parser: SAXParser, name: String, allowedContent: SAXElementAllowedContent, content: SAXDTDElemContList?)
 
     func dtdAttributeDecl(_ parser: SAXParser, name: String, elementName: String, type: SAXAttributeType, enumList: [String], defaultType: SAXAttributeDefaultType, defaultValue: String?)
 
