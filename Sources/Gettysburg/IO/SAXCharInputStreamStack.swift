@@ -43,8 +43,8 @@ open class SAXCharInputStreamStack: SAXCharInputStream {
 
     public init(initialInputStream: InputStream, url: URL) throws {
         self.inputStream = try SAXIConvCharInputStream(inputStream: initialInputStream, url: url)
-        print("Encoding: \(self.inputStream.encodingName)")
-        print("==============================================")
+        /* print("Encoding: \(self.inputStream.encodingName)") */
+        /* print("==============================================") */
     }
 
     @inlinable public final func peek() throws -> Character? { try withLock { try inputStream.peek() } }

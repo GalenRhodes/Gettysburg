@@ -38,6 +38,7 @@
 		1117D91388446226B32F9AA1 /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D44F455A6E1F051E1FE7 /* Tools.swift */; };
 		1117DA9DA3ACFB977CAA77CA /* CharacterSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DF67151CBCFC4806850A /* CharacterSets.swift */; };
 		1117DAE28F5216597168750E /* SAXError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D597EAA818B7614CEAEF /* SAXError.swift */; };
+		1117DB5A9C7185BA39AD7011 /* SAXDTDElemContTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D28FBD634884D06649BE /* SAXDTDElemContTools.swift */; };
 		1117DBACBBB748A8639285FD /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DB804342BF77458B8663 /* main.swift */; };
 		1117DC728363250D1EB182AB /* SAXAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D4A60F6A6CF727D7FDC1 /* SAXAttribute.swift */; };
 		1117DD52BDA82EF3D833AEE7 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D823F398AB0E260CA6A8 /* Enums.swift */; };
@@ -138,6 +139,7 @@
 		1117D2073D1FB2038D3403D3 /* SAXElement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXElement.swift; sourceTree = "<group>"; };
 		1117D24C2AC342935E43EA54 /* Test.dtd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Test.dtd; sourceTree = "<group>"; };
 		1117D2654B632662DADD7449 /* Test_WINDOWS-1252.xml */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = text.xml; path = "Test_WINDOWS-1252.xml"; sourceTree = "<group>"; };
+		1117D28FBD634884D06649BE /* SAXDTDElemContTools.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXDTDElemContTools.swift; sourceTree = "<group>"; };
 		1117D2AD350A984772DC23C9 /* XML_Entities_Data_A.csv */ = {isa = PBXFileReference; lastKnownFileType = file.csv; path = XML_Entities_Data_A.csv; sourceTree = "<group>"; };
 		1117D3250DFFCE3E85ABD6E2 /* .jazzy.yaml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .jazzy.yaml; sourceTree = "<group>"; };
 		1117D32792ADADA24039E4BC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -328,6 +330,7 @@
 			isa = PBXGroup;
 			children = (
 				1117D8F099166931E1797992 /* SAXDTDElemCont.swift */,
+				1117D28FBD634884D06649BE /* SAXDTDElemContTools.swift */,
 			);
 			path = DocType;
 			sourceTree = "<group>";
@@ -558,8 +561,8 @@
 			);
 			mainGroup = 83CFA5A62556E331005498FC;
 			packageReferences = (
-				83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer" */,
-				838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon" */,
+				83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer.git" */,
+				838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon.git" */,
 			);
 			productRefGroup = 83CFA5B12556E331005498FC /* Products */;
 			projectDirPath = "";
@@ -620,6 +623,7 @@
 				1117DEBC95E030F734C09CC3 /* SAXElement.swift in Sources */,
 				1117D3A334D5DC0A4F440318 /* SAXCharInputStreamStack.swift in Sources */,
 				1117D64821E98B014C70A0F5 /* SAXCharInputStream.swift in Sources */,
+				1117DB5A9C7185BA39AD7011 /* SAXDTDElemContTools.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1013,7 +1017,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon" */ = {
+		838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/GalenRhodes/Rubicon.git";
 			requirement = {
@@ -1021,7 +1025,7 @@
 				minimumVersion = 0.2.45;
 			};
 		};
-		83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer" */ = {
+		83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/GalenRhodes/PGDocFixer.git";
 			requirement = {
@@ -1034,17 +1038,17 @@
 /* Begin XCSwiftPackageProductDependency section */
 		8356BB2625D0378F00E41DFC /* Rubicon */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon" */;
+			package = 838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon.git" */;
 			productName = Rubicon;
 		};
 		83A6F52125C476F100C95BE8 /* Rubicon */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon" */;
+			package = 838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon.git" */;
 			productName = Rubicon;
 		};
 		83CFA5E22556E70C005498FC /* PGDocFixer */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer" */;
+			package = 83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer.git" */;
 			productName = PGDocFixer;
 		};
 /* End XCSwiftPackageProductDependency section */

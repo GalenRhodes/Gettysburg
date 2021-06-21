@@ -4,11 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="60b0239b-d5a7-4057-9e21-57829d56877e" name="Default Changelist" comment="More">
+    <list default="true" id="60b0239b-d5a7-4057-9e21-57829d56877e" name="Default Changelist" comment="Updated to the latest version of Rubicon to get the bug fixes.">
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DocType/SAXDTDElemContTools.swift" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.pbxproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved" beforeDir="false" afterPath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Package.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Package.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DocType/SAXDTDElemCont.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DocType/SAXDTDElemCont.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/IO/SAXCharInputStreamStack.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/IO/SAXCharInputStreamStack.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Misc/Extensions.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Misc/Extensions.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Misc/Tools.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Misc/Tools.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAXParser.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAXParser.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Validation/CharacterSets.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Validation/CharacterSets.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/GettysburgTests/SAXTestHandler.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/GettysburgTests/SAXTestHandler.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/GettysburgTests/TestData/Test_UTF-8.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/GettysburgTests/TestData/Test_UTF-8.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,7 +73,7 @@
     <option name="showVisibilityIcons" value="true" />
   </component>
   <component name="PropertiesComponent">
-    <property name="OBJC.PRESERVED_TARGET_SELECTION" value="" />
+    <property name="OBJC.PRESERVED_TARGET_SELECTION" value="Gettysburg" />
     <property name="OverrideImplement.combined" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
@@ -87,7 +94,7 @@
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="preferences.fileTypes" />
   </component>
-  <component name="RunManager" selected="XCTest.Gettysburg Tests - testParser">
+  <component name="RunManager" selected="Application.DocFixer">
     <list>
       <item itemvalue="Application.EntityTool" />
       <item itemvalue="Application.DocFixer" />
@@ -203,14 +210,7 @@
       <workItem from="1624019917318" duration="22298000" />
       <workItem from="1624120325522" duration="3439000" />
       <workItem from="1624284247405" duration="61000" />
-      <workItem from="1624284336289" duration="147000" />
-    </task>
-    <task id="LOCAL-00003" summary="Moved up to Rubicon v0.1.7">
-      <created>1611582659919</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1611582659919</updated>
+      <workItem from="1624284336289" duration="19031000" />
     </task>
     <task id="LOCAL-00004" summary="Moved up to Rubicon v0.1.7">
       <created>1611755341014</created>
@@ -548,7 +548,14 @@
       <option name="project" value="LOCAL" />
       <updated>1624284267729</updated>
     </task>
-    <option name="localTasksCounter" value="52" />
+    <task id="LOCAL-00052" summary="Updated to the latest version of Rubicon to get the bug fixes.">
+      <created>1624284627601</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1624284627601</updated>
+    </task>
+    <option name="localTasksCounter" value="53" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -589,22 +596,11 @@
     <MESSAGE value="Tests for Linux" />
     <MESSAGE value="Latest version of Rubicon." />
     <MESSAGE value="More" />
-    <option name="LAST_COMMIT_MESSAGE" value="More" />
+    <MESSAGE value="Updated to the latest version of Rubicon to get the bug fixes." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated to the latest version of Rubicon to get the bug fixes." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/Sources/Gettysburg/SAXParser.swift</url>
-          <line>274</line>
-          <option name="timeStamp" value="12" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/Sources/Gettysburg/DOM/DocType/SAXDTDElemCont.swift</url>
-          <line>109</line>
-          <option name="timeStamp" value="13" />
-        </line-breakpoint>
-      </breakpoints>
       <default-breakpoints>
         <breakpoint enabled="true" log-message="true" type="CidrExceptionBreakpoint" />
       </default-breakpoints>

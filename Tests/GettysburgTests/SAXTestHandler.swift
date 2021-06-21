@@ -58,7 +58,6 @@ class SAXTestHandler: SAXHandler {
     }
 
     func dtdElementDecl(_ parser: SAXParser, name: String, allowedContent: SAXElementAllowedContent, content: SAXDTDElemContList?) {
-        print("========================================================================================================================")
         /* TODO: Implement me... */
     }
 
@@ -67,15 +66,21 @@ class SAXTestHandler: SAXHandler {
     }
 
     func comment(_ parser: SAXParser, content: String) {
-        /* TODO: Implement me... */
+        nDebug(.In, "COMMENT")
+        defer { nDebug(.Out, "COMMENT") }
+        nDebug(.None, content)
     }
 
     func text(_ parser: SAXParser, content: String) {
-        /* TODO: Implement me... */
+        nDebug(.In, "TEXT")
+        defer { nDebug(.Out, "TEXT") }
+        nDebug(.None, content)
     }
 
     func cdataSection(_ parser: SAXParser, content: String) {
-        /* TODO: Implement me... */
+        nDebug(.In, "CDATA")
+        defer { nDebug(.Out, "CDATA") }
+        nDebug(.None, content)
     }
 
     func resolveEntity(_ parser: SAXParser, publicId: String?, systemId: String) -> InputStream? {
@@ -84,19 +89,20 @@ class SAXTestHandler: SAXHandler {
     }
 
     func beginPrefixMapping(_ parser: SAXParser, mapping: NSMapping) {
-        /* TODO: Implement me... */
+        nDebug(.In, "Prefix mapping: xmlns:\(mapping.prefix)=\"\(mapping.uri)\"")
     }
 
     func endPrefixMapping(_ parser: SAXParser, prefix: String) {
-        /* TODO: Implement me... */
+        nDebug(.Out, "Prefix mapping: xmlns:\(prefix)")
     }
 
     func beginElement(_ parser: SAXParser, name: SAXNSName, attributes: SAXRawAttribList) {
-        /* TODO: Implement me... */
+        nDebug(.In, "Element: \(name)")
+        attributes.forEach { nDebug(.None, "\($0.name)=\"\($0.value)\"") }
     }
 
     func endElement(_ parser: SAXParser, name: SAXNSName) {
-        /* TODO: Implement me... */
+        nDebug(.Out, "Element: \(name)")
     }
 
     func getEntity(_ parser: SAXParser, name: String) -> Any? {

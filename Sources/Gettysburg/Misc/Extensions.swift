@@ -232,6 +232,12 @@ extension StringProtocol {
         return (idx < endIndex)
     }
 
+    @inlinable public func advance(position pos: TextPosition) -> TextPosition {
+        var pos = pos
+        forEach { textPositionUpdate($0, pos: &pos) }
+        return pos
+    }
+
     @inlinable public var isValidXMLName: Bool {
         guard count > 0 else { return false }
         guard self[startIndex].isXmlNameStartChar else { return false }
@@ -251,7 +257,7 @@ extension String {
 
     /*===========================================================================================================================================================================*/
     /// Assuming this string is a fully qualified name, return a tuple containing the prefix and local name from this string.
-    ///
+    /// 
     /// - Returns: the prefix and local name.  `nil` is returned for the prefix if none is found.
     ///
     @inlinable public func splitPrefix() -> (String?, String) {

@@ -41,38 +41,24 @@ import Rubicon
 @usableFromInline let rxEntity:            String          = "\\&(\(rxNamePattern));"
 @usableFromInline let rxPEntity:           String          = "\\%(\(rxNamePattern));"
 
-/*===============================================================================================================================================================================*/
-/// Array of unicode scalars for hexadecimal characters.
-///
-@usableFromInline let HEX_1:               [UnicodeScalar] = "0123456789abcdefABCDEF".unicodeScalars.map { $0 }
-/*===============================================================================================================================================================================*/
-/// Array of unicode scalars for
-///
-@usableFromInline let XML_1:               [UnicodeScalar] = ":ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_".unicodeScalars.map { $0 }
-@usableFromInline let XML_2:               [UnicodeScalar] = [ UnicodeScalar(UInt8(0xb7)) ] + XML_1 + "-.0123456789".unicodeScalars.map { $0 }
-@usableFromInline let XML_3:               [Range<UInt32>] = [ (UInt32(0xc0)   ..< UInt32(0xd7)),    (UInt32(0xd8)   ..< UInt32(0xf7)),   (UInt32(0xf8)   ..< UInt32(0x300)),  (UInt32(0x370)   ..< UInt32(0x37e)),
-                                                               (UInt32(0x37f)  ..< UInt32(0x2000)),  (UInt32(0x200c) ..< UInt32(0x200e)), (UInt32(0x2070) ..< UInt32(0x2190)), (UInt32(0x2c00)  ..< UInt32(0x2ff0)),
-                                                               (UInt32(0x3001) ..< UInt32(0xd800)),  (UInt32(0xf900) ..< UInt32(0xfdd0)), (UInt32(0xfdf0) ..< UInt32(0xfffe)), (UInt32(0x10000) ..< UInt32(0xf0000)) ]
-@usableFromInline let XML_4:               [Range<UInt32>] = [ (UInt32(0x0300) ..< UInt32(0x0370)),  (UInt32(0x203f) ..< UInt32(0x2041)) ] + XML_3
-
 extension Unicode.Scalar {
-    @inlinable var isXmlNameStartChar: Bool { XML_1.contains(self) || XML_3.isAny(predicate: { $0.contains(value) }) }
-    @inlinable var isXmlNameChar:      Bool { XML_2.contains(self) || XML_4.isAny(predicate: { $0.contains(value) }) }
-    @inlinable var isXmlWhitespace:    Bool { (value <= UInt32(0x20)) || (value == UInt32(0x7f)) } // Anything less than or equal to the space character will be considered whitespace.
-    @inlinable var isXmlHex:           Bool { HEX_1.contains(self) }
+    @inlinable var isXmlNameStartChar: Bool { CharacterSet.XMLNameStartChar.contains(self) }
+    @inlinable var isXmlNameChar:      Bool { CharacterSet.XMLNameChar.contains(self) }
+    @inlinable var isXmlWhitespace:    Bool { CharacterSet.XMLWhitespace.contains(self) }
+    @inlinable var isXmlHex:           Bool { CharacterSet.XMLHex.contains(self) }
 }
 
 extension Character {
-    @inlinable var isXmlNameStartChar: Bool { unicodeScalars.count == 1 && unicodeScalars.areAll { $0.isXmlNameStartChar } }
-    @inlinable var isXmlNameChar:      Bool { unicodeScalars.areAll { $0.isXmlNameChar }                                   }
-    @inlinable var isXmlWhitespace:    Bool { unicodeScalars.areAll { $0.isXmlWhitespace }                                 }
-    @inlinable var isXmlHex:           Bool { unicodeScalars.areAll { $0.isXmlHex }                                        }
+    @inlinable var isXmlNameStartChar: Bool { unicodeScalars.count == 1 && unicodeScalars.areAll(predicate: { $0.isXmlNameStartChar }) }
+    @inlinable var isXmlNameChar:      Bool { unicodeScalars.areAll(predicate: { $0.isXmlNameChar }) }
+    @inlinable var isXmlWhitespace:    Bool { unicodeScalars.areAll(predicate: { $0.isXmlWhitespace }) }
+    @inlinable var isXmlHex:           Bool { unicodeScalars.areAll(predicate: { $0.isXmlHex }) }
 }
 
 extension String {
-    @inlinable var isXmlName:  Bool { !isEmpty && (unicodeScalars.first?.isXmlNameStartChar ?? false) && unicodeScalars.areAll { $0.isXmlNameChar } }
-    @inlinable var isXmlToken: Bool { !isEmpty && unicodeScalars.areAll { $0.isXmlNameChar } }
-    @inlinable var isXmlHex:   Bool { !isEmpty && unicodeScalars.areAll { $0.isXmlHex } }
+    @inlinable var isXmlName:          Bool { !isEmpty && (unicodeScalars.first?.isXmlNameStartChar ?? false) && unicodeScalars.areAll { $0.isXmlNameChar } }
+    @inlinable var isXmlToken:         Bool { !isEmpty && unicodeScalars.areAll { $0.isXmlNameChar } }
+    @inlinable var isXmlHex:           Bool { !isEmpty && unicodeScalars.areAll { $0.isXmlHex } }
 
     @inlinable func getXmlPrefixAndLocalName() -> (prefix: String?, localName: String) {
         let parts = split(separator: ":", maxSplits: 1, omittingEmptySubsequences: false)
@@ -84,7 +70,41 @@ extension String {
 //@f:1
 
 extension CharacterSet {
-    @inlinable static var XMLWhitespace: CharacterSet {
+    static public let XMLHex: CharacterSet = CharacterSet(charactersIn: "0123456789abcdefABCDEF")
+
+    static public let XMLWhitespace: CharacterSet = {
+        // Anything less than or equal to the space character will be considered whitespace.
         CharacterSet(charactersIn: UnicodeScalar(0) ..< UnicodeScalar(0x21)).union(CharacterSet(charactersIn: UnicodeScalar(0x7f) ..< UnicodeScalar(0x80)))
+    }()
+
+    static public let XMLNameStartChar: CharacterSet = {
+        var cs = CharacterSet(charactersIn: ":ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_")
+        [ (UInt32(0x000c0) ..< UInt32(0x000d7)), (UInt32(0x000d8) ..< UInt32(0x000f7)), (UInt32(0x000f8) ..< UInt32(0x00300)) ].forEach { cs.formUnion(CharacterSet(range: $0)) }
+        [ (UInt32(0x00370) ..< UInt32(0x0037e)), (UInt32(0x0037f) ..< UInt32(0x02000)), (UInt32(0x0200c) ..< UInt32(0x0200e)) ].forEach { cs.formUnion(CharacterSet(range: $0)) }
+        [ (UInt32(0x02070) ..< UInt32(0x02190)), (UInt32(0x02c00) ..< UInt32(0x02ff0)), (UInt32(0x03001) ..< UInt32(0x0d800)) ].forEach { cs.formUnion(CharacterSet(range: $0)) }
+        [ (UInt32(0x0f900) ..< UInt32(0x0fdd0)), (UInt32(0x0fdf0) ..< UInt32(0x0fffe)), (UInt32(0x10000) ..< UInt32(0xf0000)) ].forEach { cs.formUnion(CharacterSet(range: $0)) }
+        return cs
+    }()
+
+    static public let XMLNameChar: CharacterSet = {
+        var cs = XMLNameStartChar.union(CharacterSet(charactersIn: "-.0123456789")).union(CharacterSet(charactersIn: UnicodeScalar(0xb7) ... UnicodeScalar(0xb7)))
+        [ (UInt32(0x0300) ..< UInt32(0x0370)), (UInt32(0x203f) ..< UInt32(0x2041)) ].forEach { cs.formUnion(CharacterSet(range: $0)) }
+        return cs
+    }()
+
+    public init(range: Range<UInt32>) {
+        if range.isEmpty { self.init() }
+        else { self.init(range: range.lowerBound ... (range.upperBound - 1)) }
+    }
+
+    public init(range: ClosedRange<UInt32>) {
+        guard let lo = UnicodeScalar(range.lowerBound) else { fatalError("Not a valid Unicode Scalar: \(range.lowerBound)") }
+        guard let hi = UnicodeScalar(range.upperBound) else { fatalError("Not a valid Unicode Scalar: \(range.upperBound)") }
+        self.init(charactersIn: lo ... hi)
+    }
+
+    @inlinable public func contains(char: Character) -> Bool {
+        for s in char.unicodeScalars { guard contains(s) else { return false } }
+        return true
     }
 }

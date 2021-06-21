@@ -33,8 +33,6 @@
         <!ELEMENT pgx:dob (#PCDATA)>
         <!ELEMENT ack:nickname (#PCDATA)>
         <!ELEMENT ack:Batman (#PCDATA)>
-        <!ELEMENT>
-        <!ELEMENT >
         ]>
 <gsr:Person xmlns:gsr="urn:GalenSherardRhodes"
             xmlns:usa="urn:UnitedStatesOfAmerica"
