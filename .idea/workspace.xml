@@ -6,6 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="60b0239b-d5a7-4057-9e21-57829d56877e" name="Default Changelist" comment="More">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.pbxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved" beforeDir="false" afterPath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Package.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Package.swift" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -199,14 +202,8 @@
       <workItem from="1623982209174" duration="1798000" />
       <workItem from="1624019917318" duration="22298000" />
       <workItem from="1624120325522" duration="3439000" />
-      <workItem from="1624284247405" duration="7000" />
-    </task>
-    <task id="LOCAL-00002" summary="Changed documentation style.">
-      <created>1611343654039</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1611343654039</updated>
+      <workItem from="1624284247405" duration="61000" />
+      <workItem from="1624284336289" duration="147000" />
     </task>
     <task id="LOCAL-00003" summary="Moved up to Rubicon v0.1.7">
       <created>1611582659919</created>
@@ -544,7 +541,14 @@
       <option name="project" value="LOCAL" />
       <updated>1624186585534</updated>
     </task>
-    <option name="localTasksCounter" value="51" />
+    <task id="LOCAL-00051" summary="More">
+      <created>1624284267729</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1624284267729</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
