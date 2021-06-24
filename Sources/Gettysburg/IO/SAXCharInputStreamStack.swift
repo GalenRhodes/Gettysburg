@@ -24,7 +24,6 @@ open class SAXCharInputStreamStack: SAXCharInputStream {
     @inlinable public var url:               URL           { withLock { inputStream.url                                                                        } }
     @inlinable public var baseURL:           URL           { withLock { inputStream.baseURL                                                                    } }
     @inlinable public var filename:          String        { withLock { inputStream.filename                                                                   } }
-    @inlinable public var docPosition:       DocPosition   { withLock { isOpen ? inputStream.docPosition : DocPosition(line: 0, column: 0)                     } }
     @inlinable public var markCount:         Int           { withLock { isOpen ? inputStream.markCount : 0                                                     } }
     @inlinable public var position:          TextPosition  { withLock { isOpen ? inputStream.position : TextPosition(lineNumber: 0, columnNumber: 0)           } }
     @inlinable public var encodingName:      String        { withLock { inputStream.encodingName                                                               } }
@@ -32,7 +31,8 @@ open class SAXCharInputStreamStack: SAXCharInputStream {
     @inlinable public var streamStatus:      Stream.Status { withLock { isOpen ? inputStream.streamStatus : status                                             } }
     @inlinable public var isEOF:             Bool          { withLock { isOpen && inputStream.isEOF                                                            } }
     @inlinable public var hasCharsAvailable: Bool          { withLock { isOpen && inputStream.hasCharsAvailable                                                } }
-    @inlinable public var tabWidth:          Int8          { get { withLock { inputStream.tabWidth } } set { withLock { inputStream.tabWidth = newValue } } }
+    @inlinable public var tabWidth:          Int8          { get { withLock { inputStream.tabWidth } } set { withLock { inputStream.tabWidth = newValue }      } }
+    public       lazy var docPosition:       DocPosition   = StreamPosition(inputStream: self)
 
     @usableFromInline var inputStream: SAXCharInputStream
     @usableFromInline var streamStack: [SAXCharInputStream] = []
@@ -43,8 +43,6 @@ open class SAXCharInputStreamStack: SAXCharInputStream {
 
     public init(initialInputStream: InputStream, url: URL) throws {
         self.inputStream = try SAXIConvCharInputStream(inputStream: initialInputStream, url: url)
-        /* print("Encoding: \(self.inputStream.encodingName)") */
-        /* print("==============================================") */
     }
 
     @inlinable public final func peek() throws -> Character? { try withLock { try inputStream.peek() } }
@@ -87,7 +85,7 @@ open class SAXCharInputStreamStack: SAXCharInputStream {
 
     @inlinable public final func markReset() { withLock { if isOpen { inputStream.markReset() } } }
 
-    @inlinable public final func markUpdate() { withLock { if isOpen { inputStream.markUpdate() } } }
+    @inlinable public final func markClear() { withLock { if isOpen { inputStream.markClear() } } }
 
     @discardableResult @inlinable public final func markBackup(count: Int = 1) -> Int {
         withLock {
@@ -102,7 +100,7 @@ open class SAXCharInputStreamStack: SAXCharInputStream {
     }
 
     open func pushStream(url: URL) throws {
-        guard let inputStream = InputStream(url: url) else { throw SAXError.getMalformedURL(description: url.absoluteString) }
+        guard let inputStream = InputStream(url: url) else { throw StreamError.FileNotFound(description: url.absoluteString) }
         pushStream(inputStream: try SAXIConvCharInputStream(inputStream: inputStream, url: url))
     }
 

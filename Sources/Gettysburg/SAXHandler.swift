@@ -24,7 +24,7 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-public typealias SAXRawAttribute = (name: SAXNSName, value: String)
+public typealias SAXRawAttribute = (name: SAXName, value: String)
 public typealias SAXRawAttribList = [SAXRawAttribute]
 
 public protocol SAXHandler {
@@ -32,9 +32,13 @@ public protocol SAXHandler {
 
     func endDocument(_ parser: SAXParser)
 
-    func dtdInternalDocType(_ parser: SAXParser, elementName elemName: String)
+    func beginDocType(_ parser: SAXParser, elementName: String)
 
-    func dtdExternalDocType(_ parser: SAXParser, elementName elemName: String, publicId: String?, systemId: String)
+    func endDocType(_ parser: SAXParser, elementName: String)
+
+    func dtdInternal(_ parser: SAXParser, elementName: String)
+
+    func dtdExternal(_ parser: SAXParser, elementName: String, publicId: String?, systemId: String)
 
     func dtdInternalEntityDecl(_ parser: SAXParser, name: String, type: SAXEntityType, content: String)
 

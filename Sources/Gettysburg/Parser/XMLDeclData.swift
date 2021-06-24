@@ -24,10 +24,10 @@ import Rubicon
     public let            encoding:    String?
     public let            standalone:  Bool?
     @inlinable public var description: String {
-        var s: String = "<xml?"
-        if let v = version { s.append(" version=\"\(v)\"") }
-        if let e = encoding { s.append(" encoding=\"\(e)\"") }
-        if let a = standalone { s.append(" standalone=\"\(a)\"") }
+        var s: String = "<?xml"
+        if let v = version { s.append(" version=\(v.quoted())") }
+        if let e = encoding { s.append(" encoding=\(e.quoted())") }
+        if let a = standalone { s.append(" standalone=\((a ? "yes" : "no").quoted())") }
         s.append("?>")
         return s
     }

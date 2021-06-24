@@ -28,7 +28,7 @@
             </BuildableReference>
             <SelectedTests>
                <Test
-                  Identifier = "RegexTests/testElementDeclRegex">
+                  Identifier = "RegexTests/testElementRegex1">
                </Test>
             </SelectedTests>
          </TestableReference>

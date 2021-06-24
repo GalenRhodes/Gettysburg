@@ -19,6 +19,8 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
+public typealias SAXName = (prefix: String?, localName: String)
+
 /*===============================================================================================================================================================================*/
 /// Holds a qualified namespace name along with it's associated URI.
 ///
@@ -90,8 +92,22 @@ import Rubicon
 @frozen public struct NSMapping: Hashable, Comparable, CustomStringConvertible {
     public let            prefix:      String
     public let            uri:         String
-    @inlinable public var description: String { isDefault ? "xmlns=\"\(uri.encodeEntities())\"" : "xmlns:\(prefix)=\"\(uri.encodeEntities())\"" }
+    @inlinable public var description: String { isDefault ? "xmlns=\(uri.encodeEntities().quoted())" : "xmlns:\(prefix)=\(uri.encodeEntities().quoted())" }
     @inlinable public var isDefault:   Bool { prefix.isEmpty }
+
+    init?(_ a: SAXRawAttribute) {
+        if a.name.prefix == "xmlns" {
+            self.prefix = a.name.localName
+            self.uri = a.value
+        }
+        else if a.name.prefix == nil && a.name.localName == "xmlns" {
+            self.prefix = ""
+            self.uri = a.value
+        }
+        else {
+            return nil
+        }
+    }
 
     init(prefix: String, uri: String) {
         self.prefix = prefix.trimmed

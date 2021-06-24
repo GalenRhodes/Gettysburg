@@ -63,13 +63,20 @@ public enum SAXExternalType {
     case System
 }
 
-@usableFromInline enum LeadingWhitespace {
+public enum LeadingWhitespace {
     case None
     case Allowed
     case Required
 }
 
-@usableFromInline enum XMLDeclEnum: String {
+public enum SuffixOption {
+    case Leave
+    case Keep
+    case Peek
+    case Drop
+}
+
+public enum XMLDeclEnum: String {
     case Version    = "version"
     case Encoding   = "encoding"
     case Standalone = "standalone"

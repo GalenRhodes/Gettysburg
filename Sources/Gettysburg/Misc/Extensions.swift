@@ -225,16 +225,15 @@ extension StringProtocol {
         return String(self[index(after: startIndex) ..< ei])
     }
 
-    @discardableResult @inlinable public func advance(index idx: inout String.Index, position pos: inout TextPosition) -> Bool {
+    @discardableResult @inlinable public func advance(index idx: inout String.Index, position pos: DocPosition) -> Bool {
         guard idx < endIndex else { return false }
-        textPositionUpdate(self[idx], pos: &pos, tabWidth: 4)
+        pos.positionUpdate(self[idx])
         formIndex(after: &idx)
         return (idx < endIndex)
     }
 
-    @inlinable public func advance(position pos: TextPosition) -> TextPosition {
-        var pos = pos
-        forEach { textPositionUpdate($0, pos: &pos) }
+    @discardableResult @inlinable public func advance(position pos: DocPosition) -> DocPosition {
+        forEach { pos.positionUpdate($0) }
         return pos
     }
 
@@ -248,6 +247,21 @@ extension StringProtocol {
         }
         return true
     }
+
+    @inlinable public func surroundedWith(_ prefix: String, _ suffix: String? = nil) -> String { "\(prefix)\(self)\(suffix ?? prefix)" }
+
+    @inlinable public func surroundedWith(_ prefix: Character, _ suffix: Character? = nil) -> String { "\(prefix)\(self)\(suffix ?? prefix)" }
+
+    @inlinable public func quoted() -> String { surroundedWith("\"") }
+
+    @inlinable public func singleQuoted() -> String { surroundedWith("'") }
+
+    @inlinable public func collapeWS() -> String {
+        let r = GetRegularExpression(pattern: "\\s\\s+").stringByReplacingMatches(in: String(self)) { m in " " }
+        return r.0
+    }
+
+    @inlinable public func noLF() -> String { String(self).replacingOccurrences(of: "\r\n", with: " ").replacingOccurrences(of: "\r", with: " ").replacingOccurrences(of: "\n", with: " ") }
 }
 
 extension String {
@@ -260,7 +274,7 @@ extension String {
     /// 
     /// - Returns: the prefix and local name.  `nil` is returned for the prefix if none is found.
     ///
-    @inlinable public func splitPrefix() -> (String?, String) {
+    @inlinable public func splitPrefix() -> SAXName {
         guard let idx = firstIndex(of: ":") else { return (nil, self) }
         guard idx > startIndex else { return (nil, String(self[index(after: startIndex) ..< endIndex])) }
         return (String(self[startIndex ..< idx]), String(self[index(after: idx) ..< endIndex]))
@@ -285,8 +299,22 @@ extension String {
 extension Collection where Element == Character {
 
     @inlinable public func lowercased() -> [Character] {
-        var out: [Character] = []
+        var out = Array<Character>()
         forEach { out.append(contentsOf: $0.lowercased()) }
         return out
+    }
+
+    @inlinable public func clustersExpanded() -> [Character] {
+        var out = Array<Character>()
+        forEach { $0.unicodeScalars.forEach { out <+ Character($0) } }
+        return out
+    }
+}
+
+extension RegularExpression {
+    public func parse<S, E>(from str: S, with body: (RegularExpression.Match, inout Bool) -> E?) -> [E] where S: StringProtocol {
+        var arr: [E] = []
+        forEachMatch(in: String(str)) { m, _, stop in if let m = m, let e = body(m, &stop) { arr <+ e } }
+        return arr
     }
 }

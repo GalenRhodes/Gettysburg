@@ -31,10 +31,9 @@ import Rubicon
 /// - Returns: An instance of SAXDTDElemContList.
 /// - Throws: If the DTD Element Content List is malformed.
 ///
-func ParseDTDElementContentList(position pos: TextPosition, list src: String) throws -> SAXDTDElemContList {
+func ParseDTDElementContentList(position pos: DocPosition, list src: String) throws -> SAXDTDElemContList {
     var idx: String.Index = src.startIndex
-    var pos: TextPosition = pos
-    return try _parseDTDElementContentList(src, index: &idx, position: &pos, isRoot: true)
+    return try _parseDTDElementContentList(src, index: &idx, position: pos.mutableCopy(), isRoot: true)
 }
 
 /*===============================================================================================================================================================================*/
@@ -48,120 +47,97 @@ func ParseDTDElementContentList(position pos: TextPosition, list src: String) th
 /// - Returns: An instance of SAXDTDElemContList.
 /// - Throws: If the DTD Element Content List is malformed.
 ///
-func _parseDTDElementContentList(_ src: String, index idx: inout String.Index, position pos: inout TextPosition, isRoot: Bool) throws -> SAXDTDElemContList {
-    func foo(_ conjChar: Character, _ m: SAXDTDElemCont.ItemMultiplicity, _ pos: TextPosition) -> Error {
-        return SAXError.MalformedElementDecl(position: pos, description: _msg("Invalid character", expected: ((m == .Once) ? CHARS2 + CHARS1 : CHARS1), got: conjChar))
+func _parseDTDElementContentList(_ src: String, index idx: inout String.Index, position pos: DocPosition, isRoot: Bool) throws -> SAXDTDElemContList {
+    func foo(_ conjChar: Character, _ m: SAXDTDElemCont.ItemMultiplicity, _ pos: DocPosition) -> Error {
+        return SAXError.MalformedElementDecl(position: pos, description: ExpMsg(ERRMSG_ILLEGAL_CHAR, expected: ((m == .Once) ? CHARS2 + CHARS1 : CHARS1), got: conjChar))
     }
 
-    _ = try _nextChar(src, index: &idx, position: &pos, willThrow: true, allowed: "(")
+    _ = try _nextChar(src, index: &idx, position: pos, willThrow: true, allowed: "(")
 
-    let firstItem: SAXDTDElemCont   = try _parseItem(src, index: &idx, position: &pos, pcDataAllowed: isRoot)
+    let firstItem: SAXDTDElemCont   = try _parseItem(src, index: &idx, position: pos, pcDataAllowed: isRoot)
     var items:     [SAXDTDElemCont] = [ firstItem ]
 
-    guard let conjChar = try _nextChar(src, index: &idx, position: &pos, allowed: CHARS1) else { throw foo(src[idx], firstItem.multiplicity, pos) }
+    guard let conjChar = try _nextChar(src, index: &idx, position: pos, allowed: CHARS1) else { throw foo(src[idx], firstItem.multiplicity, pos) }
 
     if conjChar != ")" {
-        repeat { items <+ try _parseItem(src, index: &idx, position: &pos, pcDataAllowed: false) } while try _nextChar(src, index: &idx, position: &pos, allowed: conjChar) != nil
-        _ = try _nextChar(src, index: &idx, position: &pos, willThrow: true, allowed: ")")
+        repeat { items <+ try _parseItem(src, index: &idx, position: pos, pcDataAllowed: false) } while try _nextChar(src, index: &idx, position: pos, allowed: conjChar) != nil
+        _ = try _nextChar(src, index: &idx, position: pos, willThrow: true, allowed: ")")
     }
 
-    let mult = ((idx < src.endIndex) ? SAXDTDElemCont.ItemMultiplicity.valueFor(char: try _nextChar(src, index: &idx, position: &pos, allowed: CHARS2)) : .Once)
+    let mult = ((idx < src.endIndex) ? SAXDTDElemCont.ItemMultiplicity.valueFor(char: try _nextChar(src, index: &idx, position: pos, allowed: CHARS2)) : .Once)
     return SAXDTDElemContList(multiplicity: mult, conjunction: ((conjChar == "|") ? .Or : .And), items: items)
 }
 
-func _parseItem(_ src: String, index idx: inout String.Index, position pos: inout TextPosition, pcDataAllowed: Bool) throws -> SAXDTDElemCont {
-    if src[idx] == "(" { return try _parseDTDElementContentList(src, index: &idx, position: &pos, isRoot: false) }
+func _parseItem(_ src: String, index idx: inout String.Index, position pos: DocPosition, pcDataAllowed: Bool) throws -> SAXDTDElemCont {
+    if src[idx] == "(" { return try _parseDTDElementContentList(src, index: &idx, position: pos, isRoot: false) }
 
-    let (element, mult, p) = try _getElement(src, index: &idx, position: &pos)
+    let (element, mult, p) = try _getElement(src, index: &idx, position: pos)
 
     if element == PCDATA {
-        guard pcDataAllowed else { throw SAXError.MalformedElementDecl(position: p, description: "\"\(PCDATA)\" not allowed here.") }
+        guard pcDataAllowed else { throw SAXError.MalformedElementDecl(position: p, description: "\(PCDATA.quoted()) not allowed here.") }
         return SAXDTDElemContPCData()
     }
 
     return SAXDTDElemContElement(name: element, multiplicity: mult)
 }
 
-func _getElement(_ src: String, index idx: inout String.Index, position pos: inout TextPosition) throws -> (String, SAXDTDElemCont.ItemMultiplicity, TextPosition) {
-    let p1:   TextPosition                    = pos
-    var mlt:  SAXDTDElemCont.ItemMultiplicity = .Once
-    var ch:   Character                       = try _nextChar(src, index: &idx, position: &pos)
-    var data: [Character]                     = []
+func _getElement(_ src: String, index idx: inout String.Index, position pos: DocPosition) throws -> (String, SAXDTDElemCont.ItemMultiplicity, DocPosition) {
+    let p1:  DocPosition                     = pos
+    var mlt: SAXDTDElemCont.ItemMultiplicity = .Once
+    var ch:  Character                       = try _nextChar(src, index: &idx, position: pos)
+    var data                                 = Array<Character>()
 
     if ch == "#" {
         data <+ ch
-        ch = try _nextChar(src, index: &idx, position: &pos)
+        ch = try _nextChar(src, index: &idx, position: pos)
     }
 
-    guard ch.isXmlNameStartChar else { throw SAXError.MalformedElementDecl(position: pos, description: _msg("Invalid element starting character", got: ch)) }
+    guard ch.isXmlNameStartChar else { throw SAXError.MalformedElementDecl(position: pos, description: ExpMsg("Invalid element starting character", got: ch)) }
     data <+ ch
 
-    while let ch = try _nextChar(src, index: &idx, position: &pos, allowed: .XMLNameChar) { data <+ ch }
+    while let ch = try _nextChar(src, index: &idx, position: pos, allowed: .XMLNameChar) { data <+ ch }
 
     let p2 = pos
-    if let ch = try _nextChar(src, index: &idx, position: &pos, allowed: CHARS2) { mlt = SAXDTDElemCont.ItemMultiplicity.valueFor(char: ch) }
+    if let ch = try _nextChar(src, index: &idx, position: pos, allowed: CHARS2) { mlt = SAXDTDElemCont.ItemMultiplicity.valueFor(char: ch) }
 
     let str = String(data)
 
     if data[0] == "#" {
-        guard str == PCDATA else { throw SAXError.MalformedElementDecl(position: p1, description: _msg("Invalid element", expected: PCDATA, got: str)) }
-        guard mlt == .Once else { throw SAXError.MalformedElementDecl(position: p2, description: "\"\(PCDATA)\" elements are not allowed to have a multiplicity marker.") }
+        guard str == PCDATA else { throw SAXError.MalformedElementDecl(position: p1, description: ExpMsg("Invalid element", expected: PCDATA, got: str)) }
+        guard mlt == .Once else { throw SAXError.MalformedElementDecl(position: p2, description: "\(PCDATA.quoted()) elements are not allowed to have a multiplicity marker.") }
     }
 
     return (str, mlt, p1)
 }
 
-@inlinable func _nextChar(_ src: String, index idx: inout String.Index, position pos: inout TextPosition) throws -> Character {
-    try _nextChar(src, index: &idx, position: &pos, test: { _, _ in true })!
+@inlinable func _nextChar(_ src: String, index idx: inout String.Index, position pos: DocPosition) throws -> Character {
+    try _nextChar(src, index: &idx, position: pos, test: { _, _ in true })!
 }
 
-@inlinable func _nextChar(_ src: String, index idx: inout String.Index, position pos: inout TextPosition, willThrow: Bool = false, allowed: CharacterSet) throws -> Character? {
-    if let ch = try _nextChar(src, index: &idx, position: &pos, test: { c, _ in allowed.contains(char: c) }) { return ch }
-    guard !willThrow else { throw SAXError.MalformedElementDecl(position: pos, description: _msg("Invalid character", got: src[idx])) }
+@inlinable func _nextChar(_ src: String, index idx: inout String.Index, position pos: DocPosition, willThrow: Bool = false, allowed: CharacterSet) throws -> Character? {
+    if let ch = try _nextChar(src, index: &idx, position: pos, test: { c, _ in allowed.contains(char: c) }) { return ch }
+    guard !willThrow else { throw SAXError.MalformedElementDecl(position: pos, description: ExpMsg(ERRMSG_ILLEGAL_CHAR, got: src[idx])) }
     return nil
 }
 
-@inlinable func _nextChar(_ src: String, index idx: inout String.Index, position pos: inout TextPosition, willThrow: Bool = false, allowed: Character...) throws -> Character? {
-    try __nextChar(src, index: &idx, position: &pos, willThrow: willThrow, allowed: allowed)
+@inlinable func _nextChar(_ src: String, index idx: inout String.Index, position pos: DocPosition, willThrow: Bool = false, allowed: Character...) throws -> Character? {
+    try __nextChar(src, index: &idx, position: pos, willThrow: willThrow, allowed: allowed)
 }
 
-@inlinable func _nextChar(_ src: String, index idx: inout String.Index, position pos: inout TextPosition, willThrow: Bool = false, allowed: [Character]) throws -> Character? {
-    try __nextChar(src, index: &idx, position: &pos, willThrow: willThrow, allowed: allowed)
+@inlinable func _nextChar(_ src: String, index idx: inout String.Index, position pos: DocPosition, willThrow: Bool = false, allowed: [Character]) throws -> Character? {
+    try __nextChar(src, index: &idx, position: pos, willThrow: willThrow, allowed: allowed)
 }
 
-@inlinable func __nextChar(_ src: String, index idx: inout String.Index, position pos: inout TextPosition, willThrow: Bool, allowed: [Character]) throws -> Character? {
-    if let ch = try _nextChar(src, index: &idx, position: &pos, test: { c, p in value(c, isOneOf: allowed) }) { return ch }
-    guard !willThrow else { throw SAXError.MalformedElementDecl(position: pos, description: _msg("Invalid character", expected: allowed, got: src[idx])) }
+@inlinable func __nextChar(_ src: String, index idx: inout String.Index, position pos: DocPosition, willThrow: Bool, allowed: [Character]) throws -> Character? {
+    if let ch = try _nextChar(src, index: &idx, position: pos, test: { c, p in value(c, isOneOf: allowed) }) { return ch }
+    guard !willThrow else { throw SAXError.MalformedElementDecl(position: pos, description: ExpMsg(ERRMSG_ILLEGAL_CHAR, expected: allowed, got: src[idx])) }
     return nil
 }
 
-@inlinable func _nextChar(_ src: String, index idx: inout String.Index, position pos: inout TextPosition, test: (Character, TextPosition) throws -> Bool) throws -> Character? {
+@inlinable func _nextChar(_ src: String, index idx: inout String.Index, position pos: DocPosition, test: (Character, DocPosition) throws -> Bool) throws -> Character? {
     guard idx < src.endIndex else { throw SAXError.MalformedElementDecl(position: pos, description: "Unclosed content list.") }
     let ch = src[idx]
     guard try test(ch, pos) else { return nil }
-    src.advance(index: &idx, position: &pos)
+    src.advance(index: &idx, position: pos)
     return ch
-}
-
-@usableFromInline func _msg(_ msg: String, expected c1: Character..., got c2: Character) -> String { __msg(msg, expected: c1.map { String($0) }, got: String(c2)) }
-
-@usableFromInline func _msg(_ msg: String, expected c1: [Character], got c2: Character) -> String { __msg(msg, expected: c1.map { String($0) }, got: String(c2)) }
-
-@usableFromInline func _msg(_ msg: String, expected c1: String..., got c2: String) -> String { __msg(msg, expected: c1, got: c2) }
-
-@usableFromInline func __msg(_ msg: String, expected c1: [String], got c2: String) -> String {
-    let cc          = c1.count
-    var out: String = "\(msg) -"
-
-    guard cc > 0 else { return "\(out) did not expect \"\(c2)\"." }
-
-    out += "expected \"\(c1[0])\""
-
-    if cc > 1 {
-        let x = (c1.endIndex - 1)
-        for i in (1 ..< x) { out += ", \"\(c1[i])\"" }
-        out += ", or \"\(c1[x])\""
-    }
-
-    return "\(out) but got \"\(c2)\" instead."
 }

@@ -39,8 +39,6 @@ open class SAXParser {
     @usableFromInline var _xmlIsStandalone: Bool            = true
 
     public init(inputStream: InputStream, url: URL, handler: SAXHandler) throws {
-        /* nDebug(.In, "SAXParser.init") */
-        defer { /* nDebug(.Out, "SAXParser.init") */ }
         self.inputStream = try SAXCharInputStreamStack(initialInputStream: inputStream, url: url)
         self._xmlEncoding = self.inputStream.encodingName
         self.handler = handler
@@ -64,26 +62,28 @@ open class SAXParser {
     /*===========================================================================================================================================================================*/
     /// Parse the XML document from the given input stream.
     /// 
+    /// It should be noted that the only text that should exist at the root of the document is whitespace.
+    /// 
     /// - Throws: If an error occured.
     ///
     open func parse() throws {
         do {
             inputStream.open()
-            defer { inputStream.close() }
+            inputStream.markSet()
+            defer {
+                inputStream.markDelete()
+                inputStream.close()
+            }
 
-            try getXmlDeclaration()
-            markSet()
-            defer { markDelete() }
-
-            var hasDocType:  Bool = false
-            var hasRootElem: Bool = false
+            var hasDocType:     Bool = false
+            var hasRootElement: Bool = false
 
             while let ch = try inputStream.read() {
                 switch ch {
-                    case "<": try handleRootNodeItem(&hasDocType, &hasRootElem)
-                    default:  guard ch.isXmlWhitespace else { throw unexpectedCharacterError(character: ch) }
+                    case "<": try parseRootNode(&hasRootElement, &hasDocType)
+                    default:  guard ch.isXmlWhitespace else { throw SAXError.getMalformedDocument(inputStream, description: ExpMsg(ERRMSG_ILLEGAL_CHAR, got: ch)) }
                 }
-                markUpdate()
+                inputStream.markClear()
             }
         }
         catch let e {
@@ -92,98 +92,201 @@ open class SAXParser {
     }
 
     /*===========================================================================================================================================================================*/
-    /// Parse a root node item.
+    /// Parse a comment, processing instruction, DOCTYPE, or element that appears in the root of the document.
     /// 
     /// - Parameters:
-    ///   - hasDocType: A flag that indicates the DOCTYPE node has already been found.
-    ///   - hasRootElem: A flag that indicates the root element node has already been found.
-    /// - Throws: If an I/O error occurs or the root node item is malformed.
+    ///   - hasRootElement:
+    ///   - hasDocType:
+    /// - Throws: If an I/O error occurs or if the root node is malformed.
     ///
-    private func handleRootNodeItem(_ hasDocType: inout Bool, _ hasRootElem: inout Bool) throws {
+    private func parseRootNode(_ hasRootElement: inout Bool, _ hasDocType: inout Bool) throws {
         guard let ch = try inputStream.read() else { throw SAXError.getUnexpectedEndOfInput() }
 
         switch ch {
             case "!":
-                guard let ch = try inputStream.read() else { throw SAXError.getUnexpectedEndOfInput() }
-                switch ch {
-                    case "-":
-                        markBackup(count: 3)
-                        try handleComment()
-                    case "D":
-                        markBackup(count: 3)
-                        try handleDocType()
-                    default:
-                        throw unexpectedCharacterError(character: ch)
-                }
-                break
+                try parseRootCommentOrDocType(hasRootElement: hasRootElement, hasDocType: &hasDocType)
             case "?":
-                markBackup(count: 2)
-                try handleProcessingInstruction()
-            default:
-                guard ch.isXmlNameStartChar else { throw unexpectedCharacterError(character: ch) }
-                guard !hasRootElem else { throw SAXError.getMalformedDocument(markBackup(count: 2), description: "Document already has a root element.") }
-                markBackup(count: 2)
-                try handleNestedElement()
-                hasRootElem = true
-                break
+                inputStream.markBackup(count: 2)
+                try parseProcessingInstruction()
+            default: // TODO: Element
+                guard ch.isXmlNameStartChar else { throw SAXError.getMalformedDocument(inputStream, description: ExpMsg(ERRMSG_ILLEGAL_CHAR, got: ch)) }
+                guard !hasRootElement else { throw SAXError.getMalformedDocument(inputStream, description: "Document already has a root element.") }
+                inputStream.markBackup(count: 2)
+                try parseElement()
+                hasRootElement = true
         }
     }
 
-    private func handleDocType() throws {
-        var buffer: [Character] = []
-        guard try inputStream.read(chars: &buffer, maxLength: 10) == 10 else { throw SAXError.getUnexpectedEndOfInput() }
-        guard try String(buffer).matches(pattern: "^\\<\\!DOCTYPE\\s+") else { throw SAXError.getMalformedDocType(markReset(), description: "Not a DOCTYPE element: \"\(String(buffer))\"") }
-        guard let elem = try nextIdentifier(leadingWhitespace: .Allowed) else { throw SAXError.getMalformedDocType(markReset(), description: "Missing root element.") }
-        guard let ch = try read(leadingWhitespace: .Required) else { throw SAXError.getUnexpectedEndOfInput() }
-        switch ch {
-            case "[": try handleInternalDocType(rootElement: elem)
-            case "S": markBackup(); try handleExternalSystemDocType(rootElement: elem)
-            case "P": markBackup(); try handleExternalPublicDocType(rootElement: elem)
-            default: throw SAXError.getMalformedDocType(markBackup(), description: unexpectedCharMessage(character: ch))
-        }
-    }
-
-    private func handleExternalSystemDocType(rootElement elem: String) throws {
-        guard let tp = try nextIdentifier(leadingWhitespace: .None) else { throw SAXError.getMalformedDocType(markReset(), description: "Missing external type.") }
-        guard tp == "SYSTEM" else { throw SAXError.getMalformedDocType(markReset(), description: "Incorrect external type: \"\(tp)\"") }
-        let url = try readSystemID()
-        let ws  = try readWhitespace()
+    /*===========================================================================================================================================================================*/
+    /// Parse a DOCTYPE node or a comment that appears in the root of the document.
+    /// 
+    /// - Parameters:
+    ///   - hasRootElement: `true` if the root element has already been parsed.
+    ///   - hasDocType: R/W value that is `true` if the DOCTYPE element has already been parsed.
+    /// - Throws: If an I/O error occurs or if the root node is malformed.
+    ///
+    private func parseRootCommentOrDocType(hasRootElement: Bool, hasDocType: inout Bool) throws {
         guard let ch = try inputStream.read() else { throw SAXError.getUnexpectedEndOfInput() }
 
-        if ch == "[" {
-            guard ws else { throw SAXError.getMissingWhitespace(markBackup()) }
-            try handleInternalDocType(rootElement: elem)
+        switch ch {
+            case "-":
+                inputStream.markBackup(count: 3)
+                try parseComment(inputStream: inputStream)
+            case "D":
+                inputStream.markBackup(count: 3)
+                try parseDocTypeNode(hasRootElement: hasRootElement, hasDocType: &hasDocType)
+            default:
+                inputStream.markBackup()
+                throw SAXError.getMalformedDocument(inputStream, description: ExpMsg(ERRMSG_ILLEGAL_CHAR, expected: "-", "D", got: ch))
         }
-        else if ch != ">" {
-            throw SAXError.getMalformedDocType(markBackup(), description: unexpectedCharMessage(character: ch))
-        }
-
-        let body = try GetExternalFile(parentStream: inputStream, url: url)
-        try parseDocType(rootElement: elem, body: body, url: url)
     }
 
-    private func handleExternalPublicDocType(rootElement elem: String) throws {
-        markUpdate()
-        guard let tp = try nextIdentifier(leadingWhitespace: .None) else { throw SAXError.getMalformedDocType(markReset(), description: "Missing external type.") }
-        guard tp == "PUBLIC" else { throw SAXError.getMalformedDocType(markReset(), description: "Incorrect external type: \"\(tp)\"") }
-        guard let pid = try nextQuotedValue(leadingWhitespace: .Required) else { throw SAXError.getMalformedURL(inputStream, description: "Missing public ID.") }
-        let url = try readSystemID()
-        guard let ch = try read(leadingWhitespace: .Allowed) else { throw SAXError.getUnexpectedEndOfInput() }
-        guard ch == ">" else { throw SAXError.getMalformedDocType(markBackup(), description: unexpectedCharMessage(character: ch)) }
-        let body = try GetExternalFile(parentStream: inputStream, url: url)
-        try parseDocType(rootElement: elem, body: body, name: pid, url: url)
+    /*===========================================================================================================================================================================*/
+    /// Parse a processing instruction.
+    /// 
+    /// - Throws: If an I/O error occurs, the EOF is encountered, or the processing instruction is malformed.
+    ///
+    func parseProcessingInstruction() throws {
+        defer { inputStream.markClear() }
+        let opening = try inputStream.readString(count: 2)
+        try test(inputStream, err: .MalformedProcInst, expected: "<?", got: opening)
+        let body = try inputStream.readUntil(found: "?", ">")
+        guard let m = GetRegularExpression(pattern: RX_PROC_INST).firstMatch(in: body) else { throw SAXError.getMalformedProcInst(inputStream, description: "<?\(body.noLF())?>") }
+        guard let target = m[1].subString else { fatalError(ERRMSG_RX) }
+        guard let data = m[2].subString else { fatalError(ERRMSG_RX) }
+
+        if target.lowercased() == "xml" { setXmlDecl(try parseXmlDecl(data)) }
+        else { handler.processingInstruction(self, target: target, data: data) }
     }
 
-    private func handleInternalDocType(rootElement elem: String) throws {
-        var buffer: [Character]  = []
-        let pos:    TextPosition = inputStream.position
+    /*===========================================================================================================================================================================*/
+    /// Set the XML Decl fields from an instance of XMLDeclData.
+    /// 
+    /// - Parameter xmlDecl: An instance of XMLDeclData.
+    ///
+    private func setXmlDecl(_ xmlDecl: XMLDeclData) {
+        if let s = xmlDecl.version { _xmlVersion = s }
+        if let s = xmlDecl.encoding { _xmlEncoding = s }
+        if let s = xmlDecl.standalone { _xmlIsStandalone = s }
+    }
+
+    /*===========================================================================================================================================================================*/
+    /// Parse the XML Declaration.
+    /// 
+    /// - Parameter data: The body of the XML Declaration processing instruction.
+    /// - Returns: An instance of XMLDeclData containing the information from the XML Declaration.
+    /// - Throws: If the XML Declaration is malformed.
+    ///
+    func parseXmlDecl(_ data: String) throws -> XMLDeclData {
+        let rx                  = GetRegularExpression(pattern: RX_XML_DECL)
+        var err:        Error?  = nil
+        var version:    String? = nil
+        var encoding:   String? = nil
+        var standalone: Bool?   = nil
+
+        rx.forEachMatch(in: " \(data)") { match, _, stop in
+            if let m = match {
+                switch m[1].subString {
+                    case "version":    if version == nil { version = m[2].subString?.deQuoted() }
+                    case "encoding":   if encoding == nil { encoding = m[2].subString?.deQuoted() }
+                    case "standalone": if standalone == nil { if let s = m[2].subString?.deQuoted().lowercased() { if value(s, isOneOf: "yes", "no") { standalone = (s == "yes") } } }
+                    default:
+                        err = SAXError.getMalformedProcInst(inputStream, description: "Unknown parameter: \(m.subString)")
+                        stop = true
+                }
+            }
+        }
+
+        if let e = err { throw e }
+        nDebug(.None, "XML DECL: version=\(version?.quoted() ?? "nil"); encoding=\(encoding?.quoted() ?? "nil"); standalone=\(standalone?.description.quoted() ?? "nil")")
+        return XMLDeclData(version: version, encoding: encoding, standalone: standalone)
+    }
+
+    /*===========================================================================================================================================================================*/
+    /// Handle the DOCTYPE element.
+    /// 
+    /// - Parameters:
+    ///   - hasRootElement: `true` if the root element has already been parsed.
+    ///   - hasDocType: R/W value that is `true` if the DOCTYPE element has already been parsed.
+    /// - Throws: If an I/O error occured, the DOCTYPE is malformed, the root element or the DOCTYPE has already been parsed, or the EOF is encountered.
+    ///
+    private func parseDocTypeNode(hasRootElement: Bool, hasDocType: inout Bool) throws {
+        defer { inputStream.markClear() }
+
+        let opening = try inputStream.readString(count: 9)
+        try test(inputStream, err: .MalformedDocument, expected: "<!DOCTYPE", got: opening)
+        if hasRootElement { throw SAXError.getMalformedDocument(inputStream, description: "DOCTYPE not expected here.") }
+        if hasDocType { throw SAXError.getMalformedDocument(inputStream, description: "Document already has a DOCTYPE.") }
+
+        inputStream.markClear()
+        let header = try readDocTypeHeader()
+
+        if let m = GetRegularExpression(pattern: RX_DOCTYPE[0]).firstMatch(in: header) {
+            guard let elem = m[1].subString else { fatalError(ERRMSG_RX) }
+            handler.beginDocType(self, elementName: elem)
+            defer { handler.endDocType(self, elementName: elem) }
+            try parseInternalDTD(rootElement: elem)
+        }
+        else if let m = GetRegularExpression(pattern: RX_DOCTYPE[1]).firstMatch(in: header) {
+            guard let elem = m[1].subString else { fatalError(ERRMSG_RX) }
+            guard let systemId = m[3].subString?.deQuoted() else { fatalError(ERRMSG_RX) }
+            let hasInternal = (m[4].subString?.trimmed == "[")
+            handler.beginDocType(self, elementName: elem)
+            defer { handler.endDocType(self, elementName: elem) }
+            try parseExternalDTD(rootElement: elem, publicID: nil, systemID: GetURL(string: systemId, relativeTo: baseURL))
+            if hasInternal { try parseInternalDTD(rootElement: elem) }
+        }
+        else if let m = GetRegularExpression(pattern: RX_DOCTYPE[2]).firstMatch(in: header) {
+            guard let elem = m[1].subString else { fatalError(ERRMSG_RX) }
+            guard let publicId = m[3].subString?.deQuoted() else { fatalError(ERRMSG_RX) }
+            guard let systemId = m[4].subString?.deQuoted() else { fatalError(ERRMSG_RX) }
+            handler.beginDocType(self, elementName: elem)
+            defer { handler.endDocType(self, elementName: elem) }
+            try parseExternalDTD(rootElement: elem, publicID: publicId, systemID: GetURL(string: systemId, relativeTo: baseURL))
+        }
+        else {
+            inputStream.markReset()
+            throw SAXError.getMalformedDocType(inputStream, description: "Bad DOCTYPE opening.")
+        }
+
+        hasDocType = true
+    }
+
+    /*===========================================================================================================================================================================*/
+    /// Reads everything past the "<!DOCTYPE" up to the first instance of "[" or ">".
+    /// 
+    /// - Returns: The string.
+    /// - Throws: If an I/O error occurs or the EOF is encountered.
+    ///
+    private func readDocTypeHeader() throws -> String {
+        inputStream.markSet()
+        defer { inputStream.markDelete() }
+
+        var buffer = Array<Character>()
 
         while let ch = try inputStream.read() {
-            if ch == "]" {
-                guard let ch = try inputStream.read() else { throw SAXError.getUnexpectedEndOfInput() }
-                if ch == ">" { return try parseDocType(rootElement: elem, body: String(buffer), position: pos) }
-                buffer <+ "]"
-                buffer <+ ch
+            buffer <+ ch
+            if value(ch, isOneOf: "[", ">") { return String(buffer) }
+        }
+
+        throw SAXError.getUnexpectedEndOfInput()
+    }
+
+    /*===========================================================================================================================================================================*/
+    /// Parse the internal DTD.
+    /// 
+    /// - Parameter elem: The name of the root element.
+    /// - Throws: If an I/O error occurs, the EOF is encountered before the end of the DTD, or the DTD is malformed.
+    ///
+    private func parseInternalDTD(rootElement elem: String) throws {
+        handler.dtdInternal(self, elementName: elem)
+
+        var buffer = Array<Character>()
+        let pos    = inputStream.docPosition
+
+        while let ch = try inputStream.read() {
+            if ch == ">" && buffer.last == "]" {
+                return try parseDTD(rootElement: elem, body: String(buffer.dropLast(1)), position: pos)
             }
             buffer <+ ch
         }
@@ -191,73 +294,140 @@ open class SAXParser {
         throw SAXError.getUnexpectedEndOfInput()
     }
 
-    private func parseDocType(rootElement elem: String, body: String, name: String? = nil, url: URL? = nil, position pos: TextPosition = (0, 0)) throws {
-        let pattern             = "<!--(.*?)-->|<!(ELEMENT|ENTITY|ATTLIST|NOTATION)(?:\\s+([^>]*))?>"
-        let regex               = GetRegularExpression(pattern: pattern, options: [ .dotMatchesLineSeparators ])
-        var last:  String.Index = body.startIndex
-        var error: Error?       = nil
-        var pos                 = pos
+    /*===========================================================================================================================================================================*/
+    /// Parse an external DTD.
+    /// 
+    /// - Parameters:
+    ///   - elem: The name of the root document element.
+    ///   - publicID: The public ID of the DTD or `nil` if this is a SYSTEM DTD.
+    ///   - systemID: The system ID (URL) of the DTD.
+    /// - Throws: If there is an I/O error or the DTD is malformed.
+    ///
+    private func parseExternalDTD(rootElement elem: String, publicID: String? = nil, systemID: URL) throws {
+        handler.dtdExternal(self, elementName: elem, publicId: publicID, systemId: systemID.absoluteString)
+        let body = try GetExternalFile(parentStream: inputStream, url: systemID)
+        try parseDTD(rootElement: elem, body: body, publicID: publicID, systemID: systemID, position: StringPosition(url: systemID, line: 0, column: 0))
+    }
 
-        regex.forEachMatch(in: body) { match, _, stop in
-            if let match = match {
+    /*===========================================================================================================================================================================*/
+    /// Parse the body of the DOCTYPE.
+    /// 
+    /// - Parameters:
+    ///   - elem: The name of the root document element.
+    ///   - body: The cache string containing the entire DTD.
+    ///   - publicID: The public ID of the DTD or `nil` if there isn't one.
+    ///   - systemID: The system ID of the DTD or `nil` if this is an internal DTD.
+    ///   - pos: The position of the start of the DTD in the document.
+    /// - Throws: If the DTD is malformed.
+    ///
+    private func parseDTD(rootElement elem: String, body: String, publicID: String? = nil, systemID: URL? = nil, position pos: DocPosition) throws {
+        let pattern: String            = "<!--(.*?)-->|<!(ELEMENT|ENTITY|ATTLIST|NOTATION)(?:\\s+([^>]*))?>"
+        let regex:   RegularExpression = GetRegularExpression(pattern: pattern, options: [ .dotMatchesLineSeparators ])
+        var last:    String.Index      = body.startIndex
+        var err:     Error?            = nil
+        let pos:     DocPosition       = pos.mutableCopy()
+
+        regex.forEachMatch(in: body) { m, _, quit in
+            if let match = m {
                 do {
-                    try body[last ..< match.range.lowerBound].forEach { ch in
-                        guard ch.isXmlWhitespace else { throw SAXError.MalformedDocType(position: pos, description: unexpectedCharMessage(character: ch)) }
-                        textPositionUpdate(ch, pos: &pos, tabWidth: 4)
-                    }
-
-                    if let rComment = match[1].range {
-                        let comment = String(body[rComment])
-                        try _foo01(body: body, startIndex: match.range.lowerBound, comment: comment, rComment: rComment, position: pos)
-                        handler.comment(self, content: comment)
-                    }
-                    else if let rType = match[2].range {
-                        let type = String(body[rType])
-                        if let rData = match[3].range {
-                            let rToData = (match.range.lowerBound ..< rData.lowerBound)
-                            let pData   = GetPosition(from: body, range: rToData, startingAt: pos)
-                            let sData   = String(body[rData]).trimmingCharacters(in: .XMLWhitespace)
-
-                            switch type {
-                                case "ELEMENT": try parseDocTypeElement(rootElement: elem, body: sData, name: name, url: url, position: pData)
-                                case "ENTITY":  try parseDocTypeEntity(rootElement: elem, body: sData, name: name, url: url, position: pData)
-                                case "ATTLIST": try parseDocTypeAttList(rootElement: elem, body: sData, name: name, url: url, position: pData)
-                                default:        try parseDocTypeNotation(rootElement: elem, body: sData, name: name, url: url, position: pData)
-                            }
-                        }
-                        else {
-                            throw SAXError.MalformedDocType(position: pos, description: "Empty DTD \(type) Decl.")
-                        }
-                    }
-
-                    AdvancePosition(from: body, range: match.range, position: &pos)
-                    last = match.range.upperBound
+                    try parseDTDChildNode(match: match, content: body, index: &last, position: pos, element: elem, publicID: publicID, systemID: systemID)
                 }
                 catch let e {
-                    error = e
-                    stop = true
+                    err = e
+                    quit = true
                 }
             }
         }
 
-        if let e = error { throw e }
+        if let e = err { throw e }
     }
 
-    private func _foo01(body: String, startIndex: String.Index, comment: String, rComment: Range<String.Index>, position pos: TextPosition) throws {
-        if let rx = comment.range(of: "--") {
-            let d = comment.distance(from: startIndex, to: rx.lowerBound)
-            let p = GetPosition(from: body, range: startIndex ..< body.index(startIndex, offsetBy: d), startingAt: pos)
-            throw SAXError.MalformedComment(position: p, description: "Comment cannot contain double minus (-) signs.")
+    /*===========================================================================================================================================================================*/
+    /// Parse a node within the DTD itself.
+    /// 
+    /// - Parameters:
+    ///   - m: The RegularExpression.Match instance for the current DTD child node.
+    ///   - str: The String containing the entire DTD.
+    ///   - idx: The current index in str.
+    ///   - pos: The current DocPosition in str.
+    ///   - elem: The name of the root element in the document.
+    ///   - pid: The public ID of the DTD.
+    ///   - sid: The system ID of the DTD.
+    /// - Throws: If the DTD child node is malformed.
+    ///
+    private func parseDTDChildNode(match m: RegularExpression.Match, content str: String, index idx: inout String.Index, position pos: DocPosition, element elem: String, publicID pid: String?, systemID sid: URL?) throws {
+        try str[idx ..< m.range.lowerBound].forEach { ch in
+            guard ch.isXmlWhitespace else { throw SAXError.MalformedDocType(position: pos, description: ExpMsg(ERRMSG_ILLEGAL_CHAR, got: ch)) }
+            pos.positionUpdate(ch)
         }
-        else if comment.hasSuffix("-") {
-            let p = GetPosition(from: body, range: startIndex ..< rComment.lowerBound, startingAt: pos)
-            throw SAXError.MalformedComment(position: p, description: "Comment cannot contain double minus (-) signs.")
+
+        if let rComment = m[1].range {
+            let comment = String(str[rComment])
+            try parseDTDComment(str, index: m.range.lowerBound, comment: comment, range: rComment, position: pos)
+        }
+        else if let rType = m[2].range {
+            let type = String(str[rType])
+            if let rData = m[3].range {
+                let rToData = (m.range.lowerBound ..< rData.lowerBound)
+                let pData   = str[rToData].advance(position: pos)
+                let sData   = String(str[rData]).trimmingCharacters(in: .XMLWhitespace)
+
+                switch type {
+                    case "ELEMENT":  try parseDTDElement(rootElement: elem, body: sData, publicID: pid, systemID: sid, position: pData)
+                    case "ENTITY":   try parseDTDEntity(rootElement: elem, body: sData, publicID: pid, systemID: sid, position: pData)
+                    case "ATTLIST":  try parseDTDAttList(rootElement: elem, body: sData, publicID: pid, systemID: sid, position: pData)
+                    case "NOTATION": try parseDTDNotation(rootElement: elem, body: sData, publicID: pid, systemID: sid, position: pData)
+                    default:         throw SAXError.MalformedDocType(position: pos, description: ExpMsg("Unknown DTD child element", expected: "ELEMENT", "ENTITY", "ATTLIST", "NOTATION", got: type))
+                }
+            }
+            else {
+                throw SAXError.MalformedDocType(position: pos, description: "Empty DTD \(type) Decl.")
+            }
+        }
+
+        m.subString.advance(position: pos)
+        idx = m.range.upperBound
+    }
+
+    /*===========================================================================================================================================================================*/
+    /// Parse a comment from the cached DOCTYPE string.
+    /// 
+    /// - Parameters:
+    ///   - src: The cache string.
+    ///   - idx: The current index in the string.
+    ///   - txt: The text of the comment.
+    ///   - r: The range within src that contains the comment text.
+    ///   - pos: The document position of the comment text.
+    /// - Throws: MalformedComment if the comment contains two dashes next to each other.
+    ///
+    private func parseDTDComment(_ src: String, index idx: String.Index, comment txt: String, range r: Range<String.Index>, position pos: DocPosition) throws {
+        if let rx = txt.range(of: "--") {
+            let d = txt.distance(from: idx, to: rx.lowerBound)
+            let p = src[idx ..< src.index(idx, offsetBy: d)].advance(position: pos.mutableCopy())
+            throw SAXError.MalformedComment(position: p, description: ERRMSG_COMMENT_DASHES)
+        }
+        else if txt.hasSuffix("-") {
+            let p = src[idx ..< r.lowerBound].advance(position: pos.mutableCopy())
+            throw SAXError.MalformedComment(position: p, description: ERRMSG_COMMENT_DASHES)
+        }
+        else {
+            handler.comment(self, content: txt)
         }
     }
 
-    private func parseDocTypeElement(rootElement elem: String, body: String, name: String? = nil, url: URL? = nil, position pos: TextPosition) throws {
-        let p = "(\(rxNamePattern))\\s+(EMPTY|ANY|\\([^>]+)"
-        guard let m = GetRegularExpression(pattern: p).firstMatch(in: body) else { throw SAXError.MalformedEntityDecl(position: pos, description: "<!ELEMENT \(body)>") }
+    /*===========================================================================================================================================================================*/
+    /// Parse a DTD element item.
+    /// 
+    /// - Parameters:
+    ///   - elem: The name of the DOCTYPE element.
+    ///   - body: The body of the DTD.
+    ///   - publicID: The public ID of the DTD.
+    ///   - systemID: The system ID of the DTD.
+    ///   - pos: The position of the element item in the containing document.
+    /// - Throws: If the element item is malformed.
+    ///
+    private func parseDTDElement(rootElement elem: String, body: String, publicID: String?, systemID: URL?, position pos: DocPosition) throws {
+        guard let m = GetRegularExpression(pattern: RX_DTD_ELEMENT).firstMatch(in: body) else { throw SAXError.MalformedEntityDecl(position: pos, description: "<!ELEMENT \(body.noLF())>") }
         guard let name = m[1].subString else { fatalError("Incorrect ELEMENT REGEX") }
         guard let elst = m[2].subString else { fatalError("Incorrect ELEMENT REGEX") }
         let type = SAXElementAllowedContent.valueFor(description: elst)
@@ -267,14 +437,19 @@ open class SAXParser {
         handler.dtdElementDecl(self, name: name, allowedContent: type, content: elems)
     }
 
-    private func parseDocTypeAttList(rootElement elem: String, body: String, name: String? = nil, url: URL? = nil, position pos: TextPosition) throws {
-        let p0 = "(\(rxNamePattern))"
-        let p1 = "(?:\\([^|)]+(?:\\|[^|)]+)*\\))"
-        let p2 = "(CDATA|ID|IDREF|IDREFS|ENTITY|ENTITIES|NMTOKEN|NMTOKENS|NOTATION|\(p1))"
-        let p3 = "(\\#REQUIRED|\\#IMPLIED|(?:(?:(#FIXED)\\s+)?\(rxQuotedString)))"
-        let p  = "\(p0)\\s+\(p0)\\s+\(p2)\\s+\(p3)"
-
-        guard let m = GetRegularExpression(pattern: p).firstMatch(in: body) else { throw SAXError.MalformedEntityDecl(position: pos, description: "<!ATTLIST \(body)>") }
+    /*===========================================================================================================================================================================*/
+    /// Parse a DTD attribute list item.
+    /// 
+    /// - Parameters:
+    ///   - elem: The name of the DOCTYPE element.
+    ///   - body: The body of the DTD.
+    ///   - publicID: The public ID of the DTD.
+    ///   - systemID: The system ID of the DTD.
+    ///   - pos: The position of the attribute list item in the containing document.
+    /// - Throws: If the attribute list item is malformed.
+    ///
+    private func parseDTDAttList(rootElement elem: String, body: String, publicID: String?, systemID: URL?, position pos: DocPosition) throws {
+        guard let m = GetRegularExpression(pattern: RX_DTD_ATTLIST).firstMatch(in: body) else { throw SAXError.MalformedEntityDecl(position: pos, description: "<!ATTLIST \(body.noLF())>") }
         guard let elem = m[1].subString else { fatalError("Incorrect ATTLIST REGEX") }
         guard let name = m[2].subString else { fatalError("Incorrect ATTLIST REGEX") }
         guard let tpNm = m[3].subString, let type = SAXAttributeType.valueFor(description: tpNm) else { fatalError("Incorrect ATTLIST REGEX") }
@@ -283,18 +458,19 @@ open class SAXParser {
         handler.dtdAttributeDecl(self, name: name, elementName: elem, type: type, enumList: type.enumList(tpNm), defaultType: .valueFor(description: defv), defaultValue: m[6].subString)
     }
 
-    private func parseDocTypeEntity(rootElement elem: String, body: String, name: String? = nil, url: URL? = nil, position pos: TextPosition) throws {
-        let p0 = "(\(rxNamePattern))"
-        let p1 = "\\s+\(rxQuotedString)"
-        let p2 = "(?:\(p1))"
-        let p3 = "\\s+(?:(?:(SYSTEM)|(PUBLIC)\(p1))\(p1))"
-        let p4 = "(?:\\s+(NDATA)\\s+\(p0))?"
-        let p5 = "(?:\(p3)\(p4))"
-        let p6 = "(?:\(p3))"
-        let p7 = "\(p0)(?:\(p2)|\(p5))"
-        let p8 = "(\\%)\\s+\(p0)(?:\(p2)|\(p6))"
-        let p  = "(?:\(p7)|\(p8))"
-        guard let m = GetRegularExpression(pattern: p).firstMatch(in: body) else { throw SAXError.MalformedEntityDecl(position: pos, description: "<!ENTITY \(body)>") }
+    /*===========================================================================================================================================================================*/
+    /// Parse a DTD entity item.
+    /// 
+    /// - Parameters:
+    ///   - elem: The name of the DOCTYPE element.
+    ///   - body: The body of the DTD.
+    ///   - publicID: The public ID of the DTD.
+    ///   - systemID: The system ID of the DTD.
+    ///   - pos: The position of the entity item in the containing document.
+    /// - Throws: If the entity item is malformed.
+    ///
+    private func parseDTDEntity(rootElement elem: String, body: String, publicID: String?, systemID: URL?, position pos: DocPosition) throws {
+        guard let m = GetRegularExpression(pattern: RX_DTD_ENTITY).firstMatch(in: body) else { throw SAXError.MalformedEntityDecl(position: pos, description: "<!ENTITY \(body.noLF())>") }
 
         let i:    Int           = (m[1].subString == nil ? 10 : 1)
         let type: SAXEntityType = ((i == 1) ? .General : .Parameter)
@@ -314,9 +490,19 @@ open class SAXParser {
         }
     }
 
-    private func parseDocTypeNotation(rootElement elem: String, body: String, name: String? = nil, url: URL? = nil, position pos: TextPosition) throws {
-        let p = "(\(rxNamePattern))\\s+(SYSTEM|PUBLIC)\\s+(\(rxQuotedString))(?:\\s+(\(rxQuotedString)))?"
-        guard let m = GetRegularExpression(pattern: p).firstMatch(in: body) else { throw SAXError.MalformedNotationDecl(position: pos, description: "<!NOTATION \(body)>") }
+    /*===========================================================================================================================================================================*/
+    /// Parse a DTD notation item.
+    /// 
+    /// - Parameters:
+    ///   - elem: The name of the DOCTYPE element.
+    ///   - body: The body of the DTD.
+    ///   - publicID: The public ID of the DTD.
+    ///   - systemID: The system ID of the DTD.
+    ///   - pos: The position of the notation item in the containing document.
+    /// - Throws: If the notation item is malformed.
+    ///
+    private func parseDTDNotation(rootElement elem: String, body: String, publicID: String?, systemID: URL?, position pos: DocPosition) throws {
+        guard let m = GetRegularExpression(pattern: RX_DTD_NOTATION).firstMatch(in: body) else { throw SAXError.MalformedNotationDecl(position: pos, description: "<!NOTATION \(body.noLF())>") }
         guard let name = m[1].subString else { fatalError("Incorrect NOTATION REGEX") }
         guard let type = m[2].subString else { fatalError("Incorrect NOTATION REGEX") }
         guard let prm1 = m[3].subString?.deQuoted() else { fatalError("Incorrect NOTATION REGEX") }
@@ -324,576 +510,124 @@ open class SAXParser {
 
         switch type {
             case "SYSTEM":
-                guard prm2 == nil else { throw SAXError.MalformedNotationDecl(position: pos, description: "Extra parameter in system notation: \"\(prm2!)\"") }
+                guard prm2 == nil else { throw SAXError.MalformedNotationDecl(position: pos, description: "Extra parameter in system notation: \(prm2!.quoted())") }
                 handler.dtdNotationDecl(self, name: name, publicId: nil, systemId: prm1)
             case "PUBLIC":
                 handler.dtdNotationDecl(self, name: name, publicId: prm1, systemId: prm2)
             default:
-                throw SAXError.MalformedNotationDecl(position: pos, description: "Invalid notation type: \"\(type)\"")
+                throw SAXError.MalformedNotationDecl(position: pos, description: "Invalid notation type: \(type.quoted())")
         }
     }
 
     /*===========================================================================================================================================================================*/
-    /// Parse a nested element.
+    /// Parse a comment from the given input stream.
     /// 
-    /// - Throws: If there is an I/O error or the element is malformed.
+    /// - Parameter inputStream: The input stream.
+    /// - Throws: If an I/O error occurs or the comment is malformed.
     ///
-    private func handleNestedElement() throws {
-        guard let ch = try inputStream.read() else { return }
-        guard ch == "<" else { throw unexpectedCharacterError(character: ch) }
-        guard let tagName = try nextIdentifier() else { throw SAXError.getMalformedDocument(markReset(), description: "Missing element tag name.") }
-        try handleElementAttributes(tagName: tagName)
-    }
+    private func parseComment(inputStream: SAXCharInputStream) throws {
+        defer { inputStream.markClear() }
 
-    /*===========================================================================================================================================================================*/
-    /// Handle the attributes of an element tag. In the example:
-    /// ```
-    /// <SomeElement attr1="value1" attr2="value2">
-    /// ```
-    /// Everything after `<SomeElement ` up to the closing character, `>`, are the element attributes.
-    /// 
-    /// - Parameter tagName: The name of the element.
-    /// - Throws: If an I/O error occurs or if the element tag is malformed.
-    ///
-    private func handleElementAttributes(tagName: String) throws {
-        var attribs: SAXRawAttribList = []
+        let dd: [Character] = "--".getCharacters()
+        var data            = Array<Character>()
 
-        repeat {
-            let ws = try readWhitespace()
-            guard let ch = try inputStream.read() else { throw SAXError.getUnexpectedEndOfInput() }
+        guard try inputStream.read(chars: &data, maxLength: 4) == 4 else { throw SAXError.getUnexpectedEndOfInput() }
+        try test(inputStream, err: .MalformedComment, expected: "<!--", got: data)
 
-            if ch == ">" {
-                try callElementBeginHandler(tagName: tagName, attributes: attribs)
-                try handleElementBody(tagName: tagName, attributes: attribs)
-                try callElementEndHandler(tagName: tagName)
-                return
-            }
-            else if ch == "/" {
-                guard try getChar(errorOnEOF: true, allowed: ">") != nil else { throw unexpectedCharacterError() }
-                try callElementBeginHandler(tagName: tagName, attributes: attribs)
-                try callElementEndHandler(tagName: tagName)
-                // This is an empty element and has no body.
-                return
-            }
-            else if ch.isXmlNameStartChar {
-                guard ws else { throw SAXError.getMalformedDocument(markBackup(), description: "Whitespace was expected.") }
-                markBackup()
-                guard let key = try nextIdentifier() else { throw SAXError.getMalformedDocument(markBackup(), description: "Missing Attribute Name") }
-                guard let ch = try inputStream.read() else { throw SAXError.getUnexpectedEndOfInput() }
-                guard ch == "=" else { throw unexpectedCharacterError(character: ch) }
-                guard let value = try nextQuotedValue() else { throw SAXError.getMalformedDocument(markBackup(), description: "Missing Attribute Value") }
-                attribs <+ (SAXNSName(name: key), value)
-            }
-        } while true
-    }
+        guard try inputStream.read(chars: &data, maxLength: 2) == 2 else { throw SAXError.getUnexpectedEndOfInput() }
 
-    /*===========================================================================================================================================================================*/
-    /// Call the handler's `beginPrefixMapping(_:mapping:)` and `beginElement(_:name:attributes:)` methods. If needed, one or more calls to `beginPrefixMapping(_:mapping:)` will
-    /// be made **BEFORE** the call to `beginElement(_:name:attributes:)`.
-    /// 
-    /// - Parameters:
-    ///   - tagName: The name of the element.
-    ///   - attr: The attributes of the element.
-    /// - Throws: If an I/O error occurs.
-    ///
-    private func callElementBeginHandler(tagName: String, attributes attribs: SAXRawAttribList) throws {
-        // Go through the attributes and see if there are any namespaces that need to be processed.
-        var fAttribs: SAXRawAttribList = []
-        var mappings: NSMappingList    = NSMappingList()
-
-        for a: SAXRawAttribute in attribs {
-            let uri = a.value.trimmed
-            if uri.isNotEmpty {
-                if a.name.prefix == "xmlns" { mappings.insert(NSMapping(prefix: a.name.localName, uri: uri)) }
-                else if a.name.name == "xmlns" { mappings.insert(NSMapping(prefix: "", uri: uri)) }
-                else { fAttribs <+ a }
-            }
-            else {
-                fAttribs <+ a
+        while let ch = try inputStream.read() {
+            if data.last(count: 2) == dd {
+                guard ch == ">" else { throw SAXError.getMalformedComment(inputStream, description: ERRMSG_COMMENT_DASHES) }
+                return handler.comment(self, content: String(data.dropLast(2)))
             }
         }
 
-        namespaceStack <+ mappings
-        for m in mappings.sorted() { handler.beginPrefixMapping(self, mapping: m) }
-        handler.beginElement(self, name: SAXNSName(name: tagName), attributes: fAttribs)
+        throw SAXError.getUnexpectedEndOfInput()
     }
 
     /*===========================================================================================================================================================================*/
-    /// Call the handler's `endElement(_:name:)` and `endPrefixMapping(_:prefix:)` methods. If needed, one or more calls to `endPrefixMapping(_:prefix:)` will be made **AFTER**
-    /// the call to `endElement(_:name:)`.
+    /// Parse element.
     /// 
-    /// - Parameter tagName: The name of the element.
-    /// - Throws: If an I/O error occurs.
+    /// - Throws: If an I/O error occurs, the EOF is encountered, or the element is malformed.
     ///
-    private func callElementEndHandler(tagName: String) throws {
+    private func parseElement() throws {
+        guard try inputStream.readChar() == "<" else { throw SAXError.getMalformedDocument(inputStream, description: ExpMsg(ERRMSG_ILLEGAL_CHAR, expected: "<", got: inputStream.last)) }
+        let tagName = try inputStream.readIdentifier(err: .MalformedElement)
+        let body    = try inputStream.readUntil(found: ">", err: .MalformedElement)
+        let rx      = GetRegularExpression(pattern: "^\(RX_XML_DECL)*\(RX_SPCSQ)(/)?\\>$")
+
+        guard let m = rx.firstMatch(in: "\(body)>") else { throw SAXError.getMalformedElement(inputStream, description: "<\(tagName)\(body.noLF().collapeWS())>") }
+
+        //@f:0
+        let hasBody    = !(m[3].subString == "/")
+        let rx2        = GetRegularExpression(pattern: RX_XML_DECL)
+        let rawAttribs = rx2.parse(from: body) { m, _ in SAXRawAttribute(name: m[1].subString!.splitPrefix(), value: m[2].subString!.deQuoted()) }
+        let maps       = Array<NSMapping>(NSMappingList(rawAttribs.compactMap { NSMapping($0) }))
+        let attribs    = SAXRawAttribList(rawAttribs.drop { (($0.name.prefix == "xmlns") || (($0.name.prefix == nil) && ($0.name.localName == "xmlns"))) })
+        //@f:1
+
+        maps.forEach { handler.beginPrefixMapping(self, mapping: $0) }
+        handler.beginElement(self, name: SAXNSName(name: tagName), attributes: attribs)
+        if hasBody {
+            inputStream.markClear()
+            try parseElementBody(tagName)
+        }
         handler.endElement(self, name: SAXNSName(name: tagName))
-        if let e = namespaceStack.popLast() { for m in e.sorted().reversed() { handler.endPrefixMapping(self, prefix: m.prefix) } }
+        maps.reversed().forEach { handler.endPrefixMapping(self, prefix: $0.prefix) }
     }
 
     /*===========================================================================================================================================================================*/
-    /// Handle the body of an element.
+    /// Parse the element body.
     /// 
-    /// - Parameters:
-    ///   - tagName: The name of the element.
-    ///   - attr: The attributes of the element.
-    /// - Throws: If an I/O error occurs or anything in the body of the element is malformed.
+    /// - Parameter tagName: The name of the node we're in.
+    /// - Throws: If an I/O error occurs, the EOF is encountered, or something in the element's body is malformed.
     ///
-    private func handleElementBody(tagName: String, attributes attr: SAXRawAttribList) throws {
-        markSet()
-        defer { markDelete() }
-        var text: [Character] = []
+    private func parseElementBody(_ tagName: String) throws {
+        defer { inputStream.markClear() }
+        var data = Array<Character>()
 
-        while var ch = try inputStream.read() {
+        while let ch = try inputStream.read() {
             switch ch {
                 case "<":
-                    handler.text(self, content: String(text))
-                    text.removeAll(keepingCapacity: true)
-                    ch = try readX()
+                    handler.text(self, content: String(data))
+                    data.removeAll()
+                    guard let ch = try inputStream.read() else { throw SAXError.getUnexpectedEndOfInput() }
 
                     switch ch {
-                        case "!":
-                            ch = try readX()
-                            switch ch {
-                                case "-":
-                                    markBackup(count: 3)
-                                    try handleComment()
-                                case "[":
-                                    markBackup(count: 3)
-                                    try handleCDataSection()
-                                default:
-                                    throw unexpectedCharacterError(character: ch)
-                            }
-                        case "?":
-                            markBackup(count: 2)
-                            try handleProcessingInstruction()
                         case "/":
-                            markBackup(count: 2)
-                            try handleClosingTag(tagName: tagName)
+                            let ident = try inputStream.readIdentifier(leadingWhitespace: .Allowed, err: .MalformedDocument)
+                            guard ident == tagName else {
+                                throw SAXError.getMalformedDocument(inputStream, description: ExpMsg("Incorrect name for closing tag", expected: tagName, got: ident))
+                            }
+                            guard try inputStream.readChar(leadingWhitespace: .Allowed) == ">" else {
+                                throw SAXError.getMalformedElement(inputStream, description: ExpMsg(ERRMSG_ILLEGAL_CHAR, expected: ">", got: inputStream.last))
+                            }
                             return
+                        case "!":
+                            break
+                        case "?":
+                            break
                         default:
-                            guard ch.isXmlNameStartChar else { throw unexpectedCharacterError(character: ch) }
-                            markBackup(count: 2)
-                            try handleNestedElement()
+                            break
                     }
                 case "&":
-                    text.append(contentsOf: try readEntityChar())
+                    handler.text(self, content: String(data))
+                    data.removeAll()
+                    inputStream.markBackup()
+                    try parseEntity(inputStream)
                 default:
-                    text <+ ch
+                    data <+ ch
+                    inputStream.markClear()
             }
-        }
-    }
-
-    /*===========================================================================================================================================================================*/
-    /// Handle an element closing tag.
-    /// 
-    /// - Parameter tagName: The name of the tag it should be.
-    /// - Throws: If an I/O error occurs, the closing tag is malformed, or the name of the closing tag is not correct.
-    ///
-    private func handleClosingTag(tagName: String) throws {
-        var buffer: [Character] = []
-        guard try inputStream.read(chars: &buffer, maxLength: 3) == 3 else { throw SAXError.getUnexpectedEndOfInput() }
-
-        var ch = buffer.popLast()!
-        guard buffer == "</" else { throw SAXError.getMalformedDocument(markBackup(count: 3), description: "Invalid closing tag.") }
-        guard ch.isXmlNameStartChar else { throw unexpectedCharacterError(character: ch) }
-
-        buffer = [ ch ]
-        repeat {
-            ch = try readX()
-            guard ch.isXmlNameChar else {
-                while ch.isXmlWhitespace { ch = try readX() }
-                guard ch == ">" else { throw unexpectedCharacterError(character: ch) }
-                guard String(buffer) == tagName else { throw SAXError.getMalformedDocument(markBackup(), description: "Unexpected closing tag: \"\(String(buffer))\" != \"\(tagName)\"") }
-                return
-            }
-            buffer <+ ch
-        } while true
-    }
-
-    /*===========================================================================================================================================================================*/
-    /// Handle a CDATA section.
-    /// 
-    /// - Throws: If an I/O error occurs or the CDATA section is malformed.
-    ///
-    private func handleCDataSection() throws {
-        let openMarker:      String      = "<![CDATA["
-        let openMarkerCount: Int         = openMarker.count
-        var buffer:          [Character] = []
-
-        guard try inputStream.read(chars: &buffer, maxLength: openMarkerCount) == openMarkerCount else { throw SAXError.getUnexpectedEndOfInput() }
-        guard buffer == openMarker else { throw SAXError.getMalformedCDATASection(markBackup(count: openMarkerCount), description: "Not a CDATA Section starting tag: \"\(String(buffer))\"") }
-
-        buffer.removeAll()
-        while let ch = try inputStream.read() {
-            if ch == ">" && buffer.last(count: 2) == "]]" {
-                buffer.removeLast(2)
-                handler.cdataSection(self, content: String(buffer))
-                return
-            }
-            buffer <+ ch
-        }
-        throw SAXError.getUnexpectedEndOfInput()
-    }
-
-    /*===========================================================================================================================================================================*/
-    /// Get an Unexpected Character message.
-    /// 
-    /// - Parameter ch: The character that was unexpected.
-    /// - Returns: The message.
-    ///
-    @inlinable func unexpectedCharMessage(character ch: Character) -> String { "Unexpected character: \"\(ch)\"" }
-
-    /*===========================================================================================================================================================================*/
-    /// Get an `Unexpected Character` error.
-    /// 
-    /// - Parameter ch: The character that was unexpected.
-    /// - Returns: The error.
-    ///
-    @inlinable func unexpectedCharacterError(character ch: Character) -> SAXError { SAXError.getMalformedDocument(markBackup(), description: unexpectedCharMessage(character: ch)) }
-
-    /*===========================================================================================================================================================================*/
-    /// Get an `Unexpected Character` error.
-    /// 
-    /// - Returns: The error.
-    ///
-    @inlinable func unexpectedCharacterError() -> SAXError {
-        do {
-            markBackup()
-            return unexpectedCharacterError(character: try readX())
-        }
-        catch {
-            return SAXError.getMalformedDocument(markBackup(), description: "Unexpected Error")
-        }
-    }
-
-    /*===========================================================================================================================================================================*/
-    /// Parse a processing instruction.
-    /// 
-    /// - Throws: If there is an I/O error or the comment is malformed.
-    ///
-    private func handleProcessingInstruction() throws {
-        let pi = try readProcessingInstruction()
-        handler.processingInstruction(self, target: pi.target, data: pi.data)
-    }
-
-    /*===========================================================================================================================================================================*/
-    /// Read a processing instruction from the input stream.
-    /// 
-    /// - Returns: A tuple containing the processing instruction target and data.
-    /// - Throws: If an I/O error occurs or the processing instruction is malformed.
-    ///
-    private func readProcessingInstruction() throws -> (target: String, data: String) {
-        var buffer: [Character] = []
-
-        guard try inputStream.read(chars: &buffer, maxLength: 3) == 3, buffer[0 ..< 2] == "<?" else { throw SAXError.getMalformedProcInst(markReset(), description: String(buffer)) }
-
-        while let ch = try inputStream.read() {
-            buffer <+ ch
-            if buffer.last(count: 2) == "?>" {
-                let pi = String(buffer)
-                let pt = "^<\\?(\(rxNamePattern))\(rxWhitespacePattern)(.*?)\\?>$"
-                guard let m = GetRegularExpression(pattern: pt).firstMatch(in: pi) else { throw SAXError.getMalformedProcInst(markReset(), description: pi) }
-                guard let t = m[1].subString, let d = m[2].subString else { throw SAXError.getMalformedProcInst(markReset(), description: pi) }
-                return (target: t, data: d)
-            }
-        }
-        throw SAXError.getUnexpectedEndOfInput()
-    }
-
-    /*===========================================================================================================================================================================*/
-    /// Parse a comment.
-    /// 
-    /// - Throws: If there is an I/O error or the comment is malformed.
-    ///
-    private func handleComment() throws {
-        let dd:     [Character] = [ "-", "-" ]
-        var buffer: [Character] = []
-
-        guard try inputStream.read(chars: &buffer, maxLength: 4) == 4 else { throw SAXError.getUnexpectedEndOfInput() }
-        guard buffer == "<!--" else { throw SAXError.getMalformedComment(markReset(), description: "Bad comment opening: \"\(String(buffer))\"") }
-
-        markUpdate()
-        guard try inputStream.read(chars: &buffer, maxLength: 3) == 3 else { throw SAXError.getUnexpectedEndOfInput() }
-
-        if buffer == "-->" {
-            // Handle an empty comment node.
-            markUpdate()
-            handler.comment(self, content: "")
-            return
-        }
-
-        guard buffer[0 ..< 2] != dd else { throw SAXError.getMalformedComment(markBackup(count: 2), description: "Comment cannot contain double minus (-) signs.") }
-
-        while let ch = try inputStream.read() {
-            if buffer.last(count: 2) == dd {
-                guard ch == ">" else { throw SAXError.getMalformedComment(markBackup(count: 2), description: "Comment cannot contain double minus (-) signs.") }
-                handler.comment(self, content: String(buffer[buffer.startIndex ..< (buffer.endIndex - 2)]))
-                return
-            }
-            buffer <+ ch
-        }
-    }
-
-    /*===========================================================================================================================================================================*/
-    /// Parse the document's XML Declaration.
-    /// 
-    /// - Throws: If an I/O error occured or the XML Declaration was malformed.
-    ///
-    private func getXmlDeclaration() throws {
-        markSet()
-        defer { markDelete() }
-
-        let pi = try _getXmlDeclaration()
-        if pi.bad { throw SAXError.getMalformedXmlDecl(markReset(), description: "<?\(pi.target) \(pi.data)?>") }
-    }
-
-    private func _getXmlDeclaration() throws -> (bad: Bool, target: String, data: String) {
-        do {
-            var bad: Bool = false
-            let pi        = try readProcessingInstruction()
-            guard pi.target.lowercased() == "xml" else { markReset(); return (bad, "", "") }
-
-            GetRegularExpression(pattern: "\\s+(\(rxNamePattern))=(?:'([^']*)'|\"([^\"]*)\")").forEachMatch(in: " \(pi.data)") { (m: RegularExpression.Match?, _, stop: inout Bool) in
-                if let m = m, let k = m[1].subString, let v = (m[2].subString ?? m[3].subString) {
-                    if _populateXmlDeclFields(key: k, value: v) {
-                        stop = true
-                        bad = true
-                    }
-                }
-            }
-
-            return (bad, pi.target, pi.data)
-        }
-        catch SAXError.UnexpectedEndOfInput(position: let pos, description: let description) {
-            throw SAXError.UnexpectedEndOfInput(position: pos, description: description)
-        }
-        catch {
-            return (false, "", "")
-        }
-    }
-
-    @inlinable final func _populateXmlDeclFields(key k: String, value v: String) -> Bool {
-        switch k {
-            case "version":
-                guard value(v, isOneOf: "1.0", "1.1") else { return true }
-                _xmlVersion = v
-            case "encoding":
-                // This is just for show. The encoding has already been determined.
-                _xmlEncoding = v
-            case "standalone":
-                let val = v.lowercased()
-                guard value(val, isOneOf: "yes", "no") else { return true }
-                _xmlIsStandalone = (val == "yes")
-            default:
-                return true
-        }
-        return false
-    }
-
-    /*===========================================================================================================================================================================*/
-    /// Read the next character from the input stream.
-    /// 
-    /// - Returns: The next character
-    /// - Throws: If an I/O error occurs or if the EOF has been found.
-    ///
-    @inlinable final func readX(leadingWhitespace lws: LeadingWhitespace = .None) throws -> Character {
-        guard let ch = try read(leadingWhitespace: lws) else { throw SAXError.getUnexpectedEndOfInput() }
-        return ch
-    }
-
-    /*===========================================================================================================================================================================*/
-    /// Read the next character from the input stream.
-    /// 
-    /// - Returns: The next character or `nil` if the EOF has been found.
-    /// - Throws: If an I/O error occurs.
-    ///
-    @inlinable final func read(leadingWhitespace lws: LeadingWhitespace = .None) throws -> Character? {
-        if lws != .None { try readWhitespace(isRequired: (lws == .Required)) }
-        return try inputStream.read()
-    }
-
-    /*===========================================================================================================================================================================*/
-    /// Mark Set
-    ///
-    @discardableResult @inlinable final func markSet() -> SAXCharInputStream { inputStream.markSet(); return inputStream }
-
-    /*===========================================================================================================================================================================*/
-    /// Mark Delete
-    /// 
-    /// - Returns: The input stream.
-    ///
-    @discardableResult @inlinable final func markDelete() -> SAXCharInputStream { inputStream.markDelete(); return inputStream }
-
-    /*===========================================================================================================================================================================*/
-    /// Mark Return
-    /// 
-    /// - Returns: The input stream.
-    ///
-    @discardableResult @inlinable final func markReturn() -> SAXCharInputStream { inputStream.markReturn(); return inputStream }
-
-    /*===========================================================================================================================================================================*/
-    /// Mark Reset
-    /// 
-    /// - Returns: The input stream.
-    ///
-    @discardableResult @inlinable final func markReset() -> SAXCharInputStream { inputStream.markReset(); return inputStream }
-
-    /*===========================================================================================================================================================================*/
-    /// Mark Update
-    /// 
-    /// - Returns: The input stream.
-    ///
-    @discardableResult @inlinable final func markUpdate() -> SAXCharInputStream { inputStream.markUpdate(); return inputStream }
-
-    /*===========================================================================================================================================================================*/
-    /// Mark Backup
-    /// 
-    /// - Parameter count: The number of characters to back up.
-    /// - Returns: The number of characters actually backed up.
-    ///
-    @discardableResult @inlinable final func markBackup(count: Int = 1) -> SAXCharInputStream { inputStream.markBackup(count: count); return inputStream }
-
-    /*===========================================================================================================================================================================*/
-    /// Get and return the next character in the input stream only if it is one of the allowed characters.
-    /// 
-    /// - Parameters:
-    ///   - errorOnEOF: If `true` then an error will be thrown if the EOF is found. The default is `false`.
-    ///   - chars: The allowed characters.
-    /// - Returns: The character or `nil` if the next character would not have been one of the allowed characters or if `errorOnEOF` is `true` and there was no next character.
-    /// - Throws: If there was an I/O error or `errorOnEOF` is `true` and the EOF was found.
-    ///
-    @discardableResult @inlinable final func getChar(errorOnEOF: Bool = false, leadingWhitespace lws: LeadingWhitespace = .None, allowed chars: Character...) throws -> Character? {
-        try getChar(errorOnEOF: errorOnEOF, leadingWhitespace: lws) { chars.contains($0) }
-    }
-
-    /*===========================================================================================================================================================================*/
-    /// Get and return the next character in the input stream only if it passes the test.
-    /// 
-    /// - Parameters:
-    ///   - errorOnEOF: If `true` then an error will be thrown if the EOF is found. The default is `false`.
-    ///   - test: The closure used to test the character.
-    /// - Returns: The character or `nil` if the character did not pass the test.
-    /// - Throws: If an I/O error occurs.
-    ///
-    @discardableResult @inlinable final func getChar(errorOnEOF: Bool = false, leadingWhitespace lws: LeadingWhitespace = .None, test: (Character) throws -> Bool) throws -> Character? {
-        if lws != .None { try readWhitespace(isRequired: (lws == .Required)) }
-        guard let ch = try inputStream.peek() else {
-            if errorOnEOF { throw SAXError.getUnexpectedEndOfInput() }
-            return nil
-        }
-        guard try test(ch) else { return nil }
-        return try inputStream.read()
-    }
-
-    @inlinable final func readSystemID(leadingWhitespace lws: LeadingWhitespace = .Required) throws -> URL {
-        guard let ur = try nextQuotedValue(leadingWhitespace: lws) else { throw SAXError.getMalformedDocType(markReset(), description: "Missing System ID") }
-        return try GetURL(string: ur)
-    }
-
-    /*===========================================================================================================================================================================*/
-    /// Read and return any whitespace characters that are next in the input stream.
-    /// 
-    /// - Parameter isRequired: If `true` then at least one whitespace character is required.
-    /// - Returns: A string containing the whitespace characters. May be an empty string.
-    /// - Throws: If an I/O error occurs or `isRequired` is `true` and no whitespace characters were found.
-    ///
-    @discardableResult @usableFromInline func readWhitespace(isRequired f: Bool = false) throws -> Bool {
-        markUpdate()
-        if let ch = try inputStream.read() {
-            // We got at least one character.
-            if ch.isXmlWhitespace {
-                // We got at least one whitespace character.
-                while let ch = try inputStream.read(), ch.isXmlWhitespace {}
-                markBackup()
-                return true
-            }
-            markBackup()
-            if f { throw SAXError.getMissingWhitespace(markBackup()) }
-        }
-        return false
-    }
-
-    /*===========================================================================================================================================================================*/
-    /// Read the next identifier from the input stream. An identifer starts with an XML Name Start Char and then zero or more XML Name Chars.
-    /// 
-    /// - Returns: The identifier or `nil` if there is no identifier.
-    /// - Throws: If an I/O error occurs.
-    ///
-    @usableFromInline func nextIdentifier(leadingWhitespace lws: LeadingWhitespace = .Allowed) throws -> String? {
-        if lws != .None { try readWhitespace(isRequired: (lws == .Required)) }
-        markUpdate()
-        guard let ch1 = try inputStream.read(), ch1.isXmlNameStartChar else { markBackup(); return nil }
-        var buffer: [Character] = [ ch1 ]
-
-        while let ch2 = try inputStream.read() {
-            guard ch2.isXmlNameChar else { markBackup(); break }
-            buffer <+ ch2
-        }
-
-        return String(buffer)
-    }
-
-    /*===========================================================================================================================================================================*/
-    /// Read the next quoted value from the input stream.
-    /// 
-    /// - Returns: The value without the quotes.
-    /// - Throws: If an I/O error occurs or if the EOF is found before the closing quote.
-    ///
-    @usableFromInline func nextQuotedValue(leadingWhitespace lws: LeadingWhitespace = .None) throws -> String? {
-        guard let quote = try getChar(leadingWhitespace: lws, allowed: "\"", "'") else { return nil }
-        var buffer: [Character] = []
-
-        while let ch = try inputStream.read() {
-            if ch == quote { return String(buffer) }
-            else if ch == "&" { buffer.append(contentsOf: try readEntityChar()) }
-            else { buffer <+ ch }
         }
 
         throw SAXError.getUnexpectedEndOfInput()
     }
 
-    /*===========================================================================================================================================================================*/
-    /// Read the next parameter. A parameter consists of an identifier and a quoted value separated by an equals sign (=).
-    /// 
-    /// - Returns: An instance of KVPair or `nil` if there is no parameter.
-    /// - Throws: If an I/O error occurs or if the EOF is found before the closing quote on the parameter quoted value.
-    ///
-    @usableFromInline func nextParameter(leadingWhitespace lws: LeadingWhitespace = .Allowed) throws -> KVPair? {
-        guard let key = try nextIdentifier(leadingWhitespace: lws) else { return nil }
-        let ch = try inputStream.read()
-        guard ch == "=" else { return nil }
-        guard let value = try nextQuotedValue() else { return nil }
-        return KVPair(key: key, value: value)
-    }
+    private func parseEntity(_ inputStream: SAXCharInputStream) throws {
+        guard try inputStream.readChar() == "&" else { throw SAXError.getMalformedEntityRef(inputStream, description: ExpMsg(ERRMSG_ILLEGAL_CHAR, expected: "&", got: inputStream.last)) }
+        let name = try inputStream.readUntil(found: ";", mustHave: true, err: .MalformedEntityRef)
 
-    /*===========================================================================================================================================================================*/
-    /// Complete an entity character by reading the name from the input stream and returning it's character value.
-    /// 
-    /// - Returns: The entity character.
-    /// - Throws: If an I/O error occurs.
-    ///
-    @usableFromInline func readEntityChar() throws -> String {
-        markSet()
-        defer { markDelete() }
-
-        var buffer: [Character] = []
-
-        while let ch = try inputStream.read() {
-            if ch == ";" {
-                switch String(buffer) {
-                    case "quot": return "\""
-                    case "lt":   return "<"
-                    case "gt":   return ">"
-                    case "apos": return "'"
-                    case "amp":  return "&"
-                  // TODO: Handle DTD defined character entities.
-                    default:     markReset(); return "&"
-                }
-            }
-            buffer <+ ch
-        }
-
-        markReset()
-        return "&"
     }
 }

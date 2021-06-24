@@ -52,7 +52,7 @@ import Rubicon
 /// - Throws: if the URL is malformed.
 ///
 @inlinable func GetURL(string: String, relativeTo: URL? = nil) throws -> URL {
-    guard let url = URL(string: string, relativeTo: (relativeTo ?? GetCurrDirURL())) else { throw SAXError.getMalformedURL(description: string) }
+    guard let url = URL(string: string, relativeTo: (relativeTo ?? GetCurrDirURL())) else { throw SAXError.MalformedURL(position: StringPosition(), description: string) }
     return url
 }
 
@@ -62,11 +62,11 @@ import Rubicon
 /// - Parameter strings: the array of strings.
 ///
 @usableFromInline func PrintArray(_ strings: [String?]) {
-    #if DEBUG
+    #if DEBUG_2112
         var idx = 0
         for s in strings {
-            if let s = s { /* print("\(idx++)> \"\(s)\"") */ }
-            else { /* print("\(idx++)> NIL") */ }
+            if let s = s { print("\(idx++)> \(s.quoted())") }
+            else { print("\(idx++)> NIL") }
         }
     #endif
 }
@@ -113,23 +113,23 @@ let UTF8BOM:    [UInt8] = [ 0xef, 0xbb, 0xbf ]
     guard inputStream.read(&buffer, maxLength: 4) == 4 else { throw SAXError.getUnexpectedEndOfInput(description: "Not enough data to determine the character encoding.") }
 
     if buffer == UTF32BEBOM {
-        inputStream.markUpdate()
+        inputStream.markClear()
         return "UTF-32BE"
     }
     else if buffer == UTF32LEBOM {
-        inputStream.markUpdate()
+        inputStream.markClear()
         return "UTF-32LE"
     }
     else if buffer[0 ..< 2] == UTF16BEBOM {
-        inputStream.markUpdate()
+        inputStream.markClear()
         return "UTF-16BE"
     }
     else if buffer[0 ..< 2] == UTF16LEBOM {
-        inputStream.markUpdate()
+        inputStream.markClear()
         return "UTF-16LE"
     }
     else if buffer[0 ..< 3] == UTF8BOM {
-        inputStream.markUpdate()
+        inputStream.markClear()
         return "UTF-8"
     }
     else {
@@ -140,17 +140,17 @@ let UTF8BOM:    [UInt8] = [ 0xef, 0xbb, 0xbf ]
 
 @usableFromInline func hardGuess(_ encodingName: String, _ inputStream: MarkInputStream) throws -> String {
     // NOTE: At this point the encoding is only guessed at.  We'll need to look for an XML Declaration element to hopefully give us more information.
-    /* nDebug(.None, "Taking a hard guess starting out with: \"\(encodingName)\"") */
+    /* nDebug(.None, "Taking a hard guess starting out with: \(encodingName.quoted())") */
     let _inputStream = SimpleIConvCharInputStream(inputStream: inputStream, encodingName: encodingName, autoClose: false)
     /* nDebug(.None, "Create SimpleIConvCharInputStream...") */
     _inputStream.open()
     /* nDebug(.None, "Opened SimpleIConvCharInputStream...") */
     defer { _inputStream.close() }
 
-    var chars: [Character] = []
+    var chars = Array<Character>()
     /* nDebug(.None, "Attempting to read the first 6 characters.") */
     guard try _inputStream.read(chars: &chars, maxLength: 6) == 6 else { return encodingName }
-    /* nDebug(.None, "Read the first 6 characters: \"\(String(chars))\"") */
+    /* nDebug(.None, "Read the first 6 characters: \(String(chars).quoted())") */
     guard chars.matches(pattern: "<\\?(?i:xml)\\s") else { return encodingName }
 
     // We have an XML Declaration element.  Read it, parse it, determine the encoding.
@@ -165,7 +165,7 @@ let UTF8BOM:    [UInt8] = [ 0xef, 0xbb, 0xbf ]
 
     // Now let's see if it contains the encoding.
     let decl = String(chars)
-    /* nDebug(.None, "XML Decl: \"\(decl)\"") */
+    /* nDebug(.None, "XML Decl: \(decl.quoted())") */
     guard let m = GetRegularExpression(pattern: "\\sencoding=\"([^\"]+)\"").firstMatch(in: decl), let enc = m[1].subString else { return encodingName }
     // We definitely got an encoding name, now let's see if we support it.
     let uEnc = enc.uppercased()
@@ -234,20 +234,84 @@ extension Array where Element == Character {
     }
 }
 
-@inlinable func GetExternalFile(parentStream: SAXCharInputStream, url: URL) throws -> String { try GetExternalFile(position: parentStream.position, url: url) }
+@inlinable func GetExternalFile(parentStream: SAXCharInputStream, url: URL) throws -> String { try GetExternalFile(position: parentStream.docPosition, url: url) }
 
-@usableFromInline func GetExternalFile(position: TextPosition = (0, 0), url: URL) throws -> String {
-    guard let byteInputStream = InputStream(url: url) else { throw SAXError.MalformedURL(position: position, description: url.absoluteString) }
+@usableFromInline func GetExternalFile(position: DocPosition, url: URL) throws -> String {
+    guard let byteInputStream = InputStream(url: url) else { throw SAXError.FileNotFound(position: position, description: url.absoluteString) }
     let charInputStream = try SAXIConvCharInputStream(inputStream: byteInputStream, url: url)
-    var buffer: [Character] = []
+    var buffer          = Array<Character>()
     _ = try charInputStream.read(chars: &buffer, maxLength: Int.max)
     return String(buffer)
 }
 
-@inlinable func GetPosition(from str: String, range: Range<String.Index>, startingAt pos: TextPosition) -> TextPosition {
-    var p = pos
-    str[range].forEach { ch in textPositionUpdate(ch, pos: &p, tabWidth: 4) }
-    return p
+@inlinable func GetPosition(from str: String, range: Range<String.Index>, startingAt pos: DocPosition) -> DocPosition {
+    str[range].forEach { pos.positionUpdate($0) }
+    return pos
 }
 
-@inlinable func AdvancePosition(from str: String, range: Range<String.Index>, position pos: inout TextPosition) { pos = GetPosition(from: str, range: range, startingAt: pos) }
+@inlinable func ExpMsg(_ msg: String, expected c1: Character..., got c2: Character) -> String { __ExpMsg(msg, expected: c1.map { String($0) }, got: String(c2)) }
+
+@inlinable func ExpMsg(_ msg: String, expected c1: [Character], got c2: Character) -> String { __ExpMsg(msg, expected: c1.map { String($0) }, got: String(c2)) }
+
+@inlinable func ExpMsg(_ msg: String, expected c1: String..., got c2: String) -> String { __ExpMsg(msg, expected: c1, got: c2) }
+
+@usableFromInline func __ExpMsg(_ msg: String, expected c1: [String], got c2: String) -> String {
+    let cc          = c1.count
+    var out: String = "\(msg) -"
+
+    guard cc > 0 else { return "\(out) did not expect \(c2.quoted())." }
+
+    out += " expected \(c1[0].quoted())"
+
+    if cc > 2 {
+        let x = (c1.endIndex - 1)
+        for i in (1 ..< x) { out += ", \(c1[i].quoted())" }
+        out += ", or \(c1[x].quoted())"
+    }
+    else {
+        out.append(" or \(c1[1].quoted())")
+    }
+
+    return "\(out) but got \(c2.quoted()) instead."
+}
+
+@usableFromInline func ExpMsg(_ msg: String, explanation s1: String, got c2: Character) -> String { "\(msg) - expected \(s1) but got \"\(c2)\" instead." }
+
+@usableFromInline func ExpMsg(_ msg: String, explanation s1: String, got s2: String) -> String { "\(msg) - expected \(s1) but got \"\(s2)\" instead." }
+
+@inlinable func test(_ inputStream: SAXCharInputStream, err: SAXErrorSelect, expected s1: String, got s2: String) throws {
+    guard s1 != s2 else { return }
+    try test(inputStream, err: err, expected: s1.getCharacters(), got: s2.getCharacters())
+}
+
+@inlinable func test(_ inputStream: SAXCharInputStream, err: SAXErrorSelect, expected s1: String, got a2: [Character]) throws {
+    try test(inputStream, err: err, expected: s1.getCharacters(), got: a2)
+}
+
+@inlinable func test(_ inputStream: SAXCharInputStream, err: SAXErrorSelect, expected a1: [Character], got a2: [Character]) throws {
+    // Expand grapheme clusters before testing.
+    var _a1 = Array<Character>()
+    var _a2 = Array<Character>()
+    a1.forEach { $0.unicodeScalars.forEach { _a1 <+ Character($0) } }
+    a2.forEach { $0.unicodeScalars.forEach { _a2 <+ Character($0) } }
+    try __test(inputStream, err: err, expected: _a1, got: _a2)
+}
+
+@usableFromInline func __test<A, B>(_ inputStream: SAXCharInputStream, err: SAXErrorSelect, expected a1: A, got a2: B) throws where A: Collection, B: Collection, A.Element == Character, B.Element == Character, A.Index == Int, B.Index == Int {
+    let a1c = a1.count
+    let a2c = a2.count
+
+    guard a1c == a2c else { throw SAXError.get(err, inputStream: inputStream, description: "Character count mismatch: \(a1c) <> \(a2c)") }
+
+    for x in (0 ..< a1c) {
+        let c1 = a1[a1.startIndex + x]
+        let c2 = a2[a2.startIndex + x]
+
+        guard c1 == c2 else {
+            inputStream.markBackup(count: (a2c - x))
+            throw SAXError.get(err, inputStream: inputStream, description: ExpMsg(ERRMSG_ILLEGAL_CHAR, expected: c1, got: c2))
+        }
+    }
+}
+
+@inlinable public func TempFilename(extension ext: String) -> String { "temp_\(UUID().uuidString).\(ext)" }

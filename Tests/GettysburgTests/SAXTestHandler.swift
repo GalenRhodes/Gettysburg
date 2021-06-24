@@ -26,19 +26,27 @@ import Rubicon
 
 class SAXTestHandler: SAXHandler {
     func beginDocument(_ parser: SAXParser) {
-        /* TODO: Implement me... */
+        nDebug(.In, "Document begin: \(parser.url.absoluteString)")
     }
 
     func endDocument(_ parser: SAXParser) {
-        /* TODO: Implement me... */
+        nDebug(.Out, "Document end: \(parser.url.absoluteString)")
     }
 
-    func dtdInternalDocType(_ parser: SAXParser, elementName elemName: String) {
-        /* TODO: Implement me... */
+    func beginDocType(_ parser: SAXParser, elementName: String) {
+        nDebug(.In, "DOCTYPE begin: \(elementName)")
     }
 
-    func dtdExternalDocType(_ parser: SAXParser, elementName elemName: String, publicId: String?, systemId: String) {
-        /* TODO: Implement me... */
+    func endDocType(_ parser: SAXParser, elementName: String) {
+        nDebug(.Out, "DOCTYPE end: \(elementName)")
+    }
+
+    func dtdInternal(_ parser: SAXParser, elementName: String) {
+        nDebug(.None, "Internal DTD: \(elementName)")
+    }
+
+    func dtdExternal(_ parser: SAXParser, elementName: String, publicId: String?, systemId: String) {
+        nDebug(.None, "External DTD: \(elementName); Public ID: \(publicId?.surroundedWith("\"") ?? "nil"); System ID: \(systemId.surroundedWith("\""))")
     }
 
     func dtdInternalEntityDecl(_ parser: SAXParser, name: String, type: SAXEntityType, content: String) {
@@ -116,7 +124,7 @@ class SAXTestHandler: SAXHandler {
     }
 
     func processingInstruction(_ parser: SAXParser, target: String, data: String) {
-        /* TODO: Implement me... */
+        nDebug(.None, "Processing Instruction: target=\"\(target)\"; data=\"\(data)\"")
     }
 
     func handleError(_ parser: SAXParser, error: Error) -> Bool {

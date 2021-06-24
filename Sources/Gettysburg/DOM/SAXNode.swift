@@ -40,7 +40,7 @@ open class SAXNode {
 
     public var children: [SAXNode] {
         var array: [SAXNode] = []
-        var node = firstNode
+        var node             = firstNode
         while let n = node {
             array <+ n
             node = n.nextNode

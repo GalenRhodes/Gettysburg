@@ -25,22 +25,6 @@ import CoreFoundation
 import Rubicon
 
 //@f:0
-/*===============================================================================================================================================================================*/
-/// A regular expression pattern to validate a starting character for an XML name.
-///
-@usableFromInline let rxNameStartCharSet:  String          = "a-zA-Z_:\\u00c0-\\u00d6\\u00d8-\\u00f6\\u00f8-\\u02ff\\u0370-\\u037d\\u037f-\\u1fff\\u200c-\\u200d\\u2070-\\u218f\\u2c00-\\u2fef\\u3001-\\ud7ff\\uf900-\\ufdcf\\ufdf0-\\ufffd\\U00010000-\\U000effff"
-/*===============================================================================================================================================================================*/
-/// A regular expression patther to validate a character for an XML name.
-///
-@usableFromInline let rxNameCharSet:       String          = "\(rxNameStartCharSet)0123456789\\u002e\\u00b7\\u0300-\\u036f\\u203f-\\u2040\\u002d"
-
-@usableFromInline let rxNamePattern:       String          = "(?:[\(rxNameStartCharSet)][\(rxNameCharSet)]*)"
-@usableFromInline let rxNMTokenPattern:    String          = "(?:[\(rxNameCharSet)]+)"
-@usableFromInline let rxWhitespacePattern: String          = "(?:[\\u0000-\\u0020\\u007f]*)"
-@usableFromInline let rxQuotedString:      String          = "(\"[^\"]*\"|'[^']*')"
-@usableFromInline let rxEntity:            String          = "\\&(\(rxNamePattern));"
-@usableFromInline let rxPEntity:           String          = "\\%(\(rxNamePattern));"
-
 extension Unicode.Scalar {
     @inlinable var isXmlNameStartChar: Bool { CharacterSet.XMLNameStartChar.contains(self) }
     @inlinable var isXmlNameChar:      Bool { CharacterSet.XMLNameChar.contains(self) }
@@ -56,9 +40,9 @@ extension Character {
 }
 
 extension String {
-    @inlinable var isXmlName:          Bool { !isEmpty && (unicodeScalars.first?.isXmlNameStartChar ?? false) && unicodeScalars.areAll { $0.isXmlNameChar } }
-    @inlinable var isXmlToken:         Bool { !isEmpty && unicodeScalars.areAll { $0.isXmlNameChar } }
-    @inlinable var isXmlHex:           Bool { !isEmpty && unicodeScalars.areAll { $0.isXmlHex } }
+    @inlinable var isXmlName:          Bool { !isEmpty && (unicodeScalars.first?.isXmlNameStartChar ?? false) && unicodeScalars.areAll(predicate: { $0.isXmlNameChar }) }
+    @inlinable var isXmlToken:         Bool { !isEmpty && unicodeScalars.areAll(predicate: { $0.isXmlNameChar }) }
+    @inlinable var isXmlHex:           Bool { !isEmpty && unicodeScalars.areAll(predicate: { $0.isXmlHex }) }
 
     @inlinable func getXmlPrefixAndLocalName() -> (prefix: String?, localName: String) {
         let parts = split(separator: ":", maxSplits: 1, omittingEmptySubsequences: false)
@@ -74,7 +58,7 @@ extension CharacterSet {
 
     static public let XMLWhitespace: CharacterSet = {
         // Anything less than or equal to the space character will be considered whitespace.
-        CharacterSet(charactersIn: UnicodeScalar(0) ..< UnicodeScalar(0x21)).union(CharacterSet(charactersIn: UnicodeScalar(0x7f) ..< UnicodeScalar(0x80)))
+        CharacterSet(charactersIn: UnicodeScalar(0) ... UnicodeScalar(0x20)).union(CharacterSet(charactersIn: UnicodeScalar(0x7f) ... UnicodeScalar(0x7f)))
     }()
 
     static public let XMLNameStartChar: CharacterSet = {

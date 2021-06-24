@@ -23,11 +23,11 @@ public class RegexTests: XCTestCase {
 
     #if !os(macOS) || os(tvOS) || os(iOS) || os(watchOS)
         public static var allTests: [(String, (RegexTests) -> () throws -> Void)] {
-            [ ("testAttrDeclRegex", testAttrDeclRegex), ("testEntityDeclRegex", testEntityDeclRegex), ]
+            [ ("testDocTypeRegex", testDocTypeRegex), ("testAttrDeclRegex", testAttrDeclRegex), ("testEntityDeclRegex", testEntityDeclRegex), ]
         }
     #endif
 
-    let bar = "=========================================================================="
+    let bar = "======================================================================================================================================"
 
     enum TestError: Error {
         case Failed(description: String)
@@ -36,6 +36,83 @@ public class RegexTests: XCTestCase {
     public override func setUpWithError() throws {}
 
     public override func tearDownWithError() throws {}
+
+    func testElementRegex1() throws {
+        let test = """
+                   <gsr:Person xmlns:gsr="urn:GalenSherardRhodes"
+                               xmlns:usa="urn:UnitedStatesOfAmerica"
+                               xmlns:pgx="http://pgx.galenrhodes.com"
+                               xmlns:ack="urn:dccommics"
+                               xmlns:des="urn:rhodes"
+                               xmlns:rho="urn:rhodes"
+                               xmlns="urn:Canada">
+                       <!-- - -->
+                       <?herf nerf="berf"?>
+                       <gsr:LastName pgx:type="German" gsr:type="nickname">Rhodes</gsr:LastName>
+                       <gsr:LastName pgx:type="German" gsr:type="nickname"/>
+                       <gsr:LastName pgx:type="German" gsr:type="nickname"
+                   />
+                       <gsr:FirstName>Galen</gsr:FirstName>
+                       <MiddleName preferred="YES">Sherard</MiddleName>
+                       <pgx:dob pgx:type="Julian">12 December 1967</pgx:dob>
+                       <bob:info xmlns:bob="urn:minions" xmlns:ack="urn:bill.the.cat" id="1" type="demo" gsr:region="UK">
+                           <bob:dob pgx:type="Gregorian">25 November 1970</bob:dob>
+                           <ack:nickname>&smiley;Glenn&smiley;</ack:nickname>
+                       </bob:info>
+                       <usa:family des:type="fam" rho:type='fam'>Galen &copyright; Rhodes</usa:family>
+                       <garfield />
+                       <ack:Batman>Wonder Woman</ack:Batman>
+                   </gsr:Person>
+                   """
+        let p = "\(RX_XML_DECL)*\(RX_SPCSQ)(/)?\\>"
+        try doRegexTest(testData: test, pattern: "\\<\(RX_NAME)\(p)")
+    }
+
+    func testDocTypeRegex() throws {
+        let patterns: [String] = [ //
+            "^\(RX_SPCS)(\(RX_NAME))\(RX_SPCS)\\[$", //
+            "^\(RX_SPCS)(\(RX_NAME))\(RX_SPCS)(SYSTEM)\(RX_SPCS)\(RX_QUOTED)((?:\(RX_SPCSQ)\\>)|(?:\(RX_SPCS)\\[))$", //
+            "^\(RX_SPCS)(\(RX_NAME))\(RX_SPCS)(PUBLIC)\(RX_SPCS)\(RX_QUOTED)\(RX_SPCS)\(RX_QUOTED)\(RX_SPCSQ)\\>$", ]
+        let tests:    [String] = [ //
+            " Person [", //
+            " Person PUBLIC \"pid\" \"sid\" >", //
+            " Person SYSTEM \"sid\" >", //
+            " Person PUBLIC \"pid\" \"sid\">", //
+            " Person SYSTEM \"sid\">", //
+            " Person SYSTEM \"sid\" [", //
+            " gsr:Person [", //
+            " gsr:Person PUBLIC \"pid\" \"sid\" >", //
+            " gsr:Person SYSTEM \"sid\" >", //
+            " gsr:Person PUBLIC \"pid\" \"sid\">", //
+            " gsr:Person SYSTEM \"sid\">", //
+            " gsr:Person SYSTEM \"sid\" [", //
+            " Person PUBLIC 'pid' 'sid' >", //
+            " Person SYSTEM 'sid' >", //
+            " Person PUBLIC 'pid' 'sid'>", //
+            " Person SYSTEM 'sid'>", //
+            " Person SYSTEM 'sid' [", //
+            " gsr:Person PUBLIC 'pid' 'sid' >", //
+            " gsr:Person SYSTEM 'sid' >", //
+            " gsr:Person PUBLIC 'pid' 'sid'>", //
+            " gsr:Person SYSTEM 'sid'>", //
+            " gsr:Person SYSTEM 'sid' [", ]
+
+        for str in tests {
+            for x in (0 ..< patterns.count) {
+                let p:     String = patterns[x]
+                var error: Error? = nil
+                guard let rx = RegularExpression(pattern: p, error: &error) else { throw error ?? TestError.Failed(description: "Bad REGEX") }
+
+                if let m = rx.firstMatch(in: str) {
+                    print(bar)
+                    print("\"\(str)\" matches #\(x) \"\(p)\"")
+                    for i in (0 ..< m.count) {
+                        print("        Group \("%2d".format(i)): ⎨\(m[i].subString ?? "␀")⎬")
+                    }
+                }
+            }
+        }
+    }
 
     func testElementDeclRegex() throws {
         let test = """
@@ -64,14 +141,13 @@ public class RegexTests: XCTestCase {
                    <!ELEMENT ack:Batman (#PCDATA)>
                    """
 
-
-        let p = "(\(rxNamePattern))\\s+(EMPTY|ANY|\\([^>]+)"
-        try doRegexTest(declName: "ELEMENT", testData: test, pattern: p)
+        let p = "(\(RX_NAME))\\s+(EMPTY|ANY|\\([^>]+)"
+        try doDTDRegexTest(declName: "ELEMENT", testData: test, pattern: p)
     }
 
     func testEntityDeclRegex() throws {
-        let p0 = "(\(rxNamePattern))"
-        let p1 = "\\s+\(rxQuotedString)"
+        let p0 = "(\(RX_NAME))"
+        let p1 = "\\s+\(RX_QUOTED)"
         let p2 = "(?:\(p1))"
         let p3 = "\\s+(?:(?:(SYSTEM)|(PUBLIC)\(p1))\(p1))"
         let p4 = "(?:\\s+(NDATA)\\s+\(p0))?"
@@ -100,14 +176,14 @@ public class RegexTests: XCTestCase {
                    <!ENTITY % entP PUBLIC 'pubIdP' 'sysIdP'>
                    """
 
-        try doRegexTest(declName: "ENTITY", testData: test, pattern: p)
+        try doDTDRegexTest(declName: "ENTITY", testData: test, pattern: p)
     }
 
     func testAttrDeclRegex() throws {
-        let p0 = "(\(rxNamePattern))"
+        let p0 = "(\(RX_NAME))"
         let p1 = "(?:\\([^|)]+(?:\\|[^|)]+)*\\))"
         let p2 = "(CDATA|ID|IDREF|IDREFS|ENTITY|ENTITIES|NMTOKEN|NMTOKENS|NOTATION|\(p1))"
-        let p3 = "(\\#REQUIRED|\\#IMPLIED|(?:(?:(#FIXED)\\s+)?\(rxQuotedString)))"
+        let p3 = "(\\#REQUIRED|\\#IMPLIED|(?:(?:(#FIXED)\\s+)?\(RX_QUOTED)))"
         let p  = "\(p0)\\s+\(p0)\\s+\(p2)\\s+\(p3)"
 
         let test = """
@@ -122,12 +198,16 @@ public class RegexTests: XCTestCase {
                    <!ATTLIST bob:info lid CDATA #FIXED "DUDE!">
                    """
 
-        try doRegexTest(declName: "ATTLIST", testData: test, pattern: p)
+        try doDTDRegexTest(declName: "ATTLIST", testData: test, pattern: p)
     }
 
-    private func doRegexTest(declName: String, testData str: String, pattern p: String) throws {
+    private func doDTDRegexTest(declName: String, testData str: String, pattern p: String) throws {
+        try doRegexTest(testData: str, pattern: "\\<\\!\(declName)\\s+\(p)\\>")
+    }
+
+    private func doRegexTest(testData str: String, pattern p: String) throws {
         var error: Error? = nil
-        guard let rx = RegularExpression(pattern: "\\<\\!\(declName)\\s+\(p)\\>", error: &error) else { throw error ?? TestError.Failed(description: "Bad REGEX") }
+        guard let rx = RegularExpression(pattern: p, error: &error) else { throw error ?? TestError.Failed(description: "Bad REGEX") }
 
         print()
         print(str)
@@ -135,7 +215,7 @@ public class RegexTests: XCTestCase {
             if let m = m {
                 print(bar)
                 for i in (0 ..< m.count) {
-                    print("Group \("%2d".format(i)): ⎨\(m[i].subString ?? "␀")⎬")
+                    print("Group \("%2d".format(i)): \(m[i].subString?.noLF().collapeWS().replacingOccurrences(of: "  ", with: " ").surroundedWith("⎨", "⎬") ?? "")")
                 }
             }
         }

@@ -1,9 +1,9 @@
 /*******************************************************************************************************************************************************************************//*
  *     PROJECT: Gettysburg
- *    FILENAME: KVPair.swift
+ *    FILENAME: Messages.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
- *        DATE: 6/1/21
+ *        DATE: 6/22/21
  *
  * Copyright © 2021 Galen Rhodes. All rights reserved.
  *
@@ -19,22 +19,9 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-@frozen public struct KVPair: Hashable, CustomStringConvertible, Comparable {
-    public let            key:         String
-    public let            value:       String
-    @inlinable public var description: String { "(\(key.quoted()), \(value.quoted()))" }
+@usableFromInline let ERRMSG_COMMENT_DASHES: String = "Comments cannot have two dashes, '--',  side by side."
+@usableFromInline let ERRMSG_ILLEGAL_CHAR:   String = "Illegal Character"
+@usableFromInline let ERRMSG_EOF:            String = "Unexpected End-Of-Input."
+@usableFromInline let ERRMSG_RX:             String = "Invalid REGEX"
 
-    public init(key: String, value: String) {
-        self.key = key
-        self.value = value
-    }
-
-    @inlinable public func hash(into hasher: inout Hasher) {
-        hasher.combine(key)
-        hasher.combine(value)
-    }
-
-    @inlinable public static func == (lhs: KVPair, rhs: KVPair) -> Bool { ((lhs.key == rhs.key) && (lhs.value == rhs.value)) }
-
-    @inlinable public static func < (lhs: KVPair, rhs: KVPair) -> Bool { ((lhs.key < rhs.key) || ((lhs.key == rhs.key) && (lhs.value < rhs.value))) }
-}
+@usableFromInline let ERREXP_IDENT_START: String = "an XML identifier start character"
