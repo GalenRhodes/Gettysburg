@@ -4,43 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="60b0239b-d5a7-4057-9e21-57829d56877e" name="Default Changelist" comment="DTD Parsing is finished.">
-      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMAttribute.swift" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMDocument.swift" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMElement.swift" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMError.swift" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMNode.swift" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMNodeList.swift" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMNodeSet.swift" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMProcessingInstruction.swift" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMText.swift" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DTD/SAXDTDElem.swift" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DTD/SAXDTDElemContList.swift" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAXCharInputStream.swift" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/StringProtocol.swift" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/Utils.swift" afterDir="false" />
+    <list default="true" id="60b0239b-d5a7-4057-9e21-57829d56877e" name="Default Changelist" comment="No comment.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.pbxproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DocPosition.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DocType/SAXDTDElemCont.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DocType/SAXDTDElemContTools.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/SAXAttribute.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/SAXElement.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/SAXNode.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/IO/SAXCharInputStream.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/IO/SAXCharInputStreamStack.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Misc/Enums.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Enums.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Misc/Extensions.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Misc/Messages.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Misc/RegexPatterns.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/RegexPatterns.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Misc/SAXError.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAXError.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Misc/SAXNSName.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAXNSName.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Misc/Tools.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Parser/KVPair.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Parser/XMLDeclData.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAXHandler.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAXHandler.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAXParser.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAXParser.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Validation/CharacterSets.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/CharacterSets.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMElement.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMElement.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMNode.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMNode.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMNodeList.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMListener.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMNodeSet.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMParentNode.swift" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -243,14 +213,8 @@
       <workItem from="1625654363686" duration="28000" />
       <workItem from="1625938495193" duration="26582000" />
       <workItem from="1626101088273" duration="648000" />
-      <workItem from="1626103430071" duration="4000" />
-    </task>
-    <task id="LOCAL-00008" summary="Moved up to Rubicon v0.1.19">
-      <created>1612674528768</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1612674528768</updated>
+      <workItem from="1626103430071" duration="13939000" />
+      <workItem from="1626117444644" duration="1616000" />
     </task>
     <task id="LOCAL-00009" summary="Moved up to Rubicon v0.1.25">
       <created>1612674563569</created>
@@ -588,7 +552,14 @@
       <option name="project" value="LOCAL" />
       <updated>1625654379543</updated>
     </task>
-    <option name="localTasksCounter" value="57" />
+    <task id="LOCAL-00057" summary="No comment.">
+      <created>1626103616590</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1626103616591</updated>
+    </task>
+    <option name="localTasksCounter" value="58" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -631,7 +602,8 @@
     <MESSAGE value="More" />
     <MESSAGE value="Updated to the latest version of Rubicon to get the bug fixes." />
     <MESSAGE value="DTD Parsing is finished." />
-    <option name="LAST_COMMIT_MESSAGE" value="DTD Parsing is finished." />
+    <MESSAGE value="No comment." />
+    <option name="LAST_COMMIT_MESSAGE" value="No comment." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
