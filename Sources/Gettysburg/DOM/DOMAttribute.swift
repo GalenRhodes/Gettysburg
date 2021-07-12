@@ -1,9 +1,9 @@
 /*****************************************************************************************************************************//**
  *     PROJECT: Gettysburg
- *    FILENAME: SAXParser.swift
+ *    FILENAME: DOMAttribute.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
- *        DATE: July 10, 2021
+ *        DATE: July 11, 2021
  *
   * Permission to use, copy, modify, and distribute this software for any purpose with or without fee is hereby granted, provided
  * that the above copyright notice and this permission notice appear in all copies.
@@ -18,6 +18,18 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-open class SAXParser {
+public class DOMAttribute: DOMNode {
+    //@f:0
+    public override      var nodeType:      NodeType    { .Attribute }
+    public override      var textContent:   String      { get { value } set { value = newValue } }
+    public               var value:         String      { didSet { isDefault = false } }
+    public internal(set) var isDefault:     Bool
+    public internal(set) var owningElement: DOMElement? = nil
+    //@f:1
 
+    init(owningDocument: DOMDocument, qName: String, uri: String? = nil, value: String, isDefault: Bool) {
+        self.value = value
+        self.isDefault = isDefault
+        super.init(owningDocument: owningDocument, qName: qName, uri: uri)
+    }
 }

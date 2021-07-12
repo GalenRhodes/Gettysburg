@@ -1,9 +1,9 @@
 /*****************************************************************************************************************************//**
  *     PROJECT: Gettysburg
- *    FILENAME: SAXParser.swift
+ *    FILENAME: StringProtocol.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
- *        DATE: July 10, 2021
+ *        DATE: July 11, 2021
  *
   * Permission to use, copy, modify, and distribute this software for any purpose with or without fee is hereby granted, provided
  * that the above copyright notice and this permission notice appear in all copies.
@@ -18,6 +18,34 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-open class SAXParser {
+extension StringProtocol {
 
+    @inlinable func splitPrefix() -> SAXName { SAXName(qName: self) }
+
+    @usableFromInline func encodeEntities() -> String {
+        var out: String       = ""
+        let ins: String       = String(self)
+        var idx: String.Index = ins.startIndex
+
+        RegularExpression(pattern: "\\&(\\w+);")?.forEachMatch(in: ins) { m, _, _ in
+            guard let m = m, let r = m[1].range else { return }
+
+            out += ins[idx ..< r.lowerBound]
+            idx = r.upperBound
+
+            switch ins[r] {
+                case "amp":  out += "&"
+                case "lt":   out += "<"
+                case "gt":   out += ">"
+                case "apos": out += "'"
+                case "quot": out += "\""
+                default:     out += m.subString
+            }
+        }
+
+        out += ins[idx ..< ins.endIndex]
+        return out
+    }
+
+    @inlinable func quoted(quote: Character = "\"") -> String { "\(quote)\(encodeEntities())\(quote)" }
 }

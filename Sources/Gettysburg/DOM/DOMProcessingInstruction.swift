@@ -1,9 +1,9 @@
 /*****************************************************************************************************************************//**
  *     PROJECT: Gettysburg
- *    FILENAME: SAXParser.swift
+ *    FILENAME: DOMProcessingInstruction.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
- *        DATE: July 10, 2021
+ *        DATE: July 12, 2021
  *
   * Permission to use, copy, modify, and distribute this software for any purpose with or without fee is hereby granted, provided
  * that the above copyright notice and this permission notice appear in all copies.
@@ -18,6 +18,15 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-open class SAXParser {
+public class DOMProcessingInstruction: DOMNode {
+    //@f:0
+    public          var target     : String { name.description }
+    public override var textContent: String { get { data } set { data = newValue } }
+    public          var data       : String
+    //@f:1
 
+    init(owningDocument: DOMDocument, target: String, data: String) {
+        self.data = data
+        super.init(owningDocument: owningDocument, qName: target)
+    }
 }

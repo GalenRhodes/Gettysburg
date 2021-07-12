@@ -5,7 +5,42 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="60b0239b-d5a7-4057-9e21-57829d56877e" name="Default Changelist" comment="DTD Parsing is finished.">
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMAttribute.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMDocument.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMElement.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMError.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMNode.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMNodeList.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMNodeSet.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMProcessingInstruction.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMText.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DTD/SAXDTDElem.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DTD/SAXDTDElemContList.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAXCharInputStream.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/StringProtocol.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/Utils.swift" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.pbxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DocPosition.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DocType/SAXDTDElemCont.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DocType/SAXDTDElemContTools.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/SAXAttribute.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/SAXElement.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/SAXNode.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/IO/SAXCharInputStream.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/IO/SAXCharInputStreamStack.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Misc/Enums.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Enums.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Misc/Extensions.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Misc/Messages.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Misc/RegexPatterns.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/RegexPatterns.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Misc/SAXError.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAXError.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Misc/SAXNSName.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAXNSName.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Misc/Tools.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Parser/KVPair.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Parser/XMLDeclData.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAXHandler.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAXHandler.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAXParser.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAXParser.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Validation/CharacterSets.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/CharacterSets.swift" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,11 +77,10 @@
     </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/Sources/Gettysburg/IO/SAXCharInputStreamStack.swift" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Sources/Gettysburg/Misc/SAXError.swift" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Tests/GettysburgTests/GettysburgTests.swift" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Tests/GettysburgTests/TestData/Test_UTF-8.xml" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Sources/Gettysburg/SAXHandler.swift" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Tests/GettysburgTests/GettysburgTests.swift" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Sources/Gettysburg/SAXError.swift" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MacroExpansionManager">
     <option name="directoryName" value="0kgei8de" />
@@ -73,6 +107,7 @@
     <property name="cidr.known.project.marker" value="true" />
     <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="TEXT" />
     <property name="dart.analysis.tool.window.visible" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -82,7 +117,7 @@
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.C/C++/Objective-C" />
+    <property name="settings.editor.selected.configurable" value="fileTemplates" />
   </component>
   <component name="RunManager" selected="Application.DocFixer">
     <list>
@@ -205,14 +240,10 @@
       <workItem from="1624378633670" duration="14651000" />
       <workItem from="1624446928392" duration="24596000" />
       <workItem from="1624537203070" duration="10663000" />
-      <workItem from="1625654363686" duration="6000" />
-    </task>
-    <task id="LOCAL-00007" summary="Moved up to Rubicon v0.1.19">
-      <created>1611943178797</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1611943178798</updated>
+      <workItem from="1625654363686" duration="28000" />
+      <workItem from="1625938495193" duration="26582000" />
+      <workItem from="1626101088273" duration="648000" />
+      <workItem from="1626103430071" duration="4000" />
     </task>
     <task id="LOCAL-00008" summary="Moved up to Rubicon v0.1.19">
       <created>1612674528768</created>
@@ -550,7 +581,14 @@
       <option name="project" value="LOCAL" />
       <updated>1624563628888</updated>
     </task>
-    <option name="localTasksCounter" value="56" />
+    <task id="LOCAL-00056" summary="DTD Parsing is finished.">
+      <created>1625654379543</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1625654379543</updated>
+    </task>
+    <option name="localTasksCounter" value="57" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

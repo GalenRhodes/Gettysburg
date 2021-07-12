@@ -19,71 +19,82 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-public typealias SAXName = (prefix: String?, localName: String)
+@frozen public struct SAXName: Hashable, Comparable, CustomStringConvertible {
+    public let prefix:    String?
+    public let localName: String
+
+    @inlinable public var description: String { prefix == nil ? localName : "\(prefix!):\(localName)" }
+
+    @inlinable public init(prefix: String?, localName: String) {
+        self.prefix = prefix
+        self.localName = localName
+    }
+
+    @inlinable public init<S>(qName: S) where S: StringProtocol {
+        if let idx = qName.firstIndex(ofAnyOf: ":", from: qName.startIndex) {
+            let sidx = qName.startIndex
+            self.localName = String(qName[qName.index(after: idx) ..< qName.endIndex])
+            self.prefix = ((idx > sidx) ? String(qName[sidx ..< idx]) : nil)
+        }
+        else {
+            self.prefix = nil
+            self.localName = String(qName)
+        }
+    }
+
+    @inlinable public func hash(into hasher: inout Hasher) {
+        hasher.combine(prefix)
+        hasher.combine(localName)
+    }
+
+    @inlinable public static func < (lhs: SAXName, rhs: SAXName) -> Bool { ((lhs.localName < rhs.localName) || ((lhs.localName == rhs.localName) && (lhs.prefix < rhs.prefix))) }
+
+    @inlinable public static func == (lhs: SAXName, rhs: SAXName) -> Bool { ((lhs.prefix == rhs.prefix) && (lhs.localName == rhs.localName)) }
+}
 
 /*===============================================================================================================================================================================*/
 /// Holds a qualified namespace name along with it's associated URI.
 ///
 @frozen public struct SAXNSName: Hashable, Comparable, CustomStringConvertible {
 
-    public let            localName:   String
-    public let            prefix:      String?
+    public let            name:        SAXName
     public let            uri:         String?
-    @inlinable public var name:        String { ((uri != nil && prefix != nil) ? "\(prefix!):\(localName)" : localName) }
-    @inlinable public var description: String { name }
+    @inlinable public var description: String { name.description }
 
     init(localName: String, prefix: String?, uri: String?) {
-        self.localName = localName
-        if uri == nil {
-            self.prefix = nil
-            self.uri = nil
+        if let u = uri {
+            self.name = SAXName(prefix: prefix, localName: localName)
+            self.uri = u
         }
         else {
-            self.prefix = prefix
-            self.uri = uri
+            self.name = SAXName(prefix: nil, localName: localName)
+            self.uri = nil
         }
     }
 
     init(name: String) {
-        localName = name
-        prefix = nil
-        uri = nil
+        self.init(localName: name, prefix: nil, uri: nil)
     }
 
     init(qName: String, uri: String?) {
-        if uri == nil {
-            self.uri = nil
-            self.prefix = nil
-            self.localName = qName
+        if let u = uri {
+            self.name = SAXName(qName: qName)
+            self.uri = u
         }
         else {
-            self.uri = uri
-            (self.prefix, self.localName) = qName.splitPrefix()
+            self.name = SAXName(prefix: nil, localName: qName)
+            self.uri = nil
         }
     }
 
     @inlinable public func hash(into hasher: inout Hasher) {
-        hasher.combine(localName)
-        hasher.combine(prefix)
+        hasher.combine(name)
         hasher.combine(uri)
     }
 
-    public static func < (lhs: SAXNSName, rhs: SAXNSName) -> Bool {
-        if let luri = lhs.uri, let lpfx = lhs.prefix, let ruri = rhs.uri, let rpfx = rhs.prefix {
-            return ((lhs.localName < rhs.localName) || ((lhs.localName == rhs.localName) && (lpfx < rpfx)) || ((lhs.localName == rhs.localName) && (lpfx == rpfx) && (luri < ruri)))
-        }
-        else if let _ = lhs.uri, let _ = lhs.prefix {
-            return false
-        }
-        else if let _ = rhs.uri, let _ = rhs.prefix {
-            return true
-        }
-        else {
-            return (lhs.localName < rhs.localName)
-        }
-    }
+    @inlinable public static func < (lhs: SAXNSName, rhs: SAXNSName) -> Bool { ((lhs.name < rhs.name) || ((lhs.name == rhs.name) && (lhs.uri < rhs.uri))) }
 
-    @inlinable public static func == (lhs: SAXNSName, rhs: SAXNSName) -> Bool { ((lhs.localName == rhs.localName) && (lhs.prefix == rhs.prefix) && (lhs.uri == rhs.uri)) }
+    @inlinable public static func == (lhs: SAXNSName, rhs: SAXNSName) -> Bool { ((lhs.name == rhs.name) && (lhs.uri == rhs.uri)) }
 }
 
 /*===============================================================================================================================================================================*/
@@ -92,10 +103,10 @@ public typealias SAXName = (prefix: String?, localName: String)
 @frozen public struct NSMapping: Hashable, Comparable, CustomStringConvertible {
     public let            prefix:      String
     public let            uri:         String
-    @inlinable public var description: String { isDefault ? "xmlns=\(uri.encodeEntities().quoted())" : "xmlns:\(prefix)=\(uri.encodeEntities().quoted())" }
+    @inlinable public var description: String { isDefault ? "xmlns=\(uri.quoted())" : "xmlns:\(prefix)=\(uri.quoted())" }
     @inlinable public var isDefault:   Bool { prefix.isEmpty }
 
-    init?(_ a: SAXRawAttribute) {
+    init?(attribute a: SAXRawAttribute) {
         if a.name.prefix == "xmlns" {
             self.prefix = a.name.localName
             self.uri = a.value
@@ -116,9 +127,10 @@ public typealias SAXName = (prefix: String?, localName: String)
 
     @inlinable public func hash(into hasher: inout Hasher) {
         hasher.combine(prefix)
+        hasher.combine(uri)
     }
 
-    @inlinable public static func == (lhs: NSMapping, rhs: NSMapping) -> Bool { (lhs.prefix == rhs.prefix) }
+    @inlinable public static func == (lhs: NSMapping, rhs: NSMapping) -> Bool { ((lhs.prefix == rhs.prefix) && (lhs.uri == rhs.uri)) }
 
-    @inlinable public static func < (lhs: NSMapping, rhs: NSMapping) -> Bool { (lhs.prefix < rhs.prefix) }
+    @inlinable public static func < (lhs: NSMapping, rhs: NSMapping) -> Bool { (lhs.prefix < rhs.prefix) || ((lhs.prefix == rhs.prefix) && (lhs.uri < rhs.uri)) }
 }

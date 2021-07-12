@@ -1,9 +1,9 @@
 /*****************************************************************************************************************************//**
  *     PROJECT: Gettysburg
- *    FILENAME: SAXParser.swift
+ *    FILENAME: Utils.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
- *        DATE: July 10, 2021
+ *        DATE: July 11, 2021
  *
   * Permission to use, copy, modify, and distribute this software for any purpose with or without fee is hereby granted, provided
  * that the above copyright notice and this permission notice appear in all copies.
@@ -18,6 +18,8 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-open class SAXParser {
-
+@inlinable public func < <T>(lhs: T?, rhs: T?) -> Bool where T: Comparable {
+    if let lhs = lhs, let rhs = rhs { return lhs < rhs }
+    if lhs == nil && rhs == nil { return false }
+    return lhs == nil
 }

@@ -1,9 +1,9 @@
 /*****************************************************************************************************************************//**
  *     PROJECT: Gettysburg
- *    FILENAME: SAXParser.swift
+ *    FILENAME: DOMDocument.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
- *        DATE: July 10, 2021
+ *        DATE: July 11, 2021
  *
   * Permission to use, copy, modify, and distribute this software for any purpose with or without fee is hereby granted, provided
  * that the above copyright notice and this permission notice appear in all copies.
@@ -18,6 +18,10 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-open class SAXParser {
+public class DOMDocument: DOMParentNode {
+    public override var nodeType: NodeType { .Document }
 
+    public internal(set) var documentElement: DOMElement? = nil
+
+    override init() { super.init(owningDocument: nil, qName: "#document", uri: nil) }
 }

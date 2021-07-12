@@ -1,9 +1,9 @@
 /*****************************************************************************************************************************//**
  *     PROJECT: Gettysburg
- *    FILENAME: SAXParser.swift
+ *    FILENAME: DOMError.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
- *        DATE: July 10, 2021
+ *        DATE: July 11, 2021
  *
   * Permission to use, copy, modify, and distribute this software for any purpose with or without fee is hereby granted, provided
  * that the above copyright notice and this permission notice appear in all copies.
@@ -18,6 +18,9 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-open class SAXParser {
-
+public enum DOMError: Error {
+    case NotImplemented(description: String = "Not Implemented")
+    case Hierarchy(description: String)
+    case WrongDocument(description: String = "Node belongs to a different document.")
+    case InternalConsistency(description: String = "Internal consistency error.")
 }

@@ -1,9 +1,9 @@
 /*****************************************************************************************************************************//**
  *     PROJECT: Gettysburg
- *    FILENAME: SAXParser.swift
+ *    FILENAME: DOMNodeList.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
- *        DATE: July 10, 2021
+ *        DATE: July 11, 2021
  *
   * Permission to use, copy, modify, and distribute this software for any purpose with or without fee is hereby granted, provided
  * that the above copyright notice and this permission notice appear in all copies.
@@ -18,6 +18,14 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-open class SAXParser {
+public class DOMNodeList {
+    init() {}
+}
 
+public class DOMElementNodeList: DOMNodeList {
+    weak var owner: DOMParentNode?
+
+    init(_ owner: DOMParentNode) {
+        self.owner = owner
+    }
 }
