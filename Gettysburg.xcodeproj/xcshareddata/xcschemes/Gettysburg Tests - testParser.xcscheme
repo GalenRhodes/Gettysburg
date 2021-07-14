@@ -28,7 +28,7 @@
             </BuildableReference>
             <SelectedTests>
                <Test
-                  Identifier = "GettysburgTests/testElementAllowedContent">
+                  Identifier = "GettysburgTests/testCharacterEncodingDetection">
                </Test>
             </SelectedTests>
          </TestableReference>

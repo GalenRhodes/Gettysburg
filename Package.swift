@@ -11,7 +11,7 @@ let package = Package(
         .library(name: "Gettysburg", targets: [ "Gettysburg" ]),
     ],
     dependencies: [
-        .package(name: "Rubicon", url: "https://github.com/GalenRhodes/Rubicon.git", .upToNextMinor(from: "0.2.45")),
+        .package(name: "Rubicon", url: "https://github.com/GalenRhodes/Rubicon.git", .upToNextMinor(from: "0.2.54")),
     ],
     targets: [
         .target(name: "Gettysburg", dependencies: [ "Rubicon" ], exclude: [ "Info.plist", ]),

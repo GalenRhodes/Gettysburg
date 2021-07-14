@@ -33,6 +33,7 @@
 		1117D30A75C5EA07741D0CD7 /* SAXCharInputStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D5C45746ADBA1BA761A5 /* SAXCharInputStream.swift */; };
 		1117D33AE7AC0A56417A9FCB /* DOMProcessingInstruction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D74396E6BA718D2C730C /* DOMProcessingInstruction.swift */; };
 		1117D342B4C8EFC8563ED57C /* SAXParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D82BB55E000D210FD595 /* SAXParser.swift */; };
+		1117D570FEE0AF111F3B5FCF /* DocPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D49021849ECC0630BEA2 /* DocPosition.swift */; };
 		1117D5C51FDA4DAC13271F2C /* CharacterSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D8BB14CC5212B4301758 /* CharacterSets.swift */; };
 		1117D5EABCEDAA5A84B1F95E /* DTDEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D9382CC4020F0851A7E3 /* DTDEntity.swift */; };
 		1117D68B62FFD1AA32F00AEB /* SAXTestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DEB2BBDD656C51384346 /* SAXTestHandler.swift */; };
@@ -155,6 +156,7 @@
 		1117D3A1E6C4AA50C5538A81 /* SAXHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXHandler.swift; sourceTree = "<group>"; };
 		1117D3F82BC0B22065494C83 /* StringProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringProtocol.swift; sourceTree = "<group>"; };
 		1117D464877EF4F09607BFED /* RegexTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegexTests.swift; sourceTree = "<group>"; };
+		1117D49021849ECC0630BEA2 /* DocPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocPosition.swift; sourceTree = "<group>"; };
 		1117D49E8D02446DD4DCA48F /* XML_Entities_Data.csv */ = {isa = PBXFileReference; lastKnownFileType = file.csv; path = XML_Entities_Data.csv; sourceTree = "<group>"; };
 		1117D513D9FDF90E82E5D1D1 /* Test_UTF-8_ext.dtd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Test_UTF-8_ext.dtd"; sourceTree = "<group>"; };
 		1117D5C45746ADBA1BA761A5 /* SAXCharInputStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXCharInputStream.swift; sourceTree = "<group>"; };
@@ -308,6 +310,7 @@
 				1117DEF013EEFC9E354D7B27 /* RegexPatterns.swift */,
 				1117DFA4E13F088ACE70D5BE /* SAXNSName.swift */,
 				1117D248DD92AAACA231F2AD /* Enums.swift */,
+				1117D49021849ECC0630BEA2 /* DocPosition.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -636,6 +639,7 @@
 				1117DB953363A988A7D0C131 /* Enums.swift in Sources */,
 				1117DBC41368E4FBD323C84C /* SAXError.swift in Sources */,
 				1117D30A75C5EA07741D0CD7 /* SAXCharInputStream.swift in Sources */,
+				1117D570FEE0AF111F3B5FCF /* DocPosition.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1034,7 +1038,7 @@
 			repositoryURL = "https://github.com/GalenRhodes/Rubicon.git";
 			requirement = {
 				kind = upToNextMinorVersion;
-				minimumVersion = 0.2.46;
+				minimumVersion = 0.2.54;
 			};
 		};
 		83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer" */ = {

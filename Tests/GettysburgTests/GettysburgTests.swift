@@ -14,13 +14,29 @@ public class GettysburgTests: XCTestCase {
     let testDataDir: String = "Tests/GettysburgTests/TestData"
     #if !os(macOS) || os(tvOS) || os(iOS) || os(watchOS)
         public static var allTests: [(String, (GettysburgTests) -> () throws -> Void)] {
-            [ ("testSAXSimpleIConvCharInputStream", testSAXSimpleIConvCharInputStream), ("testSAXParser", testSAXParser), ]
+            [ ("testCharacterEncodingDetection", testCharacterEncodingDetection), ("testElementAllowedContent", testElementAllowedContent), ]
         }
     #endif
 
     public override func setUpWithError() throws {}
 
     public override func tearDownWithError() throws {}
+
+    func testCharacterEncodingDetection() throws {
+        do {
+            let fm = FileManager.default
+            let path = fm.currentDirectoryPath.appendingPathComponent("Tests/GettysburgTests/TestData")
+            let files = try fm.contentsOfDirectory(atPath: path).compactMap { ($0.hasSuffix(".xml") ? $0 : nil) }.map { path.appendingPathComponent($0) }
+
+            for x in files {
+                print(x)
+            }
+
+        }
+        catch let e {
+            XCTFail("FAILED: \(e)")
+        }
+    }
 
     func testElementAllowedContent() throws {
         let data: [String] = [
