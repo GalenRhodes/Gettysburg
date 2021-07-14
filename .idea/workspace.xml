@@ -7,14 +7,14 @@
     <list default="true" id="60b0239b-d5a7-4057-9e21-57829d56877e" name="Default Changelist" comment="No comment.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.pbxproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMDocType.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMDocType.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DTD/DTDEntity.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DTD/DTDEntity.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DTD/SAXDTDElem.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DTD/SAXDTDElemContList.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Enums.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Enums.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAXHandler.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAXHandler.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/StringProtocol.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/StringProtocol.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tests/GettysburgTests/SAXTestHandler.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/GettysburgTests/SAXTestHandler.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/CharacterSets.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Common/CharacterSets.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Enums.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Common/Enums.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/RegexPatterns.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Common/RegexPatterns.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAXCharInputStream.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAX/SAXCharInputStream.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAXError.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAX/SAXError.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAXNSName.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Common/SAXNSName.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/StringProtocol.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Common/StringProtocol.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Utils.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Common/Utils.swift" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,7 +54,7 @@
     <setting file="file://$PROJECT_DIR$/Tests/GettysburgTests/GettysburgTests.swift" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Tests/GettysburgTests/TestData/Test_UTF-8.xml" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Sources/Gettysburg/SAXHandler.swift" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Sources/Gettysburg/SAXError.swift" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Sources/Gettysburg/SAX/SAXError.swift" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MacroExpansionManager">
     <option name="directoryName" value="0kgei8de" />
@@ -220,14 +220,8 @@
       <workItem from="1626103430071" duration="13939000" />
       <workItem from="1626117444644" duration="1633000" />
       <workItem from="1626123434274" duration="32583000" />
-      <workItem from="1626285886483" duration="327000" />
-    </task>
-    <task id="LOCAL-00012" summary="Removed /.build/ from GIT.">
-      <created>1612980188278</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1612980188278</updated>
+      <workItem from="1626285886483" duration="743000" />
+      <workItem from="1626286939936" duration="4000" />
     </task>
     <task id="LOCAL-00013" summary="Removed **/grhodes.xcuserdatad/ from GIT.">
       <created>1612980468039</created>
@@ -565,7 +559,14 @@
       <option name="project" value="LOCAL" />
       <updated>1626284832906</updated>
     </task>
-    <option name="localTasksCounter" value="61" />
+    <task id="LOCAL-00061" summary="No comment.">
+      <created>1626286216781</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1626286216782</updated>
+    </task>
+    <option name="localTasksCounter" value="62" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
