@@ -98,86 +98,102 @@ public enum SAXError: Error {
     }
 
     @inlinable static func getIllegalCharacter(_ inputStream: SAXCharInputStream, message msg: String, expected c1: Character..., got c2: Character) -> SAXError {
-        return SAXError.IllegalCharacter(position: inputStream.docPosition, description: ExpMsg(msg, expected: c1, got: c2))
+        SAXError.IllegalCharacter(position: inputStream.docPosition, description: ExpMsg(msg, expected: c1, got: c2))
     }
 
     @inlinable static func getMalformedEntityRef(_ inputStream: SAXCharInputStream, description: String) -> SAXError {
-        return SAXError.MalformedEntityRef(position: inputStream.docPosition, description: description)
+        SAXError.MalformedEntityRef(position: inputStream.docPosition, description: description)
     }
 
     @inlinable static func getMalformedElement(_ inputStream: SAXCharInputStream, description: String) -> SAXError {
-        return SAXError.MalformedElement(position: inputStream.docPosition, description: description)
+        SAXError.MalformedElement(position: inputStream.docPosition, description: description)
     }
 
     @inlinable static func getFileNotFound(_ inputStream: SAXCharInputStream, description: String) -> SAXError {
-        return SAXError.FileNotFound(position: inputStream.docPosition, description: description)
+        SAXError.FileNotFound(position: inputStream.docPosition, description: description)
     }
 
     @inlinable static func getMalformedNotationDecl(_ inputStream: SAXCharInputStream, description: String) -> SAXError {
-        return SAXError.MalformedNotationDecl(position: inputStream.docPosition, description: description)
+        SAXError.MalformedNotationDecl(position: inputStream.docPosition, description: description)
     }
 
     @inlinable static func getMalformedElementDecl(_ inputStream: SAXCharInputStream, description: String) -> SAXError {
-        return SAXError.MalformedElementDecl(position: inputStream.docPosition, description: description)
+        SAXError.MalformedElementDecl(position: inputStream.docPosition, description: description)
     }
 
     @inlinable static func getMalformedAttListDecl(_ inputStream: SAXCharInputStream, description: String) -> SAXError {
-        return SAXError.MalformedAttListDecl(position: inputStream.docPosition, description: description)
+        SAXError.MalformedAttListDecl(position: inputStream.docPosition, description: description)
     }
 
     @inlinable static func getMalformedEntityDecl(_ inputStream: SAXCharInputStream, description: String) -> SAXError {
-        return SAXError.MalformedEntityDecl(position: inputStream.docPosition, description: description)
+        SAXError.MalformedEntityDecl(position: inputStream.docPosition, description: description)
     }
 
     @inlinable static func getMalformedDocType(_ inputStream: SAXCharInputStream, description: String) -> SAXError {
-        return SAXError.MalformedDocType(position: inputStream.docPosition, description: description)
+        SAXError.MalformedDocType(position: inputStream.docPosition, description: description)
     }
 
     @inlinable static func getMalformedURL(_ inputStream: SAXCharInputStream, description: String) -> SAXError {
-        return SAXError.MalformedURL(position: inputStream.docPosition, description: description)
+        SAXError.MalformedURL(position: inputStream.docPosition, description: description)
     }
 
     @inlinable static func getMalformedURL(description: String) -> SAXError {
-        return SAXError.MalformedURL(position: StringPosition(), description: description)
+        SAXError.MalformedURL(position: DocPosition(url: URL(fileURLWithPath: FileManager.default.currentDirectoryPath, isDirectory: true), line: 0, column: 0), description: description)
     }
 
     @inlinable static func getUnexpectedEndOfInput(description: String = ERRMSG_EOF) -> SAXError {
-        return SAXError.UnexpectedEndOfInput(position: StringPosition(), description: description)
+        SAXError.UnexpectedEndOfInput(position: DocPosition(url: URL(fileURLWithPath: FileManager.default.currentDirectoryPath, isDirectory: true), line: 0, column: 0), description: description)
     }
 
     @inlinable static func getUnknownEncoding(description: String) -> SAXError {
-        return SAXError.UnknownEncoding(position: StringPosition(), description: description)
+        SAXError.UnknownEncoding(position: DocPosition(url: URL(fileURLWithPath: FileManager.default.currentDirectoryPath, isDirectory: true), line: 0, column: 0), description: description)
     }
 
     @inlinable static func getNoHandler(_ inputStream: SAXCharInputStream, description: String) -> SAXError {
-        return SAXError.NoHandler(position: inputStream.docPosition, description: description)
+        SAXError.NoHandler(position: inputStream.docPosition, description: description)
     }
 
     @inlinable static func getMalformedDocument(_ inputStream: SAXCharInputStream, description: String) -> SAXError {
-        return SAXError.MalformedDocument(position: inputStream.docPosition, description: description)
+        SAXError.MalformedDocument(position: inputStream.docPosition, description: description)
     }
 
     @inlinable static func getMalformedParameter(_ inputStream: SAXCharInputStream, description: String) -> SAXError {
-        return SAXError.MalformedParameter(position: inputStream.docPosition, description: description)
+        SAXError.MalformedParameter(position: inputStream.docPosition, description: description)
     }
 
     @inlinable static func getMalformedXmlDecl(_ inputStream: SAXCharInputStream, description: String) -> SAXError {
-        return SAXError.MalformedXmlDecl(position: inputStream.docPosition, description: description)
+        SAXError.MalformedXmlDecl(position: inputStream.docPosition, description: description)
     }
 
     @inlinable static func getMalformedComment(_ inputStream: SAXCharInputStream, description: String) -> SAXError {
-        return SAXError.MalformedComment(position: inputStream.docPosition, description: description)
+        SAXError.MalformedComment(position: inputStream.docPosition, description: description)
     }
 
     @inlinable static func getMalformedProcInst(_ inputStream: SAXCharInputStream, description: String) -> SAXError {
-        return SAXError.MalformedProcInst(position: inputStream.docPosition, description: description)
+        SAXError.MalformedProcInst(position: inputStream.docPosition, description: description)
     }
 
     @inlinable static func getMalformedCDATASection(_ inputStream: SAXCharInputStream, description: String) -> SAXError {
-        return SAXError.MalformedCDATASection(position: inputStream.docPosition, description: description)
+        SAXError.MalformedCDATASection(position: inputStream.docPosition, description: description)
     }
 
     @inlinable static func getMissingWhitespace(_ inputStream: SAXCharInputStream, description: String = "Whitespace was expected.") -> SAXError {
-        return SAXError.MissingWhitespace(position: inputStream.docPosition, description: description)
+        SAXError.MissingWhitespace(position: inputStream.docPosition, description: description)
     }
 }
+
+@inlinable func ExpMsg(_ msg: String = "Unexpected character", expected c1: Character..., got c2: Character) -> String { ExpMsg(msg, expected: c1, got: c2) }
+
+@inlinable func ExpMsg(_ msg: String = "Unexpected character", expected c1: [Character], got c2: Character) -> String {
+    switch c1.count {
+        case 0: return "\(msg): \"\(c2)\""
+        case 1: return "\(msg) - expected \"\(c1[0])\" but got \"\(c2)\" instead."
+        case 2: return "\(msg) - expected \"\(c1[0])\" or \"\(c1[1])\" but got \"\(c2)\" instead."
+        default:
+            var out = "\(msg) - expected "
+            for ch in c1[0 ..< (c1.endIndex - 1)] { out += "\"\(ch)\", " }
+            return " or \"\(c1[c1.endIndex - 1])\" but got \"\(c2)\" instead."
+    }
+}
+
+public let ERRMSG_EOF: String = "Unexpected End-of-Input"

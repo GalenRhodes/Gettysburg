@@ -19,5 +19,9 @@ import CoreFoundation
 import Rubicon
 
 open class SAXParser {
+    public let url: URL
 
+    public init(url: URL) {
+        self.url = url
+    }
 }

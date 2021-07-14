@@ -211,11 +211,12 @@ public class RegexTests: XCTestCase {
 
         print()
         print(str)
-        rx.forEachMatch(in: str) { m, _, stop in
-            if let m = m {
+        rx.forEachMatch(in: str) { _m, _, stop in
+            if let m: RegularExpression.Match = _m {
                 print(bar)
-                for i in (0 ..< m.count) {
-                    print("Group \("%2d".format(i)): \(m[i].subString?.noLF().collapeWS().replacingOccurrences(of: "  ", with: " ").surroundedWith("⎨", "⎬") ?? "")")
+                var i: Int = 0
+                for g: RegularExpression.Group in m {
+                    print("Group \("%2d".format(i++)): \(g.subString?.noLF().collapeWS().surroundedWith("⎨", "⎬") ?? "")")
                 }
             }
         }

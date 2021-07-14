@@ -22,39 +22,40 @@ public class GettysburgTests: XCTestCase {
 
     public override func tearDownWithError() throws {}
 
-    func testSAXSimpleIConvCharInputStream() throws {
-        do {
-            let filename = "\(testDataDir)/Test_UTF-8.xml"
-            let fileUrl  = GetFileURL(filename: filename)
+    func testElementAllowedContent() throws {
+        let data: [String] = [
+            "( ack:Batman)",
+            "( gsr:LastName ,  gsr:FirstName ,  MiddleName+ ,  pgx:dob ,  bob:info ,  usa:family ,  ( garfield  | odie)* ,  ack:Batman ,  foo? ,  bar?)",
+            "( #PCDATA  | usa:family)*",
+            "EMPTY",
+            "ANY",
+            "( #PCDATA)",
+            "( ( #PDCATA)  | one  | two+  | three)+",
+            "( one? ,  two* ,  #PCDATA ,  three)",
+            "( one? ,  two* ,  ( #PCDATA) ,  three)",
+            "( one ,  two  | three)",
+            "( )",
+            "( one ,  two ,  ( ) ,  three)",
+            "( ( rain  | snow  | hail)+ ,  gsr:LastName ,  gsr:FirstName ,  MiddleName+ ,  ( one ,  two ,  buckle ,  my ,  ( shoe  | boot  | sandle  | crock)) ,  pgx:dob ,  bob:info ,  usa:family ,  ( garfield  | odie)* ,  ack:Batman ,  foo? ,  bar?)",
+        ]
 
-            nDebug(.In, "File URL: \"\(fileUrl.absoluteString)\"")
-            guard let inputStream = MarkInputStream(url: fileUrl) else { XCTFail("Could not open file \"\(fileUrl.absoluteString)\""); return }
-            nDebug(.None, "File Opened: \"\(fileUrl.absoluteString)\"")
-            let encodingName = try hardGuess("UTF-8", inputStream)
-            nDebug(.Out, "Encoding Name: \"\(encodingName)\"")
-        }
-        catch let e {
-            XCTFail("ERROR: \(e)")
-        }
-    }
-
-    func testSAXParser() throws {
-        nDebug(.In, "Starting: testSAXParser")
-        defer { nDebug(.Out, "Ending: testSAXParser") }
-        do {
-            let filename = "\(testDataDir)/Test_UTF-8.xml"
-            let fileUrl  = GetFileURL(filename: filename)
-
-            nDebug(.None, "File URL: \"\(fileUrl)\"")
-            guard let inputStream = MarkInputStream(url: fileUrl) else { XCTFail("Could not open file \"\(fileUrl)\""); return }
-
-            let handler: SAXTestHandler = SAXTestHandler()
-            let parser:  SAXParser      = try SAXParser(inputStream: inputStream, url: fileUrl, handler: handler)
-            nDebug(.None, "Beginning Parse...")
-            try parser.parse()
-        }
-        catch let e {
-            XCTFail("ERROR: \(e.localizedDescription)")
+        for str in data {
+            do {
+                let ac = try DTDElement.AllowedContent.getAllowedContent(content: str)
+                switch ac {
+                    case .Empty:
+                        print("SUCCESS: EMPTY")
+                    case .Any:
+                        print("SUCCESS: ANY")
+                    case .Elements(content: let cl):
+                        print("SUCCESS: \(cl.description)")
+                    case .Mixed(content: let cl):
+                        print("SUCCESS: \(cl.description)")
+                }
+            }
+            catch let e {
+                print("FAILED: \(e)\n\t\(str)")
+            }
         }
     }
 

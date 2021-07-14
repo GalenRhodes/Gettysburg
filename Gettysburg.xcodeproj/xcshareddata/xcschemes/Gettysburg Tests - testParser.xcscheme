@@ -28,7 +28,7 @@
             </BuildableReference>
             <SelectedTests>
                <Test
-                  Identifier = "GettysburgTests/testSAXParser">
+                  Identifier = "GettysburgTests/testElementAllowedContent">
                </Test>
             </SelectedTests>
          </TestableReference>

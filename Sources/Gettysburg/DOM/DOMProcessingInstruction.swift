@@ -20,7 +20,7 @@ import Rubicon
 
 public class DOMProcessingInstruction: DOMNode {
     //@f:0
-    public          var target     : String { name.description }
+    public          var target     : String { nodeName }
     public override var textContent: String { get { data } set { data = newValue } }
     public          var data       : String
     //@f:1

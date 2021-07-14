@@ -1,9 +1,9 @@
 /*****************************************************************************************************************************//**
  *     PROJECT: Gettysburg
- *    FILENAME: Utils.swift
+ *    FILENAME: DTDNotation.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
- *        DATE: July 11, 2021
+ *        DATE: July 13, 2021
  *
   * Permission to use, copy, modify, and distribute this software for any purpose with or without fee is hereby granted, provided
  * that the above copyright notice and this permission notice appear in all copies.
@@ -18,12 +18,19 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-@inlinable public func < <T>(lhs: T?, rhs: T?) -> Bool where T: Comparable {
-    if let lhs = lhs, let rhs = rhs { return lhs < rhs }
-    if lhs == nil && rhs == nil { return false }
-    return lhs == nil
-}
+public class DTDNotation: DOMNode {
+    //@f:0
+    public override var nodeType:     NodeType                   { .DTDNotation }
+    public          var name:         String                     { nodeName }
+    public          let externalType: DOMDocType.DTDExternalType
+    public          let publicID:     String?
+    public          let systemID:     String?
+    //@f:1
 
-@inlinable public func bogusURL(baseURL: URL? = nil) -> URL {
-    URL(string: UUID().uuidString + ".xml", relativeTo: baseURL ?? URL(fileURLWithPath: FileManager.default.currentDirectoryPath, isDirectory: true))!
+    init(owningDocument: DOMDocument, name: String, externalType: DOMDocType.DTDExternalType, publicID: String?, systemID: String?) {
+        self.externalType = externalType
+        self.publicID = publicID
+        self.systemID = systemID
+        super.init(owningDocument: owningDocument, qName: name, uri: nil)
+    }
 }

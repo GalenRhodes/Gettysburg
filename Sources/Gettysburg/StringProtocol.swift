@@ -22,6 +22,26 @@ extension StringProtocol {
 
     @inlinable func splitPrefix() -> SAXName { SAXName(qName: self) }
 
+    @inlinable func surroundedWith<S: StringProtocol>(_ s: S) -> String { "\(s)\(self)\(s)" }
+
+    @inlinable func surroundedWith<S: StringProtocol>(_ s1: S, _ s2: S) -> String { "\(s1)\(self)\(s2)" }
+
+    @inlinable func noLF() -> String {
+        let str = String(self)
+        return RegularExpression(pattern: "\\R")?.stringByReplacingMatches(in: str, using: { _ in " " }).0 ?? str
+    }
+
+    @inlinable func collapeWS() -> String {
+        let str = String(self)
+        return RegularExpression(pattern: "\\s+")?.stringByReplacingMatches(in: str, using: { _ in " " }).0 ?? str
+    }
+
+    @inlinable func skipWhitespace(_ idx: inout String.Index) throws -> Character {
+        while idx < endIndex && self[idx].isXmlWhitespace { formIndex(after: &idx) }
+        guard idx < endIndex else { throw SAXError.getUnexpectedEndOfInput() }
+        return self[idx]
+    }
+
     @usableFromInline func encodeEntities() -> String {
         var out: String       = ""
         let ins: String       = String(self)

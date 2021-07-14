@@ -53,7 +53,6 @@ public class DOMNode: Hashable, BidirectionalCollection {
     public                    var firstChild:     DOMNode?       { nil }
     public                    var lastChild:      DOMNode?       { nil }
     public                    var startIndex:     Index          { 0 }
-    public                    var attributes:     [DOMAttribute] { [] }
     public internal(set) weak var owningDocument: DOMDocument?   = nil
     public internal(set) weak var parentNode:     DOMNode?       = nil
     public internal(set)      var nextNode:       DOMNode?       = nil
@@ -88,4 +87,6 @@ public class DOMNode: Hashable, BidirectionalCollection {
     public func index(after i: Index) -> Index { (i + 1) }
 
     public func index(before i: Index) -> Index { (i - 1) }
+
+    public func forEachNode(ofType: NodeType, do body: (DOMNode) throws -> Void) rethrows { try forEach { if $0.nodeType == ofType { try body($0) } } }
 }
