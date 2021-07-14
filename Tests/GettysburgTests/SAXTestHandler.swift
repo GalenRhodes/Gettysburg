@@ -49,11 +49,11 @@ class SAXTestHandler: SAXHandler {
         nDebug(.None, "External DTD: \(elementName); Public ID: \(publicId?.surroundedWith("\"") ?? "nil"); System ID: \(systemId.surroundedWith("\""))")
     }
 
-    func dtdInternalEntityDecl(_ parser: SAXParser, name: String, type: SAXEntityType, content: String) {
+    func dtdInternalEntityDecl(_ parser: SAXParser, name: String, content: String) {
         /* TODO: Implement me... */
     }
 
-    func dtdExternalEntityDecl(_ parser: SAXParser, name: String, type: SAXEntityType, publicId: String?, systemId: String) {
+    func dtdExternalEntityDecl(_ parser: SAXParser, name: String, type: DOMDocType.DTDExternalType, publicId: String?, systemId: String) {
         /* TODO: Implement me... */
     }
 
@@ -61,15 +61,15 @@ class SAXTestHandler: SAXHandler {
         /* TODO: Implement me... */
     }
 
+    func dtdElementDecl(_ parser: SAXParser, name: String, allowedContent: DTDElement.AllowedContent) {
+        /* TODO: Implement me... */
+    }
+
+    func dtdAttributeDecl(_ parser: SAXParser, name: String, elementName: String, type: DTDAttribute.AttributeType, defaultType: DTDAttribute.DefaultType) {
+        /* TODO: Implement me... */
+    }
+
     func dtdNotationDecl(_ parser: SAXParser, name: String, publicId: String?, systemId: String?) {
-        /* TODO: Implement me... */
-    }
-
-    func dtdElementDecl(_ parser: SAXParser, name: String, allowedContent: SAXElementAllowedContent, content: SAXDTDElemContList?) {
-        /* TODO: Implement me... */
-    }
-
-    func dtdAttributeDecl(_ parser: SAXParser, name: String, elementName: String, type: SAXAttributeType, enumList: [String], defaultType: SAXAttributeDefaultType, defaultValue: String?) {
         /* TODO: Implement me... */
     }
 

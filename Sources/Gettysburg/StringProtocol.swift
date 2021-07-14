@@ -22,9 +22,9 @@ extension StringProtocol {
 
     @inlinable func splitPrefix() -> SAXName { SAXName(qName: self) }
 
-    @inlinable func surroundedWith<S: StringProtocol>(_ s: S) -> String { "\(s)\(self)\(s)" }
+    @inlinable func surroundedWith(_ s: String) -> String { "\(s)\(self)\(s)" }
 
-    @inlinable func surroundedWith<S: StringProtocol>(_ s1: S, _ s2: S) -> String { "\(s1)\(self)\(s2)" }
+    @inlinable func surroundedWith(_ s1: String, _ s2: String) -> String { "\(s1)\(self)\(s2)" }
 
     @inlinable func noLF() -> String {
         let str = String(self)

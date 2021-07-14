@@ -32,8 +32,7 @@ public class DTDEntity: DOMNode {
     public          let systemID:     String?
     //@f:1
 
-    init(owningDocument: DOMDocument, name: String, value: String?, type: EntityType, placement: DOMDocType.DTDPlacement, externalType: DOMDocType.DTDExternalType, publicID: String?,
-         systemID: String?) {
+    init(owningDocument: DOMDocument, name: String, value: String?, type: EntityType, placement: DOMDocType.DTDPlacement, externalType: DOMDocType.DTDExternalType, publicID: String?, systemID: String?) {
         self.type = type
         self.placement = placement
         self.externalType = externalType

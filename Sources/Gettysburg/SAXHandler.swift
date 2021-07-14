@@ -36,17 +36,17 @@ public protocol SAXHandler {
 
     func dtdExternal(_ parser: SAXParser, elementName: String, publicId: String?, systemId: String)
 
-    func dtdInternalEntityDecl(_ parser: SAXParser, name: String, type: SAXEntityType, content: String)
+    func dtdInternalEntityDecl(_ parser: SAXParser, name: String, content: String)
 
-    func dtdExternalEntityDecl(_ parser: SAXParser, name: String, type: SAXEntityType, publicId: String?, systemId: String)
+    func dtdExternalEntityDecl(_ parser: SAXParser, name: String, type: DOMDocType.DTDExternalType, publicId: String?, systemId: String)
 
     func dtdUnparsedEntityDecl(_ parser: SAXParser, name: String, publicId: String?, systemId: String, notation: String)
 
     func dtdNotationDecl(_ parser: SAXParser, name: String, publicId: String?, systemId: String?)
 
-    func dtdElementDecl(_ parser: SAXParser, name: String, allowedContent: SAXElementAllowedContent, content: SAXDTDElemContList?)
+    func dtdElementDecl(_ parser: SAXParser, name: String, allowedContent: DTDElement.AllowedContent)
 
-    func dtdAttributeDecl(_ parser: SAXParser, name: String, elementName: String, type: SAXAttributeType, enumList: [String], defaultType: SAXAttributeDefaultType, defaultValue: String?)
+    func dtdAttributeDecl(_ parser: SAXParser, name: String, elementName: String, type: DTDAttribute.AttributeType, defaultType: DTDAttribute.DefaultType)
 
     func comment(_ parser: SAXParser, content: String)
 

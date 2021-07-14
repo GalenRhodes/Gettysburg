@@ -22,13 +22,13 @@ public class DOMDocType: DOMNode {
 
     public enum DTDExternalType: String { case Public = "PUBLIC", System = "SYSTEM" }
 
-    public enum DTDPlacement { case Internal, External, Both }
+    public enum DTDPlacement { case Internal, External }
 
     //@f:0
     public override      var nodeType:       NodeType               { .DTDDocType }
     public               var name:           String                 { nodeName }
-    public               let placement:      DTDPlacement
-    public               let externalType:   DTDExternalType
+    public               let placement:      [DTDPlacement]
+    public               let externalType:   DTDExternalType?
     public               let publicID:       String?
     public               let systemID:       String?
     public               let internalSubset: String?
@@ -38,7 +38,7 @@ public class DOMDocType: DOMNode {
     public internal(set) var attributes:     [String: DTDAttribute]
     //@f:1
 
-    init(owningDocument: DOMDocument, name: String, externalType: DTDExternalType, placement: DTDPlacement, publicID: String?, systemID: String?, internalSubset: String?,
+    init(owningDocument: DOMDocument, name: String, externalType: DTDExternalType? = nil, placement: [DTDPlacement] = [ .Internal ], publicID: String?, systemID: String?, internalSubset: String?,
          attributes: [String: DTDAttribute], elements: [String: DTDElement], entities: [String: DTDEntity], notations: [String: DTDNotation]) {
         self.externalType = externalType
         self.placement = placement

@@ -23,46 +23,6 @@
 import Foundation
 import CoreFoundation
 
-public enum SAXAttributeType {
-    case CData
-    case ID
-    case IDRef
-    case IDRefs
-    case Entity
-    case Entities
-    case NMToken
-    case NMTokens
-    case Notation
-    case Enumerated
-}
-
-public enum SAXAttributeDefaultType {
-    case Value
-    case Required
-    case Implied
-    case Fixed
-}
-
-public enum SAXEntityType {
-    case General
-    case Parameter
-    case Unparsed
-}
-
-public enum SAXElementAllowedContent {
-    case Empty
-    case `Any`
-    case Elements
-    case Mixed
-    case PCData
-}
-
-public enum SAXExternalType {
-    case Internal
-    case Public
-    case System
-}
-
 public enum LeadingWhitespace {
     case None
     case Allowed
