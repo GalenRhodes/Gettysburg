@@ -28,7 +28,7 @@
             </BuildableReference>
             <SelectedTests>
                <Test
-                  Identifier = "GettysburgTests/testSAXSimpleIConvCharInputStream">
+                  Identifier = "ExperimentTests/testURLs_1">
                </Test>
             </SelectedTests>
          </TestableReference>
