@@ -22,16 +22,64 @@ public class GettysburgTests: XCTestCase {
 
     public override func tearDownWithError() throws {}
 
+    func testURL_makeAbsolute() throws {
+        let urls: [String] = [
+            "galen.html",
+            "./galen.html",
+            "../galen.html",
+            "http://foo.com/Projects/galen.html",
+            "http://foo.com/Projects/galen.html?bar=foo",
+            "http://foo.com/Projects/galen.html#bar",
+            "http://foo.com/Projects/galen.html?bar=foo#bar",
+            "http://foo.com:8080/Projects/galen.html",
+            "http://foo.com:8080/Projects/galen.html?bar=foo",
+            "http://foo.com:8080/Projects/galen.html#bar",
+            "http://foo.com:8080/Projects/galen.html?bar=foo#bar",
+            "http://foo.com/Projects/./galen.html",
+            "http://foo.com/Projects/../galen.html",
+            "file:///Users/grhodes/Projects/test.swift",
+            "file:///Users/grhodes/Projects/./test.swift",
+            "file:///Users/grhodes/Projects/../test.swift",
+            "file://Users/grhodes/Projects/test.swift",
+            "file://Users/grhodes/Projects/./test.swift",
+            "file://Users/grhodes/Projects/../test.swift",
+            "ftp://bossman:8080/",
+            "/galen.html",
+            "~/galen.html",
+            "~galen.html",
+        ]
+
+        let cd   = URL(fileURLWithPath: FileManager.default.currentDirectoryPath, isDirectory: true)
+
+        for str in urls {
+            print("-------------------------------------------------------------------")
+            print(" URL IN: \(str)")
+            do {
+                guard let url = URL(string: str) else { throw URLErrors.MalformedURL(description: str) }
+                let url2 = try url.normalize(relativeTo: cd)
+                print("URL OUT: \(url2)")
+            }
+            catch let e {
+                XCTFail("ERROR: \(str) - \(e)")
+            }
+        }
+    }
+
     func testCharacterEncodingDetection() throws {
         do {
             let fm = FileManager.default
             let path = fm.currentDirectoryPath.appendingPathComponent("Tests/GettysburgTests/TestData")
-            let files = try fm.contentsOfDirectory(atPath: path).compactMap { ($0.hasSuffix(".xml") ? $0 : nil) }.map { path.appendingPathComponent($0) }
+            let files = try fm.contentsOfDirectory(atPath: path).compactMap({ ($0.hasSuffix(".xml") ? $0 : nil) }).map({ path.appendingPathComponent($0) })
 
-            for x in files {
-                print(x)
+            for filename in files {
+                do {
+                    let encoding = try getEncodingName(filename: filename)
+                    print("\"\(encoding)\" -> \"\(filename.lastPathComponent)\"")
+                }
+                catch let e {
+                    XCTFail("FAILED: \(e)")
+                }
             }
-
         }
         catch let e {
             XCTFail("FAILED: \(e)")

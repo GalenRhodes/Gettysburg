@@ -28,7 +28,7 @@
             </BuildableReference>
             <SelectedTests>
                <Test
-                  Identifier = "GettysburgTests/testCharacterEncodingDetection">
+                  Identifier = "GettysburgTests/testURL_makeAbsolute">
                </Test>
             </SelectedTests>
          </TestableReference>

@@ -22,10 +22,6 @@ extension StringProtocol {
 
     @inlinable func splitPrefix() -> SAXName { SAXName(qName: self) }
 
-    @inlinable func surroundedWith(_ s: String) -> String { "\(s)\(self)\(s)" }
-
-    @inlinable func surroundedWith(_ s1: String, _ s2: String) -> String { "\(s1)\(self)\(s2)" }
-
     @inlinable func noLF() -> String {
         let str = String(self)
         return RegularExpression(pattern: "\\R")?.stringByReplacingMatches(in: str, using: { _ in " " }).0 ?? str
@@ -67,5 +63,20 @@ extension StringProtocol {
         return out
     }
 
+    @inlinable func surroundedWith(_ s: String) -> String { "\(s)\(self)\(s)" }
+
+    @inlinable func surroundedWith(_ s1: String, _ s2: String) -> String { "\(s1)\(self)\(s2)" }
+
     @inlinable func quoted(quote: Character = "\"") -> String { "\(quote)\(encodeEntities())\(quote)" }
+
+    @usableFromInline func unQuoted() -> String {
+        let work = trimmed
+        guard work.count > 1 else { return String(self) }
+
+        let firstChar = work[work.startIndex]
+        let lastIdx = work.index(before: work.endIndex)
+
+        guard value(firstChar, isOneOf: "\"", "'") && work[lastIdx] == firstChar else { return String(self) }
+        return String(self[work.index(after: work.startIndex) ..< lastIdx])
+    }
 }
