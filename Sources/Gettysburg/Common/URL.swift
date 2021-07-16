@@ -23,10 +23,21 @@ public enum URLErrors: Error {
 }
 
 extension URL {
-    @inlinable public var isRelative: Bool { (scheme == nil) }
+    /*===========================================================================================================================================================================*/
+    /// Returns `true` if the URL has a scheme. Otherwise it's not normalized.
+    ///
+    @inlinable public var isNormalized: Bool { (scheme != nil) }
 
+    /*===========================================================================================================================================================================*/
+    /// If a URL does not have a scheme then attempt to normalize it by making it relative to a given base URL. If a base URL is not given then the current working directory on
+    /// the local filesystem is used.
+    /// 
+    /// - Parameter base: The base URL to use or `nil` to use the current working directory.
+    /// - Returns: The normalized URL.
+    /// - Throws: If the URL cannot be normalized or the given base URL is not normalized to begin with.
+    ///
     public func normalize(relativeTo base: URL? = nil) throws -> URL {
-        guard scheme == nil else { return try standardized._makeRelative() }
+        guard !isNormalized else { return try standardized.createBaseURL() }
 
         var strAbs = standardized.absoluteString
 
@@ -37,10 +48,21 @@ extension URL {
             throw URLErrors.MalformedURL(description: strAbs)
         }
 
-        return try url._makeRelative()
+        return try url.createBaseURL()
     }
 
-    private func _makeRelative() throws -> URL {
+    /*===========================================================================================================================================================================*/
+    /// This method gives the URL a base URL by separating the last path component from the rest of the path. So, for example, given the URL:
+    /// ```
+    ///     http://foo.bar.com/Users/jdoe/samples/document.xml?item=one#anAnchor
+    /// ```
+    /// This method will create a new URL object for `document.xml?item=one#anAnchor` that has a base URL of `http://foo.bar.com/Users/jdoe/samples/`. This is to make sure that
+    /// the `baseURL` property returns a non-`nil` value.
+    /// 
+    /// - Returns: A new URL where the `baseURL` property does not return a `nil` value.
+    /// - Throws: If the URL cannot be created.
+    ///
+    @inlinable public func createBaseURL() throws -> URL {
         let s = (scheme ?? "")
         let h = (host ?? "")
         let p = (((port == nil) || (h == "")) ? "" : ":\(port!)")
