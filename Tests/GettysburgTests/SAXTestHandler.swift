@@ -104,12 +104,12 @@ class SAXTestHandler: SAXHandler {
         nDebug(.Out, "Prefix mapping: xmlns:\(prefix)")
     }
 
-    func beginElement(_ parser: SAXParser, name: SAXNSName, attributes: SAXRawAttribList) {
+    func beginElement(_ parser: SAXParser, name: NSName, attributes: SAXRawAttribList) {
         nDebug(.In, "Element: \(name)")
         attributes.forEach { nDebug(.None, "\($0.name)=\"\($0.value)\"") }
     }
 
-    func endElement(_ parser: SAXParser, name: SAXNSName) {
+    func endElement(_ parser: SAXParser, name: NSName) {
         nDebug(.Out, "Element: \(name)")
     }
 

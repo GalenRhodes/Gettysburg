@@ -69,60 +69,67 @@ private func getEncodingName(byteStream: MarkInputStream) throws -> String {
         defer { byteStream.markDelete() }
 
         // See if a web server is telling is what it thinks it is...
+        if let txtEnc = (byteStream.property(forKey: .textEncodingNameKey) as? String)?.trimmed, txtEnc.isNotEmpty {
+            // Try to confirm it by reading the XML Decl.
+            return try checkXMLDeclForEncoding(byteStream: byteStream, encodingName: txtEnc)
+        }
+
         var bytes: [UInt8] = Array<UInt8>(repeating: 0, count: 4)
 
         let res = byteStream.read(&bytes, maxLength: 4)
         if res < 0 { throw byteStream.streamError ?? StreamError.UnknownError() }
         if res < 4 { throw StreamError.UnexpectedEndOfInput() }
 
-        for t in FourBytes { if bytes == t.0 { return t.1 } }
+        if let t = FourBytes.first(where: { bytes == $0.0 }) { return t.1 }
         if bytes[0] == 0 && bytes[1] == 0 && bytes[2] == 0 && bytes[3] != 0 { return "UTF-32BE" }
         if bytes[0] != 0 && bytes[1] == 0 && bytes[2] == 0 && bytes[3] == 0 { return "UTF-32LE" }
 
         bytes.removeLast()
         _ = byteStream.markBackup()
-        for t in ThreeBytes { if bytes == t.0 { return t.1 } }
+        if let t = ThreeBytes.first(where: { bytes == $0.0 }) { return t.1 }
 
         bytes.removeLast()
         _ = byteStream.markBackup()
-        for t in TwoBytes { if bytes == t.0 { return t.1 } }
+        if let t = TwoBytes.first(where: { bytes == $0.0 }) { return t.1 }
         if bytes[0] == 0 && bytes[1] != 0 { return "UTF-16BE" }
         if bytes[0] != 0 && bytes[1] == 0 { return "UTF-16LE" }
 
         // We'll do this the hard way.  We'll start out assuming UTF-8
-        do {
-            byteStream.markReset()
-            defer { byteStream.markReset() }
-            let charStream = SimpleIConvCharInputStream(inputStream: byteStream, encodingName: "UTF-8", autoClose: false)
-            charStream.open()
-            defer { charStream.close() }
-
-            var buffer: [Character] = []
-
-            guard try charStream.read(chars: &buffer, maxLength: 5) == 5 else { throw StreamError.UnexpectedEndOfInput() }
-            guard String(buffer) == "<?xml" else { return "UTF-8" }
-
-            while let ch = try charStream.read() {
-                buffer <+ ch
-                if buffer.last(count: 2) == [ "?", ">" ] {
-                    let decl = String(buffer)
-                    if RegularExpression(pattern: "^\\<\\?xml\\s")?.firstMatch(in: decl) != nil {
-                        if let m = RegularExpression(pattern: "\\sencoding=((?:\"[^\"]+\")|(?:'[^']+'))(?:\\s|\\?)")?.firstMatch(in: decl), let enc = m[1].subString {
-                            return enc.unQuoted().uppercased()
-                        }
-                    }
-                    // This is the default case...
-                    return "UTF-8"
-                }
-            }
-
-            throw StreamError.UnexpectedEndOfInput()
-        }
+        return try checkXMLDeclForEncoding(byteStream: byteStream, encodingName: "UTF-8")
     }
     catch let err {
         byteStream.close()
         throw err
     }
+}
+
+private func checkXMLDeclForEncoding(byteStream: MarkInputStream, encodingName tEnc: String) throws -> String {
+    byteStream.markReset()
+    defer { byteStream.markReset() }
+    let charStream = SimpleIConvCharInputStream(inputStream: byteStream, encodingName: tEnc, autoClose: false)
+    charStream.open()
+    defer { charStream.close() }
+
+    var buffer: [Character] = []
+
+    guard try charStream.read(chars: &buffer, maxLength: 5) == 5 else { throw StreamError.UnexpectedEndOfInput() }
+    guard String(buffer) == "<?xml" else { return "UTF-8" }
+
+    while let ch = try charStream.read() {
+        buffer <+ ch
+        if buffer.last(count: 2) == [ "?", ">" ] {
+            let decl = String(buffer)
+            if RegularExpression(pattern: "^\\<\\?xml\\s")?.firstMatch(in: decl) != nil {
+                if let m = RegularExpression(pattern: "\\sencoding=((?:\"[^\"]+\")|(?:'[^']+'))(?:\\s|\\?)")?.firstMatch(in: decl), let enc = m[1].subString {
+                    return enc.unQuoted().uppercased()
+                }
+            }
+            // This is the default case...
+            return "UTF-8"
+        }
+    }
+
+    throw StreamError.UnexpectedEndOfInput()
 }
 
 @inlinable func getBOMForName(name: String) -> [UInt8] {
@@ -147,14 +154,17 @@ func removeBOM(inputStream: MarkInputStream, encodingName: String) throws {
 
         switch encodingName {
           // 4 bytes
+            case "UTF-32":     if shouldRemoveBOM(read: bytes, bom: getBOMForName(name: encodingName)) { inputStream.markClear() }
             case "UTF-EBCDIC": if shouldRemoveBOM(read: bytes, bom: getBOMForName(name: encodingName)) { inputStream.markClear() }
             case "GB-18030":   if shouldRemoveBOM(read: bytes, bom: getBOMForName(name: encodingName)) { inputStream.markClear() }
           // 3 bytes
-            case "UTF-8":      if shouldRemoveBOM(read: bytes, bom: getBOMForName(name: encodingName)) { _ = inputStream.markBackup(); inputStream.markClear() }
-            case "UTF-7":      if shouldRemoveBOM(read: bytes, bom: getBOMForName(name: encodingName)) { _ = inputStream.markBackup(); inputStream.markClear() }
-            case "UTF-1":      if shouldRemoveBOM(read: bytes, bom: getBOMForName(name: encodingName)) { _ = inputStream.markBackup(); inputStream.markClear() }
-            case "SCSU":       if shouldRemoveBOM(read: bytes, bom: getBOMForName(name: encodingName)) { _ = inputStream.markBackup(); inputStream.markClear() }
-            case "BOCU-1":     if shouldRemoveBOM(read: bytes, bom: getBOMForName(name: encodingName)) { _ = inputStream.markBackup(); inputStream.markClear() }
+            case "UTF-8":      if shouldRemoveBOM(read: bytes, bom: getBOMForName(name: encodingName)) { inputStream.markBackup(); inputStream.markClear() }
+            case "UTF-7":      if shouldRemoveBOM(read: bytes, bom: getBOMForName(name: encodingName)) { inputStream.markBackup(); inputStream.markClear() }
+            case "UTF-1":      if shouldRemoveBOM(read: bytes, bom: getBOMForName(name: encodingName)) { inputStream.markBackup(); inputStream.markClear() }
+            case "SCSU":       if shouldRemoveBOM(read: bytes, bom: getBOMForName(name: encodingName)) { inputStream.markBackup(); inputStream.markClear() }
+            case "BOCU-1":     if shouldRemoveBOM(read: bytes, bom: getBOMForName(name: encodingName)) { inputStream.markBackup(); inputStream.markClear() }
+          // 2 bytes
+            case "UTF-16":     if shouldRemoveBOM(read: bytes, bom: getBOMForName(name: encodingName)) { inputStream.markBackup(count: 2); inputStream.markClear() }
           // Otherwise leave the bytes at the beginning...
             default:           break
         }

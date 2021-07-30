@@ -18,9 +18,6 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-public typealias DOMNSName = SAXNSName
-public typealias DOMName = SAXName
-
 public class DOMNode: Hashable, BidirectionalCollection {
     public typealias Element = DOMNode
     public typealias Index = Int
@@ -58,15 +55,15 @@ public class DOMNode: Hashable, BidirectionalCollection {
     public internal(set)      var nextNode:       DOMNode?       = nil
     public internal(set)      var previousNode:   DOMNode?       = nil
     public internal(set)      var isReadOnly:     Bool           = false
-    private                   var name:           DOMNSName
     private                   let uuid:           String         = UUID().uuidString
+    private                   var name:           NSName
     //@f:1
 
 
     public init() { fatalError("Not Implemented.") }
 
     init(owningDocument: DOMDocument?, qName: String, uri: String? = nil) {
-        self.name = DOMNSName(qName: qName, uri: uri)
+        self.name = NSName(qName: qName, uri: uri)
         self.owningDocument = owningDocument
     }
 

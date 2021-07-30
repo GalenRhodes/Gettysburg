@@ -19,7 +19,7 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-@frozen public struct SAXName: Hashable, Comparable, CustomStringConvertible {
+@frozen public struct Name: Hashable, Comparable, CustomStringConvertible {
     public let prefix:    String?
     public let localName: String
 
@@ -47,27 +47,27 @@ import Rubicon
         hasher.combine(localName)
     }
 
-    @inlinable public static func < (lhs: SAXName, rhs: SAXName) -> Bool { ((lhs.localName < rhs.localName) || ((lhs.localName == rhs.localName) && (lhs.prefix < rhs.prefix))) }
+    @inlinable public static func < (lhs: Name, rhs: Name) -> Bool { ((lhs.localName < rhs.localName) || ((lhs.localName == rhs.localName) && (lhs.prefix < rhs.prefix))) }
 
-    @inlinable public static func == (lhs: SAXName, rhs: SAXName) -> Bool { ((lhs.prefix == rhs.prefix) && (lhs.localName == rhs.localName)) }
+    @inlinable public static func == (lhs: Name, rhs: Name) -> Bool { ((lhs.prefix == rhs.prefix) && (lhs.localName == rhs.localName)) }
 }
 
 /*===============================================================================================================================================================================*/
 /// Holds a qualified namespace name along with it's associated URI.
 ///
-@frozen public struct SAXNSName: Hashable, Comparable, CustomStringConvertible {
+@frozen public struct NSName: Hashable, Comparable, CustomStringConvertible {
 
-    public let            name:        SAXName
+    public let            name:        Name
     public let            uri:         String?
     @inlinable public var description: String { name.description }
 
     init(localName: String, prefix: String?, uri: String?) {
         if let u = uri {
-            self.name = SAXName(prefix: prefix, localName: localName)
+            self.name = Name(prefix: prefix, localName: localName)
             self.uri = u
         }
         else {
-            self.name = SAXName(prefix: nil, localName: localName)
+            self.name = Name(prefix: nil, localName: localName)
             self.uri = nil
         }
     }
@@ -78,11 +78,11 @@ import Rubicon
 
     init(qName: String, uri: String?) {
         if let u = uri {
-            self.name = SAXName(qName: qName)
+            self.name = Name(qName: qName)
             self.uri = u
         }
         else {
-            self.name = SAXName(prefix: nil, localName: qName)
+            self.name = Name(prefix: nil, localName: qName)
             self.uri = nil
         }
     }
@@ -92,9 +92,9 @@ import Rubicon
         hasher.combine(uri)
     }
 
-    @inlinable public static func < (lhs: SAXNSName, rhs: SAXNSName) -> Bool { ((lhs.name < rhs.name) || ((lhs.name == rhs.name) && (lhs.uri < rhs.uri))) }
+    @inlinable public static func < (lhs: NSName, rhs: NSName) -> Bool { ((lhs.name < rhs.name) || ((lhs.name == rhs.name) && (lhs.uri < rhs.uri))) }
 
-    @inlinable public static func == (lhs: SAXNSName, rhs: SAXNSName) -> Bool { ((lhs.name == rhs.name) && (lhs.uri == rhs.uri)) }
+    @inlinable public static func == (lhs: NSName, rhs: NSName) -> Bool { ((lhs.name == rhs.name) && (lhs.uri == rhs.uri)) }
 }
 
 /*===============================================================================================================================================================================*/

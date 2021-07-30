@@ -20,7 +20,7 @@ import Rubicon
 
 extension StringProtocol {
 
-    @inlinable func splitPrefix() -> SAXName { SAXName(qName: self) }
+    @inlinable func splitPrefix() -> Name { Name(qName: self) }
 
     @inlinable func noLF() -> String {
         let str = String(self)

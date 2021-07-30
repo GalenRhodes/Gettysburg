@@ -20,7 +20,7 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-public typealias SAXRawAttribute = (name: SAXName, value: String)
+public typealias SAXRawAttribute = (name: Name, value: String)
 public typealias SAXRawAttribList = [SAXRawAttribute]
 
 public protocol SAXHandler {
@@ -60,9 +60,9 @@ public protocol SAXHandler {
 
     func endPrefixMapping(_ parser: SAXParser, prefix: String)
 
-    func beginElement(_ parser: SAXParser, name: SAXNSName, attributes: SAXRawAttribList)
+    func beginElement(_ parser: SAXParser, name: NSName, attributes: SAXRawAttribList)
 
-    func endElement(_ parser: SAXParser, name: SAXNSName)
+    func endElement(_ parser: SAXParser, name: NSName)
 
     func getEntity(_ parser: SAXParser, name: String) -> Any?
 
