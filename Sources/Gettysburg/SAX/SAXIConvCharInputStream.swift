@@ -46,7 +46,7 @@ class SAXIConvCharInputStream: SAXCharInputStream {
         try self.init(inputStream: strm, url: url, encodingName: enc, tabSize: tabSize)
     }
 
-    convenience init(url: URL, options: URLInputStreamOptions = [], authenticate: AuthenticationCallback? = nil, tabSize: Int8 = 4) throws {
+    convenience init(url: URL, tabSize: Int8 = 4, options: URLInputStreamOptions = [], authenticate: AuthenticationCallback? = nil) throws {
         let enc = try getEncodingName(url: url, options: options, authenticate: authenticate)
         guard let byteStream = MarkInputStream(url: url, options: options, authenticate: authenticate) else { throw StreamError.FileNotFound(description: url.absoluteString) }
         try self.init(inputStream: byteStream, url: url, encodingName: enc, tabSize: tabSize)

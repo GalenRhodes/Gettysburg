@@ -17,11 +17,38 @@
 import Foundation
 import CoreFoundation
 import Rubicon
+import Chadakoin
 
 open class SAXParser {
-    public let url: URL
+    //@f:0
+    public var url:                URL          { lock.withLock { inputStream.docPosition.url      } }
+    public var baseURL:            URL          { lock.withLock { inputStream.baseURL              } }
+    public var filename:           String       { lock.withLock { inputStream.filename             } }
+    public var docPosition:        TextPosition { lock.withLock { inputStream.docPosition.position } }
+    public var delegate:           SAXDelegate? { lock.withLock { _delegates.last                  } }
 
-    public init(url: URL) {
-        self.url = url
+    public var allowedURIPrefixes: [String]     { get { lock.withLock { _allowedURIPrefixes } } set { lock.withLock { _allowedURIPrefixes = newValue } } }
+
+    let lock:        Conditional        = Conditional()
+    var inputStream: SAXCharInputStream
+    //@f:1
+
+    public init(url: URL, tabSize: Int8 = 4, delegate: SAXDelegate? = nil, options: URLInputStreamOptions = [], authenticate: AuthenticationCallback? = nil) throws {
+        inputStream = try SAXIConvCharInputStream(url: url, tabSize: tabSize, options: options, authenticate: authenticate)
     }
+
+    public init(fileAtPath path: String, tabSize: Int8 = 4, delegate: SAXDelegate? = nil) throws {
+        inputStream = try SAXIConvCharInputStream(fileAtPath: path, tabSize: tabSize)
+    }
+
+    public init(data: Data, url: URL? = nil, tabSize: Int8 = 4, delegate: SAXDelegate? = nil) throws {
+        inputStream = try SAXIConvCharInputStream(data: data, url: url, tabSize: tabSize)
+    }
+
+    public init(string: String, url: URL? = nil, tabSize: Int8 = 4, delegate: SAXDelegate? = nil) {
+        inputStream = SAXStringCharInputStream(string: string, url: url, tabSize: tabSize)
+    }
+
+    private var _allowedURIPrefixes: [String]      = []
+    private var _delegates:          [SAXDelegate] = []
 }

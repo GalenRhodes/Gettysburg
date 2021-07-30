@@ -5,15 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="60b0239b-d5a7-4057-9e21-57829d56877e" name="Default Changelist" comment="No comment.">
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/Common/Locked.swift" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.pbxproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved" beforeDir="false" afterPath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Package.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Package.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Common/SAXNSName.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Common/NSName.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Common/StringProtocol.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Common/StringProtocol.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMNode.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMNode.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAX/CharacterEncoding.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAX/CharacterEncoding.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAXHandler.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAXHandler.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAX/SAXCharInputStream.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAX/SAXCharInputStream.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAX/SAXIConvCharInputStream.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAX/SAXIConvCharInputStream.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAXHandler.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAXDelegate.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAXParser.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAXParser.swift" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Tests/GettysburgTests/SAXTestHandler.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/GettysburgTests/SAXTestHandler.swift" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -53,7 +51,7 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Tests/GettysburgTests/GettysburgTests.swift" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Tests/GettysburgTests/TestData/Test_UTF-8.xml" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Sources/Gettysburg/SAXHandler.swift" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Sources/Gettysburg/SAXDelegate.swift" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Sources/Gettysburg/SAX/SAXError.swift" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MacroExpansionManager">
@@ -231,14 +229,7 @@
       <workItem from="1627568417676" duration="7219000" />
       <workItem from="1627590105166" duration="8000" />
       <workItem from="1627644298514" duration="1291000" />
-      <workItem from="1627645752091" duration="940000" />
-    </task>
-    <task id="LOCAL-00020" summary="More...">
-      <created>1614708587487</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1614708587487</updated>
+      <workItem from="1627645752091" duration="3020000" />
     </task>
     <task id="LOCAL-00021" summary="Preliminary DTD parsing done.">
       <created>1614950114465</created>
@@ -576,7 +567,14 @@
       <option name="project" value="LOCAL" />
       <updated>1627644471216</updated>
     </task>
-    <option name="localTasksCounter" value="69" />
+    <task id="LOCAL-00069" summary="No comment.">
+      <created>1627646735740</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1627646735740</updated>
+    </task>
+    <option name="localTasksCounter" value="70" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

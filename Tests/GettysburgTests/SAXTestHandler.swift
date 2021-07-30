@@ -24,7 +24,7 @@ import Foundation
 import Rubicon
 @testable import Gettysburg
 
-class SAXTestHandler: SAXHandler {
+class SAXTestHandler: SAXDelegate {
     func beginDocument(_ parser: SAXParser) {
         nDebug(.In, "Document begin: \(parser.url.absoluteString)")
     }

@@ -43,7 +43,7 @@ extension SAXCharInputStream {
     }
 
     public static func GetCharInputStream(url: URL, options: URLInputStreamOptions = [], authenticate: AuthenticationCallback? = nil, tabSize: Int8 = 4) throws -> SAXCharInputStream {
-        try SAXIConvCharInputStream(url: url, options: options, authenticate: authenticate, tabSize: tabSize)
+        try SAXIConvCharInputStream(url: url, tabSize: tabSize, options: options, authenticate: authenticate)
     }
 
     public static func GetCharInputStream(data: Data, url: URL? = nil, tabSize: Int8 = 4) throws -> SAXCharInputStream {

@@ -23,7 +23,7 @@ import Rubicon
 public typealias SAXRawAttribute = (name: Name, value: String)
 public typealias SAXRawAttribList = [SAXRawAttribute]
 
-public protocol SAXHandler {
+public protocol SAXDelegate {
     func beginDocument(_ parser: SAXParser)
 
     func endDocument(_ parser: SAXParser)
