@@ -25,6 +25,7 @@ import CoreFoundation
 import Rubicon
 
 public enum SAXErrorSelect {
+    case RunawayInput
     case FileNotFound
     case IllegalCharacter
     case InternalStateError
@@ -49,9 +50,11 @@ public enum SAXErrorSelect {
 }
 
 public enum SAXError: Error {
+    case AlreadyParsed(description: String = "The document was already parsed.")
+    case InternalStateError(description: String)
+    case RunawayInput(position: DocPosition, description: String = "Too many characters read before the end condition.")
     case FileNotFound(position: DocPosition, description: String)
     case IllegalCharacter(position: DocPosition, description: String)
-    case InternalStateError(description: String)
     case MalformedAttListDecl(position: DocPosition, description: String)
     case MalformedCDATASection(position: DocPosition, description: String)
     case MalformedComment(position: DocPosition, description: String)
@@ -73,6 +76,7 @@ public enum SAXError: Error {
 
     @inlinable static func get(_ selector: SAXErrorSelect, inputStream: SAXCharInputStream, description: String) -> SAXError {
         switch selector {
+            case .RunawayInput: return SAXError.getRunawayInput(inputStream, description: description)
             case .MalformedURL: return SAXError.MalformedURL(position: inputStream.docPosition, description: description)
             case .UnexpectedEndOfInput: return SAXError.UnexpectedEndOfInput(position: inputStream.docPosition, description: description)
             case .UnknownEncoding: return SAXError.UnknownEncoding(position: inputStream.docPosition, description: description)
@@ -99,6 +103,10 @@ public enum SAXError: Error {
 
     @inlinable static func getIllegalCharacter(_ inputStream: SAXCharInputStream, message msg: String, expected c1: Character..., got c2: Character) -> SAXError {
         SAXError.IllegalCharacter(position: inputStream.docPosition, description: ExpMsg(msg, expected: c1, got: c2))
+    }
+
+    @inlinable static func getRunawayInput(_ inputStream: SAXCharInputStream, description: String) -> SAXError {
+        SAXError.RunawayInput(position: inputStream.docPosition, description: description)
     }
 
     @inlinable static func getMalformedEntityRef(_ inputStream: SAXCharInputStream, description: String) -> SAXError {

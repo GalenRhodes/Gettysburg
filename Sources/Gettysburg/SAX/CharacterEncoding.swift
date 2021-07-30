@@ -81,20 +81,19 @@ private func getEncodingName(byteStream: MarkInputStream) throws -> String {
         if res < 4 { throw StreamError.UnexpectedEndOfInput() }
 
         if let t = FourBytes.first(where: { bytes == $0.0 }) { return t.1 }
-        if bytes[0] == 0 && bytes[1] == 0 && bytes[2] == 0 && bytes[3] != 0 { return "UTF-32BE" }
-        if bytes[0] != 0 && bytes[1] == 0 && bytes[2] == 0 && bytes[3] == 0 { return "UTF-32LE" }
+        if bytes[..<3] == [ 0, 0, 0 ] && bytes[3] != 0 { return "UTF-32BE" }
+        if bytes[0] != 0 && bytes[1...] == [ 0, 0, 0 ] { return "UTF-32LE" }
 
-        bytes.removeLast()
         _ = byteStream.markBackup()
-        if let t = ThreeBytes.first(where: { bytes == $0.0 }) { return t.1 }
+        if let t = ThreeBytes.first(where: { bytes[..<3] == $0.0 }) { return t.1 }
 
-        bytes.removeLast()
         _ = byteStream.markBackup()
-        if let t = TwoBytes.first(where: { bytes == $0.0 }) { return t.1 }
+        if let t = TwoBytes.first(where: { bytes[..<2] == $0.0 }) { return t.1 }
         if bytes[0] == 0 && bytes[1] != 0 { return "UTF-16BE" }
         if bytes[0] != 0 && bytes[1] == 0 { return "UTF-16LE" }
 
         // We'll do this the hard way.  We'll start out assuming UTF-8
+        byteStream.markReset()
         return try checkXMLDeclForEncoding(byteStream: byteStream, encodingName: "UTF-8")
     }
     catch let err {
@@ -104,32 +103,17 @@ private func getEncodingName(byteStream: MarkInputStream) throws -> String {
 }
 
 private func checkXMLDeclForEncoding(byteStream: MarkInputStream, encodingName tEnc: String) throws -> String {
-    byteStream.markReset()
     defer { byteStream.markReset() }
-    let charStream = SimpleIConvCharInputStream(inputStream: byteStream, encodingName: tEnc, autoClose: false)
-    charStream.open()
-    defer { charStream.close() }
 
-    var buffer: [Character] = []
-
-    guard try charStream.read(chars: &buffer, maxLength: 5) == 5 else { throw StreamError.UnexpectedEndOfInput() }
-    guard String(buffer) == "<?xml" else { return "UTF-8" }
-
-    while let ch = try charStream.read() {
-        buffer <+ ch
-        if buffer.last(count: 2) == [ "?", ">" ] {
-            let decl = String(buffer)
-            if RegularExpression(pattern: "^\\<\\?xml\\s")?.firstMatch(in: decl) != nil {
-                if let m = RegularExpression(pattern: "\\sencoding=((?:\"[^\"]+\")|(?:'[^']+'))(?:\\s|\\?)")?.firstMatch(in: decl), let enc = m[1].subString {
-                    return enc.unQuoted().uppercased()
-                }
-            }
-            // This is the default case...
-            return "UTF-8"
-        }
+    do {
+        let charStream = SimpleIConvCharInputStream(inputStream: byteStream, encodingName: tEnc, autoClose: false)
+        charStream.open()
+        defer { charStream.close() }
+        return ((try XMLDecl.processXMLDecl(inputStream: charStream)?.encoding) ?? tEnc)
     }
-
-    throw StreamError.UnexpectedEndOfInput()
+    catch {
+        return tEnc
+    }
 }
 
 @inlinable func getBOMForName(name: String) -> [UInt8] {
@@ -139,7 +123,7 @@ private func checkXMLDeclForEncoding(byteStream: MarkInputStream, encodingName t
     return []
 }
 
-@inlinable func shouldRemoveBOM(read: [UInt8], bom: [UInt8]) -> Bool { (bom.isNotEmpty && (read.first(count: bom.count) == bom)) }
+@inlinable func shouldRemoveBOM(read: [UInt8], bom: [UInt8]) -> Bool { (bom.isNotEmpty && (read[..<bom.count] == bom)) }
 
 func removeBOM(inputStream: MarkInputStream, encodingName: String) throws {
     #if REMOVEBOM

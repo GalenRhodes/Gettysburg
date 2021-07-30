@@ -51,5 +51,5 @@ import Rubicon
 @usableFromInline let RX_DTD_ATTLIST:   String = "(\(RX_NAME))\(RX_SPCS)(\(RX_NAME))\(RX_SPCS)(CDATA|ID|IDREF|IDREFS|ENTITY|ENTITIES|NMTOKEN|NMTOKENS|NOTATION|(?:\\([^|)]+(?:\\|[^|)]+)*\\)))\(RX_SPCS)(\\#REQUIRED|\\#IMPLIED|(?:(?:(#FIXED)\(RX_SPCS))?\(RX_QUOTED)))"
 @usableFromInline let RX_DTD_ELEMENT:   String = "(\(RX_NAME))\(RX_SPCS)(EMPTY|ANY|\\([^>]+)"
 
-@usableFromInline let RX_PROC_INST:     String = "^(\(RX_NAME))\(RX_SPCS)(?s:(.+))"
-@usableFromInline let RX_XML_DECL:      String = "(?:\(RX_SPCS)\(RX_PARAM))"
+@usableFromInline let RX_PROC_INST:     String = "^\\<\\?(\(RX_NAME))\(RX_SPCS)(?s:(.+))\\?\\>$"
+@usableFromInline let RX_XML_DECL:      String = "^\\<\\?xml(?:\(RX_SPCS)version=\(RX_QUOTED))?(?:\(RX_SPCS)encoding=\(RX_QUOTED))?(?:\(RX_SPCS)standalone=\(RX_QUOTED))?\(RX_SPCSQ)\\?\\>$"

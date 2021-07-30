@@ -66,19 +66,22 @@ import Rubicon
         (lhs.url == rhs.url) && (lhs.tabSize == rhs.tabSize) && (lhs.position == rhs.position)
     }
 
-    mutating func update(_ char: Character) {
+    @discardableResult mutating func update(_ char: Character) -> DocPosition {
         textPositionUpdate(char, pos: &position, tabWidth: tabSize)
+        return self
     }
 
-    mutating func update<C>(_ collection: C) where C: Collection, C.Element == Character {
+    @discardableResult mutating func update<C>(_ collection: C) -> DocPosition where C: Collection, C.Element == Character {
         for char: Character in collection {
             textPositionUpdate(char, pos: &position, tabWidth: tabSize)
         }
+        return self
     }
 
-    mutating func update<S: StringProtocol>(_ str: S) {
+    @discardableResult mutating func update<S: StringProtocol>(_ str: S) -> DocPosition {
         for char: Character in str {
             textPositionUpdate(char, pos: &position, tabWidth: tabSize)
         }
+        return self
     }
 }

@@ -24,16 +24,30 @@ public protocol SAXCharInputStream: SimpleCharInputStream {
     var docPosition: DocPosition { get }
     var markCount:   Int { get }
 
+    /// Sets a mark point in the input stream.
+    ///
     func markSet()
 
+    /// Releases the mark point.
+    ///
     func markRelease()
 
+    /// Returns the input stream to the last mark point. If there is no mark point then nothing is done.
     func markReturn()
 
+    /// Effectively the same as calling `markRelease()` followed by `markSet()`.
+    ///
     func markUpdate()
 
+    /// Effectively the same as calling `markReturn()` followed by `markSet()`.
+    ///
     func markReset()
 
+    /// Returns up to `count` previously read characters from the last mark point to the input stream. Must have called `markSet()` first. If the number of characters
+    /// read since `markSet()` was called is less then `count` then this is effectively the same as calling `markReset()`.
+    ///
+    /// - Parameter count: The number of characters to return to the input stream.
+    /// - Returns: The number of characters actually returned to the input stream.
     @discardableResult func markBackup(count: Int) -> Int
 }
 
@@ -55,6 +69,45 @@ extension SAXCharInputStream {
     }
 
     @inlinable @discardableResult public func markBackup() -> Int { markBackup(count: 1) }
+
+    @discardableResult @usableFromInline func append(to chars: inout [Character], until body: (inout [Character]) throws -> SuffixOption?) throws -> Int {
+        markSet()
+        defer { markRelease() }
+
+        let sIdx = chars.endIndex
+
+        while let ch = try read() {
+            chars <+ ch
+            if let r = try body(&chars), chars.endIndex > sIdx {
+                let cc = (chars.endIndex - sIdx)
+                switch r {
+                    case .Peek(count: let count):
+                        markBackup(count: min(count, cc))
+                    case .Keep:
+                        break
+                    case .Leave(count: let count):
+                        markBackup(count: min(count, cc))
+                        _ = chars.dropLast(min(count, cc))
+                    case .Drop(count: let count):
+                        _ = chars.dropLast(min(count, cc))
+                }
+                return (chars.endIndex - sIdx)
+            }
+
+            guard (chars.endIndex - sIdx) < (1024 * 1024) else { throw SAXError.RunawayInput(position: docPosition, description: "Too many characters read before the end condition.") }
+        }
+
+        throw SAXError.getUnexpectedEndOfInput()
+    }
+
+    @discardableResult @inlinable func read(to chars: inout [Character], until body: (inout [Character]) throws -> SuffixOption?) throws -> Int {
+        chars.removeAll(keepingCapacity: true)
+        return try append(to: &chars, until: body)
+    }
+
+    @inlinable func read(until body: (inout [Character]) throws -> SuffixOption?) throws -> [Character] {
+        var chars: [Character] = []
+        _ = try append(to: &chars, until: body)
+        return chars
+    }
 }
-
-

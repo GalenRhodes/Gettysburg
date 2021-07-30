@@ -30,10 +30,14 @@ public enum LeadingWhitespace {
 }
 
 public enum SuffixOption {
-    case Leave
+    /// Return the characters but leave them on the input stream.
+    case Peek(count: Int)
+    /// Return the characters and remove them from the input stream.
     case Keep
-    case Peek
-    case Drop
+    /// Do not return the characters and leave them on the input stream.
+    case Leave(count: Int)
+    /// Do not return the characters but remove them from the input stream
+    case Drop(count: Int)
 }
 
 public enum XMLDeclEnum: String {
