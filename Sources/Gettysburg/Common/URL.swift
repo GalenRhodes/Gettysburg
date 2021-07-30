@@ -24,9 +24,27 @@ public enum URLErrors: Error {
 
 extension URL {
     /*===========================================================================================================================================================================*/
+    /// Returns the URL form of the current working directory on the local file system.
+    ///
+    @inlinable public static var currentDirectoryURL: URL { URL(fileURLWithPath: FileMan.currentDirectoryPath, isDirectory: true) }
+
+    /*===========================================================================================================================================================================*/
     /// Returns `true` if the URL has a scheme. Otherwise it's not normalized.
     ///
     @inlinable public var isNormalized: Bool { (scheme != nil) }
+
+    /*===========================================================================================================================================================================*/
+    /// Creates a bogus URL for times when a URL is needed but none is given. For example when an InputStream is created from a `String` or an instance of `Data`.
+    /// 
+    /// - Parameters:
+    ///   - ext: The file extension to use.
+    ///   - baseURL: The base URL to use. If none is given then the temp directory on the local file system is used.
+    /// - Returns: A bogus URL.
+    ///
+    @inlinable public static func bogusURL(extension ext: String = ".xml", baseURL: URL? = nil) -> URL {
+        guard let url = URL(string: (UUID().uuidString + ext), relativeTo: (baseURL ?? FileMan.temporaryDirectory)) else { fatalError("This shouldn't happen.") }
+        return url
+    }
 
     /*===========================================================================================================================================================================*/
     /// If a URL does not have a scheme then attempt to normalize it by making it relative to a given base URL. If a base URL is not given then the current working directory on
@@ -44,10 +62,7 @@ extension URL {
         if strAbs.hasPrefix("~/") { strAbs = "file://\(strAbs.standardizingPath)" }
         if strAbs.hasPrefix("/") { strAbs = "file://\(strAbs)" }
 
-        guard let url = URL(string: strAbs, relativeTo: (base ?? URL(fileURLWithPath: FileManager.default.currentDirectoryPath, isDirectory: true))) else {
-            throw URLErrors.MalformedURL(description: strAbs)
-        }
-
+        guard let url = URL(string: strAbs, relativeTo: (base ?? URL.currentDirectoryURL)) else { throw URLErrors.MalformedURL(description: strAbs) }
         return try url.createBaseURL()
     }
 

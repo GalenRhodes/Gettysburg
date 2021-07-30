@@ -18,24 +18,10 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
+public let FileMan: FileManager = FileManager.default
+
 @inlinable public func < <T>(lhs: T?, rhs: T?) -> Bool where T: Comparable {
     if let lhs = lhs, let rhs = rhs { return lhs < rhs }
     if lhs == nil && rhs == nil { return false }
     return lhs == nil
-}
-
-@inlinable public func bogusURL(baseURL: URL? = nil) -> URL {
-    URL(string: UUID().uuidString + ".xml", relativeTo: baseURL ?? URL(fileURLWithPath: FileManager.default.currentDirectoryPath, isDirectory: true))!
-}
-
-@inlinable public func normalizeURL(url: URL?) throws -> URL {
-    if let url = url {
-        guard let url = URL(string: url.absoluteString, relativeTo: URL(fileURLWithPath: FileManager.default.currentDirectoryPath, isDirectory: true)) else {
-            throw SAXError.MalformedURL(position: DocPosition(), description: url.absoluteString)
-        }
-        return url
-    }
-    else {
-        return bogusURL()
-    }
 }

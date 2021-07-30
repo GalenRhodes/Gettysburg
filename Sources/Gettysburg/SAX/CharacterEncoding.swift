@@ -17,6 +17,27 @@
 import Foundation
 import CoreFoundation
 import Rubicon
+import Chadakoin
+
+@usableFromInline let FourBytes: [([UInt8], String)] = [
+    ([ 0x00, 0x00, 0xfe, 0xff ], "UTF-32"),
+    ([ 0xff, 0xfe, 0x00, 0x00 ], "UTF-32"),
+    ([ 0xdd, 0x73, 0x66, 0x73 ], "UTF-EBCDIC"),
+    ([ 0x84, 0x31, 0x95, 0x33 ], "GB-18030"),
+]
+
+@usableFromInline let ThreeBytes: [([UInt8], String)] = [
+    ([ 0xef, 0xbb, 0xbf ], "UTF-8"),
+    ([ 0x2b, 0x2f, 0x76 ], "UTF-7"),
+    ([ 0xf7, 0x64, 0x4c ], "UTF-1"),
+    ([ 0x0E, 0xFE, 0xFF ], "SCSU"),
+    ([ 0xFB, 0xEE, 0x28 ], "BOCU-1"),
+]
+
+@usableFromInline let TwoBytes: [([UInt8], String)] = [
+    ([ 0xfe, 0xff ], "UTF-16"),
+    ([ 0xff, 0xfe ], "UTF-16"),
+]
 
 public func getEncodingName(data: Data) throws -> String {
     try getEncodingName(byteStream: MarkInputStream(data: data))
@@ -28,8 +49,8 @@ public func getEncodingName(filename: String) throws -> String {
     return try getEncodingName(byteStream: byteStream)
 }
 
-public func getEncodingName(url: URL) throws -> String {
-    guard let byteStream = MarkInputStream(url: url) else { throw StreamError.FileNotFound(description: url.absoluteString) }
+public func getEncodingName(url: URL, options: URLInputStreamOptions = [], authenticate: AuthenticationCallback? = nil) throws -> String {
+    guard let byteStream = MarkInputStream(url: url, options: options, authenticate: authenticate) else { throw StreamError.FileNotFound(description: url.absoluteString) }
     defer { byteStream.close() }
     return try getEncodingName(byteStream: byteStream)
 }
@@ -40,26 +61,6 @@ public func getEncodingName(inputStream: InputStream) throws -> (String, InputSt
     return (try getEncodingName(byteStream: byteStream), byteStream)
 }
 
-private let FourBytes: [([UInt8], String)] = [
-    ([ 0x00, 0x00, 0xfe, 0xff ], "UTF-32BE"),
-    ([ 0xff, 0xfe, 0x00, 0x00 ], "UTF-32LE"),
-    ([ 0xdd, 0x73, 0x66, 0x73 ], "UTF-EBCDIC"),
-    ([ 0x84, 0x31, 0x95, 0x33 ], "GB-18030"),
-]
-
-private let ThreeBytes: [([UInt8], String)] = [
-    ([ 0xef, 0xbb, 0xbf ], "UTF-8"),
-    ([ 0x2b, 0x2f, 0x76 ], "UTF-7"),
-    ([ 0xf7, 0x64, 0x4c ], "UTF-1"),
-    ([ 0x0E, 0xFE, 0xFF ], "SCSU"),
-    ([ 0xFB, 0xEE, 0x28 ], "BOCU-1"),
-]
-
-private let TwoBytes: [([UInt8], String)] = [
-    ([ 0xfe, 0xff ], "UTF-16BE"),
-    ([ 0xff, 0xfe ], "UTF-16LE"),
-]
-
 private func getEncodingName(byteStream: MarkInputStream) throws -> String {
     byteStream.open()
 
@@ -67,6 +68,7 @@ private func getEncodingName(byteStream: MarkInputStream) throws -> String {
         byteStream.markSet()
         defer { byteStream.markDelete() }
 
+        // See if a web server is telling is what it thinks it is...
         var bytes: [UInt8] = Array<UInt8>(repeating: 0, count: 4)
 
         let res = byteStream.read(&bytes, maxLength: 4)
@@ -74,12 +76,18 @@ private func getEncodingName(byteStream: MarkInputStream) throws -> String {
         if res < 4 { throw StreamError.UnexpectedEndOfInput() }
 
         for t in FourBytes { if bytes == t.0 { return t.1 } }
+        if bytes[0] == 0 && bytes[1] == 0 && bytes[2] == 0 && bytes[3] != 0 { return "UTF-32BE" }
+        if bytes[0] != 0 && bytes[1] == 0 && bytes[2] == 0 && bytes[3] == 0 { return "UTF-32LE" }
+
         bytes.removeLast()
         _ = byteStream.markBackup()
         for t in ThreeBytes { if bytes == t.0 { return t.1 } }
+
         bytes.removeLast()
         _ = byteStream.markBackup()
         for t in TwoBytes { if bytes == t.0 { return t.1 } }
+        if bytes[0] == 0 && bytes[1] != 0 { return "UTF-16BE" }
+        if bytes[0] != 0 && bytes[1] == 0 { return "UTF-16LE" }
 
         // We'll do this the hard way.  We'll start out assuming UTF-8
         do {
@@ -116,3 +124,40 @@ private func getEncodingName(byteStream: MarkInputStream) throws -> String {
         throw err
     }
 }
+
+@inlinable func getBOMForName(name: String) -> [UInt8] {
+    if let bom = FourBytes.first(where: { $0.1 == name }) { return bom.0 }
+    if let bom = ThreeBytes.first(where: { $0.1 == name }) { return bom.0 }
+    if let bom = TwoBytes.first(where: { $0.1 == name }) { return bom.0 }
+    return []
+}
+
+@inlinable func shouldRemoveBOM(read: [UInt8], bom: [UInt8]) -> Bool { (bom.isNotEmpty && (read.first(count: bom.count) == bom)) }
+
+func removeBOM(inputStream: MarkInputStream, encodingName: String) throws {
+    #if REMOVEBOM
+        inputStream.open()
+        inputStream.markSet()
+        defer { inputStream.markReturn() }
+        var bytes: [UInt8] = Array<UInt8>(repeating: 0, count: 4)
+
+        let res = inputStream.read(&bytes, maxLength: 4)
+        if res < 0 { throw inputStream.streamError ?? StreamError.UnknownError() }
+        if res < 4 { throw StreamError.UnexpectedEndOfInput() }
+
+        switch encodingName {
+          // 4 bytes
+            case "UTF-EBCDIC": if shouldRemoveBOM(read: bytes, bom: getBOMForName(name: encodingName)) { inputStream.markClear() }
+            case "GB-18030":   if shouldRemoveBOM(read: bytes, bom: getBOMForName(name: encodingName)) { inputStream.markClear() }
+          // 3 bytes
+            case "UTF-8":      if shouldRemoveBOM(read: bytes, bom: getBOMForName(name: encodingName)) { _ = inputStream.markBackup(); inputStream.markClear() }
+            case "UTF-7":      if shouldRemoveBOM(read: bytes, bom: getBOMForName(name: encodingName)) { _ = inputStream.markBackup(); inputStream.markClear() }
+            case "UTF-1":      if shouldRemoveBOM(read: bytes, bom: getBOMForName(name: encodingName)) { _ = inputStream.markBackup(); inputStream.markClear() }
+            case "SCSU":       if shouldRemoveBOM(read: bytes, bom: getBOMForName(name: encodingName)) { _ = inputStream.markBackup(); inputStream.markClear() }
+            case "BOCU-1":     if shouldRemoveBOM(read: bytes, bom: getBOMForName(name: encodingName)) { _ = inputStream.markBackup(); inputStream.markClear() }
+          // Otherwise leave the bytes at the beginning...
+            default:           break
+        }
+    #endif
+}
+

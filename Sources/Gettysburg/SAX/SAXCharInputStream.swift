@@ -16,6 +16,7 @@
 
 import Foundation
 import Rubicon
+import Chadakoin
 
 public protocol SAXCharInputStream: SimpleCharInputStream {
     var baseURL:     URL { get }
@@ -31,60 +32,29 @@ public protocol SAXCharInputStream: SimpleCharInputStream {
 
     func markUpdate()
 
-    func markBackup(count: Int) -> Int
+    func markReset()
+
+    @discardableResult func markBackup(count: Int) -> Int
 }
 
-public class SAXIConvCharInputStream: SAXCharInputStream {
-    //@f:0
-    public private(set)      var docPosition:       DocPosition
-    public private(set) lazy var baseURL:           URL           = { docPosition.url.baseURL ?? URL(fileURLWithPath: FileManager.default.currentDirectoryPath, isDirectory: true) }()
-    public private(set) lazy var filename:          String        = { docPosition.url.lastPathComponent }()
-    public                   var markCount:         Int           = 0
-    public                   var isEOF:             Bool          { (buffer.isNotEmpty && inputStream.isEOF) }
-    public                   var hasCharsAvailable: Bool          { (buffer.isNotEmpty || inputStream.hasCharsAvailable) }
-    public                   var encodingName:      String        { (inputStream.encodingName) }
-    public                   var streamError:       Error?        { error }
-    public                   var streamStatus:      Stream.Status { ((error == nil) ? status : .error) }
-
-    private let inputStream: SimpleIConvCharInputStream
-    private var status:      Stream.Status              = .notOpen
-    private var error:       Error?                     = nil
-    private var buffer:      [Character]                = []
-    //@f:1
-
-    public init(inputStream: InputStream, url: URL? = nil, tabSize: Int8 = 4) throws {
-        let u = (url ?? bogusURL())
-
-        let enc = try getEncodingName(url: u)
-        guard let byteStream = InputStream(url: u) else { throw StreamError.FileNotFound(description: u.absoluteString) }
-
-        self.inputStream = SimpleIConvCharInputStream(inputStream: byteStream, encodingName: enc)
-        self.docPosition = DocPosition(url: u, line: 1, column: 1, tabSize: tabSize)
+extension SAXCharInputStream {
+    public static func GetCharInputStream(fileAtPath filename: String, tabSize: Int8 = 4) throws -> SAXCharInputStream {
+        try SAXIConvCharInputStream(fileAtPath: filename, tabSize: tabSize)
     }
 
-    public func markSet() {}
+    public static func GetCharInputStream(url: URL, options: URLInputStreamOptions = [], authenticate: AuthenticationCallback? = nil, tabSize: Int8 = 4) throws -> SAXCharInputStream {
+        try SAXIConvCharInputStream(url: url, options: options, authenticate: authenticate, tabSize: tabSize)
+    }
 
-    public func markRelease() {}
+    public static func GetCharInputStream(data: Data, url: URL? = nil, tabSize: Int8 = 4) throws -> SAXCharInputStream {
+        try SAXIConvCharInputStream(data: data, url: url, tabSize: tabSize)
+    }
 
-    public func markReturn() {}
+    public static func GetCharInputStream(string: String, url: URL? = nil, tabSize: Int8 = 4) throws -> SAXCharInputStream {
+        SAXStringCharInputStream(string: string, url: url, tabSize: tabSize)
+    }
 
-    public func markUpdate() {}
-
-    public func markBackup(count: Int) -> Int { fatalError("markBackup(count:) has not been implemented") }
-
-    public func read() throws -> Character? { fatalError("read() has not been implemented") }
-
-    public func peek() throws -> Character? { fatalError("peek() has not been implemented") }
-
-    public func append(to chars: inout [Character], maxLength: Int) throws -> Int { fatalError("append(to:maxLength:) has not been implemented") }
-
-    public func open() {}
-
-    public func close() {}
-
-    public func lock() {}
-
-    public func unlock() {}
-
-    public func withLock<T>(_ body: () throws -> T) rethrows -> T { fatalError("withLock(_:) has not been implemented") }
+    @inlinable @discardableResult public func markBackup() -> Int { markBackup(count: 1) }
 }
+
+

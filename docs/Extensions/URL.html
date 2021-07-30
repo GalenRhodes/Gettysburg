@@ -23,7 +23,7 @@
         <a class="header-link" href="../index.html">
           Gettysburg©
         </a>
-         (11% documented)
+         (9% documented)
       </p>
     
       <p class="header-col--secondary">
@@ -129,9 +129,6 @@
                 <a class="nav-group-task-link" href="../Classes/DTDNotation.html">DTDNotation</a>
               </li>
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Classes/SAXIConvCharInputStream.html">SAXIConvCharInputStream</a>
-              </li>
-              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/SAXParser.html">SAXParser</a>
               </li>
             </ul>
@@ -141,6 +138,9 @@
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Global%20Variables/ERRMSG_5FEOF.html">ERRMSG_EOF</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Global%20Variables/FileMan.html">FileMan</a>
               </li>
             </ul>
           </li>
@@ -188,9 +188,6 @@
                 <a class="nav-group-task-link" href="../Functions/_3C_28_5F_3A_5F_3A_29_5F_24sySbxSg_5FAAtcSLRzluD.html">&lt;(_:_:)</a>
               </li>
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Functions/bogusURL_28baseURL_3A_29_5F_24s7baseURL10Foundation0B0VADSg_5FtcD.html">bogusURL(baseURL:)</a>
-              </li>
-              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Functions/getEncodingName_28data_3A_29_5F_24s4dataSS10Foundation4DataV_5FtKcD.html">getEncodingName(data:)</a>
               </li>
               <li class="nav-group-task">
@@ -201,9 +198,6 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Functions/getEncodingName_28url_3A_29_5F_24s3urlSS10Foundation3URLV_5FtKcD.html">getEncodingName(url:)</a>
-              </li>
-              <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Functions/normalizeURL_28url_3A_29_5F_24s3url10Foundation3URLVADSg_5FtKcD.html">normalizeURL(url:)</a>
               </li>
             </ul>
           </li>
@@ -280,6 +274,37 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:10Foundation3URLV10GettysburgE016currentDirectoryB0ACvpZ"></a>
+                    <a name="//apple_ref/swift/Variable/currentDirectoryURL" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Foundation3URLV10GettysburgE016currentDirectoryB0ACvpZ">currentDirectoryURL</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns the URL form of the current working directory on the local file system.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@inlinable</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">currentDirectoryURL</span><span class="p">:</span> <span class="kt">URL</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Common/URL.swift#L29">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:10Foundation3URLV10GettysburgE12isNormalizedSbvp"></a>
                     <a name="//apple_ref/swift/Property/isNormalized" class="dashAnchor"></a>
                     <a class="token" href="#/s:10Foundation3URLV10GettysburgE12isNormalizedSbvp">isNormalized</a>
@@ -303,7 +328,73 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Common/URL.swift#L29">Show on GitHub</a>
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Common/URL.swift#L34">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Foundation3URLV10GettysburgE05bogusB09extension04baseB0ACSS_ACSgtFZ"></a>
+                    <a name="//apple_ref/swift/Method/bogusURL(extension:baseURL:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Foundation3URLV10GettysburgE05bogusB09extension04baseB0ACSS_ACSgtFZ">bogusURL(extension:<wbr>baseURL:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Creates a bogus URL for times when a URL is needed but none is given. For example when an InputStream is created from a <code>String</code> or an instance of <code>Data</code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@inlinable</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">bogusURL</span><span class="p">(</span><span class="kd">extension</span> <span class="nv">ext</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">".xml"</span><span class="p">,</span> <span class="nv">baseURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">URL</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>ext</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The file extension to use.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>baseURL</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The base URL to use. If none is given then the temp directory on the local file system is used.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>A bogus URL.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Common/URL.swift#L44-L47">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -362,7 +453,7 @@ the local filesystem is used.</p>
                         <p>The normalized URL.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Common/URL.swift#L39-L52">Show on GitHub</a>
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Common/URL.swift#L57-L67">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -407,7 +498,7 @@ the <code>baseURL</code> property returns a non-<code>nil</code> value.</p>
                         <p>A new URL where the <code>baseURL</code> property does not return a <code>nil</code> value.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Common/URL.swift#L65-L76">Show on GitHub</a>
+                        <a href="https://github.com/GalenRhodes/Gettysburg/blob/master/Sources/Gettysburg/Common/URL.swift#L80-L91">Show on GitHub</a>
                       </div>
                     </section>
                   </div>

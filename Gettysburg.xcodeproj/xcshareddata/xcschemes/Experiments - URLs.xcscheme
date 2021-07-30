@@ -28,7 +28,7 @@
             </BuildableReference>
             <SelectedTests>
                <Test
-                  Identifier = "ExperimentTests/testURLs_1">
+                  Identifier = "ExperimentTests/testURLs_2">
                </Test>
             </SelectedTests>
          </TestableReference>

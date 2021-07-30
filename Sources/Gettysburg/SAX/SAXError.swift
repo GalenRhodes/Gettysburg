@@ -138,15 +138,15 @@ public enum SAXError: Error {
     }
 
     @inlinable static func getMalformedURL(description: String) -> SAXError {
-        SAXError.MalformedURL(position: DocPosition(url: URL(fileURLWithPath: FileManager.default.currentDirectoryPath, isDirectory: true), line: 0, column: 0), description: description)
+        SAXError.MalformedURL(position: DocPosition(url: URL.currentDirectoryURL, line: 0, column: 0), description: description)
     }
 
     @inlinable static func getUnexpectedEndOfInput(description: String = ERRMSG_EOF) -> SAXError {
-        SAXError.UnexpectedEndOfInput(position: DocPosition(url: URL(fileURLWithPath: FileManager.default.currentDirectoryPath, isDirectory: true), line: 0, column: 0), description: description)
+        SAXError.UnexpectedEndOfInput(position: DocPosition(url: URL.currentDirectoryURL, line: 0, column: 0), description: description)
     }
 
     @inlinable static func getUnknownEncoding(description: String) -> SAXError {
-        SAXError.UnknownEncoding(position: DocPosition(url: URL(fileURLWithPath: FileManager.default.currentDirectoryPath, isDirectory: true), line: 0, column: 0), description: description)
+        SAXError.UnknownEncoding(position: DocPosition(url: URL.currentDirectoryURL, line: 0, column: 0), description: description)
     }
 
     @inlinable static func getNoHandler(_ inputStream: SAXCharInputStream, description: String) -> SAXError {

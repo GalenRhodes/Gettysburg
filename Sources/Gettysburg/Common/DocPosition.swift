@@ -20,15 +20,15 @@ import Rubicon
 
 @frozen public struct DocPosition: Hashable {
     //@f:0
-    public  let url:      URL
-    public  var line:     Int32 { position.lineNumber }
-    public  var column:   Int32 { position.columnNumber }
-    public  let tabSize:  Int8
-    private var position: TextPosition
+    public   let url:      URL
+    public   var line:     Int32 { position.lineNumber }
+    public   var column:   Int32 { position.columnNumber }
+    public   let tabSize:  Int8
+    internal var position: TextPosition
     //@f:1
 
     public init(url: URL? = nil, line: Int32 = 1, column: Int32 = 1, tabSize: Int8 = 4) {
-        self.url = (url ?? bogusURL())
+        self.url = (url ?? URL.bogusURL())
         self.tabSize = tabSize
         self.position = TextPosition(lineNumber: line, columnNumber: column)
     }
@@ -38,7 +38,7 @@ import Rubicon
     }
 
     public init<S: StringProtocol>(url: URL? = nil, startLine line: Int32 = 1, startColumn column: Int32 = 1, tabSize: Int8 = 4, string str: S, range: Range<String.Index>) {
-        self.url = (url ?? bogusURL())
+        self.url = (url ?? URL.bogusURL())
         self.tabSize = tabSize
         self.position = TextPosition(lineNumber: line, columnNumber: column)
         for ch in str[range] { textPositionUpdate(ch, pos: &position, tabWidth: tabSize) }
@@ -68,6 +68,12 @@ import Rubicon
 
     mutating func update(_ char: Character) {
         textPositionUpdate(char, pos: &position, tabWidth: tabSize)
+    }
+
+    mutating func update<C>(_ collection: C) where C: Collection, C.Element == Character {
+        for char: Character in collection {
+            textPositionUpdate(char, pos: &position, tabWidth: tabSize)
+        }
     }
 
     mutating func update<S: StringProtocol>(_ str: S) {

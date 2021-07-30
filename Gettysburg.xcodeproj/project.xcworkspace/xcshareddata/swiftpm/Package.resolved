@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "Chadakoin",
+        "repositoryURL": "https://github.com/GalenRhodes/Chadakoin",
+        "state": {
+          "branch": null,
+          "revision": "94f2d763da44399385e679bd6a606ab7a5f9a2cb",
+          "version": "1.0.5"
+        }
+      },
+      {
         "package": "PGDocFixer",
         "repositoryURL": "https://github.com/GalenRhodes/PGDocFixer.git",
         "state": {
@@ -24,8 +33,17 @@
         "repositoryURL": "https://github.com/GalenRhodes/Rubicon.git",
         "state": {
           "branch": null,
-          "revision": "80a7302c7dba6caeb24f2e9221ae6165fc844626",
-          "version": "0.2.54"
+          "revision": "a2b64bb54cf3fd3ecbf677825e9626741a699f34",
+          "version": "0.3.2"
+        }
+      },
+      {
+        "package": "swift-argument-parser",
+        "repositoryURL": "https://github.com/apple/swift-argument-parser.git",
+        "state": {
+          "branch": null,
+          "revision": "986d191f94cec88f6350056da59c2e59e83d1229",
+          "version": "0.4.3"
         }
       }
     ]

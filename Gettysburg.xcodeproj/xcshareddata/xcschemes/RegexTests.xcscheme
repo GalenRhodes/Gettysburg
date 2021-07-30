@@ -36,8 +36,8 @@
    </TestAction>
    <LaunchAction
       useCustomWorkingDirectory = "YES"
-      allowLocationSimulation = "YES"
-      customWorkingDirectory = "$(SRCROOT)">
+      customWorkingDirectory = "$(SRCROOT)"
+      allowLocationSimulation = "YES">
       <LocationScenarioReference
          identifier = "com.apple.dt.IDEFoundation.CurrentLocationScenarioIdentifier"
          referenceType = "1">

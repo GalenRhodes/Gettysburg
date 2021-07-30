@@ -26,6 +26,23 @@ public class ExperimentTests: XCTestCase {
 
     public override func tearDownWithError() throws {}
 
+    func testURLs_2() throws {
+        let strURL = "http://goober/Test_UTF-8.xml"
+        guard let url = URL(string: strURL) else { throw URLErrors.MalformedURL(description: strURL) }
+        guard let fil = try? InputStream.getInputStream(url: url, authenticate: { _ in .UseDefault }) else { throw StreamError.FileNotFound(description: strURL) }
+
+
+        guard let str = String(fromInputStream: fil, encoding: .utf8) else { throw StreamError.UnknownError() }
+        print("      Cookies: \(fil.property(forKey: .httpCookiesKey) ?? "")")
+        print("      Headers: \(fil.property(forKey: .httpHeadersKey) ?? "")")
+        print("  Status Code: \(fil.property(forKey: .httpStatusCodeKey) ?? "")")
+        print("  Status Text: \(fil.property(forKey: .httpStatusTextKey) ?? "")")
+        print("    MIME Type: \(fil.property(forKey: .mimeTypeKey) ?? "")")
+        print("Text Encoding: \(fil.property(forKey: .textEncodingNameKey) ?? "")")
+        print("")
+        print(str)
+    }
+
     func testURLs_1() throws {
         let urls: [String] = [
             "galen.html",
