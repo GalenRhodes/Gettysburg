@@ -25,3 +25,17 @@ public let FileMan: FileManager = FileManager.default
     if lhs == nil && rhs == nil { return false }
     return lhs == nil
 }
+
+@inlinable public func == <C1, C2>(lhs: C1, rhs: C2) -> Bool where C1: Collection, C2: Collection, C1.Element == C2.Element, C1.Element: Equatable {
+    guard lhs.count == rhs.count else { return false }
+    var lIdx = lhs.startIndex
+    var rIdx = rhs.startIndex
+
+    while lIdx < lhs.endIndex {
+        guard lhs[lIdx] == rhs[rIdx] else { return false }
+        lhs.formIndex(after: &lIdx)
+        rhs.formIndex(after: &rIdx)
+    }
+
+    return true
+}

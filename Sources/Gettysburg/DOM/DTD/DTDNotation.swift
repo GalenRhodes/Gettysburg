@@ -33,4 +33,22 @@ public class DTDNotation: DOMNode {
         self.systemID = systemID
         super.init(owningDocument: owningDocument, qName: name, uri: nil)
     }
+
+    private enum CodingKeys: String, CodingKey { case externalType, publicID, systemID }
+
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        externalType = try container.decode(DOMDocType.DTDExternalType.self, forKey: .externalType)
+        publicID = try container.decodeIfPresent(String.self, forKey: .publicID)
+        systemID = try container.decodeIfPresent(String.self, forKey: .systemID)
+        try super.init(from: decoder)
+    }
+
+    public override func encode(to encoder: Encoder) throws {
+        try super.encode(to: encoder)
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(externalType, forKey: .externalType)
+        try container.encodeIfPresent(publicID, forKey: .publicID)
+        try container.encodeIfPresent(systemID, forKey: .systemID)
+    }
 }

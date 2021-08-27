@@ -18,15 +18,58 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-struct XMLDecl: Hashable {
-    var version:    String
-    var encoding:   String
-    var standalone: Bool
+struct XMLDecl: Hashable, Codable, CustomStringConvertible {
+    enum Version: String, Codable { case v1_0 = "1.0", v1_1 = "1.1", v1_2 = "1.2" }
 
-    static func processXMLDecl(inputStream: SimpleCharInputStream, position: DocPosition = DocPosition(line: 1, column: 1, tabSize: 4)) throws -> XMLDecl? {
+    enum Standalone: String, Codable { case yes, no }
+
+    var version:     Version
+    var encoding:    String
+    var standalone:  Standalone
+    var description: String { "<?xml version=\"\(version)\" encoding=\"\(encoding)\" standalone=\"\(standalone)\"?>" }
+
+    init(version: Version, encoding: String, standalone: Standalone) {
+        self.version = version
+        self.encoding = encoding
+        self.standalone = standalone
+    }
+
+    init?(inputStream: MarkInputStream, encodingName: String) throws {
+        do {
+            inputStream.markSet()
+            defer { inputStream.markReturn() }
+            var pos = DocPosition()
+            let ins = SimpleIConvCharInputStream(inputStream: inputStream, encodingName: encodingName, autoClose: false)
+            guard let xd = try XMLDecl.setup(inputStream: ins, position: &pos) else { return nil }
+            (version, encoding, standalone) = xd
+        }
+        catch {
+            return nil
+        }
+    }
+
+    init?(charStream: SAXCharInputStream) throws {
+        do {
+            charStream.markSet()
+            var pos = charStream.docPosition
+            guard let xd = try XMLDecl.setup(inputStream: charStream, position: &pos) else {
+                charStream.markReturn()
+                return nil
+            }
+            (version, encoding, standalone) = xd
+            charStream.markRelease()
+        }
+        catch let e {
+            throw e
+        }
+    }
+
+    private static func setup(inputStream: SimpleCharInputStream, position pos: inout DocPosition) throws -> (Version, String, Standalone)? {
         // Read the first 5 characters and see if we have an XML Decl...
-        var chars: [Character] = []
-        var pos:   DocPosition = position
+        var chars:      [Character] = []
+        var version:    Version     = .v1_0
+        var encoding:   String      = inputStream.encodingName
+        var standalone: Standalone  = .yes
 
         if try (inputStream.read(chars: &chars, maxLength: 6) == 6) && (chars[..<5] == "<?xml".getCharacters()) && chars[5].isXmlWhitespace {
             repeat {
@@ -35,31 +78,32 @@ struct XMLDecl: Hashable {
                 chars <+ ch
             } while chars.last(count: 2) != [ "?", ">" ]
 
-            var xmlDecl: XMLDecl = XMLDecl(version: "1.0", encoding: inputStream.encodingName, standalone: true)
-            let rx               = RegularExpression(pattern: RX_XML_DECL)!
-            let str              = String(chars)
+            let rx  = RegularExpression(pattern: RX_XML_DECL)!
+            let str = String(chars)
 
             guard let match = rx.firstMatch(in: str) else { throw SAXError.MalformedXmlDecl(position: pos, description: "Malformed XML Declaration.") }
 
             if let r = match[1].range {
                 let s = String(str[r]).unQuoted().trimmed
-                guard value(s, isOneOf: "1.0", "1.1") else { throw SAXError.MalformedXmlDecl(position: pos.update(str[..<r.lowerBound]), description: "Invalid version: \(s)") }
-                xmlDecl.version = s
+                guard let v = Version(rawValue: s) else { throw SAXError.MalformedXmlDecl(position: pos.update(str[..<r.lowerBound]), description: "Invalid version: \(s)") }
+                version = v
             }
 
             if let s = match[2].subString?.unQuoted().trimmed, s.isNotEmpty {
-                xmlDecl.encoding = s
+                encoding = s
             }
 
             if let r = match[3].range {
                 let s = String(str[r]).unQuoted().trimmed
-                guard value(s, isOneOf: "yes", "no") else { throw SAXError.MalformedXmlDecl(position: pos.update(str[..<r.lowerBound]), description: "Invalid standalone value: \(s)") }
-                xmlDecl.standalone = (s == "yes")
+                guard let sa = Standalone(rawValue: s) else { throw SAXError.MalformedXmlDecl(position: pos.update(str[..<r.lowerBound]), description: "Invalid standalone value: \(s)") }
+                standalone = sa
             }
 
-            return xmlDecl
+            pos.update(chars)
+            return (version, encoding, standalone)
         }
-
-        return nil
+        else {
+            return nil
+        }
     }
 }

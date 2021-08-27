@@ -18,7 +18,7 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-@frozen public struct DocPosition: Hashable {
+@frozen public struct DocPosition: Hashable, Codable {
     //@f:0
     public   let url:      URL
     public   var line:     Int32 { position.lineNumber }
@@ -53,6 +53,26 @@ import Rubicon
         self.tabSize = pos.tabSize
         self.position = pos.position
         for ch in str[range] { textPositionUpdate(ch, pos: &self.position, tabWidth: pos.tabSize) }
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case url, tabSize, line, column
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        url = try container.decode(URL.self, forKey: .url)
+        tabSize = try container.decode(Int8.self, forKey: .tabSize)
+        position.lineNumber = try container.decode(Int32.self, forKey: .line)
+        position.columnNumber = try container.decode(Int32.self, forKey: .column)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(url, forKey: .url)
+        try container.encode(tabSize, forKey: .tabSize)
+        try container.encode(position.lineNumber, forKey: .line)
+        try container.encode(position.columnNumber, forKey: .column)
     }
 
     public func hash(into hasher: inout Hasher) {

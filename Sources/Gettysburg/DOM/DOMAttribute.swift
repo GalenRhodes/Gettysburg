@@ -23,6 +23,7 @@ public class DOMAttribute: DOMNode {
     public override      var nodeType:      NodeType    { .Attribute }
     public override      var textContent:   String      { get { value } set { value = newValue } }
     public               var value:         String      { didSet { isDefault = false } }
+
     public internal(set) var isDefault:     Bool
     public internal(set) var owningElement: DOMElement? = nil
     //@f:1
@@ -31,5 +32,21 @@ public class DOMAttribute: DOMNode {
         self.value = value
         self.isDefault = isDefault
         super.init(owningDocument: owningDocument, qName: qName, uri: uri)
+    }
+
+    public convenience required init(from decoder: Decoder) throws { try self.init(from: try decoder.container(keyedBy: CodingKeys.self)) }
+
+    override init(from container: KeyedDecodingContainer<CodingKeys>) throws {
+        value = try container.decode(String.self, forKey: .value)
+        isDefault = try container.decode(Bool.self, forKey: .isDefault)
+        owningElement = try container.decodeIfPresent(DOMElement.self, forKey: .owningElement)
+        try super.init(from: container)
+    }
+
+    override func encode(to container: inout KeyedEncodingContainer<CodingKeys>) throws {
+        try super.encode(to: &container)
+        try container.encode(value, forKey: .value)
+        try container.encode(isDefault, forKey: .isDefault)
+        try container.encodeIfPresent(owningElement, forKey: .owningElement)
     }
 }

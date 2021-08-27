@@ -21,8 +21,8 @@ import Chadakoin
 
 class SAXStringCharInputStream: SAXCharInputStream {
     //@f:0
-    lazy var baseURL:           URL           = { mutex.withLock { docPosition.url.baseURL ?? URL.currentDirectoryURL } }()
-    lazy var filename:          String        = { mutex.withLock { docPosition.url.relativeString } }()
+    lazy var baseURL:           URL           = mutex.withLock { docPosition.url.absoluteURL.deletingLastPathComponent() }
+    lazy var filename:          String        = mutex.withLock { docPosition.url.absoluteString.lastPathComponent }
     var      docPosition:       DocPosition
     var      markCount:         Int           { mutex.withLock { markStack.count } }
     var      isEOF:             Bool          { mutex.withLock { idx == string.endIndex } }
@@ -40,7 +40,7 @@ class SAXStringCharInputStream: SAXCharInputStream {
     init(string: String, url: URL? = nil, tabSize: Int8 = 4) {
         self.string = string
         self.idx = self.string.startIndex
-        self.docPosition = DocPosition(url: url ?? URL.bogusURL(), tabSize: tabSize)
+        self.docPosition = DocPosition(url: url, tabSize: tabSize)
     }
 
     func markSet() { mutex.withLock { markStack <+ MarkItem(idx: idx, pos: docPosition.position) } }

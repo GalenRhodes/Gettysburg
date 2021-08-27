@@ -23,5 +23,13 @@ public class DOMDocument: DOMParentNode {
 
     public internal(set) var documentElement: DOMElement? = nil
 
-    override init() { super.init(owningDocument: nil, qName: "#document", uri: nil) }
+    public convenience required init(from decoder: Decoder) throws { try self.init(from: try decoder.container(keyedBy: CodingKeys.self)) }
+
+    override init(from container: KeyedDecodingContainer<CodingKeys>) throws {
+        try super.init(from: container)
+    }
+
+    override func encode(to container: inout KeyedEncodingContainer<CodingKeys>) throws {
+        try super.encode(to: &container)
+    }
 }

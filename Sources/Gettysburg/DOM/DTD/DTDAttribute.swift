@@ -39,6 +39,22 @@ public class DTDAttribute: DOMNode {
         super.init(owningDocument: owningDocument, qName: name, uri: nil)
         if let e = element { e.attributes <+ self }
     }
+
+    public convenience required init(from decoder: Decoder) throws { try self.init(from: try decoder.container(keyedBy: CodingKeys.self)) }
+
+    override init(from container: KeyedDecodingContainer<CodingKeys>) throws {
+        element = try container.decodeIfPresent(DTDElement.self, forKey: .element)
+        type = try container.decode(AttributeType.self, forKey: .type)
+        defaultType = try container.decode(DefaultType.self, forKey: .defaultType)
+        try super.init(from: container)
+    }
+
+    override func encode(to container: inout KeyedEncodingContainer<CodingKeys>) throws {
+        try super.encode(to: &container)
+        try container.encodeIfPresent(element, forKey: .element)
+        try container.encode(type, forKey: .type)
+        try container.encode(defaultType, forKey: .defaultType)
+    }
 }
 
 extension DTDAttribute.AttributeType: CustomStringConvertible {
@@ -79,6 +95,73 @@ extension DTDAttribute.DefaultType: CustomStringConvertible {
             case .Required:                   return nil
             case .Implied(value: let value):  return value
             case .Fixed(value: let value):    return value
+        }
+    }
+}
+
+extension DTDAttribute.AttributeType: Codable {
+    private enum CodingKeys: String, CodingKey { case name, values }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let name      = try container.decode(String.self, forKey: .name)
+        switch name {
+            case "CDATA":    self = .CData
+            case "ID":       self = .ID
+            case "IDREF":    self = .IDRef
+            case "IDREFS":   self = .IDRefs
+            case "ENTITY":   self = .Entity
+            case "ENTITIES": self = .Entities
+            case "NMTOKEN":  self = .NMToken
+            case "NMTOKENS": self = .NMTokens
+            case "NOTATION": self = .Notation
+            default:         self = .Enumerated(values: try container.decode(Array<String>.self, forKey: .values))
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        switch self {
+            case .CData:    try container.encode("CDATA", forKey: .name)
+            case .ID:       try container.encode("ID", forKey: .name)
+            case .IDRef:    try container.encode("IDREF", forKey: .name)
+            case .IDRefs:   try container.encode("IDREFS", forKey: .name)
+            case .Entity:   try container.encode("ENTITY", forKey: .name)
+            case .Entities: try container.encode("ENTITIES", forKey: .name)
+            case .NMToken:  try container.encode("NMTOKEN", forKey: .name)
+            case .NMTokens: try container.encode("NMTOKENS", forKey: .name)
+            case .Notation: try container.encode("NOTATION", forKey: .name)
+            case .Enumerated(values: let values):
+                try container.encode("ENUMERATED", forKey: .name)
+                try container.encode(values, forKey: .values)
+        }
+    }
+}
+
+extension DTDAttribute.DefaultType: Codable {
+    private enum CodingKeys: String, CodingKey { case name, value }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let name      = try container.decode(String.self, forKey: .name)
+        switch name {
+            case "#IMPLIED": self = .Implied(value: try container.decodeIfPresent(String.self, forKey: .value))
+            case "#FIXED":   self = .Fixed(value: try container.decode(String.self, forKey: .value))
+            default:        self = .Required
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        switch self {
+            case .Required:
+                try container.encode("#REQUIRED", forKey: .name)
+            case .Implied(value: let value):
+                try container.encode("#IMPLIED", forKey: .name)
+                try container.encodeIfPresent(value, forKey: .value)
+            case .Fixed(value: let value):
+                try container.encode("#FIXED", forKey: .name)
+                try container.encode(value, forKey: .value)
         }
     }
 }

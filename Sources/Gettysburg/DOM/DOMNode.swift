@@ -18,11 +18,30 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-public class DOMNode: Hashable, BidirectionalCollection {
+public class DOMNode: Hashable, BidirectionalCollection, Codable {
+    @usableFromInline enum CodingKeys: String, CodingKey {
+        case className
+        case name
+        case uuid
+        case isReadOnly
+        case previousNode
+        case nextNode
+        case parentNode
+        case owningDocument
+        case childNodes
+        case textContent
+        case data
+        case value, isDefault, owningElement
+        case placement, externalType, publicID, systemID, internalSubset, entities, notations, elements
+        case attributes
+        case element, type, defaultType
+        case allowedContent
+    }
+
     public typealias Element = DOMNode
     public typealias Index = Int
 
-    public enum NodeType: Int {
+    public enum NodeType: Int, Codable {
         case Document = 1
         case DocumentFragment
         case Element
@@ -50,21 +69,53 @@ public class DOMNode: Hashable, BidirectionalCollection {
     public                    var firstChild:     DOMNode?       { nil }
     public                    var lastChild:      DOMNode?       { nil }
     public                    var startIndex:     Index          { 0 }
+
     public internal(set) weak var owningDocument: DOMDocument?   = nil
     public internal(set) weak var parentNode:     DOMNode?       = nil
     public internal(set)      var nextNode:       DOMNode?       = nil
     public internal(set)      var previousNode:   DOMNode?       = nil
     public internal(set)      var isReadOnly:     Bool           = false
-    private                   let uuid:           String         = UUID().uuidString
+    private                   let uuid:           String
     private                   var name:           NSName
     //@f:1
-
 
     public init() { fatalError("Not Implemented.") }
 
     init(owningDocument: DOMDocument?, qName: String, uri: String? = nil) {
         self.name = NSName(qName: qName, uri: uri)
         self.owningDocument = owningDocument
+        self.uuid = UUID().uuidString
+    }
+
+    public convenience required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        try self.init(from: container)
+    }
+
+    init(from container: KeyedDecodingContainer<CodingKeys>) throws {
+        owningDocument = try container.decodeIfPresent(DOMDocument.self, forKey: .owningDocument)
+        parentNode = try container.decodeIfPresent(DOMNode.self, forKey: .parentNode)
+        nextNode = try container.decodeIfPresent(DOMNode.self, forKey: .nextNode)
+        previousNode = try container.decodeIfPresent(DOMNode.self, forKey: .previousNode)
+        isReadOnly = try container.decode(Bool.self, forKey: .isReadOnly)
+        uuid = try container.decode(String.self, forKey: .uuid)
+        name = try container.decode(NSName.self, forKey: .name)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try encode(to: &container)
+    }
+
+    func encode(to container: inout KeyedEncodingContainer<CodingKeys>) throws {
+        try container.encode(String(describing: type(of: self)), forKey: .className)
+        try container.encodeIfPresent(owningDocument, forKey: .owningDocument)
+        try container.encodeIfPresent(parentNode, forKey: .parentNode)
+        try container.encodeIfPresent(nextNode, forKey: .nextNode)
+        try container.encodeIfPresent(previousNode, forKey: .previousNode)
+        try container.encode(isReadOnly, forKey: .isReadOnly)
+        try container.encode(uuid, forKey: .uuid)
+        try container.encode(name, forKey: .name)
     }
 
     public func hash(into hasher: inout Hasher) { hasher.combine(uuid) }

@@ -20,7 +20,11 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-public typealias SAXRawAttribute = (name: Name, value: String)
+@frozen public struct SAXRawAttribute {
+    public let name: Name
+    public let value: String
+}
+
 public typealias SAXRawAttribList = [SAXRawAttribute]
 
 public protocol SAXDelegate {
@@ -71,4 +75,15 @@ public protocol SAXDelegate {
     func processingInstruction(_ parser: SAXParser, target: String, data: String)
 
     func handleError(_ parser: SAXParser, error: Error) -> Bool
+}
+
+extension SAXRawAttribute: Codable, Hashable, Comparable {
+    @inlinable public func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
+        hasher.combine(value)
+    }
+
+    @inlinable public static func < (lhs: SAXRawAttribute, rhs: SAXRawAttribute) -> Bool { ((lhs.name < rhs.name) || ((lhs.name == rhs.name) && (lhs.value < rhs.value))) }
+
+    @inlinable public static func == (lhs: SAXRawAttribute, rhs: SAXRawAttribute) -> Bool { ((lhs.name == rhs.name) && (lhs.value == rhs.value)) }
 }

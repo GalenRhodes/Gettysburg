@@ -72,13 +72,6 @@ public class GettysburgTests: XCTestCase {
             let files = try fm.contentsOfDirectory(atPath: path).compactMap({ ($0.hasSuffix(".xml") ? $0 : nil) }).map({ path.appendingPathComponent($0) })
 
             for filename in files {
-                do {
-                    let encoding = try getEncodingName(filename: filename)
-                    print("\"\(encoding)\" -> \"\(filename.lastPathComponent)\"")
-                }
-                catch let e {
-                    XCTFail("FAILED: \(e)")
-                }
             }
         }
         catch let e {

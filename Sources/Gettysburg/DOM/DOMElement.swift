@@ -17,22 +17,30 @@
 import Foundation
 import CoreFoundation
 import Rubicon
+import RedBlackTree
 
 public class DOMElement: DOMParentNode {
-    struct NSName: Hashable {
-        let localName: String
-        let uri:       String
-    }
-
     //@f:0
-    public override     var nodeType:     NodeType               { .Element }
-    public              var tagName:      String                 { nodeName }
-    public private(set) var attributes:   [DOMAttribute]         = []
-    private             var _attrsCache1: [String: DOMAttribute] = [:]
-    private             var _attrsCache2: [NSName: DOMAttribute] = [:]
+    public override     var nodeType:     NodeType                             { .Element }
+    public              var tagName:      String                               { nodeName }
+    public private(set) var attributes:   [DOMAttribute]                       = []
+    private             let _attrsCache1: TreeDictionary<String, DOMAttribute> = [:]
+    private             let _attrsCache2: TreeDictionary<NSName, DOMAttribute> = [:]
     //@f:1
 
     init(owningDocument: DOMDocument, tagName: String, uri: String?) { super.init(owningDocument: owningDocument, qName: tagName, uri: uri) }
+
+    public convenience required init(from decoder: Decoder) throws { try self.init(from: try decoder.container(keyedBy: CodingKeys.self)) }
+
+    override init(from container: KeyedDecodingContainer<CodingKeys>) throws {
+        attributes = try container.decode(Array<DOMAttribute>.self, forKey: .attributes)
+        try super.init(from: container)
+    }
+
+    override func encode(to container: inout KeyedEncodingContainer<CodingKeys>) throws {
+        try super.encode(to: &container)
+        try container.encode(attributes, forKey: .attributes)
+    }
 
     public func forEachElement(deep: Bool = true, _ body: (DOMElement) throws -> Void) rethrows {
         try forEachNode(ofType: .Element) {
@@ -97,7 +105,7 @@ public class DOMElement: DOMParentNode {
 
     /*===========================================================================================================================================================================*/
     /// Add a new attribute.
-    /// 
+    ///
     /// - Parameters:
     ///   - qName:
     ///   - uri:

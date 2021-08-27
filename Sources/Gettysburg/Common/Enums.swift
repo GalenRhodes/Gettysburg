@@ -23,13 +23,13 @@
 import Foundation
 import CoreFoundation
 
-public enum LeadingWhitespace {
+public enum LeadingWhitespace: String, Codable {
     case None
     case Allowed
     case Required
 }
 
-public enum SuffixOption {
+public enum SuffixOption: Codable {
     /// Return the characters but leave them on the input stream.
     case Peek(count: Int)
     /// Return the characters and remove them from the input stream.
@@ -38,9 +38,39 @@ public enum SuffixOption {
     case Leave(count: Int)
     /// Do not return the characters but remove them from the input stream
     case Drop(count: Int)
+
+    private enum CodingKeys: String, CodingKey { case name, count }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let name = try container.decode(String.self, forKey: .name)
+        switch name {
+            case "Peek":  self = .Peek(count: try container.decode(Int.self, forKey: .count))
+            case "Leave": self = .Leave(count: try container.decode(Int.self, forKey: .count))
+            case "Drop":  self = .Drop(count: try container.decode(Int.self, forKey: .count))
+            default:      self = .Keep
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        switch self {
+            case .Peek(count: let cc):
+                try container.encode("Peek", forKey: .name)
+                try container.encode(cc, forKey: .count)
+            case .Keep:
+                try container.encode("Keep", forKey: .name)
+            case .Leave(count: let cc):
+                try container.encode("Leave", forKey: .name)
+                try container.encode(cc, forKey: .count)
+            case .Drop(count: let cc):
+                try container.encode("Drop", forKey: .name)
+                try container.encode(cc, forKey: .count)
+        }
+    }
 }
 
-public enum XMLDeclEnum: String {
+public enum XMLDeclEnum: String, Codable {
     case Version    = "version"
     case Encoding   = "encoding"
     case Standalone = "standalone"

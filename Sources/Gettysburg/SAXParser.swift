@@ -24,49 +24,44 @@ open class SAXParser {
     public var url:                URL          { lock.withLock { inputStream.docPosition.url      } }
     public var baseURL:            URL          { lock.withLock { inputStream.baseURL              } }
     public var filename:           String       { lock.withLock { inputStream.filename             } }
-    public var xmlVersion:         String       { lock.withLock { xmlDecl.version                  } }
+    public var xmlVersion:         String       { lock.withLock { xmlDecl.version.rawValue         } }
     public var xmlEncoding:        String       { lock.withLock { xmlDecl.encoding                 } }
-    public var xmlStandalone:      Bool         { lock.withLock { xmlDecl.standalone               } }
+    public var xmlStandalone:      Bool         { lock.withLock { xmlDecl.standalone == .yes       } }
     public var docPosition:        TextPosition { lock.withLock { inputStream.docPosition.position } }
 
-    public var delegate:           SAXDelegate  { get { lock.withLock { _delegate           } } set { lock.withLock { _delegate = newValue           } } }
+    public let delegate:           SAXDelegate
     public var allowedURIPrefixes: [String]     { get { lock.withLock { _allowedURIPrefixes } } set { lock.withLock { _allowedURIPrefixes = newValue } } }
 
     let lock:          MutexLock          = MutexLock()
     var alreadyParsed: Bool               = false
-    var xmlDecl:       XMLDecl            = XMLDecl(version: "1.0", encoding: "", standalone: true)
+    var xmlDecl:       XMLDecl            = XMLDecl(version: .v1_0, encoding: "UTF-8", standalone: .yes)
     var inputStream:   SAXCharInputStream { _inputStreams.last! }
     //@f:1
 
     public init(url: URL, tabSize: Int8 = 4, delegate: SAXDelegate, options: URLInputStreamOptions = [], authenticate: AuthenticationCallback? = nil) throws {
-        _delegate = delegate
-        _inputStreams = [ try SAXIConvCharInputStream(url: url, tabSize: tabSize, options: options, authenticate: authenticate) ]
-        _inputStreams[0].open()
-        xmlDecl.encoding = _inputStreams[0].encodingName
+        self.delegate = delegate
+        xmlDecl.encoding = _pushInputStream(inputStream: try SAXIConvCharInputStream(url: url, tabSize: tabSize, options: options, authenticate: authenticate)).encodingName
     }
 
     public init(fileAtPath path: String, tabSize: Int8 = 4, delegate: SAXDelegate) throws {
-        _delegate = delegate
-        _inputStreams = [ try SAXIConvCharInputStream(fileAtPath: path, tabSize: tabSize) ]
-        _inputStreams[0].open()
-        xmlDecl.encoding = _inputStreams[0].encodingName
+        self.delegate = delegate
+        xmlDecl.encoding = _pushInputStream(inputStream: try SAXIConvCharInputStream(fileAtPath: path, tabSize: tabSize)).encodingName
     }
 
     public init(data: Data, url: URL? = nil, tabSize: Int8 = 4, delegate: SAXDelegate) throws {
-        _delegate = delegate
-        _inputStreams = [ try SAXIConvCharInputStream(data: data, url: url, tabSize: tabSize) ]
-        _inputStreams[0].open()
-        xmlDecl.encoding = _inputStreams[0].encodingName
+        self.delegate = delegate
+        xmlDecl.encoding = _pushInputStream(inputStream: try SAXIConvCharInputStream(data: data, url: url, tabSize: tabSize)).encodingName
     }
 
     public init(string: String, url: URL? = nil, tabSize: Int8 = 4, delegate: SAXDelegate) {
-        _delegate = delegate
-        _inputStreams = [ SAXStringCharInputStream(string: string, url: url, tabSize: tabSize) ]
-        _inputStreams[0].open()
-        xmlDecl.encoding = _inputStreams[0].encodingName
+        self.delegate = delegate
+        xmlDecl.encoding = _pushInputStream(inputStream: SAXStringCharInputStream(string: string, url: url, tabSize: tabSize)).encodingName
     }
 
-    deinit { _inputStreams[0].close() }
+    deinit {
+        for s in _inputStreams { s.close() }
+        _inputStreams.removeAll()
+    }
 
     open func parse() throws {
         try lock.withLock {
@@ -74,7 +69,7 @@ open class SAXParser {
             alreadyParsed = true
         }
         do {
-            try processXMLDecl()
+            if let xd = try XMLDecl(charStream: inputStream) { xmlDecl = xd }
         }
         catch let e {
             guard delegate.handleError(self, error: e) else { throw e }
@@ -115,12 +110,7 @@ open class SAXParser {
         inputStream.markUpdate()
     }
 
-    func pushInputStream(inputStream: SAXCharInputStream) {
-        lock.withLock {
-            _inputStreams <+ inputStream
-            inputStream.open()
-        }
-    }
+    func pushInputStream(inputStream: SAXCharInputStream) { lock.withLock { _ = _pushInputStream(inputStream: inputStream) } }
 
     func popInputStream(close: Bool = true) -> SAXCharInputStream? {
         lock.withLock {
@@ -131,7 +121,12 @@ open class SAXParser {
         }
     }
 
-    private var _delegate:           SAXDelegate
+    @discardableResult private func _pushInputStream(inputStream: SAXCharInputStream) -> SAXCharInputStream {
+        _inputStreams <+ inputStream
+        inputStream.open()
+        return inputStream
+    }
+
     private var _allowedURIPrefixes: [String]             = []
     private var _inputStreams:       [SAXCharInputStream] = []
 }

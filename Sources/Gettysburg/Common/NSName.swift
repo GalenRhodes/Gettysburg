@@ -19,7 +19,7 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-@frozen public struct Name: Hashable, Comparable, CustomStringConvertible {
+@frozen public struct Name: Hashable, Comparable, CustomStringConvertible, Codable {
     public let prefix:    String?
     public let localName: String
 
@@ -55,13 +55,14 @@ import Rubicon
 /*===============================================================================================================================================================================*/
 /// Holds a qualified namespace name along with it's associated URI.
 ///
-@frozen public struct NSName: Hashable, Comparable, CustomStringConvertible {
+@frozen public struct NSName: Hashable, Comparable, CustomStringConvertible, Codable {
 
     public let            name:        Name
     public let            uri:         String?
+
     @inlinable public var description: String { name.description }
 
-    init(localName: String, prefix: String?, uri: String?) {
+    init(localName: String, prefix: String? = nil, uri: String?) {
         if let u = uri {
             self.name = Name(prefix: prefix, localName: localName)
             self.uri = u
@@ -100,9 +101,10 @@ import Rubicon
 /*===============================================================================================================================================================================*/
 /// Holds a `prefix` to `uri` mapping.
 ///
-@frozen public struct NSMapping: Hashable, Comparable, CustomStringConvertible {
+@frozen public struct NSMapping: Hashable, Comparable, CustomStringConvertible, Codable {
     public let            prefix:      String
     public let            uri:         String
+
     @inlinable public var description: String { isDefault ? "xmlns=\(uri.quoted())" : "xmlns:\(prefix)=\(uri.quoted())" }
     @inlinable public var isDefault:   Bool { prefix.isEmpty }
 

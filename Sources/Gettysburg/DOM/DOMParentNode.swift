@@ -19,6 +19,7 @@ import CoreFoundation
 import Rubicon
 
 public class DOMParentNode: DOMNode {
+
     var childNodes: [DOMNode] = []
 
     public override var startIndex: Index { childNodes.startIndex }
@@ -40,6 +41,20 @@ public class DOMParentNode: DOMNode {
             txt.parentNode = self
             childNodes <+ txt
         }
+    }
+
+    public override init() { super.init() }
+
+    override init(owningDocument: DOMDocument?, qName: String, uri: String?) { super.init(owningDocument: owningDocument, qName: qName, uri: uri) }
+
+    public convenience required init(from decoder: Decoder) throws { try self.init(from: try decoder.container(keyedBy: CodingKeys.self)) }
+
+    override init(from container: KeyedDecodingContainer<CodingKeys>) throws {
+        try super.init(from: container)
+    }
+
+    override func encode(to container: inout KeyedEncodingContainer<CodingKeys>) throws {
+        try super.encode(to: &container)
     }
 
     @discardableResult public override func append(childNode node: DOMNode) throws -> DOMNode {

@@ -19,7 +19,7 @@ import CoreFoundation
 import Rubicon
 
 public class DTDEntity: DOMNode {
-    public enum EntityType { case Parsed, Unparsed }
+    public enum EntityType: String, Codable { case Parsed, Unparsed }
 
     //@f:0
     public override var nodeType:     NodeType                   { .DTDEntity }
@@ -41,4 +41,27 @@ public class DTDEntity: DOMNode {
         super.init(owningDocument: owningDocument, qName: name, uri: nil)
         if type == .Parsed { self.textContent = (value ?? "") }
     }
+
+    private enum CodingKeys: String, CodingKey { case type, placement, externalType, publicID, systemID }
+
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        type = try container.decode(EntityType.self, forKey: .type)
+        placement = try container.decode(DOMDocType.DTDPlacement.self, forKey: .placement)
+        externalType = try container.decode(DOMDocType.DTDExternalType.self, forKey: .externalType)
+        publicID = try container.decodeIfPresent(String.self, forKey: .publicID)
+        systemID = try container.decodeIfPresent(String.self, forKey: .systemID)
+        try super.init(from: decoder)
+    }
+
+    public override func encode(to encoder: Encoder) throws {
+        try super.encode(to: encoder)
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(type, forKey: .type)
+        try container.encode(placement, forKey: .placement)
+        try container.encode(externalType, forKey: .externalType)
+        try container.encodeIfPresent(publicID, forKey: .publicID)
+        try container.encodeIfPresent(systemID, forKey: .systemID)
+    }
 }
+

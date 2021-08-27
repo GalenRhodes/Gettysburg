@@ -22,47 +22,88 @@ import Chadakoin
 class SAXIConvCharInputStream: SAXCharInputStream {
     //@f:0
     var      docPosition:       DocPosition
-    lazy var baseURL:           URL           = { mutex.withLock { docPosition.url.baseURL ?? URL.currentDirectoryURL } }()
+    lazy var encodingName:      String        = { mutex.withLock { inputStream.encodingName } }()
+    lazy var baseURL:           URL           = { mutex.withLock { docPosition.url.absoluteURL.deletingLastPathComponent() } }()
     lazy var filename:          String        = { mutex.withLock { docPosition.url.relativeString } }()
     var      markCount:         Int           { mutex.withLock { markStack.count } }
     var      isEOF:             Bool          { mutex.withLock { (buffer.isNotEmpty && inputStream.isEOF) } }
     var      hasCharsAvailable: Bool          { mutex.withLock { (buffer.isNotEmpty || inputStream.hasCharsAvailable) } }
-    var      encodingName:      String        { mutex.withLock { (inputStream.encodingName) } }
     var      streamError:       Error?        { mutex.withLock { error } }
     var      streamStatus:      Stream.Status { mutex.withLock { ((error == nil) ? status : .error) } }
 
-    let      inputStream: SimpleIConvCharInputStream
-    let      mutex:       MutexLock                  = MutexLock()
-    var      status:      Stream.Status              = .notOpen
-    var      error:       Error?                     = nil
-    var      buffer:      [Character]                = []
-    var      markStack:   [MarkItem]                 = []
+    private let inputStream:  SimpleIConvCharInputStream
+    private let mutex:        MutexLock                  = MutexLock()
+    private var status:       Stream.Status              = .notOpen
+    private var error:        Error?                     = nil
+    private var buffer:       [Character]                = []
+    private var markStack:    [MarkItem]                 = []
     //@f:1
 
     convenience init(fileAtPath path: String, tabSize: Int8 = 4) throws {
-        let enc = try getEncodingName(filename: path)
         guard let strm = MarkInputStream(fileAtPath: path) else { throw StreamError.FileNotFound(description: path) }
         let url = URL(fileURLWithPath: path, relativeTo: URL.currentDirectoryURL)
-        try self.init(inputStream: strm, url: url, encodingName: enc, tabSize: tabSize)
+        try self.init(byteStream: strm, url: url, tabSize: tabSize)
     }
 
     convenience init(url: URL, tabSize: Int8 = 4, options: URLInputStreamOptions = [], authenticate: AuthenticationCallback? = nil) throws {
-        let enc = try getEncodingName(url: url, options: options, authenticate: authenticate)
         guard let byteStream = MarkInputStream(url: url, options: options, authenticate: authenticate) else { throw StreamError.FileNotFound(description: url.absoluteString) }
-        try self.init(inputStream: byteStream, url: url, encodingName: enc, tabSize: tabSize)
+        try self.init(byteStream: byteStream, url: url, tabSize: tabSize)
     }
 
     convenience init(data: Data, url: URL? = nil, tabSize: Int8 = 4) throws {
-        let enc        = try getEncodingName(data: data)
         let byteStream = MarkInputStream(data: data)
-        try self.init(inputStream: byteStream, url: url ?? URL.bogusURL(), encodingName: enc, tabSize: tabSize)
+        try self.init(byteStream: byteStream, url: url ?? URL.bogusURL(), tabSize: tabSize)
     }
 
-    init(inputStream: MarkInputStream, url: URL, encodingName: String, tabSize: Int8) throws {
-        // See if we need to remove any BOM bytes from the input stream.
-        try removeBOM(inputStream: inputStream, encodingName: encodingName)
-        self.inputStream = SimpleIConvCharInputStream(inputStream: inputStream, encodingName: encodingName)
-        self.docPosition = DocPosition(url: url, tabSize: tabSize)
+    convenience init(inputStream: InputStream, url: URL, encodingName: String, tabSize: Int8) throws {
+        if let bis = inputStream as? MarkInputStream { try self.init(byteStream: bis, url: url, tabSize: tabSize) }
+        else { try self.init(byteStream: MarkInputStream(inputStream: inputStream, autoClose: true), url: url, tabSize: tabSize) }
+    }
+
+    init(byteStream: MarkInputStream, url: URL, tabSize: Int8) throws {
+        do {
+            byteStream.open()
+
+            var encodingName = try { () throws -> String in
+                // See if a web server is telling us what it thinks it is...
+                if let txtEnc = (byteStream.property(forKey: .textEncodingNameKey) as? String)?.trimmed, txtEnc.isNotEmpty { return txtEnc }
+
+                // Look for byte order marks...
+                byteStream.markSet()
+                defer { byteStream.markReturn() }
+
+                var bytes: [UInt8] = Array<UInt8>(repeating: 0, count: 4)
+
+                let res = byteStream.read(&bytes, maxLength: 4)
+                if res < 0 { throw byteStream.streamError ?? StreamError.UnknownError() }
+                if res < 4 { throw StreamError.UnexpectedEndOfInput() }
+
+                // BOMs...
+                if let t = bomInfo.first(where: { (bom) -> Bool in bytes[..<bom.bytes.count] == bom.bytes }) { return t.1 }
+
+                // See if we can tell from any zero values in the first four bytes...
+                if bytes[..<3] == [ 0, 0, 0 ] && bytes[3] != 0 { return "UTF-32BE" }
+                if bytes[0] != 0 && bytes[1...] == [ 0, 0, 0 ] { return "UTF-32LE" }
+                if bytes[0] == 0 && bytes[1] != 0 { return "UTF-16BE" }
+                if bytes[0] != 0 && bytes[1] == 0 { return "UTF-16LE" }
+
+                // Default to UTF-8
+                return "UTF-8"
+            }()
+
+            if let xd = try XMLDecl(inputStream: byteStream, encodingName: encodingName) { encodingName = xd.encoding }
+
+            self.docPosition = DocPosition(url: url, tabSize: tabSize)
+            self.inputStream = SimpleIConvCharInputStream(inputStream: byteStream, encodingName: encodingName, autoClose: true)
+        }
+        catch let e {
+            byteStream.close()
+            throw e
+        }
+    }
+
+    deinit {
+        inputStream.close()
     }
 
     func markSet() { mutex.withLock { _markSet() } }
@@ -183,3 +224,15 @@ class SAXIConvCharInputStream: SAXCharInputStream {
         var chars: [Character] = []
     }
 }
+
+typealias BOMInfo = (bytes: [UInt8], name: String)
+
+let bomInfo: [BOMInfo] = [
+    (bytes: [ 0x00, 0x00, 0xfe, 0xff ], name: "UTF-32"),
+    (bytes: [ 0xff, 0xfe, 0x00, 0x00 ], name: "UTF-32"),
+    (bytes: [ 0x84, 0x31, 0x95, 0x33 ], name: "GB18030"),
+    (bytes: [ 0xef, 0xbb, 0xbf ], name: "UTF-8"),
+    (bytes: [ 0x2b, 0x2f, 0x76 ], name: "UTF-7"),
+    (bytes: [ 0xfe, 0xff ], name: "UTF-16"),
+    (bytes: [ 0xff, 0xfe ], name: "UTF-16"),
+]

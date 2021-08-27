@@ -29,4 +29,16 @@ public class DOMProcessingInstruction: DOMNode {
         self.data = data
         super.init(owningDocument: owningDocument, qName: target)
     }
+
+    public convenience required init(from decoder: Decoder) throws { try self.init(from: try decoder.container(keyedBy: CodingKeys.self)) }
+
+    override init(from container: KeyedDecodingContainer<CodingKeys>) throws {
+        data = try container.decode(String.self, forKey: .data)
+        try super.init(from: container)
+    }
+
+    override func encode(to container: inout KeyedEncodingContainer<CodingKeys>) throws {
+        try super.encode(to: &container)
+        try container.encode(data, forKey: .data)
+    }
 }

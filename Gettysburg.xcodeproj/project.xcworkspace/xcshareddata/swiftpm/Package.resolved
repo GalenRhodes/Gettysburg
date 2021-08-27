@@ -20,6 +20,15 @@
         }
       },
       {
+        "package": "RedBlackTree",
+        "repositoryURL": "https://github.com/GalenRhodes/RedBlackTree.git",
+        "state": {
+          "branch": null,
+          "revision": "03250079fe180885d37b16aac1c7c603ae8e3b6b",
+          "version": "1.0.2"
+        }
+      },
+      {
         "package": "RingBuffer",
         "repositoryURL": "https://github.com/GalenRhodes/RingBuffer",
         "state": {
@@ -33,8 +42,8 @@
         "repositoryURL": "https://github.com/GalenRhodes/Rubicon.git",
         "state": {
           "branch": null,
-          "revision": "69a977d79b1ccc3af8fb38842f3a1fbf9f7ddda4",
-          "version": "0.3.3"
+          "revision": "e8273825ac0264168d19746ba73ca939996c7907",
+          "version": "0.4.0"
         }
       },
       {

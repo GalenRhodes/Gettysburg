@@ -34,6 +34,18 @@ public class DOMText: DOMNode {
     }
 
     convenience init(owningDocument: DOMDocument, content: String) { self.init(owningDocument: owningDocument, name: "#text", content: content) }
+
+    public convenience required init(from decoder: Decoder) throws { try self.init(from: try decoder.container(keyedBy: CodingKeys.self)) }
+
+    override init(from container: KeyedDecodingContainer<CodingKeys>) throws {
+        _content = try container.decode(String.self, forKey: .textContent)
+        try super.init(from: container)
+    }
+
+    override func encode(to container: inout KeyedEncodingContainer<CodingKeys>) throws {
+        try super.encode(to: &container)
+        try container.encode(_content, forKey: .textContent)
+    }
 }
 
 public class DOMCData: DOMText {

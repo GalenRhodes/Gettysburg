@@ -46,10 +46,24 @@ public class DTDElement: DOMNode {
         self.attributes.forEach { $0.element = self }
     }
 
-    public class Content {
-        public enum Multiplicity: String { case Once = "", OneOrMore = "+", Optional = "?", ZeroOrMore = "*" }
+    public convenience required init(from decoder: Decoder) throws { try self.init(from: try decoder.container(keyedBy: CodingKeys.self)) }
 
-        public enum ContentType { case Element, CData, List }
+    override init(from container: KeyedDecodingContainer<CodingKeys>) throws {
+        allowedContent = try container.decode(AllowedContent.self, forKey: .allowedContent)
+        attributes = try container.decode(Array<DTDAttribute>.self, forKey: .attributes)
+        try super.init(from: container)
+    }
+
+    override func encode(to container: inout KeyedEncodingContainer<CodingKeys>) throws {
+        try super.encode(to: &container)
+        try container.encode(allowedContent, forKey: .allowedContent)
+        try container.encode(attributes, forKey: .attributes)
+    }
+
+    public class Content: Codable {
+        public enum Multiplicity: String, Codable { case Once = "", OneOrMore = "+", Optional = "?", ZeroOrMore = "*" }
+
+        public enum ContentType: String, Codable { case Element, CData, List }
 
         public let type:         ContentType
         public let multiplicity: Multiplicity
@@ -57,6 +71,25 @@ public class DTDElement: DOMNode {
         init(type: ContentType, multiplicity: Multiplicity) {
             self.type = type
             self.multiplicity = multiplicity
+        }
+
+        enum CodingKeys: String, CodingKey { case type, multiplicity, content, conjunction, name }
+
+        public required convenience init(from decoder: Decoder) throws { try self.init(from: try decoder.container(keyedBy: CodingKeys.self)) }
+
+        init(from container: KeyedDecodingContainer<CodingKeys>) throws {
+            type = try container.decode(ContentType.self, forKey: .type)
+            multiplicity = try container.decode(Multiplicity.self, forKey: .multiplicity)
+        }
+
+        public func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try encode(to: &container)
+        }
+
+        func encode(to container: inout KeyedEncodingContainer<CodingKeys>) throws {
+            try container.encode(type, forKey: .type)
+            try container.encode(multiplicity, forKey: .multiplicity)
         }
     }
 
@@ -71,6 +104,35 @@ public class DTDElement: DOMNode {
             self.conjunction = conjunction
             super.init(type: .List, multiplicity: multiplicity)
         }
+
+        public required convenience init(from decoder: Decoder) throws { try self.init(from: try decoder.container(keyedBy: CodingKeys.self)) }
+
+        override init(from container: KeyedDecodingContainer<CodingKeys>) throws {
+            conjunction = try container.decode(Conjunction.self, forKey: .conjunction)
+            content = []
+            try super.init(from: container)
+            var list: UnkeyedDecodingContainer = try container.nestedUnkeyedContainer(forKey: .content)
+            while !list.isAtEnd {
+                let subContainer = try list.nestedContainer(keyedBy: CodingKeys.self)
+                let subType      = try subContainer.decode(ContentType.self, forKey: .type)
+
+                switch subType {
+                    case .Element: content <+ try ElementContent(from: subContainer)
+                    case .List:    content <+ try ContentList(from: subContainer)
+                    case .CData:   content <+ try CharacterContent(from: subContainer)
+                }
+            }
+        }
+
+        override func encode(to container: inout KeyedEncodingContainer<Content.CodingKeys>) throws {
+            try super.encode(to: &container)
+            try container.encode(conjunction, forKey: .conjunction)
+            var list = container.nestedUnkeyedContainer(forKey: .content)
+            for c in content {
+                var subContainer = list.nestedContainer(keyedBy: CodingKeys.self)
+                try c.encode(to: &subContainer)
+            }
+        }
     }
 
     public class ElementContent: Content {
@@ -80,10 +142,28 @@ public class DTDElement: DOMNode {
             self.name = name
             super.init(type: .Element, multiplicity: multiplicity)
         }
+
+        public required convenience init(from decoder: Decoder) throws { try self.init(from: try decoder.container(keyedBy: CodingKeys.self)) }
+
+        override init(from container: KeyedDecodingContainer<CodingKeys>) throws {
+            name = try container.decode(String.self, forKey: .name)
+            try super.init(from: container)
+        }
+
+        override func encode(to container: inout KeyedEncodingContainer<CodingKeys>) throws {
+            try super.encode(to: &container)
+            try container.encode(name, forKey: .name)
+        }
     }
 
     public class CharacterContent: Content {
         init() { super.init(type: .CData, multiplicity: .Once) }
+
+        public required convenience init(from decoder: Decoder) throws { try self.init(from: try decoder.container(keyedBy: CodingKeys.self)) }
+
+        override init(from container: KeyedDecodingContainer<CodingKeys>) throws { try super.init(from: container) }
+
+        override func encode(to container: inout KeyedEncodingContainer<CodingKeys>) throws { try super.encode(to: &container) }
     }
 }
 
@@ -238,5 +318,56 @@ extension DTDElement.Content: CustomStringConvertible {
                 let l = self as! DTDElement.ContentList
                 return "(\(l.content.map({ $0.description }).joined(separator: String(l.conjunction.rawValue))))\(l.multiplicity.rawValue)"
         }
+    }
+}
+
+extension DTDElement.AllowedContent: Codable {
+    private enum CodingKeys: String, CodingKey { case name, content }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let name      = try container.decode(String.self, forKey: .name)
+        switch name {
+            case "Any":      self = .Any
+            case "Empty":    self = .Empty
+            case "Elements": self = .Elements(content: try container.decode(DTDElement.ContentList.self, forKey: .content))
+            default:         self = .Mixed(content: try container.decode(DTDElement.ContentList.self, forKey: .content))
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        switch self {
+            case .Any:
+                try container.encode("Any", forKey: .name)
+            case .Empty:
+                try container.encode("Empty", forKey: .name)
+            case .Elements(content: let list):
+                try container.encode("Elements", forKey: .name)
+                var mcc = container.nestedContainer(keyedBy: DTDElement.Content.CodingKeys.self, forKey: .content)
+                try list.encode(to: &mcc)
+            case .Mixed(content: let list):
+                try container.encode("Mixed", forKey: .name)
+                var mcc = container.nestedContainer(keyedBy: DTDElement.Content.CodingKeys.self, forKey: .content)
+                try list.encode(to: &mcc)
+        }
+    }
+}
+
+extension DTDElement.ContentList.Conjunction: Codable {
+    private enum CodingKeys: String, CodingKey { case symbol }
+
+    public init(from decoder: Decoder) throws {
+        let container  = try decoder.container(keyedBy: CodingKeys.self)
+        let ch: String = try container.decode(String.self, forKey: .symbol)
+        switch ch {
+            case ",": self = .And
+            default:  self = .Or
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(String(self.rawValue), forKey: .symbol)
     }
 }
