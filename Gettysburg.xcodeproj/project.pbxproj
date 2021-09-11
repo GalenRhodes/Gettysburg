@@ -660,10 +660,10 @@
 			);
 			mainGroup = 83CFA5A62556E331005498FC;
 			packageReferences = (
-				83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer.git" */,
-				838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon.git" */,
-				831A2D9D26A226290061E945 /* XCRemoteSwiftPackageReference "swift-argument-parser.git" */,
-				83780B6F26C566810032AD73 /* XCRemoteSwiftPackageReference "RedBlackTree.git" */,
+				83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer" */,
+				838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon" */,
+				831A2D9D26A226290061E945 /* XCRemoteSwiftPackageReference "swift-argument-parser" */,
+				83780B6F26C566810032AD73 /* XCRemoteSwiftPackageReference "RedBlackTree" */,
 			);
 			productRefGroup = 83CFA5B12556E331005498FC /* Products */;
 			projectDirPath = "";
@@ -1179,7 +1179,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		831A2D9D26A226290061E945 /* XCRemoteSwiftPackageReference "swift-argument-parser.git" */ = {
+		831A2D9D26A226290061E945 /* XCRemoteSwiftPackageReference "swift-argument-parser" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-argument-parser.git";
 			requirement = {
@@ -1187,23 +1187,23 @@
 				minimumVersion = 0.4.3;
 			};
 		};
-		83780B6F26C566810032AD73 /* XCRemoteSwiftPackageReference "RedBlackTree.git" */ = {
+		83780B6F26C566810032AD73 /* XCRemoteSwiftPackageReference "RedBlackTree" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/GalenRhodes/RedBlackTree.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.2;
+				minimumVersion = 2.0.2;
 			};
 		};
-		838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon.git" */ = {
+		838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/GalenRhodes/Rubicon.git";
 			requirement = {
 				kind = upToNextMinorVersion;
-				minimumVersion = 0.4.0;
+				minimumVersion = 0.7.0;
 			};
 		};
-		83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer.git" */ = {
+		83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/GalenRhodes/PGDocFixer.git";
 			requirement = {
@@ -1216,32 +1216,32 @@
 /* Begin XCSwiftPackageProductDependency section */
 		831A2D9B26A225DC0061E945 /* Rubicon */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon.git" */;
+			package = 838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon" */;
 			productName = Rubicon;
 		};
 		831A2D9E26A226290061E945 /* ArgumentParser */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 831A2D9D26A226290061E945 /* XCRemoteSwiftPackageReference "swift-argument-parser.git" */;
+			package = 831A2D9D26A226290061E945 /* XCRemoteSwiftPackageReference "swift-argument-parser" */;
 			productName = ArgumentParser;
 		};
 		8356BB2625D0378F00E41DFC /* Rubicon */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon.git" */;
+			package = 838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon" */;
 			productName = Rubicon;
 		};
 		83780B7026C566810032AD73 /* RedBlackTree */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 83780B6F26C566810032AD73 /* XCRemoteSwiftPackageReference "RedBlackTree.git" */;
+			package = 83780B6F26C566810032AD73 /* XCRemoteSwiftPackageReference "RedBlackTree" */;
 			productName = RedBlackTree;
 		};
 		83A6F52125C476F100C95BE8 /* Rubicon */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon.git" */;
+			package = 838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon" */;
 			productName = Rubicon;
 		};
 		83CFA5E22556E70C005498FC /* PGDocFixer */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer.git" */;
+			package = 83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer" */;
 			productName = PGDocFixer;
 		};
 /* End XCSwiftPackageProductDependency section */

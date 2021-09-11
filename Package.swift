@@ -12,8 +12,8 @@ let package = Package(
         .executable(name: "URLSessionTester", targets: [ "URLSessionTester" ]),
     ],
     dependencies: [
-        .package(name: "Rubicon", url: "https://github.com/GalenRhodes/Rubicon.git", .upToNextMinor(from: "0.4.0")),
-        .package(name: "RedBlackTree", url: "https://github.com/GalenRhodes/RedBlackTree.git", .upToNextMajor(from: "1.0.2"))
+        .package(name: "Rubicon", url: "https://github.com/GalenRhodes/Rubicon.git", .upToNextMinor(from: "0.7.0")),
+        .package(name: "RedBlackTree", url: "https://github.com/GalenRhodes/RedBlackTree.git", .upToNextMajor(from: "2.0.2"))
         .package(url: "https://github.com/apple/swift-argument-parser", .upToNextMinor(from: "0.4.3")),
     ],
     targets: [

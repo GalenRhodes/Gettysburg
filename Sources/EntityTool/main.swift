@@ -32,7 +32,7 @@ extension UnsignedInteger {
         let ws:  Int    = ((m + 7) / 8)
         var val         = self
 
-        for x in (0 ..< ws) {
+        for _ in (0 ..< ws) {
             let a = Int(truncatingIfNeeded: (val & 0x0f))
             let b = Int(truncatingIfNeeded: ((val & 0xf0) >> 4))
             val = (val >> 8)
@@ -46,8 +46,8 @@ extension UnsignedInteger {
 do {
     guard CommandLine.arguments.count > 1 else { fatalError("Must specify filename.") }
     let data:   String            = try String(contentsOfFile: CommandLine.arguments[1], encoding: String.Encoding.utf8)
-    let regex1: RegularExpression = try RegularExpression(pattern: "^((?:\"[^\"]+\")|(?:[^,]+)),(.*)", options: [ NSRegularExpression.Options.anchorsMatchLines ])
-    let regex2: RegularExpression = try RegularExpression(pattern: "([^,]+),?")
+    let regex1: RegularExpression = RegularExpression(pattern: "^((?:\"[^\"]+\")|(?:[^,]+)),(.*)", options: .anchorsMatchLines)!
+    let regex2: RegularExpression = RegularExpression(pattern: "([^,]+),?")!
     var map:    [String: String]  = [:]
     var tab:    Int               = 0
 
@@ -60,15 +60,16 @@ do {
     // "NonBreakingSpace":	""
     // "shy":	""
     //
-    regex1.forEachMatch(in: data) { (match: RegularExpression.Match) in
+    regex1.forEachMatch(in: data) { (m, _, _) in
+        guard let match = m else { return }
         let name            = (match[1].subString ?? "\(UnicodeReplacementChar)").trimmed
         let entity          = (match[2].subString ?? "")
         var names: [String] = []
 
         if name[name.startIndex] == "\"" {
             let s = String(name[name.index(after: name.startIndex) ..< name.index(before: name.endIndex)])
-            let m = regex2.matches(in: s)
-            for match in m { names <+ match[1].subString!.trimmed }
+            let r = regex2.matches(in: s)
+            for m1 in r { names <+ m1[1].subString!.trimmed }
         }
         else {
             names <+ name.trimmed
@@ -88,8 +89,6 @@ do {
                 default:                         map[n] = entity
             }
         }
-
-        return false
     }
 
     let spc:    String = "                                                                                                                                         "
