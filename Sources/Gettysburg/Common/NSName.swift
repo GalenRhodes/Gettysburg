@@ -19,8 +19,10 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-@frozen public struct Name: Hashable, Comparable, CustomStringConvertible, Codable {
-    public let prefix:    String?
+/// Holds a qualified name.
+///
+@frozen public struct QName: Hashable, Comparable, CustomStringConvertible, Codable {
+    public var prefix:    String?
     public let localName: String
 
     @inlinable public var description: String { prefix == nil ? localName : "\(prefix!):\(localName)" }
@@ -47,9 +49,9 @@ import Rubicon
         hasher.combine(localName)
     }
 
-    @inlinable public static func < (lhs: Name, rhs: Name) -> Bool { ((lhs.localName < rhs.localName) || ((lhs.localName == rhs.localName) && (lhs.prefix < rhs.prefix))) }
+    @inlinable public static func < (lhs: QName, rhs: QName) -> Bool { ((lhs.localName < rhs.localName) || ((lhs.localName == rhs.localName) && (lhs.prefix < rhs.prefix))) }
 
-    @inlinable public static func == (lhs: Name, rhs: Name) -> Bool { ((lhs.prefix == rhs.prefix) && (lhs.localName == rhs.localName)) }
+    @inlinable public static func == (lhs: QName, rhs: QName) -> Bool { ((lhs.prefix == rhs.prefix) && (lhs.localName == rhs.localName)) }
 }
 
 /*===============================================================================================================================================================================*/
@@ -57,33 +59,33 @@ import Rubicon
 ///
 @frozen public struct NSName: Hashable, Comparable, CustomStringConvertible, Codable {
 
-    public let            name:        Name
+    public var            name:        QName
     public let            uri:         String?
 
     @inlinable public var description: String { name.description }
 
-    init(localName: String, prefix: String? = nil, uri: String?) {
+    @inlinable init(localName: String, prefix: String? = nil, uri: String?) {
         if let u = uri {
-            self.name = Name(prefix: prefix, localName: localName)
+            self.name = QName(prefix: prefix, localName: localName)
             self.uri = u
         }
         else {
-            self.name = Name(prefix: nil, localName: localName)
+            self.name = QName(prefix: nil, localName: localName)
             self.uri = nil
         }
     }
 
-    init(name: String) {
+    @inlinable init(name: String) {
         self.init(localName: name, prefix: nil, uri: nil)
     }
 
-    init(qName: String, uri: String?) {
+    @inlinable init(qName: String, uri: String?) {
         if let u = uri {
-            self.name = Name(qName: qName)
+            self.name = QName(qName: qName)
             self.uri = u
         }
         else {
-            self.name = Name(prefix: nil, localName: qName)
+            self.name = QName(prefix: nil, localName: qName)
             self.uri = nil
         }
     }
@@ -108,7 +110,7 @@ import Rubicon
     @inlinable public var description: String { isDefault ? "xmlns=\(uri.quoted())" : "xmlns:\(prefix)=\(uri.quoted())" }
     @inlinable public var isDefault:   Bool { prefix.isEmpty }
 
-    init?(attribute a: SAXRawAttribute) {
+    @inlinable init?(attribute a: SAXRawAttribute) {
         if a.name.prefix == "xmlns" {
             self.prefix = a.name.localName
             self.uri = a.value
@@ -122,7 +124,7 @@ import Rubicon
         }
     }
 
-    init(prefix: String, uri: String) {
+    @inlinable init(prefix: String, uri: String) {
         self.prefix = prefix.trimmed
         self.uri = uri
     }

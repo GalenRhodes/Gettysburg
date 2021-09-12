@@ -21,7 +21,7 @@ import CoreFoundation
 import Rubicon
 
 @frozen public struct SAXRawAttribute {
-    public let name: Name
+    public let name: QName
     public let value: String
 }
 
@@ -77,7 +77,7 @@ public protocol SAXDelegate {
     func handleError(_ parser: SAXParser, error: Error) -> Bool
 }
 
-extension SAXRawAttribute: Codable, Hashable, Comparable {
+extension SAXRawAttribute: Hashable, Comparable {
     @inlinable public func hash(into hasher: inout Hasher) {
         hasher.combine(name)
         hasher.combine(value)

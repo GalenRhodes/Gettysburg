@@ -69,9 +69,3 @@ public enum SuffixOption: Codable {
         }
     }
 }
-
-public enum XMLDeclEnum: String, Codable {
-    case Version    = "version"
-    case Encoding   = "encoding"
-    case Standalone = "standalone"
-}

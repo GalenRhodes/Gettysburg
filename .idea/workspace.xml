@@ -4,14 +4,45 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="60b0239b-d5a7-4057-9e21-57829d56877e" name="Default Changelist" comment="No comment.">
-      <change beforePath="$PROJECT_DIR$/.idea/Gettysburg.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/URLSessionTester.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations/URLSessionTester.xml" afterDir="false" />
+    <list default="true" id="60b0239b-d5a7-4057-9e21-57829d56877e" name="Default Changelist" comment="Latest Libraries...">
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/NodeImpl.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/NodeTypes.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/Attribute.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/Document.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Protocols/Node.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/UserData.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAXError.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/DocFixer.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations/DocFixer.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.pbxproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved" beforeDir="false" afterPath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Package.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Package.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/EntityTool/main.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/EntityTool/main.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gettysburg.xcodeproj/xcshareddata/xcschemes/DocFixer.xcscheme" beforeDir="false" afterPath="$PROJECT_DIR$/Gettysburg.xcodeproj/xcshareddata/xcschemes/DocFixer.xcscheme" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Common/Enums.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Common/Enums.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Common/Locked.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Common/NSName.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Common/NSName.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Common/StringProtocol.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Common/StringProtocol.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Common/XMLDecl.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Common/XMLDecl.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMAttribute.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMDocType.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMDocument.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMElement.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMError.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMError.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMListener.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMNode.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMParentNode.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMProcessingInstruction.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMText.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DTD/DTDAttribute.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DTD/DTDElement.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DTD/DTDEntity.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DTD/DTDNotation.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAX/CharacterEncoding.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAX/SAXCharInputStream.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAX/SAXError.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAX/SAXIConvCharInputStream.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAX/SAXStringCharInputStream.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAXDelegate.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAXDelegate.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAXParser.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAXParser.swift" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,7 +81,6 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Tests/GettysburgTests/GettysburgTests.swift" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Tests/GettysburgTests/TestData/Test_UTF-8.xml" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Sources/Gettysburg/SAX/SAXError.swift" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Sources/Gettysburg/SAXDelegate.swift" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MacroExpansionManager">
@@ -68,7 +98,7 @@
     <option name="showVisibilityIcons" value="true" />
   </component>
   <component name="PropertiesComponent">
-    <property name="OBJC.PRESERVED_TARGET_SELECTION" value="" />
+    <property name="OBJC.PRESERVED_TARGET_SELECTION" value="Gettysburg" />
     <property name="OverrideImplement.combined" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
@@ -93,7 +123,7 @@
   <component name="ReaderModeSettings">
     <option name="showRenderedDocs" value="false" />
   </component>
-  <component name="RunManager" selected="XCTest.Experiments - URLs">
+  <component name="RunManager" selected="Application.DocFixer">
     <configuration default="true" type="Application" factoryName="Application">
       <method v="2">
         <option name="Make" enabled="true" />
@@ -247,13 +277,7 @@
       <workItem from="1628874640606" duration="6763000" />
       <workItem from="1629121902376" duration="222000" />
       <workItem from="1630088567945" duration="7000" />
-    </task>
-    <task id="LOCAL-00023" summary="Cleanup.">
-      <created>1615738212344</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1615738212344</updated>
+      <workItem from="1631363304321" duration="12730000" />
     </task>
     <task id="LOCAL-00024" summary="Cleanup.">
       <created>1615738223136</created>
@@ -591,7 +615,14 @@
       <option name="project" value="LOCAL" />
       <updated>1627661564676</updated>
     </task>
-    <option name="localTasksCounter" value="72" />
+    <task id="LOCAL-00072" summary="Latest Libraries...">
+      <created>1631362927862</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1631362927863</updated>
+    </task>
+    <option name="localTasksCounter" value="73" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -635,7 +666,8 @@
     <MESSAGE value="Updated to the latest version of Rubicon to get the bug fixes." />
     <MESSAGE value="DTD Parsing is finished." />
     <MESSAGE value="No comment." />
-    <option name="LAST_COMMIT_MESSAGE" value="No comment." />
+    <MESSAGE value="Latest Libraries..." />
+    <option name="LAST_COMMIT_MESSAGE" value="Latest Libraries..." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

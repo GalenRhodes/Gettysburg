@@ -24,52 +24,38 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		1117D01C36B366392164440B /* DOMNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DB27AA74D4759EC445D2 /* DOMNode.swift */; };
 		1117D04D745A95855B838B79 /* RegexTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D464877EF4F09607BFED /* RegexTests.swift */; };
 		1117D0A4FF07F25A60BC18D2 /* SAXDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D3A1E6C4AA50C5538A81 /* SAXDelegate.swift */; };
-		1117D1A64191FB5F067AB417 /* DTDNotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D6F178C3D1BA0306A8B2 /* DTDNotation.swift */; };
-		1117D1C398E170A0CE19DB27 /* DOMError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DEF5AD35AD24C145521A /* DOMError.swift */; };
-		1117D1C5D5A8065DE03EA485 /* DOMElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D84EB01B0704F8BC5EE4 /* DOMElement.swift */; };
-		1117D30A75C5EA07741D0CD7 /* SAXCharInputStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D5C45746ADBA1BA761A5 /* SAXCharInputStream.swift */; };
-		1117D31016FAD70A39B0BB16 /* SAXStringCharInputStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D100A69CCA013E229AA7 /* SAXStringCharInputStream.swift */; };
-		1117D33AE7AC0A56417A9FCB /* DOMProcessingInstruction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D74396E6BA718D2C730C /* DOMProcessingInstruction.swift */; };
 		1117D342B4C8EFC8563ED57C /* SAXParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D82BB55E000D210FD595 /* SAXParser.swift */; };
+		1117D3BDF383A521B922FB29 /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D46AF359B742C8430D7E /* Node.swift */; };
 		1117D570FEE0AF111F3B5FCF /* DocPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D49021849ECC0630BEA2 /* DocPosition.swift */; };
 		1117D5C51FDA4DAC13271F2C /* CharacterSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D8BB14CC5212B4301758 /* CharacterSets.swift */; };
-		1117D5EABCEDAA5A84B1F95E /* DTDEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D9382CC4020F0851A7E3 /* DTDEntity.swift */; };
 		1117D68B62FFD1AA32F00AEB /* SAXTestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DEB2BBDD656C51384346 /* SAXTestHandler.swift */; };
 		1117D69F6A9D0CE122C2B284 /* NSName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DFA4E13F088ACE70D5BE /* NSName.swift */; };
-		1117D7388A3E0EB2AB1678BD /* SAXIConvCharInputStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D244EDEDFD1DF0B4680D /* SAXIConvCharInputStream.swift */; };
-		1117D884CBAD7A9E985E2478 /* DOMAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DDECB1E4797BA25AEE9D /* DOMAttribute.swift */; };
-		1117D956F2DB5A731BF24303 /* DTDElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DED372196AB513550FCB /* DTDElement.swift */; };
-		1117DA7CA648BCCCD9B3927E /* DOMDocType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D28EB788906BC57D97C6 /* DOMDocType.swift */; };
+		1117D69FA25CC3CE6AE48789 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D86D4885ED713B39101E /* Document.swift */; };
+		1117D786977A546B4A36A304 /* Attribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D4ACB00AD06AB3AC7966 /* Attribute.swift */; };
+		1117D7CB6E8C9AA0A38D8AC4 /* SAXError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D226CA98FFFFC61EEAC6 /* SAXError.swift */; };
+		1117D85D1F7409889647472E /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DC7C6EF184B971FA2FA8 /* UserData.swift */; };
 		1117DAB06F168610D56501FE /* URLSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D3DFC0F6EF93F59575D8 /* URLSessionTests.swift */; };
+		1117DB29441FFC75702D9367 /* DOMError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D9D54446DA16AE2097BD /* DOMError.swift */; };
 		1117DB638102D57A90034A2B /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DA64AAB5D5B731B6F5D7 /* Utils.swift */; };
 		1117DB953363A988A7D0C131 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D248DD92AAACA231F2AD /* Enums.swift */; };
 		1117DBACBBB748A8639285FD /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DB804342BF77458B8663 /* main.swift */; };
-		1117DBC41368E4FBD323C84C /* SAXError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DA6E1AC0D757BB4785E0 /* SAXError.swift */; };
 		1117DC8DA17365180FC03EAA /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D8EE1CD620C4E6152B79 /* URL.swift */; };
-		1117DD001449361B628E5518 /* DOMParentNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DC89DAD756EFF369D5E5 /* DOMParentNode.swift */; };
-		1117DD04A7FB4FB9A110DFEE /* Locked.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DB51F050158CCF9BBEEB /* Locked.swift */; };
 		1117DD369D6AD5DD54788721 /* URLSessionTesterAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D631D08E8F21105FD274 /* URLSessionTesterAction.swift */; };
 		1117DD3A3F198482B084D02A /* RegexPatterns.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DEF013EEFC9E354D7B27 /* RegexPatterns.swift */; };
-		1117DD71CCBA0C79AEE33E0F /* DOMListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DB1D9C461046CDD1F4F3 /* DOMListener.swift */; };
-		1117DDA7062C3D9F74B1FB8D /* DTDAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D6EE06D5F4BFE60941B5 /* DTDAttribute.swift */; };
 		1117DDAABC5C2559C3E58075 /* Gettysburg.h in Headers */ = {isa = PBXBuildFile; fileRef = 1117DA52094C2ABAE3EA2EBA /* Gettysburg.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1117DDBD35C0C805FC029E5D /* CharacterEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DAD466ED7945FEADF7D5 /* CharacterEncoding.swift */; };
 		1117DE30CAFBFEAC7BA6A96B /* ExperimentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D28B5717E792A78E31E5 /* ExperimentTests.swift */; };
-		1117DF1BB3B3E483F28917A2 /* DOMText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DB65D8729AD3AA34F0A6 /* DOMText.swift */; };
-		1117DF470CD9CE6667019E78 /* DOMDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D1469EF7A8F97BF6DE27 /* DOMDocument.swift */; };
+		1117DE9021ADA39C5586ABF8 /* NodeImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D592766799802E21FA47 /* NodeImpl.swift */; };
 		1117DF8DB58574A9ED6FEB55 /* StringProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D3F82BC0B22065494C83 /* StringProtocol.swift */; };
 		1117DFAF328D68D2A5131153 /* XMLDecl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D37453D0CD4F1F982E84 /* XMLDecl.swift */; };
-		830E3C952631AC0600F3835F /* Rubicon in Frameworks */ = {isa = PBXBuildFile; productRef = 83A6F52125C476F100C95BE8 /* Rubicon */; };
+		1117DFE2BD1C6C0D12531ED5 /* NodeTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D3D96F0BD8D1F81E9F81 /* NodeTypes.swift */; };
 		830E3C962631AC0600F3835F /* PGDocFixer in Frameworks */ = {isa = PBXBuildFile; productRef = 83CFA5E22556E70C005498FC /* PGDocFixer */; };
-		830E3C972631AC0600F3835F /* Rubicon in Frameworks */ = {isa = PBXBuildFile; productRef = 8356BB2625D0378F00E41DFC /* Rubicon */; };
 		831A2D9726A225B20061E945 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 831A2D9626A225B20061E945 /* main.swift */; };
-		831A2D9C26A225DC0061E945 /* Rubicon in Frameworks */ = {isa = PBXBuildFile; productRef = 831A2D9B26A225DC0061E945 /* Rubicon */; };
 		831A2D9F26A226290061E945 /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = 831A2D9E26A226290061E945 /* ArgumentParser */; };
 		8356BB3C25D038AA00E41DFC /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D86804A3FA8399671C13 /* main.swift */; };
 		8356BB4425D03A8100E41DFC /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 83DD3B8425B9CBEE0083BC1C /* libiconv.tbd */; };
+		835BCD9826ECD81700B5DEF0 /* Rubicon in Frameworks */ = {isa = PBXBuildFile; productRef = 835BCD9726ECD81700B5DEF0 /* Rubicon */; };
 		83780B7126C566810032AD73 /* RedBlackTree in Frameworks */ = {isa = PBXBuildFile; productRef = 83780B7026C566810032AD73 /* RedBlackTree */; };
 		83CFA5BA2556E331005498FC /* Gettysburg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83CFA5B02556E331005498FC /* Gettysburg.framework */; };
 		83CFA5BF2556E331005498FC /* GettysburgTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CFA5BE2556E331005498FC /* GettysburgTests.swift */; };
@@ -163,16 +149,13 @@
 
 /* Begin PBXFileReference section */
 		1117D07930C31B9EB322C3C2 /* Test_UTF-16BE.xml */ = {isa = PBXFileReference; fileEncoding = 2415919360; lastKnownFileType = text.xml; path = "Test_UTF-16BE.xml"; sourceTree = "<group>"; };
-		1117D100A69CCA013E229AA7 /* SAXStringCharInputStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXStringCharInputStream.swift; sourceTree = "<group>"; };
 		1117D140D7C3EAE052E01D31 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.info; path = Info.plist; sourceTree = "<group>"; };
-		1117D1469EF7A8F97BF6DE27 /* DOMDocument.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DOMDocument.swift; sourceTree = "<group>"; };
 		1117D173F94712C34C49032A /* Test_UTF-16BE_ext.xml */ = {isa = PBXFileReference; fileEncoding = 2415919360; lastKnownFileType = text.xml; path = "Test_UTF-16BE_ext.xml"; sourceTree = "<group>"; };
-		1117D244EDEDFD1DF0B4680D /* SAXIConvCharInputStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXIConvCharInputStream.swift; sourceTree = "<group>"; };
+		1117D226CA98FFFFC61EEAC6 /* SAXError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXError.swift; sourceTree = "<group>"; };
 		1117D248DD92AAACA231F2AD /* Enums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
 		1117D24C2AC342935E43EA54 /* Test.dtd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Test.dtd; sourceTree = "<group>"; };
 		1117D2654B632662DADD7449 /* Test_WINDOWS-1252.xml */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = text.xml; path = "Test_WINDOWS-1252.xml"; sourceTree = "<group>"; };
 		1117D28B5717E792A78E31E5 /* ExperimentTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExperimentTests.swift; sourceTree = "<group>"; };
-		1117D28EB788906BC57D97C6 /* DOMDocType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DOMDocType.swift; sourceTree = "<group>"; };
 		1117D2AD350A984772DC23C9 /* XML_Entities_Data_A.csv */ = {isa = PBXFileReference; lastKnownFileType = file.csv; path = XML_Entities_Data_A.csv; sourceTree = "<group>"; };
 		1117D3250DFFCE3E85ABD6E2 /* .jazzy.yaml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .jazzy.yaml; sourceTree = "<group>"; };
 		1117D32792ADADA24039E4BC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -180,49 +163,41 @@
 		1117D37453D0CD4F1F982E84 /* XMLDecl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XMLDecl.swift; sourceTree = "<group>"; };
 		1117D39A50E13D704326AF0E /* Test_UTF-8.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Test_UTF-8.xml"; sourceTree = "<group>"; };
 		1117D3A1E6C4AA50C5538A81 /* SAXDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXDelegate.swift; sourceTree = "<group>"; };
+		1117D3D96F0BD8D1F81E9F81 /* NodeTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeTypes.swift; sourceTree = "<group>"; };
 		1117D3DFC0F6EF93F59575D8 /* URLSessionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLSessionTests.swift; sourceTree = "<group>"; };
 		1117D3F82BC0B22065494C83 /* StringProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringProtocol.swift; sourceTree = "<group>"; };
 		1117D464877EF4F09607BFED /* RegexTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegexTests.swift; sourceTree = "<group>"; };
+		1117D46AF359B742C8430D7E /* Node.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
 		1117D49021849ECC0630BEA2 /* DocPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocPosition.swift; sourceTree = "<group>"; };
 		1117D49E8D02446DD4DCA48F /* XML_Entities_Data.csv */ = {isa = PBXFileReference; lastKnownFileType = file.csv; path = XML_Entities_Data.csv; sourceTree = "<group>"; };
+		1117D4ACB00AD06AB3AC7966 /* Attribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Attribute.swift; sourceTree = "<group>"; };
 		1117D513D9FDF90E82E5D1D1 /* Test_UTF-8_ext.dtd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Test_UTF-8_ext.dtd"; sourceTree = "<group>"; };
-		1117D5C45746ADBA1BA761A5 /* SAXCharInputStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXCharInputStream.swift; sourceTree = "<group>"; };
+		1117D592766799802E21FA47 /* NodeImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeImpl.swift; sourceTree = "<group>"; };
 		1117D62B33D6FEF9D67D50E6 /* Test_UTF-32LE.xml */ = {isa = PBXFileReference; fileEncoding = 2617245952; lastKnownFileType = text.xml; path = "Test_UTF-32LE.xml"; sourceTree = "<group>"; };
 		1117D631D08E8F21105FD274 /* URLSessionTesterAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLSessionTesterAction.swift; sourceTree = "<group>"; };
-		1117D6EE06D5F4BFE60941B5 /* DTDAttribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DTDAttribute.swift; sourceTree = "<group>"; };
-		1117D6F178C3D1BA0306A8B2 /* DTDNotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DTDNotation.swift; sourceTree = "<group>"; };
-		1117D74396E6BA718D2C730C /* DOMProcessingInstruction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DOMProcessingInstruction.swift; sourceTree = "<group>"; };
+		1117D68B357A879E6682C588 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.info; path = Info.plist; sourceTree = "<group>"; };
 		1117D7BD3C4A2B65CD16265F /* compname.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = compname.txt; sourceTree = "<group>"; };
 		1117D7BF1803856C4213CB5E /* Test.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Test.xml; sourceTree = "<group>"; };
 		1117D82BB55E000D210FD595 /* SAXParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXParser.swift; sourceTree = "<group>"; };
-		1117D84EB01B0704F8BC5EE4 /* DOMElement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DOMElement.swift; sourceTree = "<group>"; };
 		1117D86804A3FA8399671C13 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		1117D86D4885ED713B39101E /* Document.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
 		1117D8BB14CC5212B4301758 /* CharacterSets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CharacterSets.swift; sourceTree = "<group>"; };
 		1117D8C36782AC8D094246EE /* Test_UTF-16LE_ext.dtd */ = {isa = PBXFileReference; fileEncoding = 2483028224; lastKnownFileType = text.xml; path = "Test_UTF-16LE_ext.dtd"; sourceTree = "<group>"; };
 		1117D8EE1CD620C4E6152B79 /* URL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
-		1117D9382CC4020F0851A7E3 /* DTDEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DTDEntity.swift; sourceTree = "<group>"; };
 		1117D9BAFC548A58FAF127F5 /* Test3.xml */ = {isa = PBXFileReference; fileEncoding = 2483028224; lastKnownFileType = text.xml; path = Test3.xml; sourceTree = "<group>"; };
+		1117D9D54446DA16AE2097BD /* DOMError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DOMError.swift; sourceTree = "<group>"; };
 		1117DA00775621297FDDF090 /* Test4.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Test4.xml; sourceTree = "<group>"; };
 		1117DA1BA1656B061F4F54F0 /* Test2.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Test2.xml; sourceTree = "<group>"; };
 		1117DA52094C2ABAE3EA2EBA /* Gettysburg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gettysburg.h; sourceTree = "<group>"; };
 		1117DA64AAB5D5B731B6F5D7 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
-		1117DA6E1AC0D757BB4785E0 /* SAXError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXError.swift; sourceTree = "<group>"; };
-		1117DAD466ED7945FEADF7D5 /* CharacterEncoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CharacterEncoding.swift; sourceTree = "<group>"; };
-		1117DB1D9C461046CDD1F4F3 /* DOMListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DOMListener.swift; sourceTree = "<group>"; };
-		1117DB27AA74D4759EC445D2 /* DOMNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DOMNode.swift; sourceTree = "<group>"; };
-		1117DB51F050158CCF9BBEEB /* Locked.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Locked.swift; sourceTree = "<group>"; };
-		1117DB65D8729AD3AA34F0A6 /* DOMText.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DOMText.swift; sourceTree = "<group>"; };
 		1117DB804342BF77458B8663 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		1117DC6CE7526681197F1C19 /* Test_UTF-8_ext.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Test_UTF-8_ext.xml"; sourceTree = "<group>"; };
-		1117DC89DAD756EFF369D5E5 /* DOMParentNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DOMParentNode.swift; sourceTree = "<group>"; };
+		1117DC7C6EF184B971FA2FA8 /* UserData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
 		1117DD5AFC911B2020139DDF /* LinuxMain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinuxMain.swift; sourceTree = "<group>"; };
-		1117DDECB1E4797BA25AEE9D /* DOMAttribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DOMAttribute.swift; sourceTree = "<group>"; };
 		1117DE2BDCA0459705A3E248 /* CodableTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CodableTests.swift; path = Sources/Gettysburg/DOM/CodableTests.swift; sourceTree = SOURCE_ROOT; };
 		1117DEB2BBDD656C51384346 /* SAXTestHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXTestHandler.swift; sourceTree = "<group>"; };
 		1117DEC96369491CED3F9649 /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
-		1117DED372196AB513550FCB /* DTDElement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DTDElement.swift; sourceTree = "<group>"; };
 		1117DEF013EEFC9E354D7B27 /* RegexPatterns.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegexPatterns.swift; sourceTree = "<group>"; };
-		1117DEF5AD35AD24C145521A /* DOMError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DOMError.swift; sourceTree = "<group>"; };
 		1117DF25C968B209A3179FBE /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = file.gitignore; path = .gitignore; sourceTree = "<group>"; };
 		1117DF9FFB9A6409B0562E05 /* EntityRegexPatternTest.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = EntityRegexPatternTest.pdf; sourceTree = "<group>"; };
 		1117DFA4E13F088ACE70D5BE /* NSName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSName.swift; sourceTree = "<group>"; };
@@ -233,7 +208,6 @@
 		83CFA5B02556E331005498FC /* Gettysburg.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Gettysburg.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		83CFA5B92556E331005498FC /* GettysburgTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GettysburgTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		83CFA5BE2556E331005498FC /* GettysburgTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GettysburgTests.swift; sourceTree = "<group>"; };
-		83CFA5C02556E331005498FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		83CFA5D72556E6C4005498FC /* DocFixer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = DocFixer; sourceTree = BUILT_PRODUCTS_DIR; };
 		83DD3B8425B9CBEE0083BC1C /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -244,7 +218,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				831A2D9F26A226290061E945 /* ArgumentParser in Frameworks */,
-				831A2D9C26A225DC0061E945 /* Rubicon in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -253,7 +226,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				8356BB4425D03A8100E41DFC /* libiconv.tbd in Frameworks */,
-				830E3C972631AC0600F3835F /* Rubicon in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,7 +234,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				83F8D67425C4816A004DD445 /* libiconv.tbd in Frameworks */,
-				830E3C952631AC0600F3835F /* Rubicon in Frameworks */,
+				835BCD9826ECD81700B5DEF0 /* Rubicon in Frameworks */,
 				83780B7126C566810032AD73 /* RedBlackTree in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -306,25 +278,41 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		1117D425A5CABEC2C0221D1E /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				1117D46AF359B742C8430D7E /* Node.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
 		1117D4B1C428552B54421138 /* SAX */ = {
 			isa = PBXGroup;
 			children = (
-				1117DA6E1AC0D757BB4785E0 /* SAXError.swift */,
-				1117D5C45746ADBA1BA761A5 /* SAXCharInputStream.swift */,
-				1117DAD466ED7945FEADF7D5 /* CharacterEncoding.swift */,
-				1117D100A69CCA013E229AA7 /* SAXStringCharInputStream.swift */,
-				1117D244EDEDFD1DF0B4680D /* SAXIConvCharInputStream.swift */,
 			);
 			path = SAX;
+			sourceTree = "<group>";
+		};
+		1117D5E93652D28A53DFCF06 /* Nodes */ = {
+			isa = PBXGroup;
+			children = (
+				1117D4ACB00AD06AB3AC7966 /* Attribute.swift */,
+				1117D86D4885ED713B39101E /* Document.swift */,
+			);
+			path = Nodes;
+			sourceTree = "<group>";
+		};
+		1117D710FABD4E23D8A7B677 /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				1117D68B357A879E6682C588 /* Info.plist */,
+			);
+			name = Other;
 			sourceTree = "<group>";
 		};
 		1117D766569BC8AD65091EE4 /* DTD */ = {
 			isa = PBXGroup;
 			children = (
-				1117D9382CC4020F0851A7E3 /* DTDEntity.swift */,
-				1117D6F178C3D1BA0306A8B2 /* DTDNotation.swift */,
-				1117DED372196AB513550FCB /* DTDElement.swift */,
-				1117D6EE06D5F4BFE60941B5 /* DTDAttribute.swift */,
 			);
 			path = DTD;
 			sourceTree = "<group>";
@@ -361,7 +349,6 @@
 				1117D248DD92AAACA231F2AD /* Enums.swift */,
 				1117D49021849ECC0630BEA2 /* DocPosition.swift */,
 				1117D8EE1CD620C4E6152B79 /* URL.swift */,
-				1117DB51F050158CCF9BBEEB /* Locked.swift */,
 				1117D37453D0CD4F1F982E84 /* XMLDecl.swift */,
 			);
 			path = Common;
@@ -371,16 +358,12 @@
 			isa = PBXGroup;
 			children = (
 				1117D766569BC8AD65091EE4 /* DTD */,
-				1117DDECB1E4797BA25AEE9D /* DOMAttribute.swift */,
-				1117DB27AA74D4759EC445D2 /* DOMNode.swift */,
-				1117D1469EF7A8F97BF6DE27 /* DOMDocument.swift */,
-				1117DEF5AD35AD24C145521A /* DOMError.swift */,
-				1117D84EB01B0704F8BC5EE4 /* DOMElement.swift */,
-				1117DB65D8729AD3AA34F0A6 /* DOMText.swift */,
-				1117D74396E6BA718D2C730C /* DOMProcessingInstruction.swift */,
-				1117DB1D9C461046CDD1F4F3 /* DOMListener.swift */,
-				1117DC89DAD756EFF369D5E5 /* DOMParentNode.swift */,
-				1117D28EB788906BC57D97C6 /* DOMDocType.swift */,
+				1117D425A5CABEC2C0221D1E /* Protocols */,
+				1117D3D96F0BD8D1F81E9F81 /* NodeTypes.swift */,
+				1117DC7C6EF184B971FA2FA8 /* UserData.swift */,
+				1117D5E93652D28A53DFCF06 /* Nodes */,
+				1117D592766799802E21FA47 /* NodeImpl.swift */,
+				1117D9D54446DA16AE2097BD /* DOMError.swift */,
 			);
 			path = DOM;
 			sourceTree = "<group>";
@@ -448,6 +431,7 @@
 				1117DA94D13086D907CF34E3 /* Common */,
 				1117D3A1E6C4AA50C5538A81 /* SAXDelegate.swift */,
 				1117D82BB55E000D210FD595 /* SAXParser.swift */,
+				1117D226CA98FFFFC61EEAC6 /* SAXError.swift */,
 			);
 			path = Gettysburg;
 			sourceTree = "<group>";
@@ -455,13 +439,13 @@
 		83CFA5BD2556E331005498FC /* GettysburgTests */ = {
 			isa = PBXGroup;
 			children = (
-				83CFA5C02556E331005498FC /* Info.plist */,
 				1117DA34C4883FCE9F6D0B90 /* TestData */,
 				83CFA5BE2556E331005498FC /* GettysburgTests.swift */,
 				1117D464877EF4F09607BFED /* RegexTests.swift */,
 				1117DEB2BBDD656C51384346 /* SAXTestHandler.swift */,
 				1117D28B5717E792A78E31E5 /* ExperimentTests.swift */,
 				1117D3DFC0F6EF93F59575D8 /* URLSessionTests.swift */,
+				1117D710FABD4E23D8A7B677 /* Other */,
 			);
 			path = GettysburgTests;
 			sourceTree = "<group>";
@@ -530,7 +514,6 @@
 			);
 			name = URLSessionTester;
 			packageProductDependencies = (
-				831A2D9B26A225DC0061E945 /* Rubicon */,
 				831A2D9E26A226290061E945 /* ArgumentParser */,
 			);
 			productName = URLSessionTester;
@@ -551,7 +534,6 @@
 			);
 			name = EntityTool;
 			packageProductDependencies = (
-				8356BB2625D0378F00E41DFC /* Rubicon */,
 			);
 			productName = EntityTool;
 			productReference = 8356BB1A25D0375F00E41DFC /* EntityTool */;
@@ -572,8 +554,8 @@
 			);
 			name = Gettysburg;
 			packageProductDependencies = (
-				83A6F52125C476F100C95BE8 /* Rubicon */,
 				83780B7026C566810032AD73 /* RedBlackTree */,
+				835BCD9726ECD81700B5DEF0 /* Rubicon */,
 			);
 			productName = Gettysburg;
 			productReference = 83CFA5B02556E331005498FC /* Gettysburg.framework */;
@@ -660,10 +642,10 @@
 			);
 			mainGroup = 83CFA5A62556E331005498FC;
 			packageReferences = (
-				83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer" */,
-				838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon" */,
-				831A2D9D26A226290061E945 /* XCRemoteSwiftPackageReference "swift-argument-parser" */,
-				83780B6F26C566810032AD73 /* XCRemoteSwiftPackageReference "RedBlackTree" */,
+				83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer.git" */,
+				831A2D9D26A226290061E945 /* XCRemoteSwiftPackageReference "swift-argument-parser.git" */,
+				83780B6F26C566810032AD73 /* XCRemoteSwiftPackageReference "RedBlackTree.git" */,
+				835BCD9626ECD81700B5DEF0 /* XCRemoteSwiftPackageReference "Rubicon.git" */,
 			);
 			productRefGroup = 83CFA5B12556E331005498FC /* Products */;
 			projectDirPath = "";
@@ -720,35 +702,23 @@
 			files = (
 				1117D0A4FF07F25A60BC18D2 /* SAXDelegate.swift in Sources */,
 				1117D342B4C8EFC8563ED57C /* SAXParser.swift in Sources */,
-				1117D884CBAD7A9E985E2478 /* DOMAttribute.swift in Sources */,
-				1117D01C36B366392164440B /* DOMNode.swift in Sources */,
-				1117DF470CD9CE6667019E78 /* DOMDocument.swift in Sources */,
-				1117D1C398E170A0CE19DB27 /* DOMError.swift in Sources */,
-				1117D1C5D5A8065DE03EA485 /* DOMElement.swift in Sources */,
-				1117DF1BB3B3E483F28917A2 /* DOMText.swift in Sources */,
-				1117D33AE7AC0A56417A9FCB /* DOMProcessingInstruction.swift in Sources */,
-				1117DD71CCBA0C79AEE33E0F /* DOMListener.swift in Sources */,
-				1117DD001449361B628E5518 /* DOMParentNode.swift in Sources */,
-				1117DA7CA648BCCCD9B3927E /* DOMDocType.swift in Sources */,
-				1117D5EABCEDAA5A84B1F95E /* DTDEntity.swift in Sources */,
-				1117D1A64191FB5F067AB417 /* DTDNotation.swift in Sources */,
-				1117D956F2DB5A731BF24303 /* DTDElement.swift in Sources */,
-				1117DDA7062C3D9F74B1FB8D /* DTDAttribute.swift in Sources */,
 				1117DB638102D57A90034A2B /* Utils.swift in Sources */,
 				1117DF8DB58574A9ED6FEB55 /* StringProtocol.swift in Sources */,
 				1117D5C51FDA4DAC13271F2C /* CharacterSets.swift in Sources */,
 				1117DD3A3F198482B084D02A /* RegexPatterns.swift in Sources */,
 				1117D69F6A9D0CE122C2B284 /* NSName.swift in Sources */,
 				1117DB953363A988A7D0C131 /* Enums.swift in Sources */,
-				1117DBC41368E4FBD323C84C /* SAXError.swift in Sources */,
-				1117D30A75C5EA07741D0CD7 /* SAXCharInputStream.swift in Sources */,
 				1117D570FEE0AF111F3B5FCF /* DocPosition.swift in Sources */,
-				1117DDBD35C0C805FC029E5D /* CharacterEncoding.swift in Sources */,
 				1117DC8DA17365180FC03EAA /* URL.swift in Sources */,
-				1117D31016FAD70A39B0BB16 /* SAXStringCharInputStream.swift in Sources */,
-				1117D7388A3E0EB2AB1678BD /* SAXIConvCharInputStream.swift in Sources */,
-				1117DD04A7FB4FB9A110DFEE /* Locked.swift in Sources */,
 				1117DFAF328D68D2A5131153 /* XMLDecl.swift in Sources */,
+				1117D7CB6E8C9AA0A38D8AC4 /* SAXError.swift in Sources */,
+				1117D3BDF383A521B922FB29 /* Node.swift in Sources */,
+				1117DFE2BD1C6C0D12531ED5 /* NodeTypes.swift in Sources */,
+				1117D85D1F7409889647472E /* UserData.swift in Sources */,
+				1117D786977A546B4A36A304 /* Attribute.swift in Sources */,
+				1117D69FA25CC3CE6AE48789 /* Document.swift in Sources */,
+				1117DE9021ADA39C5586ABF8 /* NodeImpl.swift in Sources */,
+				1117DB29441FFC75702D9367 /* DOMError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1179,7 +1149,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		831A2D9D26A226290061E945 /* XCRemoteSwiftPackageReference "swift-argument-parser" */ = {
+		831A2D9D26A226290061E945 /* XCRemoteSwiftPackageReference "swift-argument-parser.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-argument-parser.git";
 			requirement = {
@@ -1187,7 +1157,15 @@
 				minimumVersion = 0.4.3;
 			};
 		};
-		83780B6F26C566810032AD73 /* XCRemoteSwiftPackageReference "RedBlackTree" */ = {
+		835BCD9626ECD81700B5DEF0 /* XCRemoteSwiftPackageReference "Rubicon.git" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/GalenRhodes/Rubicon.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.7.0;
+			};
+		};
+		83780B6F26C566810032AD73 /* XCRemoteSwiftPackageReference "RedBlackTree.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/GalenRhodes/RedBlackTree.git";
 			requirement = {
@@ -1195,15 +1173,7 @@
 				minimumVersion = 2.0.2;
 			};
 		};
-		838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/GalenRhodes/Rubicon.git";
-			requirement = {
-				kind = upToNextMinorVersion;
-				minimumVersion = 0.7.0;
-			};
-		};
-		83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer" */ = {
+		83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/GalenRhodes/PGDocFixer.git";
 			requirement = {
@@ -1214,34 +1184,24 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		831A2D9B26A225DC0061E945 /* Rubicon */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon" */;
-			productName = Rubicon;
-		};
 		831A2D9E26A226290061E945 /* ArgumentParser */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 831A2D9D26A226290061E945 /* XCRemoteSwiftPackageReference "swift-argument-parser" */;
+			package = 831A2D9D26A226290061E945 /* XCRemoteSwiftPackageReference "swift-argument-parser.git" */;
 			productName = ArgumentParser;
 		};
-		8356BB2625D0378F00E41DFC /* Rubicon */ = {
+		835BCD9726ECD81700B5DEF0 /* Rubicon */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon" */;
+			package = 835BCD9626ECD81700B5DEF0 /* XCRemoteSwiftPackageReference "Rubicon.git" */;
 			productName = Rubicon;
 		};
 		83780B7026C566810032AD73 /* RedBlackTree */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 83780B6F26C566810032AD73 /* XCRemoteSwiftPackageReference "RedBlackTree" */;
+			package = 83780B6F26C566810032AD73 /* XCRemoteSwiftPackageReference "RedBlackTree.git" */;
 			productName = RedBlackTree;
-		};
-		83A6F52125C476F100C95BE8 /* Rubicon */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 838D394625B88044009FF043 /* XCRemoteSwiftPackageReference "Rubicon" */;
-			productName = Rubicon;
 		};
 		83CFA5E22556E70C005498FC /* PGDocFixer */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer" */;
+			package = 83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer.git" */;
 			productName = PGDocFixer;
 		};
 /* End XCSwiftPackageProductDependency section */

@@ -18,15 +18,21 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-struct XMLDecl: Hashable, Codable, CustomStringConvertible {
-    enum Version: String, Codable { case v1_0 = "1.0", v1_1 = "1.1", v1_2 = "1.2" }
+public enum XMLDeclEnum: String, Codable {
+    case Version    = "version"
+    case Encoding   = "encoding"
+    case Standalone = "standalone"
+}
 
-    enum Standalone: String, Codable { case yes, no }
+public struct XMLDecl: Hashable, Codable, CustomStringConvertible {
+    public enum Version: String, Codable { case v1_0 = "1.0", v1_1 = "1.1", v1_2 = "1.2" }
 
-    var version:     Version
-    var encoding:    String
-    var standalone:  Standalone
-    var description: String { "<?xml version=\"\(version)\" encoding=\"\(encoding)\" standalone=\"\(standalone)\"?>" }
+    public enum Standalone: String, Codable { case yes, no }
+
+    public var version:     Version
+    public var encoding:    String
+    public var standalone:  Standalone
+    public var description: String { "<?xml version=\"\(version)\" encoding=\"\(encoding)\" standalone=\"\(standalone)\"?>" }
 
     init(version: Version, encoding: String, standalone: Standalone) {
         self.version = version
@@ -48,22 +54,6 @@ struct XMLDecl: Hashable, Codable, CustomStringConvertible {
         }
     }
 
-    init?(charStream: SAXCharInputStream) throws {
-        do {
-            charStream.markSet()
-            var pos = charStream.docPosition
-            guard let xd = try XMLDecl.setup(inputStream: charStream, position: &pos) else {
-                charStream.markReturn()
-                return nil
-            }
-            (version, encoding, standalone) = xd
-            charStream.markRelease()
-        }
-        catch let e {
-            throw e
-        }
-    }
-
     private static func setup(inputStream: SimpleCharInputStream, position pos: inout DocPosition) throws -> (Version, String, Standalone)? {
         // Read the first 5 characters and see if we have an XML Decl...
         var chars:      [Character] = []
@@ -74,7 +64,7 @@ struct XMLDecl: Hashable, Codable, CustomStringConvertible {
         if try (inputStream.read(chars: &chars, maxLength: 6) == 6) && (chars[..<5] == "<?xml".getCharacters()) && chars[5].isXmlWhitespace {
             repeat {
                 guard chars.count < (1024 * 1024) else { throw SAXError.RunawayInput(position: pos.update(chars)) }
-                guard let ch = try inputStream.read() else { throw SAXError.getUnexpectedEndOfInput() }
+                guard let ch = try inputStream.read() else { throw SAXError.UnexpectedEndOfInput(position: pos.update(chars)) }
                 chars <+ ch
             } while chars.last(count: 2) != [ "?", ">" ]
 

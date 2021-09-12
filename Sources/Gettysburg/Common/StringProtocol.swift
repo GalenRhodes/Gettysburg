@@ -20,7 +20,7 @@ import Rubicon
 
 extension StringProtocol {
 
-    @inlinable func splitPrefix() -> Name { Name(qName: self) }
+    @inlinable func splitPrefix() -> QName { QName(qName: self) }
 
     @inlinable func noLF() -> String {
         let str = String(self)
@@ -34,7 +34,7 @@ extension StringProtocol {
 
     @inlinable func skipWhitespace(_ idx: inout String.Index) throws -> Character {
         while idx < endIndex && self[idx].isXmlWhitespace { formIndex(after: &idx) }
-        guard idx < endIndex else { throw SAXError.getUnexpectedEndOfInput() }
+        guard idx < endIndex else { throw SAXError.UnexpectedEndOfInput() }
         return self[idx]
     }
 
