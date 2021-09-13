@@ -21,25 +21,25 @@ import Rubicon
 
 public protocol Node: AnyObject {
     //@f:0
-    var nodeType:        NodeTypes          {   get   }
-    var nodeName:        String             {   get   }
-    var localName:       String             {   get   }
-    var prefix:          String?            { get set }
-    var namespaceURI:    String?            {   get   }
-    var baseURI:         String?            {   get   }
-    var nodeValue:       String?            { get set }
-    var textContent:     String             { get set }
-    var ownerDocument:   DocumentNode       {   get   }
-    var parentNode:      Node?              {   get   }
-    var firstChildNode:  Node?              {   get   }
-    var lastChildNode:   Node?              {   get   }
-    var nextSibling:     Node?              {   get   }
-    var previousSibling: Node?              {   get   }
-    var childNodes:      NodeList           {   get   }
+    var nodeType:        NodeTypes              {   get   }
+    var nodeName:        String                 {   get   }
+    var localName:       String                 {   get   }
+    var prefix:          String?                { get set }
+    var namespaceURI:    String?                {   get   }
+    var baseURI:         String?                {   get   }
+    var nodeValue:       String?                { get set }
+    var textContent:     String                 { get set }
+    var ownerDocument:   DocumentNode           {   get   }
+    var parentNode:      Node?                  {   get   }
+    var firstChildNode:  Node?                  {   get   }
+    var lastChildNode:   Node?                  {   get   }
+    var nextSibling:     Node?                  {   get   }
+    var previousSibling: Node?                  {   get   }
+    var childNodes:      NodeList               {   get   }
     var attributes:      [QName: AttributeNode] {   get   }
-    var hasAttributes:   Bool               {   get   }
-    var hasChildNodes:   Bool               {   get   }
-    var userData:        [String: UserData] { get set }
+    var hasAttributes:   Bool                   {   get   }
+    var hasChildNodes:   Bool                   {   get   }
+    var userData:        [String: UserData]     { get set }
     //@f:1
 
     @discardableResult func append<T>(child node: T) throws -> T where T: Node
@@ -81,25 +81,25 @@ public class AnyNode: Node, Equatable, Hashable {
 
 extension AnyNode {
     //@f:0
-    @inlinable public var nodeType:        NodeTypes          { node.nodeType                                                }
-    @inlinable public var nodeName:        String             { node.nodeName                                                }
-    @inlinable public var localName:       String             { node.localName                                               }
-    @inlinable public var prefix:          String?            { get { node.prefix      } set { node.prefix = newValue      } }
-    @inlinable public var namespaceURI:    String?            { node.namespaceURI                                            }
-    @inlinable public var baseURI:         String?            { node.baseURI                                                 }
-    @inlinable public var nodeValue:       String?            { get { node.nodeValue   } set { node.nodeValue = newValue   } }
-    @inlinable public var textContent:     String             { get { node.textContent } set { node.textContent = newValue } }
-    @inlinable public var ownerDocument:   DocumentNode       { node.ownerDocument                                           }
-    @inlinable public var parentNode:      Node?              { node.parentNode                                              }
-    @inlinable public var firstChildNode:  Node?              { node.firstChildNode                                          }
-    @inlinable public var lastChildNode:   Node?              { node.lastChildNode                                           }
-    @inlinable public var nextSibling:     Node?              { node.nextSibling                                             }
-    @inlinable public var previousSibling: Node?              { node.previousSibling                                         }
-    @inlinable public var childNodes:      NodeList           { node.childNodes                                              }
+    @inlinable public var nodeType:        NodeTypes              { node.nodeType                                                }
+    @inlinable public var nodeName:        String                 { node.nodeName                                                }
+    @inlinable public var localName:       String                 { node.localName                                               }
+    @inlinable public var prefix:          String?                { get { node.prefix      } set { node.prefix = newValue      } }
+    @inlinable public var namespaceURI:    String?                { node.namespaceURI                                            }
+    @inlinable public var baseURI:         String?                { node.baseURI                                                 }
+    @inlinable public var nodeValue:       String?                { get { node.nodeValue   } set { node.nodeValue = newValue   } }
+    @inlinable public var textContent:     String                 { get { node.textContent } set { node.textContent = newValue } }
+    @inlinable public var ownerDocument:   DocumentNode           { node.ownerDocument                                           }
+    @inlinable public var parentNode:      Node?                  { node.parentNode                                              }
+    @inlinable public var firstChildNode:  Node?                  { node.firstChildNode                                          }
+    @inlinable public var lastChildNode:   Node?                  { node.lastChildNode                                           }
+    @inlinable public var nextSibling:     Node?                  { node.nextSibling                                             }
+    @inlinable public var previousSibling: Node?                  { node.previousSibling                                         }
+    @inlinable public var childNodes:      NodeList               { node.childNodes                                              }
     @inlinable public var attributes:      [QName: AttributeNode] { node.attributes                                              }
-    @inlinable public var hasAttributes:   Bool               { node.hasAttributes                                           }
-    @inlinable public var hasChildNodes:   Bool               { node.hasChildNodes                                           }
-    @inlinable public var userData:        [String: UserData] { get { node.userData    } set { node.userData = newValue    } }
+    @inlinable public var hasAttributes:   Bool                   { node.hasAttributes                                           }
+    @inlinable public var hasChildNodes:   Bool                   { node.hasChildNodes                                           }
+    @inlinable public var userData:        [String: UserData]     { get { node.userData    } set { node.userData = newValue    } }
     //@f:1
 
     @inlinable public func append<T>(child node: T) throws -> T where T: Node { try node.append(child: node) }
