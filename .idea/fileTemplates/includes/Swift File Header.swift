@@ -1,11 +1,16 @@
+#if ($HEADER_COMMENTS)
 /*===============================================================================================================================================================================*
- *     PROJECT: Gettysburg
- *    FILENAME: NodeTypes.swift
+ *     PROJECT: ${PROJECT_NAME}
+ *    FILENAME: ${FILE_NAME}
  *         IDE: AppCode
- *      AUTHOR: Galen Rhodes
- *        DATE: 9/11/21
+ *      AUTHOR: ${USER_NAME}
+ *        DATE: ${DATE}
  *
- * Copyright © 2021. All rights reserved.
+#if ($ORGANIZATION_NAME && $ORGANIZATION_NAME != "")
+ * Copyright © $YEAR ${ORGANIZATION_NAME}#if (!$ORGANIZATION_NAME.endsWith(".")).#end All rights reserved.
+#else
+ * Copyright © $YEAR. All rights reserved.
+#end
  *
  * Permission to use, copy, modify, and distribute this software for any purpose with or without fee is hereby granted, provided that the above copyright notice and this
  * permission notice appear in all copies.
@@ -14,23 +19,4 @@
  * EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN
  * AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *===============================================================================================================================================================================*/
-
-import Foundation
-import CoreFoundation
-
-public enum NodeTypes: String, Codable {
-    case Attribute
-    case AttributeDecl
-    case CDataSection     = "#cdata-section"
-    case Comment          = "#comment"
-    case Element
-    case ElementDecl
-    case EntityDecl
-    case EntityReference
-    case DocType
-    case Document         = "#document"
-    case DocumentFragment = "#document-fragment"
-    case NotationDecl
-    case ProcessingInstruction
-    case Text             = "#text"
-}
+#end

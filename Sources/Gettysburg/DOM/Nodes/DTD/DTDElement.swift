@@ -1,9 +1,9 @@
 /*===============================================================================================================================================================================*
  *     PROJECT: Gettysburg
- *    FILENAME: SimpleIConvCharInputStream.swift
+ *    FILENAME: DTDElement.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
- *        DATE: 9/11/21
+ *        DATE: 9/13/21
  *
  * Copyright © 2021. All rights reserved.
  *
@@ -17,9 +17,27 @@
 
 import Foundation
 import CoreFoundation
+import Rubicon
 
-open class Attribute: NodeImpl {
-    public override var nodeType: NodeTypes { .Attribute }
+open class DTDElement: NodeImpl {
+    //@f:0
+    public override var nodeName:     String  { name.name.description }
+    public override var localName:    String  { name.name.localName }
+    public override var prefix:       String? { get { name.name.prefix } set { name.name.prefix = newValue } }
+    public override var namespaceURI: String? { name.uri }
 
-    public override func cloneNode(deep: Bool) -> Self { super.cloneNode(deep: deep) as! Self }
+    public internal(set) var internalSubset: String              = ""
+    public internal(set) var entities:       [EntityDeclNode]    = []
+    public internal(set) var notations:      [NotationNode]      = []
+    public internal(set) var elements:       [ElementDeclNode]   = []
+    public internal(set) var attrs:          [AttributeDeclNode] = []
+    public internal(set) var name:           NSName
+    public internal(set) var publicId:       String?
+    public internal(set) var systemId:       String?
+    //@f:1
+
+    init(ownerDocument: DocumentNode?, name: String, namespaceURI uri: String? = nil, publicId: String? = nil, systemId: String? = nil) {
+        self.name = NSName(qName: name, uri: uri)
+        super.init(ownerDocument: ownerDocument)
+    }
 }

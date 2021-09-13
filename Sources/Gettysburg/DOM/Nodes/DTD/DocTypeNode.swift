@@ -1,9 +1,9 @@
 /*===============================================================================================================================================================================*
  *     PROJECT: Gettysburg
- *    FILENAME: NodeTypes.swift
+ *    FILENAME: DocTypeNode.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
- *        DATE: 9/11/21
+ *        DATE: 9/13/21
  *
  * Copyright © 2021. All rights reserved.
  *
@@ -17,20 +17,8 @@
 
 import Foundation
 import CoreFoundation
+import Rubicon
 
-public enum NodeTypes: String, Codable {
-    case Attribute
-    case AttributeDecl
-    case CDataSection     = "#cdata-section"
-    case Comment          = "#comment"
-    case Element
-    case ElementDecl
-    case EntityDecl
-    case EntityReference
-    case DocType
-    case Document         = "#document"
-    case DocumentFragment = "#document-fragment"
-    case NotationDecl
-    case ProcessingInstruction
-    case Text             = "#text"
+open class DocTypeNode: ChildNode {
+    public override var nodeType: NodeTypes { .DocType }
 }

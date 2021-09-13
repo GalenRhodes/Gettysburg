@@ -1,9 +1,9 @@
 /*===============================================================================================================================================================================*
  *     PROJECT: Gettysburg
- *    FILENAME: NodeTypes.swift
+ *    FILENAME: ProcessingInstructionNode.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
- *        DATE: 9/11/21
+ *        DATE: 9/13/21
  *
  * Copyright © 2021. All rights reserved.
  *
@@ -17,20 +17,32 @@
 
 import Foundation
 import CoreFoundation
+import Rubicon
 
-public enum NodeTypes: String, Codable {
-    case Attribute
-    case AttributeDecl
-    case CDataSection     = "#cdata-section"
-    case Comment          = "#comment"
-    case Element
-    case ElementDecl
-    case EntityDecl
-    case EntityReference
-    case DocType
-    case Document         = "#document"
-    case DocumentFragment = "#document-fragment"
-    case NotationDecl
-    case ProcessingInstruction
-    case Text             = "#text"
+open class ProcessingInstructionNode: ChildNode {
+    //@f:0
+    public let target: String
+    public let data:   String
+
+    public override var nodeType:    NodeTypes { .ProcessingInstruction }
+    public override var nodeName:    String    { target }
+    public override var nodeValue:   String?   { get { target } set {} }
+    public override var textContent: String    { get { target } set {} }
+    //@f:1
+
+    public init(ownerDocument: DocumentNode?, target: String, data: String) {
+        self.target = target
+        self.data = data
+        super.init(ownerDocument: ownerDocument)
+    }
+
+    public override func isEqualTo(_ other: Node) -> Bool {
+        guard let o = (other as? ProcessingInstructionNode) else { return false }
+        return target == o.target && data == o.data
+    }
+
+    public override func hash(into hasher: inout Hasher) {
+        hasher.combine(target)
+        hasher.combine(data)
+    }
 }

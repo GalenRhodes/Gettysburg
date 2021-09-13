@@ -1,9 +1,9 @@
 /*===============================================================================================================================================================================*
  *     PROJECT: Gettysburg
- *    FILENAME: NodeTypes.swift
+ *    FILENAME: ChildNode.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
- *        DATE: 9/11/21
+ *        DATE: 9/13/21
  *
  * Copyright © 2021. All rights reserved.
  *
@@ -17,20 +17,20 @@
 
 import Foundation
 import CoreFoundation
+import Rubicon
 
-public enum NodeTypes: String, Codable {
-    case Attribute
-    case AttributeDecl
-    case CDataSection     = "#cdata-section"
-    case Comment          = "#comment"
-    case Element
-    case ElementDecl
-    case EntityDecl
-    case EntityReference
-    case DocType
-    case Document         = "#document"
-    case DocumentFragment = "#document-fragment"
-    case NotationDecl
-    case ProcessingInstruction
-    case Text             = "#text"
+open class ChildNode: NodeImpl {
+    var _nextSibling:     ChildNode?  = nil
+    var _previousSibling: ChildNode?  = nil
+    var _parentNode:      ParentNode? = nil
+
+    public override var parentNode:      Node? { _parentNode }
+    public override var nextSibling:     Node? { _nextSibling }
+    public override var previousSibling: Node? { _previousSibling }
+
+    override init(ownerDocument: DocumentNode?) { super.init(ownerDocument: ownerDocument) }
+
+    public override func isEqualTo(_ other: Node) -> Bool { super.isEqualTo(other) }
+
+    public override func hash(into hasher: inout Hasher) { super.hash(into: &hasher) }
 }

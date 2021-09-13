@@ -1,9 +1,9 @@
 /*===============================================================================================================================================================================*
  *     PROJECT: Gettysburg
- *    FILENAME: NodeTypes.swift
+ *    FILENAME: EntityReferenceNode.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
- *        DATE: 9/11/21
+ *        DATE: 9/13/21
  *
  * Copyright © 2021. All rights reserved.
  *
@@ -18,19 +18,22 @@
 import Foundation
 import CoreFoundation
 
-public enum NodeTypes: String, Codable {
-    case Attribute
-    case AttributeDecl
-    case CDataSection     = "#cdata-section"
-    case Comment          = "#comment"
-    case Element
-    case ElementDecl
-    case EntityDecl
-    case EntityReference
-    case DocType
-    case Document         = "#document"
-    case DocumentFragment = "#document-fragment"
-    case NotationDecl
-    case ProcessingInstruction
-    case Text             = "#text"
+open class EntityReferenceNode: ParentNode {
+    public override var nodeType:  NodeTypes { .EntityReference }
+    public override var nodeName:  String { entity.name }
+    public override var localName: String { entity.name }
+
+    private let entity: EntityDeclNode
+
+    public init(ownerDocument: DocumentNode?, entity: EntityDeclNode) {
+        self.entity = entity
+        super.init(ownerDocument: ownerDocument)
+    }
+
+    public override func isEqualTo(_ other: Node) -> Bool {
+        guard let o = (other as? EntityReferenceNode) else { return false }
+        return entity == o.entity
+    }
+
+    public override func hash(into hasher: inout Hasher) { hasher.combine(entity) }
 }

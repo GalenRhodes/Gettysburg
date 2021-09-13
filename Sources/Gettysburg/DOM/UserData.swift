@@ -1,6 +1,6 @@
 /*===============================================================================================================================================================================*
  *     PROJECT: Gettysburg
- *    FILENAME: SimpleIConvCharInputStream.swift
+ *    FILENAME: UserData.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
  *        DATE: 9/11/21

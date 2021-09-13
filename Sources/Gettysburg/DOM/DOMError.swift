@@ -25,6 +25,8 @@ public enum DOMError: Error, Codable {
     case WrongDocument(description: String = "Wrong Document")
     case HierarchyViolation(description: String = "Hierarchy Violation")
     case NotSupported(description: String = "Operation Not Supported")
+    case NotFound(description: String = "Node Not Found")
+    case InternalInconsistency(description: String = "Internal Inconsistency")
 
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
@@ -34,6 +36,8 @@ public enum DOMError: Error, Codable {
             case "WrongDocument":         self = .WrongDocument(description: try c.decode(String.self, forKey: .description))
             case "HierarchyViolation":    self = .HierarchyViolation(description: try c.decode(String.self, forKey: .description))
             case "NotSupported":          self = .NotSupported(description: try c.decode(String.self, forKey: .description))
+            case "NotFound":              self = .NotFound(description: try c.decode(String.self, forKey: .description))
+            case "InternalInconsistency": self = .InternalInconsistency(description: try c.decode(String.self, forKey: .description))
             default: fatalError("Unknown DOMError type.")
         }
     }
@@ -52,6 +56,12 @@ public enum DOMError: Error, Codable {
                 try c.encode(description, forKey: .description)
             case .NotSupported(description: let description):
                 try c.encode("NotSupported", forKey: .type)
+                try c.encode(description, forKey: .description)
+            case .NotFound(description: let description):
+                try c.encode("NotFound", forKey: .type)
+                try c.encode(description, forKey: .description)
+            case .InternalInconsistency(description: let description):
+                try c.encode("InternalInconsistency", forKey: .type)
                 try c.encode(description, forKey: .description)
         }
     }

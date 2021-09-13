@@ -1,6 +1,6 @@
 /*
  *     PROJECT: Gettysburg
- *    FILENAME: SAXNSName.swift
+ *    FILENAME: NSName.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
  *        DATE: 3/8/21

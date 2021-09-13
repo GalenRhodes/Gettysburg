@@ -1,9 +1,9 @@
 /*===============================================================================================================================================================================*
  *     PROJECT: Gettysburg
- *    FILENAME: SimpleIConvCharInputStream.swift
+ *    FILENAME: EntityDeclNode.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
- *        DATE: 9/11/21
+ *        DATE: 9/13/21
  *
  * Copyright © 2021. All rights reserved.
  *
@@ -17,12 +17,14 @@
 
 import Foundation
 import CoreFoundation
+import Rubicon
 
-open class Document: NodeImpl {
-    //@f:0
-    public override var nodeType:      NodeTypes { .Document }
-    public override var ownerDocument: Document  { self      }
-    //@f:1
+open class EntityDeclNode: DTDElement {
+    public let name: String
+    public override var nodeType: NodeTypes { .EntityDecl }
 
-    public override func cloneNode(deep: Bool) -> Self { super.cloneNode(deep: deep) as! Self }
+    init(ownerDocument: DocumentNode?, name: String) {
+        self.name = name
+        super.init(ownerDocument: ownerDocument)
+    }
 }

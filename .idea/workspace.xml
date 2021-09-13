@@ -5,7 +5,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="60b0239b-d5a7-4057-9e21-57829d56877e" name="Default Changelist" comment="Latest Libraries...">
+      <change afterPath="$PROJECT_DIR$/.idea/csv-plugin.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DocumentFragmentNode.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/NodeList.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/AttributeNode.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/CharacterNode.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/DTD/AttributeDeclNode.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/DTD/DTDElement.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/DTD/DocTypeNode.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/DTD/ElementDeclNode.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/DTD/EntityDeclNode.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/DTD/NotationNode.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/ElementNode.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/EntityReferenceNode.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/ProcessingInstructionNode.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/ParentNode.swift" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.pbxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Common/NSName.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Common/NSName.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMError.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMError.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/NodeImpl.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/NodeImpl.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/NodeTypes.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/NodeTypes.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/Attribute.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/ChildNode.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/Document.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/DocumentNode.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Protocols/Node.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Protocols/Node.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/UserData.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/UserData.swift" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,6 +46,9 @@
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
     </projectState>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="SCHEME" value="Project" />
   </component>
   <component name="Git.Settings">
     <option name="PREVIEW_PUSH_PROTECTED_ONLY" value="true" />
@@ -81,7 +108,7 @@
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="settings.editor.selected.configurable" value="fileTemplates" />
   </component>
   <component name="ReaderModeSettings">
     <option name="showRenderedDocs" value="false" />
@@ -242,14 +269,7 @@
       <workItem from="1630088567945" duration="7000" />
       <workItem from="1631363304321" duration="12763000" />
       <workItem from="1631544909619" duration="61000" />
-      <workItem from="1631548377558" duration="4000" />
-    </task>
-    <task id="LOCAL-00026" summary="Cleanup.">
-      <created>1617744542455</created>
-      <option name="number" value="00026" />
-      <option name="presentableId" value="LOCAL-00026" />
-      <option name="project" value="LOCAL" />
-      <updated>1617744542455</updated>
+      <workItem from="1631548377558" duration="12172000" />
     </task>
     <task id="LOCAL-00027" summary="Cleanup.">
       <created>1619102351161</created>
@@ -587,7 +607,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631544958535</updated>
     </task>
-    <option name="localTasksCounter" value="75" />
+    <task id="LOCAL-00075" summary="Latest Libraries...">
+      <created>1631548397201</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1631548397201</updated>
+    </task>
+    <option name="localTasksCounter" value="76" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

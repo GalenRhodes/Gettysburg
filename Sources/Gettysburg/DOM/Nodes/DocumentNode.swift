@@ -1,6 +1,6 @@
 /*===============================================================================================================================================================================*
  *     PROJECT: Gettysburg
- *    FILENAME: NodeTypes.swift
+ *    FILENAME: DocumentNode.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
  *        DATE: 9/11/21
@@ -17,20 +17,17 @@
 
 import Foundation
 import CoreFoundation
+import Rubicon
 
-public enum NodeTypes: String, Codable {
-    case Attribute
-    case AttributeDecl
-    case CDataSection     = "#cdata-section"
-    case Comment          = "#comment"
-    case Element
-    case ElementDecl
-    case EntityDecl
-    case EntityReference
-    case DocType
-    case Document         = "#document"
-    case DocumentFragment = "#document-fragment"
-    case NotationDecl
-    case ProcessingInstruction
-    case Text             = "#text"
+open class DocumentNode: NodeImpl {
+    //@f:0
+    public override var nodeType:      NodeTypes    { .Document }
+    public override var ownerDocument: DocumentNode { self      }
+    private         let uuid:          String       = UUID().uuidString
+    //@f:1
+    public override func isEqualTo(_ other: Node) -> Bool { self === other }
+
+    public override func hash(into hasher: inout Hasher) { hasher.combine(uuid) }
+
+    public override func cloneNode(deep: Bool) -> Self { super.cloneNode(deep: deep) as! Self }
 }
