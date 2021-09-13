@@ -5,44 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="60b0239b-d5a7-4057-9e21-57829d56877e" name="Default Changelist" comment="Latest Libraries...">
-      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/NodeImpl.swift" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/NodeTypes.swift" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/Attribute.swift" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/Document.swift" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Protocols/Node.swift" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/UserData.swift" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAXError.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/DocFixer.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations/DocFixer.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.pbxproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Gettysburg.xcodeproj/xcshareddata/xcschemes/DocFixer.xcscheme" beforeDir="false" afterPath="$PROJECT_DIR$/Gettysburg.xcodeproj/xcshareddata/xcschemes/DocFixer.xcscheme" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Common/Enums.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Common/Enums.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Common/Locked.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Common/NSName.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Common/NSName.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Common/StringProtocol.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Common/StringProtocol.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Common/XMLDecl.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Common/XMLDecl.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMAttribute.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMDocType.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMDocument.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMElement.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMError.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMError.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMListener.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMNode.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMParentNode.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMProcessingInstruction.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DOMText.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DTD/DTDAttribute.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DTD/DTDElement.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DTD/DTDEntity.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/DTD/DTDNotation.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAX/CharacterEncoding.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAX/SAXCharInputStream.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAX/SAXError.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAX/SAXIConvCharInputStream.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAX/SAXStringCharInputStream.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAXDelegate.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAXDelegate.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAXParser.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAXParser.swift" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -277,14 +240,8 @@
       <workItem from="1628874640606" duration="6763000" />
       <workItem from="1629121902376" duration="222000" />
       <workItem from="1630088567945" duration="7000" />
-      <workItem from="1631363304321" duration="12730000" />
-    </task>
-    <task id="LOCAL-00024" summary="Cleanup.">
-      <created>1615738223136</created>
-      <option name="number" value="00024" />
-      <option name="presentableId" value="LOCAL-00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1615738223136</updated>
+      <workItem from="1631363304321" duration="12763000" />
+      <workItem from="1631544909619" duration="6000" />
     </task>
     <task id="LOCAL-00025" summary="Cleanup.">
       <created>1617744520500</created>
@@ -622,7 +579,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631362927863</updated>
     </task>
-    <option name="localTasksCounter" value="73" />
+    <task id="LOCAL-00073" summary="Latest Libraries...">
+      <created>1631454819533</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1631454819534</updated>
+    </task>
+    <option name="localTasksCounter" value="74" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
