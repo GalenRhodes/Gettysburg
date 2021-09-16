@@ -43,8 +43,10 @@
 		1117D7CB6E8C9AA0A38D8AC4 /* SAXError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D226CA98FFFFC61EEAC6 /* SAXError.swift */; };
 		1117D85D1F7409889647472E /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DC7C6EF184B971FA2FA8 /* UserData.swift */; };
 		1117D8EB73B6465CE5A3B181 /* ElementDeclNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D8793A3B6CD85464C82D /* ElementDeclNode.swift */; };
+		1117D9F3B52CD8BC84D679B5 /* Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D05784461054CFA93D44 /* Messages.swift */; };
 		1117DA3DF7414EE4FD99BA2E /* EntityReferenceNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D7FE8F8B35296A58C2A7 /* EntityReferenceNode.swift */; };
 		1117DAB06F168610D56501FE /* URLSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D3DFC0F6EF93F59575D8 /* URLSessionTests.swift */; };
+		1117DAD42539CEF65C01F83F /* DTDExternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DFEAEB7252CCE1CE0A03 /* DTDExternal.swift */; };
 		1117DB1DAC52DC7E176C18AA /* ParentNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D7553789A231979AE774 /* ParentNode.swift */; };
 		1117DB29441FFC75702D9367 /* DOMError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D9D54446DA16AE2097BD /* DOMError.swift */; };
 		1117DB638102D57A90034A2B /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DA64AAB5D5B731B6F5D7 /* Utils.swift */; };
@@ -162,6 +164,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1117D05784461054CFA93D44 /* Messages.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Messages.swift; sourceTree = "<group>"; };
 		1117D07930C31B9EB322C3C2 /* Test_UTF-16BE.xml */ = {isa = PBXFileReference; fileEncoding = 2415919360; lastKnownFileType = text.xml; path = "Test_UTF-16BE.xml"; sourceTree = "<group>"; };
 		1117D0A1A2CADB9EB4FA512E /* DocumentFragmentNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DocumentFragmentNode.swift; path = Sources/Gettysburg/DOM/DocumentFragmentNode.swift; sourceTree = SOURCE_ROOT; };
 		1117D0D3140A4780F806AB1E /* AttributeDeclNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttributeDeclNode.swift; sourceTree = "<group>"; };
@@ -229,6 +232,7 @@
 		1117DFA4E13F088ACE70D5BE /* NSName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSName.swift; sourceTree = "<group>"; };
 		1117DFC5AB82040801F1C743 /* ChildNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChildNode.swift; sourceTree = "<group>"; };
 		1117DFE061300CCF2BE8EBA3 /* DTDElement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DTDElement.swift; sourceTree = "<group>"; };
+		1117DFEAEB7252CCE1CE0A03 /* DTDExternal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DTDExternal.swift; sourceTree = "<group>"; };
 		831A2D9426A225B20061E945 /* URLSessionTester */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = URLSessionTester; sourceTree = BUILT_PRODUCTS_DIR; };
 		831A2D9626A225B20061E945 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		831A2DA026A226440061E945 /* URLSessionTester.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = URLSessionTester.entitlements; sourceTree = "<group>"; };
@@ -304,6 +308,7 @@
 				1117D0D3140A4780F806AB1E /* AttributeDeclNode.swift */,
 				1117D8793A3B6CD85464C82D /* ElementDeclNode.swift */,
 				1117DFE061300CCF2BE8EBA3 /* DTDElement.swift */,
+				1117DFEAEB7252CCE1CE0A03 /* DTDExternal.swift */,
 			);
 			path = DTD;
 			sourceTree = "<group>";
@@ -390,6 +395,7 @@
 				1117D49021849ECC0630BEA2 /* DocPosition.swift */,
 				1117D8EE1CD620C4E6152B79 /* URL.swift */,
 				1117D37453D0CD4F1F982E84 /* XMLDecl.swift */,
+				1117D05784461054CFA93D44 /* Messages.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -775,6 +781,8 @@
 				1117D8EB73B6465CE5A3B181 /* ElementDeclNode.swift in Sources */,
 				1117D3BD04A6E6FACF8CE09B /* ElementNode.swift in Sources */,
 				1117D436C0924F71604707CA /* DTDElement.swift in Sources */,
+				1117DAD42539CEF65C01F83F /* DTDExternal.swift in Sources */,
+				1117D9F3B52CD8BC84D679B5 /* Messages.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

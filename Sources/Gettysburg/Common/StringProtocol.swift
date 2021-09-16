@@ -79,4 +79,6 @@ extension StringProtocol {
         guard value(firstChar, isOneOf: "\"", "'") && work[lastIdx] == firstChar else { return String(self) }
         return String(self[work.index(after: work.startIndex) ..< lastIdx])
     }
+
+    @inlinable var firstChar: Character { self[startIndex] }
 }

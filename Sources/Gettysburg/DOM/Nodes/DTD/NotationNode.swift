@@ -19,8 +19,10 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-open class NotationNode: DTDElement {
+open class NotationNode: DTDExternal {
     public override var nodeType: NodeTypes { .NotationDecl }
 
-    override init(ownerDocument: DocumentNode?) { super.init(ownerDocument: ownerDocument) }
+    override init(ownerDocument: DocumentNode?, qName: String, namespaceURI: String?, publicId: String?, systemId: String?) {
+        super.init(ownerDocument: ownerDocument, qName: qName, namespaceURI: namespaceURI, publicId: publicId, systemId: systemId)
+    }
 }

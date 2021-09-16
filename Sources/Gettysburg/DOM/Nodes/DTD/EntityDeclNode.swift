@@ -19,12 +19,22 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-open class EntityDeclNode: DTDElement {
-    public let name: String
-    public override var nodeType: NodeTypes { .EntityDecl }
+open class EntityDeclNode: DTDExternal {
+    //@f:0
+    public override var nodeType:      NodeTypes { .EntityDecl }
+    public          var inputEncoding: String
+    public          var notationName:  String?
+    public          var xmlEncoding:   String?
+    public          var xmlVersion:    String?
+    public          var value:         String?
+    //@f:1
 
-    init(ownerDocument: DocumentNode?, name: String) {
-        self.name = name
-        super.init(ownerDocument: ownerDocument)
+    init(ownerDocument: DocumentNode?, qName: String, namespaceURI: String?, value: String?, publicId: String?, systemId: String?, notationName: String?, inputEncoding: String, xmlEncoding: String?, xmlVersion: String?) {
+        self.inputEncoding = inputEncoding
+        self.notationName = notationName
+        self.xmlEncoding = xmlEncoding
+        self.xmlVersion = xmlVersion
+        self.value = value
+        super.init(ownerDocument: ownerDocument, qName: qName, namespaceURI: namespaceURI, publicId: publicId, systemId: systemId)
     }
 }

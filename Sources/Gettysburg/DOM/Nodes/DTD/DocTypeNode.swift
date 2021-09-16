@@ -20,5 +20,23 @@ import CoreFoundation
 import Rubicon
 
 open class DocTypeNode: ChildNode {
-    public override var nodeType: NodeTypes { .DocType }
+    //@f:0
+    public override      var nodeType:       NodeTypes           { .DocType }
+    public internal(set) var internalSubset: String              = ""
+    public internal(set) var entities:       [EntityDeclNode]    = []
+    public internal(set) var notations:      [NotationNode]      = []
+    public internal(set) var elements:       [ElementDeclNode]   = []
+    public internal(set) var attrs:          [AttributeDeclNode] = []
+    public internal(set) var name:           NSName
+    public internal(set) var publicId:       String?
+    public internal(set) var systemId:       String?
+    //@f:1
+
+    init(ownerDocument: DocumentNode?, qName: String, namespaceURI: String?, publicId: String?, systemId: String?, internalSubset: String) {
+        self.internalSubset = internalSubset
+        self.name = NSName(qName: qName, uri: namespaceURI)
+        self.publicId = publicId
+        self.systemId = systemId
+        super.init(ownerDocument: ownerDocument)
+    }
 }

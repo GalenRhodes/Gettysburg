@@ -26,18 +26,11 @@ open class DTDElement: NodeImpl {
     public override var prefix:       String? { get { name.name.prefix } set { name.name.prefix = newValue } }
     public override var namespaceURI: String? { name.uri }
 
-    public internal(set) var internalSubset: String              = ""
-    public internal(set) var entities:       [EntityDeclNode]    = []
-    public internal(set) var notations:      [NotationNode]      = []
-    public internal(set) var elements:       [ElementDeclNode]   = []
-    public internal(set) var attrs:          [AttributeDeclNode] = []
-    public internal(set) var name:           NSName
-    public internal(set) var publicId:       String?
-    public internal(set) var systemId:       String?
+    internal var name: NSName
     //@f:1
 
-    init(ownerDocument: DocumentNode?, name: String, namespaceURI uri: String? = nil, publicId: String? = nil, systemId: String? = nil) {
-        self.name = NSName(qName: name, uri: uri)
+    init(ownerDocument: DocumentNode?, qName: String, namespaceURI: String?) {
+        self.name = NSName(qName: qName, uri: namespaceURI)
         super.init(ownerDocument: ownerDocument)
     }
 }

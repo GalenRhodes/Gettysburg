@@ -1,9 +1,9 @@
 /*===============================================================================================================================================================================*
  *     PROJECT: Gettysburg
- *    FILENAME: AttributeDeclNode.swift
+ *    FILENAME: DTDExternal.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
- *        DATE: 9/13/21
+ *        DATE: 9/14/21
  *
  * Copyright © 2021. All rights reserved.
  *
@@ -19,40 +19,13 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-open class AttributeDeclNode: DTDElement {
-    //@f:0
-    public override var nodeType:     NodeTypes { .AttributeDecl }
-    public          var elementName:  QName
-    public          var type:         AttrType
-    public          var defaultType:  DefaultType
-    public          var defaultValue: String?
-    public          var enumValues:   [String] = []
-    //@f:1
+open class DTDExternal: DTDElement {
+    public internal(set) var publicId: String?
+    public internal(set) var systemId: String?
 
-    init(ownerDocument: DocumentNode?, qName: String, namespaceURI: String?, elementName: String, type: AttrType, enumValues: [String], defaultType: DefaultType, defaultValue: String?) {
-        self.type = type
-        self.defaultType = defaultType
-        self.defaultValue = defaultValue
-        self.enumValues = enumValues
-        self.elementName = QName(qName: elementName)
+    init(ownerDocument: DocumentNode?, qName: String, namespaceURI: String?, publicId: String?, systemId: String?) {
+        self.publicId = publicId
+        self.systemId = systemId
         super.init(ownerDocument: ownerDocument, qName: qName, namespaceURI: namespaceURI)
-    }
-
-    public enum AttrType: String, Codable {
-        case CData      = "CDATA"
-        case ID         = "ID"
-        case IDRef      = "IDREF"
-        case Entity     = "ENTITY"
-        case Entities   = "ENTITIES"
-        case NMToken    = "NMTOKEN"
-        case NMTokens   = "NMTOKENS"
-        case Notation   = "NOTATION"
-        case Enumerated = "()"
-    }
-
-    public enum DefaultType: String, Codable {
-        case Required = "#REQUIRED"
-        case Implied  = "#IMPLIED"
-        case Fixed    = "#FIXED"
     }
 }

@@ -56,4 +56,8 @@ public class SAXError: Error, Codable {
         public override init(position: DocPosition, description: String) { super.init(position: position, description: description) }
         required public init(from decoder: Decoder) throws { try super.init(from: decoder) }
     }
+    public final class MalformedElementDecl: SAXError {
+        public override init(position: DocPosition, description: String) { super.init(position: position, description: description) }
+        required public init(from decoder: Decoder) throws { try super.init(from: decoder) }
+    }
 }
