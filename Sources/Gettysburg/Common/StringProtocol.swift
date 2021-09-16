@@ -20,6 +20,20 @@ import Rubicon
 
 extension StringProtocol {
 
+    @inlinable func skipWS(_ idx: inout String.Index, position pos: inout DocPosition, peek: Bool = false) -> Character? {
+        while idx < endIndex && self[idx].isXmlWhitespace {
+            pos.update(self[idx])
+            formIndex(after: &idx)
+        }
+        guard idx < endIndex else { return nil }
+        let ch = self[idx]
+        if !peek {
+            pos.update(ch)
+            formIndex(after: &idx)
+        }
+        return ch
+    }
+
     @inlinable func splitPrefix() -> QName { QName(qName: self) }
 
     @inlinable func noLF() -> String {
@@ -30,12 +44,6 @@ extension StringProtocol {
     @inlinable func collapeWS() -> String {
         let str = String(self)
         return RegularExpression(pattern: "\\s+")?.stringByReplacingMatches(in: str, using: { _ in " " }).0 ?? str
-    }
-
-    @inlinable func skipWhitespace(_ idx: inout String.Index) throws -> Character {
-        while idx < endIndex && self[idx].isXmlWhitespace { formIndex(after: &idx) }
-        guard idx < endIndex else { throw SAXError.UnexpectedEndOfInput() }
-        return self[idx]
     }
 
     @usableFromInline func encodeEntities() -> String {
@@ -74,7 +82,7 @@ extension StringProtocol {
         guard work.count > 1 else { return String(self) }
 
         let firstChar = work[work.startIndex]
-        let lastIdx = work.index(before: work.endIndex)
+        let lastIdx   = work.index(before: work.endIndex)
 
         guard value(firstChar, isOneOf: "\"", "'") && work[lastIdx] == firstChar else { return String(self) }
         return String(self[work.index(after: work.startIndex) ..< lastIdx])

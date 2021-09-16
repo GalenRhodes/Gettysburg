@@ -64,6 +64,8 @@ open class ElementDeclNode: DTDElement {
         public enum Multiplicity: String, Codable { case Optional = "?", Once = "", OneOrMore = "+", ZeroOrMore = "*" }
     }
 
+    /// Allowed content item list.
+    ///
     public class ContentList: ContentItem {
         public enum ListType: String, Codable { case Ordered = ",", Unordered = "|" }
 
@@ -81,54 +83,56 @@ open class ElementDeclNode: DTDElement {
         }
 
         init(content c: String, index i: inout String.Index, position pos: inout DocPosition, allowPCData: Bool) throws {
-            guard i < c.endIndex else { throw SAXError.MalformedElementDecl(position: pos, description: MsgUnexpectedEOF) }
-            guard c[i] == StartListChar else { throw SAXError.MalformedElementDecl(position: pos, description: "\(MsgContentListBadPrefix) \(quote(StartListChar)).") }
+            guard let ch = c.skipWS(&i, position: &pos) else { throw SAXError.MalformedElementDecl(position: pos, description: MsgUnexpectedEOF) }
+            guard ch == StartListChar else { throw SAXError.MalformedElementDecl(position: pos, description: "\(MsgContentListBadPrefix) \(quote(StartListChar)).") }
+            guard let ch = c.skipWS(&i, position: &pos, peek: true) else { throw SAXError.MalformedElementDecl(position: pos, description: MsgUnexpectedEOF) }
 
-            pos.update(StartListChar)
-            c.formIndex(after: &i)
             var lt: ListType? = nil
 
-            if c[i] == "#" {
-                guard allowPCData else { throw SAXError.MalformedElementDecl(position: pos, description: unexpectedMessage(found: c[i])) }
+            if ch == "#" {
+                guard allowPCData else { throw SAXError.MalformedElementDecl(position: pos, description: unexpectedMessage(found: ch)) }
                 content <+ try PCData(content: c, index: &i, position: &pos)
-                lt = .Unordered
-                listType = .Unordered
+                guard let ch = c.skipWS(&i, position: &pos) else { throw SAXError.MalformedElementDecl(position: pos, description: MsgUnexpectedEOF) }
 
-                if c[i] == EndListChar {
+                if ch == EndListChar {
+                    listType = .Unordered
                     super.init(type: .List, multiplicity: .Once)
                     return
                 }
-                else if c[i] != UnorderedChar {
-                    throw SAXError.MalformedElementDecl(position: pos, description: unexpectedMessage(found: c[i], expected: EndListChar, UnorderedChar))
+                else if ch != UnorderedChar {
+                    throw SAXError.MalformedElementDecl(position: pos, description: unexpectedMessage(found: ch, expected: EndListChar, UnorderedChar))
                 }
+
+                lt = .Unordered
             }
 
             repeat {
-                let c0 = c[i]
-                if c0.isXmlNameStartChar {
+                guard let c1 = c.skipWS(&i, position: &pos, peek: true) else { throw SAXError.MalformedElementDecl(position: pos, description: MsgUnexpectedEOF) }
+
+                if c1.isXmlNameStartChar {
                     content <+ try Element(content: c, index: &i, position: &pos)
                 }
-                else if c0 == StartListChar {
+                else if c1 == StartListChar {
                     content <+ try ContentList(content: c, index: &i, position: &pos, allowPCData: false)
                 }
                 else {
-                    throw SAXError.MalformedElementDecl(position: pos, description: unexpectedMessage(found: c0))
+                    throw SAXError.MalformedElementDecl(position: pos, description: unexpectedMessage(found: c1))
                 }
 
-                let c1 = c[i]
-                pos.update(c1)
-                if value(c1, isOneOf: OrderedChar, UnorderedChar) {
-                    let x1 = String(c1)
+                guard let c2 = c.skipWS(&i, position: &pos) else { throw SAXError.MalformedElementDecl(position: pos, description: MsgUnexpectedEOF) }
+
+                if value(c2, isOneOf: OrderedChar, UnorderedChar) {
+                    let sc2 = String(c2)
+
                     if let _lt = lt?.rawValue {
-                        guard _lt == x1 else { throw SAXError.MalformedElementDecl(position: pos, description: unexpectedMessage(found: x1, expected: _lt)) }
+                        guard _lt == sc2 else { throw SAXError.MalformedElementDecl(position: pos, description: unexpectedMessage(found: sc2, expected: _lt)) }
                     }
                     else {
-                        lt = ListType(rawValue: x1)!
+                        lt = ListType(rawValue: sc2)!
                     }
                 }
                 else {
-                    guard c1 == EndListChar else { throw SAXError.MalformedElementDecl(position: pos, description: unexpectedMessage(found: c1)) }
-                    c.formIndex(after: &i)
+                    guard c2 == EndListChar else { throw SAXError.MalformedElementDecl(position: pos, description: unexpectedMessage(found: c2)) }
                     break
                 }
             }
@@ -136,42 +140,34 @@ open class ElementDeclNode: DTDElement {
 
             guard content.isNotEmpty else { throw SAXError.MalformedElementDecl(position: pos, description: MsgEmptyContentList) }
             self.listType = ((lt == nil) ? .Ordered : lt!)
-
-            if i < c.endIndex && value(c[i], isOneOf: "?", "+", "*") {
-                super.init(type: .List, multiplicity: Multiplicity(rawValue: String(c[i]))!)
-                c.formIndex(after: &i)
-            }
-            else {
-                super.init(type: .List, multiplicity: .Once)
-            }
+            super.init(type: .List, multiplicity: Multiplicity.get(c, index: &i, position: &pos))
         }
     }
 
+    /// PCData allowed content item.
+    ///
     public class PCData: ContentItem {
         init() { super.init(type: .PCData, multiplicity: .Once) }
 
         init(content c: String, index i: inout String.Index, position pos: inout DocPosition) throws {
-            guard let j = c.index(i, offsetBy: 7, limitedBy: c.endIndex) else { throw SAXError.MalformedElementDecl(position: pos, description: MsgUnexpectedEOF) }
+            guard let _ = c.skipWS(&i, position: &pos) else { throw SAXError.UnexpectedEndOfInput(position: pos) }
 
-            let ss = c[i ..< j]
-
-            guard String(ss) == ItemType.PCData.rawValue else { throw SAXError.MalformedElementDecl(position: pos, description: "\(MsgUnrecognizedTag): \(quote(ss))") }
-            guard j < c.endIndex else { throw SAXError.MalformedElementDecl(position: pos, description: MsgUnexpectedEOF) }
-
-            pos.update(ss)
-            let ch = c[j]
-
-            guard value(ch, isOneOf: UnorderedChar, EndListChar) else {
-                let msg = ((ch == OrderedChar) ? unexpectedMessage(found: ch, expected: EndListChar, UnorderedChar) : unexpectedMessage(found: ch))
+            for xch in ItemType.PCData.rawValue {
+                guard xch == c[i] else { throw SAXError.MalformedElementDecl(position: pos, description: unexpectedMessage(found: c[i], expected: xch)) }
+                pos.update(xch)
+                c.formIndex(after: &i)
+                guard i < c.endIndex else { throw SAXError.UnexpectedEndOfInput(position: pos) }
+            }
+            guard !Multiplicity.test(c[i]) else {
+                let msg = unexpectedMessage(found: c[i], expected: UnorderedChar, EndListChar)
                 throw SAXError.MalformedElementDecl(position: pos, description: msg)
             }
-
-            i = j
-            pos.update(ch)
             super.init(type: .PCData, multiplicity: .Once)
         }
     }
 
+    /// Element allowed content item.
+    ///
     public class Element: ContentItem {
         public let name: QName
 
@@ -181,29 +177,30 @@ open class ElementDeclNode: DTDElement {
         }
 
         init(content c: String, index i: inout String.Index, position pos: inout DocPosition) throws {
-            guard i < c.endIndex else { throw SAXError.MalformedElementDecl(position: pos, description: MsgEmptyElementName) }
-            guard c[i].isXmlNameStartChar else { throw SAXError.MalformedElementDecl(position: pos, description: unexpectedMessage(found: c[i])) }
+            guard let ch = c.skipWS(&i, position: &pos, peek: true) else { throw SAXError.UnexpectedEndOfInput(position: pos) }
+            guard ch.isXmlNameStartChar else { throw SAXError.MalformedElementDecl(position: pos, description: unexpectedMessage(found: ch)) }
 
-            var chars: [Character] = []
-            repeat {
-                chars <+ c[i]
+            var data: [Character] = []
+            while i < c.endIndex && c[i].isXmlNameChar {
+                data <+ c[i]
                 pos.update(c[i])
                 c.formIndex(after: &i)
             }
-            while i < c.endIndex && c[i].isXmlNameChar
-            self.name = QName(qName: String(chars))
-
-            if i < c.endIndex && value(c[i], isOneOf: "?", "+", "*") {
-                super.init(type: .Element, multiplicity: Multiplicity(rawValue: String(c[i]))!)
-                c.formIndex(after: &i)
-            }
-            else {
-                super.init(type: .Element, multiplicity: .Once)
-            }
+            self.name = QName(qName: String(data))
+            super.init(type: .Element, multiplicity: Multiplicity.get(c, index: &i, position: &pos))
         }
     }
 }
 
 extension ElementDeclNode.ContentItem.Multiplicity {
-    @inlinable static func get()
+    @inlinable static func test(_ ch: Character) -> Bool { value(ch, isOneOf: "?", "+", "*") }
+
+    @inlinable static func get(_ s: String, index i: inout String.Index, position pos: inout DocPosition) -> Self {
+        guard i < s.endIndex else { return .Once }
+        let ch: Character = s[i]
+        guard test(ch), let r = ElementDeclNode.ContentItem.Multiplicity(rawValue: String(ch)) else { return .Once }
+        pos.update(ch)
+        s.formIndex(after: &i)
+        return r
+    }
 }
