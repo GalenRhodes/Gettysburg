@@ -31,16 +31,28 @@ open class ElementDeclNode: DTDElement {
     public          var content:     ContentList?
     //@f:1
 
-    public init(ownerDocument: DocumentNode?, qName: String, namespaceURI: String?, contentType: ContentType, content: String, position pos: inout DocPosition) throws {
+    public init(ownerDocument: DocumentNode?, qName: String, namespaceURI: String, contentType: ContentType, content: String, position pos: inout DocPosition) throws {
         self.contentType = contentType
         self.content = try ContentList(content: content, position: &pos, allowPCData: (contentType == .Mixed))
         super.init(ownerDocument: ownerDocument, qName: qName, namespaceURI: namespaceURI)
     }
 
-    init(ownerDocument: DocumentNode?, qName: String, namespaceURI: String?, contentType: ContentType, content: ContentList? = nil) {
+    public init(ownerDocument: DocumentNode?, name: String, contentType: ContentType, content: String, position pos: inout DocPosition) throws {
+        self.contentType = contentType
+        self.content = try ContentList(content: content, position: &pos, allowPCData: (contentType == .Mixed))
+        super.init(ownerDocument: ownerDocument, name: name)
+    }
+
+    init(ownerDocument: DocumentNode?, qName: String, namespaceURI: String, contentType: ContentType, content: ContentList? = nil) {
         self.contentType = contentType
         self.content = content
         super.init(ownerDocument: ownerDocument, qName: qName, namespaceURI: namespaceURI)
+    }
+
+    init(ownerDocument: DocumentNode?, name: String, contentType: ContentType, content: ContentList? = nil) {
+        self.contentType = contentType
+        self.content = content
+        super.init(ownerDocument: ownerDocument, name: name)
     }
 
     public enum ContentType: String, Codable {
@@ -64,6 +76,7 @@ open class ElementDeclNode: DTDElement {
         public enum Multiplicity: String, Codable { case Optional = "?", Once = "", OneOrMore = "+", ZeroOrMore = "*" }
     }
 
+    /*===========================================================================================================================*/
     /// Allowed content item list.
     ///
     public class ContentList: ContentItem {
@@ -144,6 +157,7 @@ open class ElementDeclNode: DTDElement {
         }
     }
 
+    /*===========================================================================================================================*/
     /// PCData allowed content item.
     ///
     public class PCData: ContentItem {
@@ -166,6 +180,7 @@ open class ElementDeclNode: DTDElement {
         }
     }
 
+    /*===========================================================================================================================*/
     /// Element allowed content item.
     ///
     public class Element: ContentItem {

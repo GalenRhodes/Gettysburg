@@ -144,4 +144,3 @@ let obj2  = try dec.decode(Child3.self, from: data)
 let data2 = try enc.encode(obj2)
 let str2  = String(data: data, encoding: .utf8) ?? "-nil-"
 print(str2)
-

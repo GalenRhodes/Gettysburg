@@ -32,9 +32,17 @@ open class DocTypeNode: ChildNode {
     public internal(set) var systemId:       String?
     //@f:1
 
-    init(ownerDocument: DocumentNode?, qName: String, namespaceURI: String?, publicId: String?, systemId: String?, internalSubset: String) {
+    init(ownerDocument: DocumentNode?, name: String, publicId: String?, systemId: String?, internalSubset: String) {
+        self.name = NSName(name: name)
         self.internalSubset = internalSubset
+        self.publicId = publicId
+        self.systemId = systemId
+        super.init(ownerDocument: ownerDocument)
+    }
+
+    init(ownerDocument: DocumentNode?, qName: String, namespaceURI: String, publicId: String?, systemId: String?, internalSubset: String) {
         self.name = NSName(qName: qName, uri: namespaceURI)
+        self.internalSubset = internalSubset
         self.publicId = publicId
         self.systemId = systemId
         super.init(ownerDocument: ownerDocument)

@@ -126,4 +126,3 @@ extension AnyNode {
 
     @inlinable public static func == (lhs: AnyNode, rhs: AnyNode) -> Bool { lhs.node.isEqualTo(rhs.node) }
 }
-

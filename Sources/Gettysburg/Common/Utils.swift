@@ -17,14 +17,44 @@
 import Foundation
 import CoreFoundation
 import Rubicon
+import RedBlackTree
 
 public let FileMan: FileManager = FileManager.default
 
-@inlinable public func < <T>(lhs: T?, rhs: T?) -> Bool where T: Comparable {
-    if let lhs = lhs, let rhs = rhs { return lhs < rhs }
-    if lhs == nil && rhs == nil { return false }
-    return lhs == nil
+@inlinable public func == <T>(lhs: T?, rhs: T?) -> Bool where T: Equatable {
+    guard let l = lhs, let r = rhs else { return ((lhs == nil) && (rhs == nil)) }
+    return (l == r)
 }
+
+@inlinable public func < <T>(lhs: T?, rhs: T?) -> Bool where T: Comparable {
+    guard let l = lhs, let r = rhs else { return ((lhs == nil) && (rhs != nil)) }
+    return (l < r)
+}
+
+@inlinable public func <= <T>(lhs: T?, rhs: T?) -> Bool where T: Comparable { ((lhs < rhs) || (lhs == rhs)) }
+
+@inlinable public func > <T>(lhs: T?, rhs: T?) -> Bool where T: Comparable { !(lhs <= rhs) }
+
+@inlinable public func >= <T>(lhs: T?, rhs: T?) -> Bool where T: Comparable { !(lhs < rhs) }
+
+@inlinable public func compare<T>(_ list: [(T?, T?)]) -> ComparisonResults where T: Comparable {
+    for i in list { guard i.0 == i.1 else { return ((i.0 < i.1) ? .LessThan : .GreaterThan) } }
+    return .EqualTo
+}
+
+@inlinable public func compare<T>(_ list: (T?, T?)...) -> ComparisonResults where T: Comparable { compare(list) }
+
+@inlinable public func areEqual<T>(_ list: (T?, T?)...) -> Bool where T: Comparable { (compare(list) == .EqualTo) }
+
+@inlinable public func areLessThan<T>(_ list: (T?, T?)...) -> Bool where T: Comparable { (compare(list) == .LessThan) }
+
+@inlinable public func areGreaterThan<T>(_ list: (T?, T?)...) -> Bool where T: Comparable { (compare(list) == .GreaterThan) }
+
+@inlinable public func areEqual<T>(_ list: [(T?, T?)]) -> Bool where T: Comparable { (compare(list) == .EqualTo) }
+
+@inlinable public func areLessThan<T>(_ list: [(T?, T?)]) -> Bool where T: Comparable { (compare(list) == .LessThan) }
+
+@inlinable public func areGreaterThan<T>(_ list: [(T?, T?)]) -> Bool where T: Comparable { (compare(list) == .GreaterThan) }
 
 @inlinable public func == <C1, C2>(lhs: C1, rhs: C2) -> Bool where C1: Collection, C2: Collection, C1.Element == C2.Element, C1.Element: Equatable {
     guard lhs.count == rhs.count else { return false }

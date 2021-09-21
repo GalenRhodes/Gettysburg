@@ -23,18 +23,19 @@ public enum URLErrors: Error {
 }
 
 extension URL {
-    /*===========================================================================================================================================================================*/
+    /*===========================================================================================================================*/
     /// Returns the URL form of the current working directory on the local file system.
     ///
     @inlinable public static var currentDirectoryURL: URL { URL(fileURLWithPath: FileMan.currentDirectoryPath, isDirectory: true) }
 
-    /*===========================================================================================================================================================================*/
+    /*===========================================================================================================================*/
     /// Returns `true` if the URL has a scheme. Otherwise it's not normalized.
     ///
     @inlinable public var isNormalized: Bool { (scheme != nil) }
 
-    /*===========================================================================================================================================================================*/
-    /// Creates a bogus URL for times when a URL is needed but none is given. For example when an InputStream is created from a `String` or an instance of `Data`.
+    /*===========================================================================================================================*/
+    /// Creates a bogus URL for times when a URL is needed but none is given. For example when an InputStream is created from a
+    /// `String` or an instance of `Data`.
     /// 
     /// - Parameters:
     ///   - ext: The file extension to use.
@@ -46,9 +47,9 @@ extension URL {
         return url
     }
 
-    /*===========================================================================================================================================================================*/
-    /// If a URL does not have a scheme then attempt to normalize it by making it relative to a given base URL. If a base URL is not given then the current working directory on
-    /// the local filesystem is used.
+    /*===========================================================================================================================*/
+    /// If a URL does not have a scheme then attempt to normalize it by making it relative to a given base URL. If a base URL is
+    /// not given then the current working directory on the local filesystem is used.
     /// 
     /// - Parameter base: The base URL to use or `nil` to use the current working directory.
     /// - Returns: The normalized URL.
@@ -66,13 +67,14 @@ extension URL {
         return try url.createBaseURL()
     }
 
-    /*===========================================================================================================================================================================*/
-    /// This method gives the URL a base URL by separating the last path component from the rest of the path. So, for example, given the URL:
+    /*===========================================================================================================================*/
+    /// This method gives the URL a base URL by separating the last path component from the rest of the path. So, for example,
+    /// given the URL:
     /// ```
     ///     http://foo.bar.com/Users/jdoe/samples/document.xml?item=one#anAnchor
     /// ```
-    /// This method will create a new URL object for `document.xml?item=one#anAnchor` that has a base URL of `http://foo.bar.com/Users/jdoe/samples/`. This is to make sure that
-    /// the `baseURL` property returns a non-`nil` value.
+    /// This method will create a new URL object for `document.xml?item=one#anAnchor` that has a base URL of
+    /// `http://foo.bar.com/Users/jdoe/samples/`. This is to make sure that the `baseURL` property returns a non-`nil` value.
     /// 
     /// - Returns: A new URL where the `baseURL` property does not return a `nil` value.
     /// - Throws: If the URL cannot be created.

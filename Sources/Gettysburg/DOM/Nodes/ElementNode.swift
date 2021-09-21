@@ -32,8 +32,13 @@ open class ElementNode: ParentNode {
     internal var name: NSName
     //@f:1
 
-    public init(ownerDocument: DocumentNode?, tagName: String, namespaceURI: String? = nil) {
+    public init(ownerDocument: DocumentNode?, tagName: String, namespaceURI: String) {
         self.name = NSName(qName: tagName, uri: namespaceURI)
+        super.init(ownerDocument: ownerDocument)
+    }
+
+    public init(ownerDocument: DocumentNode?, tagName: String) {
+        self.name = NSName(name: tagName)
         super.init(ownerDocument: ownerDocument)
     }
 }

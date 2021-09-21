@@ -30,13 +30,21 @@ public enum LeadingWhitespace: String, Codable {
 }
 
 public enum SuffixOption: Codable {
+    /*===========================================================================================================================*/
     /// Return the characters but leave them on the input stream.
+    ///
     case Peek(count: Int)
+    /*===========================================================================================================================*/
     /// Return the characters and remove them from the input stream.
+    ///
     case Keep
+    /*===========================================================================================================================*/
     /// Do not return the characters and leave them on the input stream.
+    ///
     case Leave(count: Int)
+    /*===========================================================================================================================*/
     /// Do not return the characters but remove them from the input stream
+    ///
     case Drop(count: Int)
 
     private enum CodingKeys: String, CodingKey { case name, count }

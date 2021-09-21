@@ -19,24 +19,27 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
+/*===============================================================================================================================*/
 /// Holds a qualified name.
 ///
 @frozen public struct QName: Hashable, Comparable, CustomStringConvertible, Codable {
-    public var prefix:    String?
+    public var prefix:    String? = nil
     public let localName: String
 
-    @inlinable public var description: String { prefix == nil ? localName : "\(prefix!):\(localName)" }
+    @inlinable public var description: String {
+        guard let p = prefix else { return localName }
+        return "\(p):\(localName)"
+    }
 
     @inlinable public init(prefix: String?, localName: String) {
-        self.prefix = prefix
+        if let p = prefix { self.prefix = (p.isEmpty ? nil : p) }
         self.localName = localName
     }
 
     @inlinable public init<S>(qName: S) where S: StringProtocol {
-        if let idx = qName.firstIndex(ofAnyOf: ":", from: qName.startIndex) {
-            let sidx = qName.startIndex
+        if let idx = qName.firstIndex(where: { $0 == ":" }) {
             self.localName = String(qName[qName.index(after: idx) ..< qName.endIndex])
-            self.prefix = ((idx > sidx) ? String(qName[sidx ..< idx]) : nil)
+            self.prefix = ((idx > qName.startIndex) ? String(qName[qName.startIndex ..< idx]) : nil)
         }
         else {
             self.prefix = nil
@@ -54,13 +57,13 @@ import Rubicon
     @inlinable public static func == (lhs: QName, rhs: QName) -> Bool { ((lhs.prefix == rhs.prefix) && (lhs.localName == rhs.localName)) }
 }
 
-/*===============================================================================================================================================================================*/
+/*===============================================================================================================================*/
 /// Holds a qualified namespace name along with it's associated URI.
 ///
 @frozen public struct NSName: Hashable, Comparable, CustomStringConvertible, Codable {
 
-    public var            name:        QName
-    public let            uri:         String?
+    public var name: QName
+    public let uri:  String?
 
     @inlinable public var description: String { name.description }
 
@@ -79,15 +82,9 @@ import Rubicon
         self.init(localName: name, prefix: nil, uri: nil)
     }
 
-    @inlinable init(qName: String, uri: String?) {
-        if let u = uri {
-            self.name = QName(qName: qName)
-            self.uri = u
-        }
-        else {
-            self.name = QName(prefix: nil, localName: qName)
-            self.uri = nil
-        }
+    @inlinable init(qName: String, uri: String) {
+        self.name = QName(qName: qName)
+        self.uri = uri
     }
 
     @inlinable public func hash(into hasher: inout Hasher) {
@@ -95,17 +92,17 @@ import Rubicon
         hasher.combine(uri)
     }
 
-    @inlinable public static func < (lhs: NSName, rhs: NSName) -> Bool { ((lhs.name < rhs.name) || ((lhs.name == rhs.name) && (lhs.uri < rhs.uri))) }
+    @inlinable public static func < (lhs: NSName, rhs: NSName) -> Bool { areLessThan((lhs.name.localName, rhs.name.localName), (lhs.uri, rhs.uri)) }
 
-    @inlinable public static func == (lhs: NSName, rhs: NSName) -> Bool { ((lhs.name == rhs.name) && (lhs.uri == rhs.uri)) }
+    @inlinable public static func == (lhs: NSName, rhs: NSName) -> Bool { areEqual((lhs.name.localName, rhs.name.localName), (lhs.uri, rhs.uri)) }
 }
 
-/*===============================================================================================================================================================================*/
+/*===============================================================================================================================*/
 /// Holds a `prefix` to `uri` mapping.
 ///
 @frozen public struct NSMapping: Hashable, Comparable, CustomStringConvertible, Codable {
-    public let            prefix:      String
-    public let            uri:         String
+    public let prefix: String
+    public let uri:    String
 
     @inlinable public var description: String { isDefault ? "xmlns=\(uri.quoted())" : "xmlns:\(prefix)=\(uri.quoted())" }
     @inlinable public var isDefault:   Bool { prefix.isEmpty }

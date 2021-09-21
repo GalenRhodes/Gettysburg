@@ -5,10 +5,179 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="60b0239b-d5a7-4057-9e21-57829d56877e" name="Default Changelist" comment="More...">
+      <change afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/DTD/NodeMap.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_9_11_21,_8_12_AM_[Default_Changelist]1/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_9_11_21__8_12_AM__Default_Changelist_1.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Common/DocPosition.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Common/DocPosition.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Common/StringProtocol.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Common/StringProtocol.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.pbxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved" beforeDir="false" afterPath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Package.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Package.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Common/Enums.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Common/Enums.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Common/NSName.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Common/NSName.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Common/RegexPatterns.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Common/RegexPatterns.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Common/URL.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Common/URL.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Common/Utils.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Common/Utils.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/CodableTests.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/CodableTests.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/DTD/AttributeDeclNode.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/DTD/AttributeDeclNode.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/DTD/DTDElement.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/DTD/DTDElement.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/DTD/DTDExternal.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/DTD/DTDExternal.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/DTD/DocTypeNode.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/DTD/DocTypeNode.swift" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/DTD/ElementDeclNode.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/DTD/ElementDeclNode.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/DTD/EntityDeclNode.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/DTD/EntityDeclNode.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/DTD/NotationNode.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/DTD/NotationNode.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/ElementNode.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/ElementNode.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/EntityReferenceNode.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/EntityReferenceNode.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Protocols/Node.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Protocols/Node.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/SAXDelegate.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/SAXDelegate.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/GettysburgTests/SAXTestHandler.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/GettysburgTests/SAXTestHandler.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Classes.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Classes.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Classes/DOMAttribute.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Classes/DOMCData.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Classes/DOMComment.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Classes/DOMDocType.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Classes/DOMDocType/DTDExternalType.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Classes/DOMDocType/DTDPlacement.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Classes/DOMDocument.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Classes/DOMElement.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Classes/DOMNode.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Classes/DOMNode/Element.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Classes/DOMNode/Index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Classes/DOMNode/NodeType.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Classes/DOMParentNode.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Classes/DOMProcessingInstruction.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Classes/DOMText.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Classes/DTDAttribute.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Classes/DTDAttribute/AttributeType.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Classes/DTDAttribute/DefaultType.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Classes/DTDElement.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Classes/DTDElement.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Classes/DTDElement/AllowedContent.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Classes/DTDElement/CharacterContent.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Classes/DTDElement/Content.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Classes/DTDElement/Content/ContentType.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Classes/DTDElement/Content/Multiplicity.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Classes/DTDElement/ContentList.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Classes/DTDElement/ContentList/Conjunction.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Classes/DTDElement/ElementContent.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Classes/DTDEntity.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Classes/DTDEntity/EntityType.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Classes/DTDNotation.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Classes/SAXParser.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Classes/SAXParser.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Enums.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Enums.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Enums/DOMError.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Enums/DOMError.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Enums/LeadingWhitespace.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Enums/LeadingWhitespace.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Enums/SAXError.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Enums/SAXErrorSelect.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Enums/SuffixOption.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Enums/SuffixOption.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Enums/URLErrors.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Enums/URLErrors.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Enums/XMLDeclEnum.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Enums/XMLDeclEnum.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Extensions.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Extensions.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Extensions/CharacterSet.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Extensions/CharacterSet.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Extensions/URL.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Extensions/URL.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Functions.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Functions.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Functions/_3C_28_5F_3A_5F_3A_29_5F_24sySbxSg_5FAAtcSLRzluD.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Functions/_3C_28_5F_3A_5F_3A_29_5F_24sySbxSg_5FAAtcSLRzluD.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Functions/getEncodingName_28data_3A_29_5F_24s4dataSS10Foundation4DataV_5FtKcD.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Functions/getEncodingName_28filename_3A_29_5F_24s8filenameS2S_5FtKcD.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Functions/getEncodingName_28inputStream_3A_29_5F_24s11inputStreamSS_5FSo07NSInputB0CtAC_5FtKcD.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Functions/getEncodingName_28url_3A_29_5F_24s3urlSS10Foundation3URLV_5FtKcD.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Global Variables.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Global Variables.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Global Variables/ERRMSG_5FEOF.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Global Variables/FileMan.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Global Variables/FileMan.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Protocols.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Protocols.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Protocols/DOMListener.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Protocols/SAXCharInputStream.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Protocols/SAXHandler.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Structs.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Structs.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Structs/DocPosition.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Structs/DocPosition.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Structs/NSMapping.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Structs/NSMapping.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Structs/SAXNSName.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Structs/SAXName.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Typealiases.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Typealiases.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Typealiases/DOMNSName.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Typealiases/DOMName.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Typealiases/SAXRawAttribList.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Typealiases/SAXRawAttribList.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Typealiases/SAXRawAttribute.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/badge.svg" beforeDir="false" afterPath="$PROJECT_DIR$/docs/badge.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/css/highlight.css" beforeDir="false" afterPath="$PROJECT_DIR$/docs/css/highlight.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/css/jazzy.css" beforeDir="false" afterPath="$PROJECT_DIR$/docs/css/jazzy.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Classes.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Classes.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Classes/DOMAttribute.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Classes/DOMCData.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Classes/DOMComment.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Classes/DOMDocType.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Classes/DOMDocType/DTDExternalType.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Classes/DOMDocType/DTDPlacement.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Classes/DOMDocument.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Classes/DOMElement.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Classes/DOMNode.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Classes/DOMNode/Element.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Classes/DOMNode/Index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Classes/DOMNode/NodeType.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Classes/DOMParentNode.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Classes/DOMProcessingInstruction.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Classes/DOMText.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Classes/DTDAttribute.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Classes/DTDAttribute/AttributeType.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Classes/DTDAttribute/DefaultType.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Classes/DTDElement.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Classes/DTDElement.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Classes/DTDElement/AllowedContent.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Classes/DTDElement/CharacterContent.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Classes/DTDElement/Content.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Classes/DTDElement/Content/ContentType.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Classes/DTDElement/Content/Multiplicity.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Classes/DTDElement/ContentList.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Classes/DTDElement/ContentList/Conjunction.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Classes/DTDElement/ElementContent.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Classes/DTDEntity.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Classes/DTDEntity/EntityType.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Classes/DTDNotation.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Classes/SAXParser.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Classes/SAXParser.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Enums.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Enums.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Enums/DOMError.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Enums/DOMError.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Enums/LeadingWhitespace.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Enums/LeadingWhitespace.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Enums/SAXError.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Enums/SAXErrorSelect.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Enums/SuffixOption.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Enums/SuffixOption.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Enums/URLErrors.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Enums/URLErrors.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Enums/XMLDeclEnum.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Enums/XMLDeclEnum.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Extensions.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Extensions.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Extensions/CharacterSet.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Extensions/CharacterSet.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Extensions/URL.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Extensions/URL.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Functions.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Functions.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Functions/_3C_28_5F_3A_5F_3A_29_5F_24sySbxSg_5FAAtcSLRzluD.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Functions/_3C_28_5F_3A_5F_3A_29_5F_24sySbxSg_5FAAtcSLRzluD.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Functions/getEncodingName_28data_3A_29_5F_24s4dataSS10Foundation4DataV_5FtKcD.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Functions/getEncodingName_28filename_3A_29_5F_24s8filenameS2S_5FtKcD.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Functions/getEncodingName_28inputStream_3A_29_5F_24s11inputStreamSS_5FSo07NSInputB0CtAC_5FtKcD.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Functions/getEncodingName_28url_3A_29_5F_24s3urlSS10Foundation3URLV_5FtKcD.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Global Variables.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Global Variables.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Global Variables/ERRMSG_5FEOF.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Global Variables/FileMan.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Global Variables/FileMan.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Protocols.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Protocols.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Protocols/DOMListener.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Protocols/SAXCharInputStream.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Protocols/SAXHandler.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Structs.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Structs.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Structs/DocPosition.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Structs/DocPosition.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Structs/NSMapping.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Structs/NSMapping.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Structs/SAXNSName.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Structs/SAXName.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Typealiases.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Typealiases.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Typealiases/DOMNSName.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Typealiases/DOMName.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Typealiases/SAXRawAttribList.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Typealiases/SAXRawAttribList.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/Typealiases/SAXRawAttribute.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/css/highlight.css" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/css/highlight.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/css/jazzy.css" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/css/jazzy.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/js/jazzy.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/js/jazzy.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/js/jazzy.search.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/js/jazzy.search.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/search.json" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/Documents/search.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/docSet.dsidx" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.docset/Contents/Resources/docSet.dsidx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/docsets/.tgz" beforeDir="false" afterPath="$PROJECT_DIR$/docs/docsets/.tgz" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/js/jazzy.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/js/jazzy.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/js/jazzy.search.js" beforeDir="false" afterPath="$PROJECT_DIR$/docs/js/jazzy.search.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/search.json" beforeDir="false" afterPath="$PROJECT_DIR$/docs/search.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/undocumented.json" beforeDir="false" afterPath="$PROJECT_DIR$/docs/undocumented.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,6 +236,7 @@
     <option name="showVisibilityIcons" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="OBJC.PRESERVED_TARGET_SELECTION" value="Gettysburg" />
     <property name="OverrideImplement.combined" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
@@ -250,14 +420,10 @@
       <workItem from="1631544909619" duration="61000" />
       <workItem from="1631548377558" duration="12352000" />
       <workItem from="1631625127040" duration="18936000" />
-      <workItem from="1631816982367" duration="4759000" />
-    </task>
-    <task id="LOCAL-00030" summary="Cleanup.">
-      <created>1623246209772</created>
-      <option name="number" value="00030" />
-      <option name="presentableId" value="LOCAL-00030" />
-      <option name="project" value="LOCAL" />
-      <updated>1623246209772</updated>
+      <workItem from="1631816982367" duration="4837000" />
+      <workItem from="1632046723024" duration="8115000" />
+      <workItem from="1632139526162" duration="2950000" />
+      <workItem from="1632235825937" duration="6100000" />
     </task>
     <task id="LOCAL-00031" summary="Cleanup.">
       <created>1623246247093</created>
@@ -595,7 +761,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631816094863</updated>
     </task>
-    <option name="localTasksCounter" value="79" />
+    <task id="LOCAL-00079" summary="More...">
+      <created>1631823013196</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1631823013197</updated>
+    </task>
+    <option name="localTasksCounter" value="80" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -616,6 +789,7 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Changed documentation style." />
     <MESSAGE value="Moved up to Rubicon v0.1.7" />
     <MESSAGE value="Moved up to Rubicon v0.1.15" />

@@ -59,6 +59,7 @@
 		1117DD3A3F198482B084D02A /* RegexPatterns.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DEF013EEFC9E354D7B27 /* RegexPatterns.swift */; };
 		1117DD5EA3D228496356B194 /* ProcessingInstructionNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DAE3BCCA71E45675F701 /* ProcessingInstructionNode.swift */; };
 		1117DDAABC5C2559C3E58075 /* Gettysburg.h in Headers */ = {isa = PBXBuildFile; fileRef = 1117DA52094C2ABAE3EA2EBA /* Gettysburg.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1117DDD84984DBA2B554720B /* NodeMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D9B6B995236D628C22A6 /* NodeMap.swift */; };
 		1117DE30CAFBFEAC7BA6A96B /* ExperimentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D28B5717E792A78E31E5 /* ExperimentTests.swift */; };
 		1117DE9021ADA39C5586ABF8 /* NodeImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D592766799802E21FA47 /* NodeImpl.swift */; };
 		1117DF8DB58574A9ED6FEB55 /* StringProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D3F82BC0B22065494C83 /* StringProtocol.swift */; };
@@ -209,6 +210,7 @@
 		1117D8BB14CC5212B4301758 /* CharacterSets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CharacterSets.swift; sourceTree = "<group>"; };
 		1117D8C36782AC8D094246EE /* Test_UTF-16LE_ext.dtd */ = {isa = PBXFileReference; fileEncoding = 2483028224; lastKnownFileType = text.xml; path = "Test_UTF-16LE_ext.dtd"; sourceTree = "<group>"; };
 		1117D8EE1CD620C4E6152B79 /* URL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
+		1117D9B6B995236D628C22A6 /* NodeMap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NodeMap.swift; path = Nodes/DTD/NodeMap.swift; sourceTree = "<group>"; };
 		1117D9BAFC548A58FAF127F5 /* Test3.xml */ = {isa = PBXFileReference; fileEncoding = 2483028224; lastKnownFileType = text.xml; path = Test3.xml; sourceTree = "<group>"; };
 		1117D9D54446DA16AE2097BD /* DOMError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DOMError.swift; sourceTree = "<group>"; };
 		1117DA00775621297FDDF090 /* Test4.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Test4.xml; sourceTree = "<group>"; };
@@ -412,6 +414,7 @@
 				1117D28A9282F49C0EB21DB3 /* NodeList.swift */,
 				1117D7553789A231979AE774 /* ParentNode.swift */,
 				1117DFC5AB82040801F1C743 /* ChildNode.swift */,
+				1117D9B6B995236D628C22A6 /* NodeMap.swift */,
 			);
 			path = DOM;
 			sourceTree = "<group>";
@@ -690,10 +693,10 @@
 			);
 			mainGroup = 83CFA5A62556E331005498FC;
 			packageReferences = (
-				83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer.git" */,
-				831A2D9D26A226290061E945 /* XCRemoteSwiftPackageReference "swift-argument-parser.git" */,
-				83780B6F26C566810032AD73 /* XCRemoteSwiftPackageReference "RedBlackTree.git" */,
-				835BCD9626ECD81700B5DEF0 /* XCRemoteSwiftPackageReference "Rubicon.git" */,
+				83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer" */,
+				831A2D9D26A226290061E945 /* XCRemoteSwiftPackageReference "swift-argument-parser" */,
+				83780B6F26C566810032AD73 /* XCRemoteSwiftPackageReference "RedBlackTree" */,
+				835BCD9626ECD81700B5DEF0 /* XCRemoteSwiftPackageReference "Rubicon" */,
 			);
 			productRefGroup = 83CFA5B12556E331005498FC /* Products */;
 			projectDirPath = "";
@@ -783,6 +786,7 @@
 				1117D436C0924F71604707CA /* DTDElement.swift in Sources */,
 				1117DAD42539CEF65C01F83F /* DTDExternal.swift in Sources */,
 				1117D9F3B52CD8BC84D679B5 /* Messages.swift in Sources */,
+				1117DDD84984DBA2B554720B /* NodeMap.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1213,7 +1217,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		831A2D9D26A226290061E945 /* XCRemoteSwiftPackageReference "swift-argument-parser.git" */ = {
+		831A2D9D26A226290061E945 /* XCRemoteSwiftPackageReference "swift-argument-parser" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-argument-parser.git";
 			requirement = {
@@ -1221,7 +1225,7 @@
 				minimumVersion = 0.4.3;
 			};
 		};
-		835BCD9626ECD81700B5DEF0 /* XCRemoteSwiftPackageReference "Rubicon.git" */ = {
+		835BCD9626ECD81700B5DEF0 /* XCRemoteSwiftPackageReference "Rubicon" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/GalenRhodes/Rubicon.git";
 			requirement = {
@@ -1229,15 +1233,15 @@
 				minimumVersion = 0.7.0;
 			};
 		};
-		83780B6F26C566810032AD73 /* XCRemoteSwiftPackageReference "RedBlackTree.git" */ = {
+		83780B6F26C566810032AD73 /* XCRemoteSwiftPackageReference "RedBlackTree" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/GalenRhodes/RedBlackTree.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.2;
+				minimumVersion = 2.0.3;
 			};
 		};
-		83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer.git" */ = {
+		83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/GalenRhodes/PGDocFixer.git";
 			requirement = {
@@ -1250,22 +1254,22 @@
 /* Begin XCSwiftPackageProductDependency section */
 		831A2D9E26A226290061E945 /* ArgumentParser */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 831A2D9D26A226290061E945 /* XCRemoteSwiftPackageReference "swift-argument-parser.git" */;
+			package = 831A2D9D26A226290061E945 /* XCRemoteSwiftPackageReference "swift-argument-parser" */;
 			productName = ArgumentParser;
 		};
 		835BCD9726ECD81700B5DEF0 /* Rubicon */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 835BCD9626ECD81700B5DEF0 /* XCRemoteSwiftPackageReference "Rubicon.git" */;
+			package = 835BCD9626ECD81700B5DEF0 /* XCRemoteSwiftPackageReference "Rubicon" */;
 			productName = Rubicon;
 		};
 		83780B7026C566810032AD73 /* RedBlackTree */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 83780B6F26C566810032AD73 /* XCRemoteSwiftPackageReference "RedBlackTree.git" */;
+			package = 83780B6F26C566810032AD73 /* XCRemoteSwiftPackageReference "RedBlackTree" */;
 			productName = RedBlackTree;
 		};
 		83CFA5E22556E70C005498FC /* PGDocFixer */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer.git" */;
+			package = 83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer" */;
 			productName = PGDocFixer;
 		};
 /* End XCSwiftPackageProductDependency section */

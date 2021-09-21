@@ -13,7 +13,7 @@ let package = Package(
     ],
     dependencies: [
         .package(name: "Rubicon", url: "https://github.com/GalenRhodes/Rubicon.git", .upToNextMinor(from: "0.7.0")),
-        .package(name: "RedBlackTree", url: "https://github.com/GalenRhodes/RedBlackTree.git", .upToNextMajor(from: "2.0.2"))
+        .package(name: "RedBlackTree", url: "https://github.com/GalenRhodes/RedBlackTree.git", .upToNextMajor(from: "2.0.3"))
         .package(url: "https://github.com/apple/swift-argument-parser", .upToNextMinor(from: "0.4.3")),
     ],
     targets: [

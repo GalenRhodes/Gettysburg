@@ -53,7 +53,7 @@ class SAXTestHandler: SAXDelegate {
         /* TODO: Implement me... */
     }
 
-    func dtdExternalEntityDecl(_ parser: SAXParser, name: String, type: DOMDocType.DTDExternalType, publicId: String?, systemId: String) {
+    func dtdExternalEntityDecl(_ parser: SAXParser, name: String, publicId: String?, systemId: String) {
         /* TODO: Implement me... */
     }
 
@@ -61,11 +61,11 @@ class SAXTestHandler: SAXDelegate {
         /* TODO: Implement me... */
     }
 
-    func dtdElementDecl(_ parser: SAXParser, name: String, allowedContent: DTDElement.AllowedContent) {
+    func dtdElementDecl(_ parser: SAXParser, name: String, allowedContent: ElementDeclNode.ContentList) {
         /* TODO: Implement me... */
     }
 
-    func dtdAttributeDecl(_ parser: SAXParser, name: String, elementName: String, type: DTDAttribute.AttributeType, defaultType: DTDAttribute.DefaultType) {
+    func dtdAttributeDecl(_ parser: SAXParser, name: String, elementName: String, type: AttributeDeclNode.AttrType, defaultType: AttributeDeclNode.DefaultType, defaultValue: String?) {
         /* TODO: Implement me... */
     }
 

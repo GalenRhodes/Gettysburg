@@ -42,15 +42,15 @@ public protocol SAXDelegate {
 
     func dtdInternalEntityDecl(_ parser: SAXParser, name: String, content: String)
 
-    func dtdExternalEntityDecl(_ parser: SAXParser, name: String, type: DOMDocType.DTDExternalType, publicId: String?, systemId: String)
+    func dtdExternalEntityDecl(_ parser: SAXParser, name: String, publicId: String?, systemId: String)
 
     func dtdUnparsedEntityDecl(_ parser: SAXParser, name: String, publicId: String?, systemId: String, notation: String)
 
     func dtdNotationDecl(_ parser: SAXParser, name: String, publicId: String?, systemId: String?)
 
-    func dtdElementDecl(_ parser: SAXParser, name: String, allowedContent: DTDElement.AllowedContent)
+    func dtdElementDecl(_ parser: SAXParser, name: String, allowedContent: ElementDeclNode.ContentList)
 
-    func dtdAttributeDecl(_ parser: SAXParser, name: String, elementName: String, type: DTDAttribute.AttributeType, defaultType: DTDAttribute.DefaultType)
+    func dtdAttributeDecl(_ parser: SAXParser, name: String, elementName: String, type: AttributeDeclNode.AttrType, defaultType: AttributeDeclNode.DefaultType, defaultValue: String?)
 
     func comment(_ parser: SAXParser, content: String)
 

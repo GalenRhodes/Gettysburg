@@ -20,8 +20,8 @@ import CoreFoundation
 
 open class EntityReferenceNode: ParentNode {
     public override var nodeType:  NodeTypes { .EntityReference }
-    public override var nodeName:  String { entity.name }
-    public override var localName: String { entity.name }
+    public override var nodeName:  String { entity.name.name.description }
+    public override var localName: String { entity.name.name.localName }
 
     private let entity: EntityDeclNode
 
