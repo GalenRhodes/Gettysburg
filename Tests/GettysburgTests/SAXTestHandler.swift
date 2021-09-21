@@ -97,7 +97,7 @@ class SAXTestHandler: SAXDelegate {
     }
 
     func beginPrefixMapping(_ parser: SAXParser, mapping: NSMapping) {
-        nDebug(.In, "Prefix mapping: xmlns:\(mapping.prefix)=\"\(mapping.uri)\"")
+        nDebug(.In, "Prefix mapping: xmlns:\(mapping.prefix)=\"\(mapping.namespaceURI)\"")
     }
 
     func endPrefixMapping(_ parser: SAXParser, prefix: String) {

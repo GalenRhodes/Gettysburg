@@ -1,6 +1,6 @@
 /*
  *     PROJECT: Gettysburg
- *    FILENAME: NSName.swift
+ *    FILENAME: Namespaces.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
  *        DATE: 3/8/21
@@ -19,6 +19,12 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
+public typealias NamespaceTuple = (localName: String, namespaceURI: String)
+
+@inlinable public func == (lhs: NamespaceTuple, rhs:NamespaceTuple) -> Bool { areEqual((lhs.localName, rhs.localName), (lhs.namespaceURI, rhs.namespaceURI)) }
+
+@inlinable public func < (lhs: NamespaceTuple, rhs: NamespaceTuple) -> Bool { areLessThan((lhs.localName, rhs.localName), (lhs.namespaceURI, rhs.namespaceURI)) }
+
 /*===============================================================================================================================*/
 /// Holds a qualified name.
 ///
@@ -26,7 +32,8 @@ import Rubicon
     public var prefix:    String? = nil
     public let localName: String
 
-    @inlinable public var description: String {
+    @inlinable public var description: String { qName }
+    @inlinable public var qName:       String {
         guard let p = prefix else { return localName }
         return "\(p):\(localName)"
     }
@@ -47,14 +54,19 @@ import Rubicon
         }
     }
 
+    @inlinable public init<S>(name: S) where S: StringProtocol {
+        localName = name
+        prefix = nil
+    }
+
     @inlinable public func hash(into hasher: inout Hasher) {
         hasher.combine(prefix)
         hasher.combine(localName)
     }
 
-    @inlinable public static func < (lhs: QName, rhs: QName) -> Bool { ((lhs.localName < rhs.localName) || ((lhs.localName == rhs.localName) && (lhs.prefix < rhs.prefix))) }
+    @inlinable public static func < (lhs: QName, rhs: QName) -> Bool { areLessThan((lhs.localName, rhs.localName), (lhs.prefix, rhs.prefix)) }
 
-    @inlinable public static func == (lhs: QName, rhs: QName) -> Bool { ((lhs.prefix == rhs.prefix) && (lhs.localName == rhs.localName)) }
+    @inlinable public static func == (lhs: QName, rhs: QName) -> Bool { areEqual((lhs.localName, rhs.localName), (lhs.prefix, rhs.prefix)) }
 }
 
 /*===============================================================================================================================*/
@@ -67,7 +79,7 @@ import Rubicon
 
     @inlinable public var description: String { name.description }
 
-    @inlinable init(localName: String, prefix: String? = nil, uri: String?) {
+    @inlinable init(localName: String, prefix: String? = nil, namespaceURI uri: String?) {
         if let u = uri {
             self.name = QName(prefix: prefix, localName: localName)
             self.uri = u
@@ -79,10 +91,10 @@ import Rubicon
     }
 
     @inlinable init(name: String) {
-        self.init(localName: name, prefix: nil, uri: nil)
+        self.init(localName: name, prefix: nil, namespaceURI: nil)
     }
 
-    @inlinable init(qName: String, uri: String) {
+    @inlinable init(qName: String, namespaceURI uri: String) {
         self.name = QName(qName: qName)
         self.uri = uri
     }
@@ -101,37 +113,37 @@ import Rubicon
 /// Holds a `prefix` to `uri` mapping.
 ///
 @frozen public struct NSMapping: Hashable, Comparable, CustomStringConvertible, Codable {
-    public let prefix: String
-    public let uri:    String
+    public let prefix:       String
+    public let namespaceURI: String
 
-    @inlinable public var description: String { isDefault ? "xmlns=\(uri.quoted())" : "xmlns:\(prefix)=\(uri.quoted())" }
+    @inlinable public var description: String { isDefault ? "xmlns=\(namespaceURI.quoted())" : "xmlns:\(prefix)=\(namespaceURI.quoted())" }
     @inlinable public var isDefault:   Bool { prefix.isEmpty }
 
     @inlinable init?(attribute a: SAXRawAttribute) {
         if a.name.prefix == "xmlns" {
             self.prefix = a.name.localName
-            self.uri = a.value
+            self.namespaceURI = a.value
         }
         else if a.name.prefix == nil && a.name.localName == "xmlns" {
             self.prefix = ""
-            self.uri = a.value
+            self.namespaceURI = a.value
         }
         else {
             return nil
         }
     }
 
-    @inlinable init(prefix: String, uri: String) {
+    @inlinable init(prefix: String, namespaceURI uri: String) {
         self.prefix = prefix.trimmed
-        self.uri = uri
+        self.namespaceURI = uri
     }
 
     @inlinable public func hash(into hasher: inout Hasher) {
         hasher.combine(prefix)
-        hasher.combine(uri)
+        hasher.combine(namespaceURI)
     }
 
-    @inlinable public static func == (lhs: NSMapping, rhs: NSMapping) -> Bool { ((lhs.prefix == rhs.prefix) && (lhs.uri == rhs.uri)) }
+    @inlinable public static func == (lhs: Self, rhs: Self) -> Bool { areEqual((lhs.prefix, rhs.prefix), (lhs.namespaceURI, rhs.namespaceURI)) }
 
-    @inlinable public static func < (lhs: NSMapping, rhs: NSMapping) -> Bool { (lhs.prefix < rhs.prefix) || ((lhs.prefix == rhs.prefix) && (lhs.uri < rhs.uri)) }
+    @inlinable public static func < (lhs: Self, rhs: Self) -> Bool { areLessThan((lhs.prefix, rhs.prefix), (lhs.namespaceURI, rhs.namespaceURI)) }
 }
