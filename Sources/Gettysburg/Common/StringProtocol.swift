@@ -18,9 +18,9 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-extension StringProtocol {
+extension Collection where Element == Character {
 
-    @inlinable func skipWS(_ idx: inout String.Index, position pos: inout DocPosition, peek: Bool = false) -> Character? {
+    @inlinable func skipWS(_ idx: inout Self.Index, position pos: inout DocPosition, peek: Bool = false) -> Character? {
         while idx < endIndex && self[idx].isXmlWhitespace {
             pos.update(self[idx])
             formIndex(after: &idx)
@@ -34,40 +34,57 @@ extension StringProtocol {
         return ch
     }
 
-    @inlinable func splitPrefix() -> QName { QName(qName: self) }
+    @inlinable func splitPrefix() -> QName { QName(qName: asString) }
 
     @inlinable func noLF() -> String {
-        let str = String(self)
-        return RegularExpression(pattern: "\\R")?.stringByReplacingMatches(in: str, using: { _ in " " }).0 ?? str
+        let str = asString
+        return RegularExpression(pattern: "\\R+")?.stringByReplacingMatches(in: str, using: { _ in " " }).0 ?? str
     }
 
     @inlinable func collapeWS() -> String {
-        let str = String(self)
+        let str = asString
         return RegularExpression(pattern: "\\s+")?.stringByReplacingMatches(in: str, using: { _ in " " }).0 ?? str
     }
 
-    @usableFromInline func encodeEntities() -> String {
-        var out: String       = ""
-        let ins: String       = String(self)
-        var idx: String.Index = ins.startIndex
+    @inlinable var asString: String {
+        guard let s = (self as? String) else { return String(self) }
+        return s
+    }
 
-        RegularExpression(pattern: "\\&(\\w+);")?.forEachMatch(in: ins) { m, _, _ in
-            guard let m = m, let r = m[1].range else { return }
+    @usableFromInline func decodeEntities() -> String {
+        var out: String     = ""
+        var idx: Self.Index = startIndex
 
-            out += ins[idx ..< r.lowerBound]
-            idx = r.upperBound
+        while idx < endIndex {
+            let ch = self[idx]
+            formIndex(after: &idx)
 
-            switch ins[r] {
-                case "amp":  out += "&"
-                case "lt":   out += "<"
-                case "gt":   out += ">"
-                case "apos": out += "'"
-                case "quot": out += "\""
-                default:     out += m.subString
+            if ch == "&" {
+                var i1 = idx
+                while self[i1] != ";" && i1 < endIndex { formIndex(after: &i1) }
+
+                if idx < endIndex, let rep: Character = StandardEntities1[self[idx ..< i1].asString] {
+                    out.append(rep)
+                    idx = index(after: i1)
+                }
+                else {
+                    out.append(ch)
+                }
+            }
+            else {
+                out.append(ch)
             }
         }
 
-        out += ins[idx ..< ins.endIndex]
+        return out
+    }
+
+    @usableFromInline func encodeEntities() -> String {
+        var out: String = ""
+        for ch in self {
+            if let rep = StandardEntities2[ch] { out += rep }
+            else { out.append(ch) }
+        }
         return out
     }
 
@@ -77,16 +94,43 @@ extension StringProtocol {
 
     @inlinable func quoted(quote: Character = "\"") -> String { "\(quote)\(encodeEntities())\(quote)" }
 
+    /*===========================================================================================================================*/
+    /// If this character collection starts and ends with either a single or double quote then those quotes are remove from the
+    /// returned string.
+    /// 
+    /// - Precondition: The starting and ending character must be the same. If, for example, the string is "Robert' then the quotes
+    ///                 *are not* removed.
+    /// - Returns: A string with the quotes removed.
+    ///
     @usableFromInline func unQuoted() -> String {
-        let work = trimmed
-        guard work.count > 1 else { return String(self) }
+        guard count > 1 else { return asString }
 
-        let firstChar = work[work.startIndex]
-        let lastIdx   = work.index(before: work.endIndex)
+        let firstChar = self[startIndex]
+        let lastIdx = lastIndex
 
-        guard value(firstChar, isOneOf: "\"", "'") && work[lastIdx] == firstChar else { return String(self) }
-        return String(self[work.index(after: work.startIndex) ..< lastIdx])
+        guard value(firstChar, isOneOf: "\"", "'") && self[lastIdx] == firstChar else { return asString }
+        return String(self[index(after: startIndex) ..< lastIdx])
     }
 
+    @inlinable var lastIndex: Self.Index {
+        var i = startIndex
+        if i < endIndex {
+            var j = index(after: i)
+            while j < endIndex {
+                i = j
+                formIndex(after: &j)
+            }
+        }
+        return i
+    }
+
+    /*===========================================================================================================================*/
+    /// Returns the first character in the collection.
+    /// 
+    /// - Precondition: There has to be at least one character in the collection of a fatal error will be thrown.
+    ///
     @inlinable var firstChar: Character { self[startIndex] }
 }
+
+private let StandardEntities1: [String: Character] = [ "amp": "&", "lt": "<", "gt": ">", "apos": "'", "quot": "\"" ]
+private let StandardEntities2: [Character: String] = [ "&": "amp", "<": "lt", ">": "gt", "'": "apos", "\"": "quot" ]

@@ -44,7 +44,9 @@ open class NodeImpl: Node, Hashable, Equatable {
 
     internal var _ownerDocument: DocumentNode? = nil
 
-    init(ownerDocument: DocumentNode?) { _ownerDocument = ownerDocument }
+    init() { _ownerDocument = nil }
+
+    init(ownerDocument: DocumentNode) { _ownerDocument = ownerDocument }
 
     @discardableResult public func append<T>(child node: T) throws -> T where T: Node { throw DOMError.NotSupported(description: "Child nodes are not allowed here.") }
 

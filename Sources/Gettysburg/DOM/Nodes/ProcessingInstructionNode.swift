@@ -30,7 +30,7 @@ open class ProcessingInstructionNode: ChildNode {
     public override var textContent: String    { get { target } set {} }
     //@f:1
 
-    public init(ownerDocument: DocumentNode?, target: String, data: String) {
+    public init(ownerDocument: DocumentNode, target: String, data: String) {
         self.target = target
         self.data = data
         super.init(ownerDocument: ownerDocument)

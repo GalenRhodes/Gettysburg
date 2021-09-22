@@ -31,25 +31,25 @@ open class ElementDeclNode: DTDElement {
     public          var content:     ContentList?
     //@f:1
 
-    public init(ownerDocument: DocumentNode?, qName: String, namespaceURI: String, contentType: ContentType, content: String, position pos: inout DocPosition) throws {
+    init(ownerDocument: DocumentNode, qName: String, namespaceURI: String, contentType: ContentType, content: String, position pos: inout DocPosition) throws {
         self.contentType = contentType
         self.content = try ContentList(content: content, position: &pos, allowPCData: (contentType == .Mixed))
         super.init(ownerDocument: ownerDocument, qName: qName, namespaceURI: namespaceURI)
     }
 
-    public init(ownerDocument: DocumentNode?, name: String, contentType: ContentType, content: String, position pos: inout DocPosition) throws {
+    init(ownerDocument: DocumentNode, name: String, contentType: ContentType, content: String, position pos: inout DocPosition) throws {
         self.contentType = contentType
         self.content = try ContentList(content: content, position: &pos, allowPCData: (contentType == .Mixed))
         super.init(ownerDocument: ownerDocument, name: name)
     }
 
-    init(ownerDocument: DocumentNode?, qName: String, namespaceURI: String, contentType: ContentType, content: ContentList? = nil) {
+    init(ownerDocument: DocumentNode, qName: String, namespaceURI: String, contentType: ContentType, content: ContentList? = nil) {
         self.contentType = contentType
         self.content = content
         super.init(ownerDocument: ownerDocument, qName: qName, namespaceURI: namespaceURI)
     }
 
-    init(ownerDocument: DocumentNode?, name: String, contentType: ContentType, content: ContentList? = nil) {
+    init(ownerDocument: DocumentNode, name: String, contentType: ContentType, content: ContentList? = nil) {
         self.contentType = contentType
         self.content = content
         super.init(ownerDocument: ownerDocument, name: name)
@@ -61,6 +61,9 @@ open class ElementDeclNode: DTDElement {
         case Elements
         case Mixed
     }
+}
+
+extension ElementDeclNode {
 
     public class ContentItem {
         public let type:         ItemType

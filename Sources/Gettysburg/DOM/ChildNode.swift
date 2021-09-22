@@ -28,7 +28,7 @@ open class ChildNode: NodeImpl {
     public override var nextSibling:     Node? { _nextSibling }
     public override var previousSibling: Node? { _previousSibling }
 
-    override init(ownerDocument: DocumentNode?) { super.init(ownerDocument: ownerDocument) }
+    override init(ownerDocument: DocumentNode) { super.init(ownerDocument: ownerDocument) }
 
     public override func isEqualTo(_ other: Node) -> Bool { super.isEqualTo(other) }
 

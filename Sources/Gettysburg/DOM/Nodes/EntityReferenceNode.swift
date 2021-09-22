@@ -25,7 +25,7 @@ open class EntityReferenceNode: ParentNode {
 
     private let entity: EntityDeclNode
 
-    public init(ownerDocument: DocumentNode?, entity: EntityDeclNode) {
+    public init(ownerDocument: DocumentNode, entity: EntityDeclNode) {
         self.entity = entity
         super.init(ownerDocument: ownerDocument)
     }

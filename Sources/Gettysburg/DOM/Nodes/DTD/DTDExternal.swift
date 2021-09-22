@@ -23,13 +23,13 @@ open class DTDExternal: DTDElement {
     public internal(set) var publicId: String?
     public internal(set) var systemId: String?
 
-    init(ownerDocument: DocumentNode?, qName: String, namespaceURI: String, publicId: String?, systemId: String?) {
+    init(ownerDocument: DocumentNode, qName: String, namespaceURI: String, publicId: String?, systemId: String?) {
         self.publicId = publicId
         self.systemId = systemId
         super.init(ownerDocument: ownerDocument, qName: qName, namespaceURI: namespaceURI)
     }
 
-    init(ownerDocument: DocumentNode?, name: String, publicId: String?, systemId: String?) {
+    init(ownerDocument: DocumentNode, name: String, publicId: String?, systemId: String?) {
         self.publicId = publicId
         self.systemId = systemId
         super.init(ownerDocument: ownerDocument, name: name)

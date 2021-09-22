@@ -29,7 +29,7 @@ open class EntityDeclNode: DTDExternal {
     public          var value:         String?
     //@f:1
 
-    init(ownerDocument: DocumentNode?, qName: String, namespaceURI: String, value: String?, publicId: String?, systemId: String?, notationName: String?, inputEncoding: String, xmlEncoding: String?, xmlVersion: String?) {
+    init(ownerDocument: DocumentNode, qName: String, namespaceURI: String, value: String?, publicId: String?, systemId: String?, notationName: String?, inputEncoding: String, xmlEncoding: String?, xmlVersion: String?) {
         self.inputEncoding = inputEncoding
         self.notationName = notationName
         self.xmlEncoding = xmlEncoding
@@ -38,7 +38,7 @@ open class EntityDeclNode: DTDExternal {
         super.init(ownerDocument: ownerDocument, qName: qName, namespaceURI: namespaceURI, publicId: publicId, systemId: systemId)
     }
 
-    init(ownerDocument: DocumentNode?, name: String, value: String?, publicId: String?, systemId: String?, notationName: String?, inputEncoding: String, xmlEncoding: String?, xmlVersion: String?) {
+    init(ownerDocument: DocumentNode, name: String, value: String?, publicId: String?, systemId: String?, notationName: String?, inputEncoding: String, xmlEncoding: String?, xmlVersion: String?) {
         self.inputEncoding = inputEncoding
         self.notationName = notationName
         self.xmlEncoding = xmlEncoding

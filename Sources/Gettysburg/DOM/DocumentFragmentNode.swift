@@ -20,7 +20,7 @@ import CoreFoundation
 import Rubicon
 
 open class DocumentFragmentNode: ParentNode {
-    override init(ownerDocument: DocumentNode?) { super.init(ownerDocument: ownerDocument) }
+    override init(ownerDocument: DocumentNode) { super.init(ownerDocument: ownerDocument) }
 
     public override func isEqualTo(_ other: Node) -> Bool { super.isEqualTo(other) }
 

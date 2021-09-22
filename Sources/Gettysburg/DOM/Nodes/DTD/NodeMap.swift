@@ -24,7 +24,7 @@ public let NodeMapDidChange: NSNotification.Name = NSNotification.Name("NodeMapD
 
 /*===============================================================================================================================*/
 /// A collection that holds a set of nodes that can be referenced by their name.
-///
+/// 
 /// - Note: When it comes to the Document Object Model, there is some ambiguity reguarding name spaces and name collisions. In
 ///         short how to handle nodes with namespaces and nodes without namespaces.
 ///
@@ -44,12 +44,12 @@ open class NodeMap<T>: BidirectionalCollection, Hashable where T: Node {
 }
 
 extension NodeMap {
-    @inlinable public var startIndex: Int { nsNameMap.startIndex }
-    @inlinable public var endIndex:   Int { nsNameMap.endIndex }
+    @inlinable public var startIndex: Index { nsNameMap.startIndex }
+    @inlinable public var endIndex:   Index { nsNameMap.endIndex }
 
     /*===========================================================================================================================*/
     /// Returns the node that has the given localName and namespaceURI.
-    ///
+    /// 
     /// - Parameter nsName: a tuple containing the localName and namespaceURI.
     /// - Returns: the node or `nil` if it doesn't exist in this nodeMap. -
     ///
@@ -58,47 +58,47 @@ extension NodeMap {
     @inlinable public subscript(nodeName: String) -> T? {
         if let n = nodeNameMap[nodeName] { return n }
         guard let n = nsNameMap.first(where: { $0.value.nodeName == nodeName }) else { return nil }
-        nodeNameMap[nodeName] = n
-        return n
+        nodeNameMap[nodeName] = n.value
+        return n.value
     }
 
-    @inlinable public subscript(position: Index) -> T { nsNameMap[position] }
+    @inlinable public subscript(position: Index) -> T { nsNameMap[position].value }
 
-    @inlinable public func removeAll() {
-        nsNameMap.removeAll()
-        nodeNameMap.removeAll()
-    }
-
-    @inlinable public func remove(at position: Index) -> T {
-        remove(node: self[position])!
-        nodeNameMap.removeAll()
-    }
-
-    @inlinable public func add(node: T) -> T? {
+    @discardableResult @inlinable public func add(node: T) -> T? {
         let n = nsNameMap[node.mapKey]
         nodeNameMap.removeAll()
         nsNameMap[node.mapKey] = node
         return n
     }
 
-    @inlinable public func removeNodeWith(nsName: NamespaceTuple) -> T? {
+    @inlinable public func removeAll() {
+        nsNameMap.removeAll()
+        nodeNameMap.removeAll()
+    }
+
+    @discardableResult @inlinable public func remove(at position: Index) -> T {
+        let n = self[position]
+        remove(node: n)
+        nodeNameMap.removeAll()
+        return n
+    }
+
+    @discardableResult @inlinable public func removeNodeWith(nsName: NamespaceTuple) -> T? {
         guard let n = self[nsName] else { return nil }
         return remove(node: n)
     }
 
-    @inlinable public func remove(node: T) -> T? {
+    @discardableResult @inlinable public func remove(node: T) -> T? {
         guard let n = nsNameMap.removeValue(forKey: node.mapKey) else { return nil }
         nodeNameMap.removeAll()
         return n
     }
 
-    @inlinable public func nodesWith(localName: String) -> [T] { nodes { $0.localName == localName } }
+    @inlinable public func nodesWith(localName: String) -> [T] { filter { $0.localName == localName } }
 
-    @inlinable public func nodesWith(namespaceURI: String) -> [T] { nodes { $0.namespaceURI == namespaceURI } }
+    @inlinable public func nodesWith(namespaceURI: String) -> [T] { filter { $0.namespaceURI == namespaceURI } }
 
-    @inlinable public func nodesWith(prefix: String) -> [T] { nodes { $0.prefix == prefix } }
-
-    @inlinable public func nodes(where body: (T) throws -> Bool) rethrows -> [T] { nsNameMap.compactMap { try body($0.value) ? $0.value : nil } }
+    @inlinable public func nodesWith(prefix: String) -> [T] { filter { $0.prefix == prefix } }
 
     @inlinable public func index(before i: Index) -> Index { nsNameMap.index(before: i) }
 
@@ -119,7 +119,7 @@ extension NodeMap {
 }
 
 extension Node {
-    fileprivate var mapKey: String {
+    @inlinable var mapKey: String {
         let uri = (namespaceURI ?? "")
         return "\(uri.quoted())|\(localName.quoted())"
     }

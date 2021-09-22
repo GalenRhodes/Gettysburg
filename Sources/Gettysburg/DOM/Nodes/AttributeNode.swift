@@ -36,14 +36,14 @@ open class AttributeNode: NodeImpl {
     private var _name: NSName
     //@f:1
 
-    init(ownerDocument: DocumentNode?, name: NSName, value: String, isSpecified: Bool = true) {
+    init(ownerDocument: DocumentNode, name: NSName, value: String, isSpecified: Bool = true) {
         self._name = name
         self.value = value
         self.isSpecified = isSpecified
         super.init(ownerDocument: ownerDocument)
     }
 
-    public override func cloneNode(deep: Bool) -> Self { super.cloneNode(deep: deep) as! Self }
+    public override func cloneNode(deep: Bool) -> Self { super.cloneNode(deep: deep) }
 
     public override func isEqualTo(_ other: Node) -> Bool {
         guard let a = (other as? AttributeNode) else { return false }

@@ -29,12 +29,12 @@ open class DTDElement: NodeImpl {
     internal var name: NSName
     //@f:1
 
-    init(ownerDocument: DocumentNode?, qName: String, namespaceURI: String) {
-        self.name = NSName(qName: qName, uri: namespaceURI)
+    init(ownerDocument: DocumentNode, qName: String, namespaceURI: String) {
+        self.name = NSName(qName: qName, namespaceURI: namespaceURI)
         super.init(ownerDocument: ownerDocument)
     }
 
-    init(ownerDocument: DocumentNode?, name: String) {
+    init(ownerDocument: DocumentNode, name: String) {
         self.name = NSName(name: name)
         super.init(ownerDocument: ownerDocument)
     }

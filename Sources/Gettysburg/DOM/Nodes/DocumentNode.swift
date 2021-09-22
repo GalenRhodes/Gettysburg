@@ -23,11 +23,16 @@ open class DocumentNode: NodeImpl {
     //@f:0
     public override var nodeType:      NodeTypes    { .Document }
     public override var ownerDocument: DocumentNode { self      }
+    public          var strict:        Bool         = false
+
     private         let uuid:          String       = UUID().uuidString
     //@f:1
+
+    public override init() { super.init() }
+
     public override func isEqualTo(_ other: Node) -> Bool { self === other }
 
     public override func hash(into hasher: inout Hasher) { hasher.combine(uuid) }
 
-    public override func cloneNode(deep: Bool) -> Self { super.cloneNode(deep: deep) as! Self }
+    public override func cloneNode(deep: Bool) -> Self { super.cloneNode(deep: deep) }
 }

@@ -29,7 +29,7 @@ open class AttributeDeclNode: DTDElement {
     public          var enumValues:   [String] = []
     //@f:1
 
-    init(ownerDocument: DocumentNode?, qName: String, namespaceURI: String, elementName: String, type: AttrType, enumValues: [String], defaultType: DefaultType, defaultValue: String?) {
+    init(ownerDocument: DocumentNode, qName: String, namespaceURI: String, elementName: String, type: AttrType, enumValues: [String], defaultType: DefaultType, defaultValue: String?) {
         self.type = type
         self.defaultType = defaultType
         self.defaultValue = defaultValue
@@ -38,7 +38,7 @@ open class AttributeDeclNode: DTDElement {
         super.init(ownerDocument: ownerDocument, qName: qName, namespaceURI: namespaceURI)
     }
 
-    init(ownerDocument: DocumentNode?, name: String, elementName: String, type: AttrType, enumValues: [String], defaultType: DefaultType, defaultValue: String?) {
+    init(ownerDocument: DocumentNode, name: String, elementName: String, type: AttrType, enumValues: [String], defaultType: DefaultType, defaultValue: String?) {
         self.type = type
         self.defaultType = defaultType
         self.defaultValue = defaultValue

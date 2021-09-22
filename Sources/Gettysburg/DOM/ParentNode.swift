@@ -27,7 +27,7 @@ open class ParentNode: ChildNode {
     public override var childNodes:     NodeList { NodeListImpl(self) }
     public override var hasChildNodes:  Bool { !nodeList.isEmpty }
 
-    override init(ownerDocument: DocumentNode?) { super.init(ownerDocument: ownerDocument) }
+    override init(ownerDocument: DocumentNode) { super.init(ownerDocument: ownerDocument) }
 
     public override func forEachChild(_ block: (Node) throws -> Void) rethrows { try nodeList.forEach(block) }
 

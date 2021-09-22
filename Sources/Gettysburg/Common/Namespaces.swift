@@ -43,7 +43,7 @@ public typealias NamespaceTuple = (localName: String, namespaceURI: String)
         self.localName = localName
     }
 
-    @inlinable public init<S>(qName: S) where S: StringProtocol {
+    @inlinable public init(qName: String) {
         if let idx = qName.firstIndex(where: { $0 == ":" }) {
             self.localName = String(qName[qName.index(after: idx) ..< qName.endIndex])
             self.prefix = ((idx > qName.startIndex) ? String(qName[qName.startIndex ..< idx]) : nil)
@@ -54,8 +54,8 @@ public typealias NamespaceTuple = (localName: String, namespaceURI: String)
         }
     }
 
-    @inlinable public init<S>(name: S) where S: StringProtocol {
-        localName = name
+    @inlinable public init(name: String) {
+        localName = String(name)
         prefix = nil
     }
 
