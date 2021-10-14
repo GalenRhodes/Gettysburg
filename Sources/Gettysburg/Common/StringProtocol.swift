@@ -20,7 +20,7 @@ import Rubicon
 
 extension Collection where Element == Character {
 
-    @inlinable func skipWS(_ idx: inout Self.Index, position pos: inout DocPosition, peek: Bool = false) -> Character? {
+    @discardableResult @inlinable func skipWS(_ idx: inout Self.Index, position pos: inout DocPosition, peek: Bool = false) -> Character? {
         while idx < endIndex && self[idx].isXmlWhitespace {
             pos.update(self[idx])
             formIndex(after: &idx)

@@ -50,7 +50,7 @@ public protocol SAXDelegate {
 
     func dtdElementDecl(_ parser: SAXParser, name: String, allowedContent: ElementDeclNode.ContentList)
 
-    func dtdAttributeDecl(_ parser: SAXParser, name: String, elementName: String, type: AttributeDeclNode.AttrType, defaultType: AttributeDeclNode.DefaultType, defaultValue: String?)
+    func dtdAttributeDecl(_ parser: SAXParser, name: String, elementName: String, type: AttributeDeclNode.AttrType, enumList: [String], defaultType: AttributeDeclNode.DefaultType, defaultValue: String?)
 
     func comment(_ parser: SAXParser, content: String)
 

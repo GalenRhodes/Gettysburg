@@ -3,7 +3,7 @@
  *    FILENAME: ElementDeclNode.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
- *        DATE: 9/13/21
+ *        DATE: 10/14/21
  *
  * Copyright © 2021. All rights reserved.
  *
@@ -19,206 +19,108 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-let OrderedChar:   Character = ","
-let UnorderedChar: Character = "|"
-let StartListChar: Character = "("
-let EndListChar:   Character = ")"
+open class ElementDeclNode: Node {
 
-open class ElementDeclNode: DTDElement {
-    //@f:0
-    public override var nodeType:    NodeTypes { .ElementDecl }
-    public          var contentType: ContentType
-    public          var content:     ContentList?
-    //@f:1
+    public class ContentBase {
+        public enum Requirement: String { case Required = "", Optional = "?", OneOrMore = "+", ZeroOrMore = "*" }
 
-    init(ownerDocument: DocumentNode, qName: String, namespaceURI: String, contentType: ContentType, content: String, position pos: inout DocPosition) throws {
-        self.contentType = contentType
-        self.content = try ContentList(content: content, position: &pos, allowPCData: (contentType == .Mixed))
-        super.init(ownerDocument: ownerDocument, qName: qName, namespaceURI: namespaceURI)
+        public var requirement: Requirement
+
+        init(_ requirement: Requirement) {
+            self.requirement = requirement
+        }
     }
 
-    init(ownerDocument: DocumentNode, name: String, contentType: ContentType, content: String, position pos: inout DocPosition) throws {
-        self.contentType = contentType
-        self.content = try ContentList(content: content, position: &pos, allowPCData: (contentType == .Mixed))
-        super.init(ownerDocument: ownerDocument, name: name)
-    }
+    public class ContentList: ContentBase {
+        public enum ListType: String { case Sequence = ",", Choice = "|" }
 
-    init(ownerDocument: DocumentNode, qName: String, namespaceURI: String, contentType: ContentType, content: ContentList? = nil) {
-        self.contentType = contentType
-        self.content = content
-        super.init(ownerDocument: ownerDocument, qName: qName, namespaceURI: namespaceURI)
-    }
+        public var content:  [ContentBase]
+        public var type:     ListType
+        public var isPCData: Bool { content.count == 1 && Swift.type(of: content[0]) == PCData.self }
+        public var isMixed:  Bool { content.count > 1 && Swift.type(of: content[0]) == PCData.self }
 
-    init(ownerDocument: DocumentNode, name: String, contentType: ContentType, content: ContentList? = nil) {
-        self.contentType = contentType
-        self.content = content
-        super.init(ownerDocument: ownerDocument, name: name)
-    }
-
-    public enum ContentType: String, Codable {
-        case Empty = "EMPTY"
-        case `Any` = "ANY"
-        case Elements
-        case Mixed
-    }
-}
-
-extension ElementDeclNode {
-
-    public class ContentItem {
-        public let type:         ItemType
-        public let multiplicity: Multiplicity
-
-        public init(type: ItemType, multiplicity: Multiplicity) {
+        init(_ requirement: Requirement, _ type: ListType, _ content: [ContentBase]) {
             self.type = type
-            self.multiplicity = multiplicity
-        }
-
-        public enum ItemType: String, Codable { case List, Element, PCData = "#PCDATA" }
-
-        public enum Multiplicity: String, Codable { case Optional = "?", Once = "", OneOrMore = "+", ZeroOrMore = "*" }
-    }
-
-    /*===========================================================================================================================*/
-    /// Allowed content item list.
-    ///
-    public class ContentList: ContentItem {
-        public enum ListType: String, Codable { case Ordered = ",", Unordered = "|" }
-
-        public var listType: ListType
-        public var content:  [ContentItem] = []
-
-        init(multiplicity: Multiplicity, listType: ListType) {
-            self.listType = listType
-            super.init(type: .List, multiplicity: multiplicity)
-        }
-
-        convenience init(content c: String, position pos: inout DocPosition, allowPCData: Bool) throws {
-            var i = c.startIndex
-            try self.init(content: c, index: &i, position: &pos, allowPCData: allowPCData)
-        }
-
-        init(content c: String, index i: inout String.Index, position pos: inout DocPosition, allowPCData: Bool) throws {
-            guard let ch = c.skipWS(&i, position: &pos) else { throw SAXError.MalformedElementDecl(position: pos, description: MsgUnexpectedEOF) }
-            guard ch == StartListChar else { throw SAXError.MalformedElementDecl(position: pos, description: "\(MsgContentListBadPrefix) \(quote(StartListChar)).") }
-            guard let ch = c.skipWS(&i, position: &pos, peek: true) else { throw SAXError.MalformedElementDecl(position: pos, description: MsgUnexpectedEOF) }
-
-            var lt: ListType? = nil
-
-            if ch == "#" {
-                guard allowPCData else { throw SAXError.MalformedElementDecl(position: pos, description: unexpectedMessage(found: ch)) }
-                content <+ try PCData(content: c, index: &i, position: &pos)
-                guard let ch = c.skipWS(&i, position: &pos) else { throw SAXError.MalformedElementDecl(position: pos, description: MsgUnexpectedEOF) }
-
-                if ch == EndListChar {
-                    listType = .Unordered
-                    super.init(type: .List, multiplicity: .Once)
-                    return
-                }
-                else if ch != UnorderedChar {
-                    throw SAXError.MalformedElementDecl(position: pos, description: unexpectedMessage(found: ch, expected: EndListChar, UnorderedChar))
-                }
-
-                lt = .Unordered
-            }
-
-            repeat {
-                guard let c1 = c.skipWS(&i, position: &pos, peek: true) else { throw SAXError.MalformedElementDecl(position: pos, description: MsgUnexpectedEOF) }
-
-                if c1.isXmlNameStartChar {
-                    content <+ try Element(content: c, index: &i, position: &pos)
-                }
-                else if c1 == StartListChar {
-                    content <+ try ContentList(content: c, index: &i, position: &pos, allowPCData: false)
-                }
-                else {
-                    throw SAXError.MalformedElementDecl(position: pos, description: unexpectedMessage(found: c1))
-                }
-
-                guard let c2 = c.skipWS(&i, position: &pos) else { throw SAXError.MalformedElementDecl(position: pos, description: MsgUnexpectedEOF) }
-
-                if value(c2, isOneOf: OrderedChar, UnorderedChar) {
-                    let sc2 = String(c2)
-
-                    if let _lt = lt?.rawValue {
-                        guard _lt == sc2 else { throw SAXError.MalformedElementDecl(position: pos, description: unexpectedMessage(found: sc2, expected: _lt)) }
-                    }
-                    else {
-                        lt = ListType(rawValue: sc2)!
-                    }
-                }
-                else {
-                    guard c2 == EndListChar else { throw SAXError.MalformedElementDecl(position: pos, description: unexpectedMessage(found: c2)) }
-                    break
-                }
-            }
-            while true
-
-            guard content.isNotEmpty else { throw SAXError.MalformedElementDecl(position: pos, description: MsgEmptyContentList) }
-            self.listType = ((lt == nil) ? .Ordered : lt!)
-            super.init(type: .List, multiplicity: Multiplicity.get(c, index: &i, position: &pos))
+            self.content = content
+            super.init(requirement)
         }
     }
 
-    /*===========================================================================================================================*/
-    /// PCData allowed content item.
-    ///
-    public class PCData: ContentItem {
-        init() { super.init(type: .PCData, multiplicity: .Once) }
+    public class ContentItem: ContentBase {
+        public var name: QName
 
-        init(content c: String, index i: inout String.Index, position pos: inout DocPosition) throws {
-            guard let _ = c.skipWS(&i, position: &pos) else { throw SAXError.UnexpectedEndOfInput(position: pos) }
-
-            for xch in ItemType.PCData.rawValue {
-                guard xch == c[i] else { throw SAXError.MalformedElementDecl(position: pos, description: unexpectedMessage(found: c[i], expected: xch)) }
-                pos.update(xch)
-                c.formIndex(after: &i)
-                guard i < c.endIndex else { throw SAXError.UnexpectedEndOfInput(position: pos) }
-            }
-            guard !Multiplicity.test(c[i]) else {
-                let msg = unexpectedMessage(found: c[i], expected: UnorderedChar, EndListChar)
-                throw SAXError.MalformedElementDecl(position: pos, description: msg)
-            }
-            super.init(type: .PCData, multiplicity: .Once)
-        }
-    }
-
-    /*===========================================================================================================================*/
-    /// Element allowed content item.
-    ///
-    public class Element: ContentItem {
-        public let name: QName
-
-        init(name: String, multiplicity: Multiplicity) {
+        init(_ requirement: Requirement, _ name: String) {
             self.name = QName(qName: name)
-            super.init(type: .Element, multiplicity: multiplicity)
+            super.init(requirement)
         }
+    }
 
-        init(content c: String, index i: inout String.Index, position pos: inout DocPosition) throws {
-            guard let ch = c.skipWS(&i, position: &pos, peek: true) else { throw SAXError.UnexpectedEndOfInput(position: pos) }
-            guard ch.isXmlNameStartChar else { throw SAXError.MalformedElementDecl(position: pos, description: unexpectedMessage(found: ch)) }
-
-            var data: [Character] = []
-            while i < c.endIndex && c[i].isXmlNameChar {
-                data <+ c[i]
-                pos.update(c[i])
-                c.formIndex(after: &i)
-            }
-            self.name = QName(qName: String(data))
-            super.init(type: .Element, multiplicity: Multiplicity.get(c, index: &i, position: &pos))
-        }
+    public class PCData: ContentBase {
+        init() { super.init(.ZeroOrMore) }
     }
 }
 
-extension ElementDeclNode.ContentItem.Multiplicity {
-    @inlinable static func test(_ ch: Character) -> Bool { value(ch, isOneOf: "?", "+", "*") }
+public func parseContentList<S>(content str: S, position: DocPosition) throws -> ElementDeclNode.ContentList where S: StringProtocol {
+    var pos: DocPosition  = position
+    var idx: String.Index = str.startIndex
 
-    @inlinable static func get(_ s: String, index i: inout String.Index, position pos: inout DocPosition) -> Self {
-        guard i < s.endIndex else { return .Once }
-        let ch: Character = s[i]
-        guard test(ch), let r = ElementDeclNode.ContentItem.Multiplicity(rawValue: String(ch)) else { return .Once }
-        pos.update(ch)
-        s.formIndex(after: &i)
-        return r
+    return try parseContentList(content: str, index: &idx, position: &pos, isRoot: true)
+}
+
+private let listOpenChar:  Character = "("
+private let listCloseChar: Character = ")"
+private let pcdata:        String    = "#PCDATA"
+private let mixedMarker:   String    = "\(listOpenChar)\(pcdata)"
+private let pcdataMarker:  String    = "\(mixedMarker)\(listCloseChar)"
+
+private func parseContentList<S>(content str: S, index idx: inout String.Index, position pos: inout DocPosition, isRoot: Bool = false) throws -> ElementDeclNode.ContentList where S: StringProtocol {
+    guard let ch = str.skipWS(&idx, position: &pos, peek: true) else { throw SAXError.MalformedElementDecl(position: pos, description: "Empty Content List") }
+    guard ch == listOpenChar else { throw SAXError.MalformedElementDecl(position: pos, description: errorMessage(prefix: "Invalid Character", found: ch, expected: listOpenChar)) }
+    let _idx = idx
+
+    if isRoot && testPrefix(marker: pcdataMarker, content: str, index: &idx) {
+        pos.update(str[_idx ..< idx])
+        if let ch = str.skipWS(&idx, position: &pos, peek: true) { throw SAXError.MalformedElementDecl(position: pos, description: errorMessage(prefix: "Invalid Character", found: ch)) }
+        return ElementDeclNode.ContentList(.Required, .Choice, [ ElementDeclNode.PCData() ])
     }
+
+    var listType: ElementDeclNode.ContentList.ListType? = nil
+    var list: [ElementDeclNode.ContentBase] = []
+
+    if isRoot && testPrefix(marker: mixedMarker, content: str, index: &idx) {
+        guard let ch = str.skipWS(&idx, position: &pos) else { throw SAXError.MalformedElementDecl(position: pos, description: "Content List Not Closed") }
+        guard ch == "|" else { throw SAXError.MalformedElementDecl(position: pos, description: errorMessage(prefix: "Invalid Character", found: ch, expected: "|")) }
+        listType = .Choice
+        list <+ ElementDeclNode.PCData()
+    }
+    else {
+        str.formIndex(after: &idx)
+    }
+
+    repeat {
+        guard let ch = str.skipWS(&idx, position: &pos) else { throw SAXError.MalformedElementDecl(position: pos, description: "Content List Not Closed") }
+        guard ch != listCloseChar else { break }
+        if ch == listOpenChar {
+            list <+ try parseContentList(content: str, index: &idx, position: &pos, isRoot: false)
+        }
+    }
+    while true
+    fatalError("DONE")
+}
+
+private func testPrefix<S>(marker: String, content str: S, index idx: inout String.Index) -> Bool where S: StringProtocol {
+    var idx1 = idx
+    var idx2 = marker.startIndex
+
+    while idx1 < str.endIndex {
+        guard str[idx1] == marker[idx2] else { break }
+        str.formIndex(after: &idx1)
+        marker.formIndex(after: &idx2)
+        guard idx2 < marker.endIndex else {
+            idx = idx1
+            return true
+        }
+    }
+
+    return false
 }

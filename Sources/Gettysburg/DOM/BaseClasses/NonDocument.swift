@@ -1,9 +1,9 @@
 /*===============================================================================================================================================================================*
  *     PROJECT: Gettysburg
- *    FILENAME: ProcessingInstructionNode.swift
+ *    FILENAME: NonDocument.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
- *        DATE: 9/13/21
+ *        DATE: 10/12/21
  *
  * Copyright © 2021. All rights reserved.
  *
@@ -19,30 +19,13 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-open class ProcessingInstructionNode: ChildNode {
-    //@f:0
-    public let target: String
-    public let data:   String
+open class NonDocument: Node {
+    open override var ownerDocument: DocumentNode { _ownerDocument }
 
-    public override var nodeType:    NodeTypes { .ProcessingInstruction }
-    public override var nodeName:    String    { target }
-    public override var nodeValue:   String?   { get { target } set {} }
-    public override var textContent: String    { get { target } set {} }
-    //@f:1
+    let _ownerDocument: DocumentNode
 
-    public init(ownerDocument: DocumentNode, target: String, data: String) {
-        self.target = target
-        self.data = data
-        super.init(ownerDocument: ownerDocument)
-    }
-
-    public override func isEqualTo(_ other: Node) -> Bool {
-        guard let o = (other as? ProcessingInstructionNode) else { return false }
-        return target == o.target && data == o.data
-    }
-
-    public override func hash(into hasher: inout Hasher) {
-        hasher.combine(target)
-        hasher.combine(data)
+    public init(ownerDocument: DocumentNode) {
+        self._ownerDocument = ownerDocument
+        super.init()
     }
 }

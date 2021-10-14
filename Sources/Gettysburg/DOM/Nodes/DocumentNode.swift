@@ -3,7 +3,7 @@
  *    FILENAME: DocumentNode.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
- *        DATE: 9/11/21
+ *        DATE: 10/12/21
  *
  * Copyright © 2021. All rights reserved.
  *
@@ -19,20 +19,7 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-open class DocumentNode: NodeImpl {
-    //@f:0
-    public override var nodeType:      NodeTypes    { .Document }
-    public override var ownerDocument: DocumentNode { self      }
-    public          var strict:        Bool         = false
-
-    private         let uuid:          String       = UUID().uuidString
-    //@f:1
-
-    public override init() { super.init() }
-
-    public override func isEqualTo(_ other: Node) -> Bool { self === other }
-
-    public override func hash(into hasher: inout Hasher) { hasher.combine(uuid) }
-
-    public override func cloneNode(deep: Bool) -> Self { super.cloneNode(deep: deep) }
+open class DocumentNode: Node {
+    open override var nodeType: NodeTypes { .Document }
+    open override var ownerDocument: DocumentNode { self }
 }

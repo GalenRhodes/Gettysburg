@@ -60,4 +60,35 @@ public class SAXError: Error, Codable {
         public override init(position: DocPosition, description: String) { super.init(position: position, description: description) }
         required public init(from decoder: Decoder) throws { try super.init(from: decoder) }
     }
+    //@f:1
+}
+
+func errorMessage(prefix: String, found: Character, expected: Character...) -> String {
+    errorMessage(prefix: prefix, found: "\(found)", expected: expected.map({ (ch) -> String in "\(ch)" }))
+}
+
+func errorMessage(prefix: String, found: String, expected: String...) -> String {
+    errorMessage(prefix: prefix, found: found, expected: expected)
+}
+
+func errorMessage(prefix: String, found: String, expected: [String]) -> String {
+    var msg: String = prefix
+
+    if expected.count == 0 {
+        msg += ": \"\(found)\""
+    }
+    else if expected.count == 1 {
+        msg += ". Expected \"\(expected[0])\" but found \"\(found)\" insteaad."
+    }
+    else {
+        let j = (expected.endIndex - 1)
+
+        msg += ". Expected "
+        for i in (expected.startIndex ..< j) {
+            msg += "\"\(expected[i])\", "
+        }
+        msg += "or \"\(expected[j])\" but found \"\(found)\" insteaad."
+    }
+
+    return msg
 }

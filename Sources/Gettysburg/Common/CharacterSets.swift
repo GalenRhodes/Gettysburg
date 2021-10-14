@@ -58,7 +58,7 @@ extension CharacterSet {
 
     static public let XMLWhitespace: CharacterSet = {
         // Anything less than or equal to the space character will be considered whitespace.
-        CharacterSet(charactersIn: UnicodeScalar(0) ... UnicodeScalar(0x20)).union(CharacterSet(charactersIn: UnicodeScalar(0x7f) ... UnicodeScalar(0x7f)))
+        CharacterSet(charactersIn: UnicodeScalar(UInt8(0)) ... UnicodeScalar(UInt8(0x20))).union(CharacterSet(charactersIn: UnicodeScalar(UInt8(0x7f)) ... UnicodeScalar(UInt8(0x7f))))
     }()
 
     static public let XMLNameStartChar: CharacterSet = {
@@ -71,7 +71,7 @@ extension CharacterSet {
     }()
 
     static public let XMLNameChar: CharacterSet = {
-        var cs = XMLNameStartChar.union(CharacterSet(charactersIn: "-.0123456789")).union(CharacterSet(charactersIn: UnicodeScalar(0xb7) ... UnicodeScalar(0xb7)))
+        var cs = XMLNameStartChar.union(CharacterSet(charactersIn: "-.0123456789")).union(CharacterSet(charactersIn: UnicodeScalar(UInt8(0xb7)) ... UnicodeScalar(UInt8(0xb7))))
         [ (UInt32(0x0300) ..< UInt32(0x0370)), (UInt32(0x203f) ..< UInt32(0x2041)) ].forEach { cs.formUnion(CharacterSet(range: $0)) }
         return cs
     }()

@@ -3,7 +3,7 @@
  *    FILENAME: NodeList.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
- *        DATE: 9/13/21
+ *        DATE: 10/12/21
  *
  * Copyright © 2021. All rights reserved.
  *
@@ -19,35 +19,10 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-public typealias NodeList = EmptyNodeListImpl
-
-public class EmptyNodeListImpl: BidirectionalCollection {
-    public typealias Element = Node
-    public typealias Index = Int
-
-    public var startIndex: Index { 0 }
-    public var endIndex:   Index { 0 }
-
+open class NodeList {
     init() {}
-
-    public func index(before i: Index) -> Index { fatalError("Index Out of Bounds.") }
-
-    public func index(after i: Index) -> Index { fatalError("Index Out of Bounds.") }
-
-    public subscript(position: Index) -> Element { fatalError("Index Out of Bounds.") }
 }
 
-public class NodeListImpl: EmptyNodeListImpl {
-    public override var startIndex: Index { parent.nodeList.startIndex }
-    public override var endIndex:   Index { parent.nodeList.endIndex }
-
-    let parent: ParentNode
-
-    init(_ parent: ParentNode) { self.parent = parent }
-
-    public override func index(before i: Index) -> Index { parent.nodeList.index(before: i) }
-
-    public override func index(after i: Index) -> Index { parent.nodeList.index(after: i) }
-
-    public override subscript(position: Index) -> Element { parent.nodeList[position] }
+class EmptyNodeList: NodeList {
+    override init() { super.init() }
 }

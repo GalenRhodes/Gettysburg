@@ -3,7 +3,7 @@
  *    FILENAME: UserData.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
- *        DATE: 9/11/21
+ *        DATE: 10/12/21
  *
  * Copyright © 2021. All rights reserved.
  *
@@ -17,8 +17,7 @@
 
 import Foundation
 import CoreFoundation
+import Rubicon
 
-public enum NodeEvent { case Adopted, Cloned, Deleted, Imported, Renamed }
-
-public typealias UserDataHandler = (NodeEvent, String, Any, Node, Node) -> Void
-public typealias UserData = (data: Any, handler: UserDataHandler)
+open class UserData {
+}

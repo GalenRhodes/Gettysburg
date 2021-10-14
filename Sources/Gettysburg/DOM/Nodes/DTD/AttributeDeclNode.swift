@@ -3,7 +3,7 @@
  *    FILENAME: AttributeDeclNode.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
- *        DATE: 9/13/21
+ *        DATE: 10/14/21
  *
  * Copyright © 2021. All rights reserved.
  *
@@ -19,49 +19,11 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-open class AttributeDeclNode: DTDElement {
-    //@f:0
-    public override var nodeType:     NodeTypes { .AttributeDecl }
-    public          var elementName:  QName
-    public          var type:         AttrType
-    public          var defaultType:  DefaultType
-    public          var defaultValue: String?
-    public          var enumValues:   [String] = []
-    //@f:1
+open class AttributeDeclNode: Node {
+    public enum AttrType { case ID, IDREF, IDREFS, ENTITY, ENTITIES, NMTOKEN, NMTOKENS, NOTATION, ENUMERATED }
 
-    init(ownerDocument: DocumentNode, qName: String, namespaceURI: String, elementName: String, type: AttrType, enumValues: [String], defaultType: DefaultType, defaultValue: String?) {
-        self.type = type
-        self.defaultType = defaultType
-        self.defaultValue = defaultValue
-        self.enumValues = enumValues
-        self.elementName = QName(qName: elementName)
-        super.init(ownerDocument: ownerDocument, qName: qName, namespaceURI: namespaceURI)
-    }
+    public enum DefaultType { case Required, Implied, Fixed }
 
-    init(ownerDocument: DocumentNode, name: String, elementName: String, type: AttrType, enumValues: [String], defaultType: DefaultType, defaultValue: String?) {
-        self.type = type
-        self.defaultType = defaultType
-        self.defaultValue = defaultValue
-        self.enumValues = enumValues
-        self.elementName = QName(qName: elementName)
-        super.init(ownerDocument: ownerDocument, name: name)
-    }
 
-    public enum AttrType: String, Codable {
-        case CData      = "CDATA"
-        case ID         = "ID"
-        case IDRef      = "IDREF"
-        case Entity     = "ENTITY"
-        case Entities   = "ENTITIES"
-        case NMToken    = "NMTOKEN"
-        case NMTokens   = "NMTOKENS"
-        case Notation   = "NOTATION"
-        case Enumerated = "()"
-    }
 
-    public enum DefaultType: String, Codable {
-        case Required = "#REQUIRED"
-        case Implied  = "#IMPLIED"
-        case Fixed    = "#FIXED"
-    }
 }

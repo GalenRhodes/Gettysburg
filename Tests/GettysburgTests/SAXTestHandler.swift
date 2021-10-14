@@ -65,7 +65,7 @@ class SAXTestHandler: SAXDelegate {
         /* TODO: Implement me... */
     }
 
-    func dtdAttributeDecl(_ parser: SAXParser, name: String, elementName: String, type: AttributeDeclNode.AttrType, defaultType: AttributeDeclNode.DefaultType, defaultValue: String?) {
+    func dtdAttributeDecl(_ parser: SAXParser, name: String, elementName: String, type: AttributeDeclNode.AttrType, enumList: [String], defaultType: AttributeDeclNode.DefaultType, defaultValue: String?) {
         /* TODO: Implement me... */
     }
 
