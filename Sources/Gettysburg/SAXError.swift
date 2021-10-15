@@ -63,31 +63,29 @@ public class SAXError: Error, Codable {
     //@f:1
 }
 
-func errorMessage(prefix: String, found: Character, expected: Character...) -> String {
-    errorMessage(prefix: prefix, found: "\(found)", expected: expected.map({ (ch) -> String in "\(ch)" }))
-}
+@inlinable func errorMessage(prefix p: String, found f: Character, expected e: Character...) -> String { errorMessage(prefix: p, found: f, expected: e) }
 
-func errorMessage(prefix: String, found: String, expected: String...) -> String {
-    errorMessage(prefix: prefix, found: found, expected: expected)
-}
+@inlinable func errorMessage(prefix p: String, found f: Character, expected e: [Character]) -> String { errorMessage(prefix: p, found: "\(f)", expected: e.map({ (c) -> String in "\(c)" })) }
 
-func errorMessage(prefix: String, found: String, expected: [String]) -> String {
-    var msg: String = prefix
+@inlinable func errorMessage(prefix: String, found: String, expected: String...) -> String { errorMessage(prefix: prefix, found: found, expected: expected) }
 
-    if expected.count == 0 {
-        msg += ": \"\(found)\""
+@usableFromInline func errorMessage(prefix p: String, found f: String, expected e: [String]) -> String {
+    var msg: String = p
+
+    if e.count == 0 {
+        msg += ": \"\(f)\""
     }
-    else if expected.count == 1 {
-        msg += ". Expected \"\(expected[0])\" but found \"\(found)\" insteaad."
+    else if e.count == 1 {
+        msg += ". Expected \"\(e[0])\" but found \"\(f)\" insteaad."
     }
     else {
-        let j = (expected.endIndex - 1)
+        let j = (e.endIndex - 1)
 
         msg += ". Expected "
-        for i in (expected.startIndex ..< j) {
-            msg += "\"\(expected[i])\", "
+        for i in (e.startIndex ..< j) {
+            msg += "\"\(e[i])\", "
         }
-        msg += "or \"\(expected[j])\" but found \"\(found)\" insteaad."
+        msg += "or \"\(e[j])\" but found \"\(f)\" insteaad."
     }
 
     return msg
