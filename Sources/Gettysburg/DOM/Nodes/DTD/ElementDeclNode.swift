@@ -67,58 +67,176 @@ public func parseContentList<S>(content str: S, position: DocPosition) throws ->
     return try parseContentList(content: str, index: &idx, position: &pos, isRoot: true)
 }
 
+private typealias _List = ElementDeclNode.ContentList
+private typealias _Base = ElementDeclNode.ContentBase
+private typealias _TList = (DocPosition, _Base)
+private typealias _Req = _Base.Requirement
+private typealias _LType = _List.ListType
+
 private let listOpenChar:  Character = "("
 private let listCloseChar: Character = ")"
 private let pcdata:        String    = "#PCDATA"
 private let mixedMarker:   String    = "\(listOpenChar)\(pcdata)"
 private let pcdataMarker:  String    = "\(mixedMarker)\(listCloseChar)"
 
-private func parseContentList<S>(content str: S, index idx: inout String.Index, position pos: inout DocPosition, isRoot: Bool = false) throws -> ElementDeclNode.ContentList where S: StringProtocol {
+/*===============================================================================================================================*/
+private func parseContentList<S>(content str: S, index idx: inout String.Index, position pos: inout DocPosition, isRoot: Bool) throws -> _List where S: StringProtocol {
     guard let ch = str.skipWS(&idx, position: &pos, peek: false) else { throw emptyContentListError(position: pos) }
     guard ch == listOpenChar else { throw unexpectedCharError(position: pos, found: ch, expected: listOpenChar) }
 
-    var content:  [(DocPosition, ElementDeclNode.ContentBase)] = []
-    var listType: ElementDeclNode.ContentList.ListType?        = nil
-    var reqType:  ElementDeclNode.ContentBase.Requirement      = .Required
+    var content:   [_TList] = []
+    var listType:  _LType?  = nil
+    var inBetween: Bool     = false
 
-    repeat {
-        guard let ch = str.skipWS(&idx, position: &pos) else { throw SAXError.MalformedElementDecl(position: pos, description: "Unexpected end of content list.") }
+    while idx < str.endIndex {
+        let ch: Character = str[idx]
 
-        switch ch {
-            case ")":
-                let cc = content.count
-                guard cc > 0 else { throw emptyContentListError(position: pos) }
-                if cc == 1 { listType = .Sequence }
-                reqType = getRequirement(content: str, index: &idx, position: &pos)
-
-                if type(of: content[0].1) == ElementDeclNode.PCData.self {
-                    try validatePCDataList(isRoot: isRoot, content: str, index: &idx, position: &pos, list: content, listType: &listType, reqType: &reqType)
+        switch inBetween {
+            case true:
+                switch ch {
+                    case ")":      return try finishContentList(content: str, index: &idx, position: &pos, contentList: content, listType: listType, isRoot: isRoot)
+                    case "|", ",": try handleListType(str, &idx, &pos, ch, &listType)
+                    default:       try handleInBetweenWS(ch, str, &idx, &pos)
                 }
-
-                if cc > 1 {
-                    for i in (1 ..< (content.endIndex - 1)) {
-                        guard type(of: content[i].1) != ElementDeclNode.PCData.self else { throw unexpectedPCDataError(position: pos) }
-                    }
+                inBetween = false
+            case false:
+                switch ch {
+                    case ")": return try finishContentList(content: str, index: &idx, position: &pos, contentList: content, listType: listType, isRoot: isRoot)
+                    case "(": try handleSubList(str, &idx, &pos, &content)
+                    case "#": try handlePCData(str, &idx, &pos, &content, isRoot, &inBetween)
+                    default:  try handleCharacter(ch, str, &idx, &pos, &content, &inBetween)
                 }
-
-                return ElementDeclNode.ContentList(reqType, listType!, content.map({ $0.1 }))
-            default: break
         }
     }
-    while true
+
+    throw SAXError.MalformedElementDecl(position: pos, description: "Unexpected end of content list.")
 }
 
-private func validatePCDataList<S>(isRoot: Bool, content str: S, index idx: inout String.Index, position pos: inout DocPosition, list: [(DocPosition, ElementDeclNode.ContentBase)], listType: inout ElementDeclNode.ContentList.ListType?, reqType: inout ElementDeclNode.ContentBase.Requirement) throws where S: StringProtocol {
-    let cc             = list.count
-    let zom: Character = ElementDeclNode.ContentBase.Requirement.ZeroOrMore.rawValue[0]
-    guard isRoot else { throw unexpectedPCDataError(position: list[0].0) }
+/*===============================================================================================================================*/
+private func handleInBetweenWS<S>(_ ch: Character, _ str: S, _ idx: inout String.Index, _ pos: inout DocPosition) throws where S: StringProtocol {
+    guard ch.isXmlWhitespace else { throw unexpectedCharError(position: pos, found: ch) }
+    guard let _ = str.skipWS(&idx, position: &pos, peek: true) else { throw SAXError.MalformedElementDecl(position: pos, description: "Unexpected end of content list.") }
+}
+
+/*===============================================================================================================================*/
+private func handleSubList<S>(_ str: S, _ idx: inout String.Index, _ pos: inout DocPosition, _ content: inout [_TList]) throws where S: StringProtocol {
+    let p = pos
+    content <+ (p, try parseContentList(content: str, index: &idx, position: &pos, isRoot: false))
+}
+
+/*===============================================================================================================================*/
+private func handleCharacter<S>(_ ch: Character, _ str: S, _ idx: inout String.Index, _ pos: inout DocPosition, _ content: inout [_TList], _ inBetween: inout Bool) throws where S: StringProtocol {
+    if ch.isXmlWhitespace {
+        guard let _ = str.skipWS(&idx, position: &pos, peek: true) else { throw SAXError.MalformedElementDecl(position: pos, description: "Unexpected end of content list.") }
+    }
+    else if ch.isXmlNameStartChar {
+        try handleItemName(ch, str, &idx, &pos, &content)
+        inBetween = true
+    }
+}
+
+/*===============================================================================================================================*/
+private func handlePCData<S>(_ str: S, _ idx: inout String.Index, _ pos: inout DocPosition, _ content: inout [_TList], _ isRoot: Bool, _ inBetween: inout Bool) throws where S: StringProtocol {
+    let p = pos
+    var x = pcdata.startIndex
+
+    repeat {
+        let c = str[idx]
+        guard c == pcdata[x] else { throw SAXError.MalformedElementDecl(position: pos, description: errorMessage(prefix: "Unexpected character", found: c, expected: pcdata[x])) }
+        str.advanceIndex(index: &idx, position: &pos)
+        guard idx < str.endIndex else { throw SAXError.MalformedElementDecl(position: pos, description: "Unexpected end of content list.") }
+        pcdata.formIndex(after: &x)
+    }
+    while x < pcdata.endIndex
+    guard isRoot && content.isEmpty else { throw unexpectedPCDataError(position: p) }
+    content <+ (p, ElementDeclNode.PCData())
+    inBetween = true
+}
+
+/*===============================================================================================================================*/
+private func handleItemName<S>(_ ch: Character, _ str: S, _ idx: inout String.Index, _ pos: inout DocPosition, _ content: inout [_TList]) throws where S: StringProtocol {
+    let p                 = pos
+    var c                 = ch
+    var name: [Character] = []
+
+    repeat {
+        name <+ c
+        str.advanceIndex(index: &idx, position: &pos)
+        guard idx < str.endIndex else { throw SAXError.MalformedElementDecl(position: pos, description: "Unexpected end of content list.") }
+        c = str[idx]
+    }
+    while c.isXmlNameChar
+
+    content <+ (p, ElementDeclNode.ContentItem(getRequirement(content: str, index: &idx, position: &pos), String(name)))
+}
+
+/*===============================================================================================================================*/
+private func handleListType<S>(_ str: S, _ idx: inout String.Index, _ pos: inout DocPosition, _ ch: Character, _ listType: inout _LType?) throws where S: StringProtocol {
+    let ch1 = String(ch)
+    if let lt = listType { guard ch1 == lt.rawValue else { throw unexpectedCharError(position: pos, found: ch1, expected: lt.rawValue) } }
+    else { listType = _LType(rawValue: ch1) }
+    str.advanceIndex(index: &idx, position: &pos)
+}
+
+/*===============================================================================================================================*/
+/// Complete the list.
+///
+/// - Parameters:
+///   - str: The string being parsed.
+///   - idx: The index of the current character in the string.
+///   - pos: The position (line, column) in the parent document.
+///   - content: The current list of items.
+///   - listType: The list type.
+///   - isRoot: `true` if this is the root content list and not a nested list.
+/// - Returns: A new instance of `ElementDeclNode.ContentList`.
+/// - Throws: If the content list is malformed.
+///
+private func finishContentList<S>(content str: S, index idx: inout String.Index, position pos: inout DocPosition, contentList content: [_TList], listType: _LType?, isRoot: Bool) throws -> _List where S: StringProtocol {
+    let cc = content.count
+    guard cc > 0 else { throw emptyContentListError(position: pos) }
+    str.advanceIndex(index: &idx, position: &pos)
+    var listType = (cc == 1 ? .Sequence : listType)
+    var reqType  = getRequirement(content: str, index: &idx, position: &pos)
+
+    if type(of: content[0].1) == ElementDeclNode.PCData.self { try validatePCDataList(isRoot, str, &idx, &pos, content, &listType, &reqType) }
+    if cc > 1 { try testNoMorePCData(content: content, position: pos) }
+
+    return _List(reqType, listType!, content.map({ $0.1 }))
+}
+
+/*===============================================================================================================================*/
+private func testNoMorePCData(content: [_TList], position pos: DocPosition) throws {
+    for i in (1 ..< (content.endIndex - 1)) {
+        guard type(of: content[i].1) != ElementDeclNode.PCData.self else {
+            throw unexpectedPCDataError(position: pos)
+        }
+    }
+}
+
+/*===============================================================================================================================*/
+/// Validate a content list that begins with #PCDATA.
+///
+/// - Parameters:
+///   - str: The string being parsed.
+///   - idx: The index of the current character in the string.
+///   - pos: The position (line, column) in the parent document.
+///   - content: The current list of items.
+///   - listType: The list type.
+///   - reqType: The requirement type.
+///   - isRoot: `true` if this is the root content list and not a nested list.
+/// - Throws: If the content list is malformed.
+///
+private func validatePCDataList<S>(_ isRoot: Bool, _ str: S, _ idx: inout String.Index, _ pos: inout DocPosition, _ content: [_TList], _ listType: inout _LType?, _ reqType: inout _Req) throws where S: StringProtocol {
+    let cc             = content.count
+    let zom: Character = _Req.ZeroOrMore.rawValue[0]
+    guard isRoot else { throw unexpectedPCDataError(position: content[0].0) }
 
     if cc == 1 {
-        if try nextChar(content: str, index: &idx, position: &pos, peek: true) == zom { advanceIndex(content: str, index: &idx, position: &pos) }
+        if try str.nextChar(index: &idx, position: &pos, peek: true) == zom { str.advanceIndex(index: &idx, position: &pos) }
         listType = .Choice
     }
     else {
-        let ch = try nextChar(content: str, index: &idx, position: &pos)
+        let ch = try str.nextChar(index: &idx, position: &pos)
         guard ch == zom else { throw unexpectedCharError(position: pos, found: ch, expected: zom) }
         guard listType == .Choice else { throw SAXError.MalformedElementDecl(position: pos, description: "Content list separator must be '|' not ','.") }
     }
@@ -126,69 +244,39 @@ private func validatePCDataList<S>(isRoot: Bool, content str: S, index idx: inou
     reqType = .ZeroOrMore
 }
 
-private func getRequirement<S>(content str: S, index idx: inout String.Index, position pos: inout DocPosition) -> ElementDeclNode.ContentBase.Requirement where S: StringProtocol {
-    if idx < str.endIndex, let r = ElementDeclNode.ContentBase.Requirement(rawValue: String(str[idx])) {
-        advanceIndex(content: str, index: &idx, position: &pos)
+/*===============================================================================================================================*/
+/// Get the requirement for the content list item.
+///
+/// - Parameters:
+///   - str: The string being parsed.
+///   - idx: The index of the current character in the string.
+///   - pos: The position (line, column) in the parent document.
+/// - Returns: The requirement.
+///
+private func getRequirement<S>(content str: S, index idx: inout String.Index, position pos: inout DocPosition) -> _Req where S: StringProtocol {
+    if idx < str.endIndex, let r = _Req(rawValue: String(str[idx])) {
+        str.advanceIndex(index: &idx, position: &pos)
         return r
     }
-    return ElementDeclNode.ContentBase.Requirement.Required
+    return _Req.Required
 }
 
+/*===============================================================================================================================*/
 private func unexpectedPCDataError(position pos: DocPosition) -> SAXError.MalformedElementDecl {
     SAXError.MalformedElementDecl(position: pos, description: "\"\(pcdata)\" not expected here.")
 }
 
+/*===============================================================================================================================*/
 private func emptyContentListError(position pos: DocPosition) -> SAXError.MalformedElementDecl {
     SAXError.MalformedElementDecl(position: pos, description: "Empty Content List")
 }
 
+/*===============================================================================================================================*/
 private func unexpectedCharError(position pos: DocPosition, found ch: Character, expected exp: Character...) -> SAXError.MalformedElementDecl {
     SAXError.MalformedElementDecl(position: pos, description: errorMessage(prefix: "Unexpected character", found: ch, expected: exp))
 }
 
-private func nextChar<S>(content str: S, index idx: inout String.Index, position pos: inout DocPosition, peek: Bool = false) throws -> Character where S: StringProtocol {
-    guard idx < str.endIndex else { throw SAXError.MalformedElementDecl(position: pos, description: "Unexpected end of content list.") }
-    let ch: Character = str[idx]
-    if !peek { advanceIndex(content: str, index: &idx, position: &pos) }
-    return ch
+/*===============================================================================================================================*/
+private func unexpectedCharError(position pos: DocPosition, found ch: String, expected exp: String...) -> SAXError.MalformedElementDecl {
+    SAXError.MalformedElementDecl(position: pos, description: errorMessage(prefix: "Unexpected character", found: ch, expected: exp))
 }
-
-private func advanceIndex<S>(content str: S, index idx: inout String.Index, position pos: inout DocPosition) where S: StringProtocol {
-    pos.update(str[idx])
-    str.formIndex(after: &idx)
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -24,6 +24,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		1117D031B5F0E05F35CB30AA /* InternalTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D200B013F7131EE64171 /* InternalTools.swift */; };
 		1117D04D745A95855B838B79 /* RegexTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D464877EF4F09607BFED /* RegexTests.swift */; };
 		1117D0A4FF07F25A60BC18D2 /* SAXDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D3A1E6C4AA50C5538A81 /* SAXDelegate.swift */; };
 		1117D1AB55647F7E12BB3328 /* ElementDeclNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D3CEA65044DE1220FFB9 /* ElementDeclNode.swift */; };
@@ -158,6 +159,7 @@
 		1117D140D7C3EAE052E01D31 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.info; path = Info.plist; sourceTree = "<group>"; };
 		1117D173F94712C34C49032A /* Test_UTF-16BE_ext.xml */ = {isa = PBXFileReference; fileEncoding = 2415919360; lastKnownFileType = text.xml; path = "Test_UTF-16BE_ext.xml"; sourceTree = "<group>"; };
 		1117D1DC0D5DC9667C623494 /* AttributeDeclNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttributeDeclNode.swift; sourceTree = "<group>"; };
+		1117D200B013F7131EE64171 /* InternalTools.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternalTools.swift; sourceTree = "<group>"; };
 		1117D202B740A33D05A3A6F3 /* UserData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
 		1117D226CA98FFFFC61EEAC6 /* SAXError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXError.swift; sourceTree = "<group>"; };
 		1117D248DD92AAACA231F2AD /* Enums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
@@ -363,6 +365,7 @@
 				1117D37453D0CD4F1F982E84 /* XMLDecl.swift */,
 				1117D05784461054CFA93D44 /* Messages.swift */,
 				1117DE64065CACAC0BB2A5FD /* Entities.swift */,
+				1117D200B013F7131EE64171 /* InternalTools.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -735,6 +738,7 @@
 				1117D75C668B3239099E7294 /* NonDocument.swift in Sources */,
 				1117D1AB55647F7E12BB3328 /* ElementDeclNode.swift in Sources */,
 				1117D3E25985663376356D91 /* AttributeDeclNode.swift in Sources */,
+				1117D031B5F0E05F35CB30AA /* InternalTools.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

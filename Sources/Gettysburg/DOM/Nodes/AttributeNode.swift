@@ -22,4 +22,3 @@ import Rubicon
 open class AttributeNode: NonDocument {
     open override var nodeType: NodeTypes { .Attribute }
 }
-

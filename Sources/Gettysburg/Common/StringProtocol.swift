@@ -46,3 +46,18 @@ extension Collection where Element == Character {
         return RegularExpression(pattern: "\\s+")?.stringByReplacingMatches(in: str, using: { _ in " " }).0 ?? str
     }
 }
+
+extension Collection where Element == Character, Index == String.Index {
+
+    @inlinable func nextChar(index idx: inout String.Index, position pos: inout DocPosition, peek: Bool = false) throws -> Character {
+        guard idx < endIndex else { throw SAXError.MalformedElementDecl(position: pos, description: "Unexpected end of content list.") }
+        let ch: Character = self[idx]
+        if !peek { advanceIndex(index: &idx, position: &pos) }
+        return ch
+    }
+
+    @inlinable func advanceIndex(index idx: inout String.Index, position pos: inout DocPosition) {
+        pos.update(self[idx])
+        formIndex(after: &idx)
+    }
+}
