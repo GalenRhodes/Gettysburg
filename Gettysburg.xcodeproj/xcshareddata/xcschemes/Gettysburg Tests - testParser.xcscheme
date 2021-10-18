@@ -28,7 +28,7 @@
             </BuildableReference>
             <SelectedTests>
                <Test
-                  Identifier = "GettysburgTests/testURL_makeAbsolute">
+                  Identifier = "GettysburgTests/testElementAllowedContent">
                </Test>
             </SelectedTests>
          </TestableReference>

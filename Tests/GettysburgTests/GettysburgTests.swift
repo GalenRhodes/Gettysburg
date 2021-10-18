@@ -98,17 +98,9 @@ public class GettysburgTests: XCTestCase {
 
         for str in data {
             do {
-                let ac = try DTDElement.AllowedContent.getAllowedContent(content: str)
-                switch ac {
-                    case .Empty:
-                        print("SUCCESS: EMPTY")
-                    case .Any:
-                        print("SUCCESS: ANY")
-                    case .Elements(content: let cl):
-                        print("SUCCESS: \(cl.description)")
-                    case .Mixed(content: let cl):
-                        print("SUCCESS: \(cl.description)")
-                }
+                let p = DocPosition()
+                let cl = try parseContentList(content: str, position: p)
+                print("\(cl)")
             }
             catch let e {
                 print("FAILED: \(e)\n\t\(str)")

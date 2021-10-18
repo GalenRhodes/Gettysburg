@@ -21,9 +21,10 @@ import Rubicon
 
 open class ElementDeclNode: Node {
 
-    public class ContentBase {
+    public class ContentBase: CustomStringConvertible {
         public enum Requirement: String { case Required = "", Optional = "?", OneOrMore = "+", ZeroOrMore = "*" }
 
+        public var description: String { "" }
         public var requirement: Requirement
 
         init(_ requirement: Requirement) {
@@ -38,6 +39,13 @@ open class ElementDeclNode: Node {
         public var type:     ListType
         public var isPCData: Bool { content.count == 1 && Swift.type(of: content[0]) == PCData.self }
         public var isMixed:  Bool { content.count > 1 && Swift.type(of: content[0]) == PCData.self }
+        public override var description: String {
+            var str: String = "("
+            str += content.componentsJoined(by: type.rawValue)
+            str += ")"
+            str += (isPCData ? "" : (isMixed ? Requirement.ZeroOrMore.rawValue : requirement.rawValue))
+            return str
+        }
 
         init(_ requirement: Requirement, _ type: ListType, _ content: [ContentBase]) {
             self.type = type
@@ -48,6 +56,7 @@ open class ElementDeclNode: Node {
 
     public class ContentItem: ContentBase {
         public var name: QName
+        public override var description: String { "\(name)\(requirement.rawValue)" }
 
         init(_ requirement: Requirement, _ name: String) {
             self.name = QName(qName: name)
@@ -56,10 +65,21 @@ open class ElementDeclNode: Node {
     }
 
     public class PCData: ContentBase {
+        public override var description: String { pcdata }
+
         init() { super.init(.ZeroOrMore) }
     }
 }
 
+/*===============================================================================================================================*/
+/// Parse the content list.
+///
+/// - Parameters:
+///   - str: The string to parse.
+///   - position: The position in the document.
+/// - Returns: An instance of `ElementDeclNode.ContentList`.
+/// - Throws: If the content list is malformed.
+///
 public func parseContentList<S>(content str: S, position: DocPosition) throws -> ElementDeclNode.ContentList where S: StringProtocol {
     var pos: DocPosition  = position
     var idx: String.Index = str.startIndex
@@ -95,14 +115,13 @@ private func parseContentList<S>(content str: S, index idx: inout String.Index, 
             case true:
                 switch ch {
                     case ")":      return try finishContentList(content: str, index: &idx, position: &pos, contentList: content, listType: listType, isRoot: isRoot)
-                    case "|", ",": try handleListType(str, &idx, &pos, ch, &listType)
+                    case "|", ",": try handleListType(str, &idx, &pos, ch, &listType, &inBetween)
                     default:       try handleInBetweenWS(ch, str, &idx, &pos)
                 }
-                inBetween = false
             case false:
                 switch ch {
                     case ")": return try finishContentList(content: str, index: &idx, position: &pos, contentList: content, listType: listType, isRoot: isRoot)
-                    case "(": try handleSubList(str, &idx, &pos, &content)
+                    case "(": try handleSubList(str, &idx, &pos, &content, &inBetween)
                     case "#": try handlePCData(str, &idx, &pos, &content, isRoot, &inBetween)
                     default:  try handleCharacter(ch, str, &idx, &pos, &content, &inBetween)
                 }
@@ -119,9 +138,10 @@ private func handleInBetweenWS<S>(_ ch: Character, _ str: S, _ idx: inout String
 }
 
 /*===============================================================================================================================*/
-private func handleSubList<S>(_ str: S, _ idx: inout String.Index, _ pos: inout DocPosition, _ content: inout [_TList]) throws where S: StringProtocol {
+private func handleSubList<S>(_ str: S, _ idx: inout String.Index, _ pos: inout DocPosition, _ content: inout [_TList], _ inBetween: inout Bool) throws where S: StringProtocol {
     let p = pos
     content <+ (p, try parseContentList(content: str, index: &idx, position: &pos, isRoot: false))
+    inBetween = true
 }
 
 /*===============================================================================================================================*/
@@ -148,6 +168,7 @@ private func handlePCData<S>(_ str: S, _ idx: inout String.Index, _ pos: inout D
         pcdata.formIndex(after: &x)
     }
     while x < pcdata.endIndex
+
     guard isRoot && content.isEmpty else { throw unexpectedPCDataError(position: p) }
     content <+ (p, ElementDeclNode.PCData())
     inBetween = true
@@ -171,11 +192,12 @@ private func handleItemName<S>(_ ch: Character, _ str: S, _ idx: inout String.In
 }
 
 /*===============================================================================================================================*/
-private func handleListType<S>(_ str: S, _ idx: inout String.Index, _ pos: inout DocPosition, _ ch: Character, _ listType: inout _LType?) throws where S: StringProtocol {
+private func handleListType<S>(_ str: S, _ idx: inout String.Index, _ pos: inout DocPosition, _ ch: Character, _ listType: inout _LType?, _ inBetween: inout Bool) throws where S: StringProtocol {
     let ch1 = String(ch)
+    str.advanceIndex(index: &idx, position: &pos)
     if let lt = listType { guard ch1 == lt.rawValue else { throw unexpectedCharError(position: pos, found: ch1, expected: lt.rawValue) } }
     else { listType = _LType(rawValue: ch1) }
-    str.advanceIndex(index: &idx, position: &pos)
+    inBetween = false
 }
 
 /*===============================================================================================================================*/
@@ -227,21 +249,16 @@ private func testNoMorePCData(content: [_TList], position pos: DocPosition) thro
 /// - Throws: If the content list is malformed.
 ///
 private func validatePCDataList<S>(_ isRoot: Bool, _ str: S, _ idx: inout String.Index, _ pos: inout DocPosition, _ content: [_TList], _ listType: inout _LType?, _ reqType: inout _Req) throws where S: StringProtocol {
-    let cc             = content.count
-    let zom: Character = _Req.ZeroOrMore.rawValue[0]
     guard isRoot else { throw unexpectedPCDataError(position: content[0].0) }
 
-    if cc == 1 {
-        if try str.nextChar(index: &idx, position: &pos, peek: true) == zom { str.advanceIndex(index: &idx, position: &pos) }
+    if content.count == 1 {
+        reqType = .ZeroOrMore
         listType = .Choice
     }
     else {
-        let ch = try str.nextChar(index: &idx, position: &pos)
-        guard ch == zom else { throw unexpectedCharError(position: pos, found: ch, expected: zom) }
+        guard reqType == _Req.ZeroOrMore else { throw SAXError.MalformedElementDecl(position: pos, description: "") }
         guard listType == .Choice else { throw SAXError.MalformedElementDecl(position: pos, description: "Content list separator must be '|' not ','.") }
     }
-
-    reqType = .ZeroOrMore
 }
 
 /*===============================================================================================================================*/

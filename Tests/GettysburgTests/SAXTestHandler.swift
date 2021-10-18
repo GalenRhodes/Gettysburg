@@ -26,11 +26,11 @@ import Rubicon
 
 class SAXTestHandler: SAXDelegate {
     func beginDocument(_ parser: SAXParser) {
-        nDebug(.In, "Document begin: \(parser.url.absoluteString)")
+        nDebug(.In, "Document begin:")
     }
 
     func endDocument(_ parser: SAXParser) {
-        nDebug(.Out, "Document end: \(parser.url.absoluteString)")
+        nDebug(.Out, "Document end:")
     }
 
     func beginDocType(_ parser: SAXParser, elementName: String) {

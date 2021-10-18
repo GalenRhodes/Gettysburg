@@ -61,3 +61,23 @@ extension Collection where Element == Character, Index == String.Index {
         formIndex(after: &idx)
     }
 }
+
+extension Collection where Element: CustomStringConvertible {
+    @inlinable func componentsJoined(by separator: String) -> String {
+        var idx = startIndex
+        var str: String = ""
+
+        if idx < endIndex {
+            str += self[idx].description
+            formIndex(after: &idx)
+
+            while idx < endIndex {
+                str += separator
+                str += self[idx].description
+                formIndex(after: &idx)
+            }
+        }
+
+        return str
+    }
+}

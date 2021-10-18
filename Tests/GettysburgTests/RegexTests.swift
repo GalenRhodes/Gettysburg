@@ -211,15 +211,6 @@ public class RegexTests: XCTestCase {
 
         print()
         print(str)
-        rx.forEachMatch(in: str) { _m, _, stop in
-            if let m: RegularExpression.Match = _m {
-                print(bar)
-                var i: Int = 0
-                for g: RegularExpression.Group in m {
-                    print("Group \("%2d".format(i++)): \(g.subString?.noLF().collapeWS().surroundedWith("⎨", "⎬") ?? "")")
-                }
-            }
-        }
         print(bar)
         print()
     }
