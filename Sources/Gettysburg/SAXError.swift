@@ -19,7 +19,7 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-public class SAXError: Error, Codable {
+public class SAXError: Error, Codable, CustomStringConvertible {
     private enum CodingKeys: String, CodingKey { case docPosition, description }
 
     public let description: String

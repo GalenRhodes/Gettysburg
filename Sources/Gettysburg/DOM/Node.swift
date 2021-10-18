@@ -21,25 +21,25 @@ import Rubicon
 
 open class Node {
     //@f:0
-    open var nodeType:        NodeTypes              { fatalError("Not Implemented") }
-    open var nodeName:        String                 { nodeType.rawValue }
-    open var localName:       String                 { nodeName }
-    open var prefix:          String?                { get { nil } set {} }
-    open var namespaceURI:    String?                { nil }
-    open var baseURI:         String?                { nil }
-    open var nodeValue:       String?                { get { nil } set {} }
-    open var textContent:     String                 { get { "" } set {} }
-    open var ownerDocument:   DocumentNode           { fatalError("Not Implemented") }
-    open var parentNode:      Node?                  { nil }
-    open var firstChildNode:  Node?                  { nil }
-    open var lastChildNode:   Node?                  { nil }
-    open var nextSibling:     Node?                  { nil }
-    open var previousSibling: Node?                  { nil }
-    open var childNodes:      NodeList               { EmptyNodeList() }
-    open var attributes:      [QName: AttributeNode] { [:] }
-    open var hasAttributes:   Bool                   { false }
-    open var hasChildNodes:   Bool                   { false }
-    open var userData:        [String: UserData]     { get { [:] } set {} }
+    open               var nodeType:        NodeTypes              { fatalError("Not Implemented") }
+    open               var nodeName:        String                 { nodeType.rawValue }
+    open               var localName:       String                 { nodeName }
+    open               var prefix:          String?                { get { nil } set {} }
+    open               var namespaceURI:    String?                { nil }
+    open               var baseURI:         String?                { nil }
+    open               var nodeValue:       String?                { get { nil } set {} }
+    open               var textContent:     String                 { get { "" } set {} }
+    open               var ownerDocument:   DocumentNode           { fatalError("Not Implemented") }
+    open internal(set) var parentNode:      Node?                  { get { nil } set {} }
+    open internal(set) var firstChildNode:  Node?                  { get { nil } set {} }
+    open internal(set) var lastChildNode:   Node?                  { get { nil } set {} }
+    open internal(set) var nextSibling:     Node?                  { get { nil } set {} }
+    open internal(set) var previousSibling: Node?                  { get { nil } set {} }
+    open               var childNodes:      some NodeList          { EmptyNodeList() }
+    open               var attributes:      [QName: AttributeNode] { [:] }
+    open               var hasAttributes:   Bool                   { false }
+    open               var hasChildNodes:   Bool                   { false }
+    open               var userData:        [String: UserData]     { get { [:] } set {} }
     //@f:1
 
     init() {}
