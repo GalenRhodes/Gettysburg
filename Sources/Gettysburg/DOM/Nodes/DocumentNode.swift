@@ -20,6 +20,9 @@ import CoreFoundation
 import Rubicon
 
 open class DocumentNode: Node {
-    open override var nodeType:      NodeTypes { .Document }
-    open override var ownerDocument: DocumentNode { self }
+    open override var nodeType: NodeTypes { .Document }
+    open internal(set) override var ownerDocument: DocumentNode {
+        get { self }
+        set {}
+    }
 }

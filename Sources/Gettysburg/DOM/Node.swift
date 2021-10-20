@@ -19,30 +19,46 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-open class Node: Hashable {
+open class Node: Hashable, BidirectionalCollection, Codable {
+    internal enum CodingKeys: CodingKey {
+        case ownerDocument
+        case localName
+        case prefix
+        case namespaceURI
+        case nodeName
+        case baseURI
+        case attributes
+        case nodeType
+        case nodeValue
+        case parentNode
+        case refId
+    }
+
+    public typealias Element = Node
+    public typealias Index = Int
+
     //@f:0
-    open               var nodeType:        NodeTypes              { fatalError("Not Implemented") }
-    open               var nodeName:        String                 { nodeType.rawValue }
-    open               var localName:       String                 { nodeName }
-    open               var prefix:          String?                { get { nil } set {} }
-    open               var namespaceURI:    String?                { nil }
-    open               var baseURI:         String?                { nil }
-    open               var nodeValue:       String?                { get { nil } set {} }
-    open               var ownerDocument:   DocumentNode           { fatalError("Not Implemented") }
-    open internal(set) var parentNode:      Node?                  { get { nil } set {} }
-    open internal(set) var nextSibling:     Node?                  { get { nil } set {} }
-    open internal(set) var previousSibling: Node?                  { get { nil } set {} }
-    open               var firstChildNode:  Node?                  { childNodes.firstNode }
-    open               var lastChildNode:   Node?                  { childNodes.lastNode }
-    open               var childNodes:      some NodeList          { EmptyNodeList() }
-    open               var attributes:      some NodeMap           { EmptyNodeMap() }
-    open               var hasAttributes:   Bool                   { attributes.count > 0 }
-    open               var hasChildNodes:   Bool                   { childNodes.count > 0 }
-    open               var userData:        [String: UserData]     { get { [:] } set {} }
-    open               var textContent:     String                 { get { "" } set {} }
+    open                 var nodeType:        NodeTypes              { fatalError("Not Implemented") }
+    open                 var nodeName:        String                 { nodeType.rawValue }
+    open   internal(set) var localName:       String                 { get { nodeName } set {} }
+    open                 var prefix:          String?                { get { nil } set {} }
+    open   internal(set) var namespaceURI:    String?                { get { nil } set {} }
+    open                 var nodeValue:       String?                { get { nil } set {} }
+    open   internal(set) var ownerDocument:   DocumentNode           { get { fatalError("Not Implemented") } set { fatalError("Not Implemented") } }
+    open   internal(set) var parentNode:      Node?                  { get { nil } set {} }
+    open   internal(set) var nextSibling:     Node?                  { get { nil } set {} }
+    open   internal(set) var previousSibling: Node?                  { get { nil } set {} }
+    open                 var attributes:      NodeMap<AttributeNode> { NodeMap() }
+    open                 var hasAttributes:   Bool                   { attributes.count > 0 }
+    open                 var userData:        [String: UserData]     { get { [:] } set {} }
+    public internal(set) var baseURI:         String?                = nil
+    public               let startIndex:      Int
+    open                 var endIndex:        Int                    { 0 }
     //@f:1
 
-    init() {}
+    lazy var refId: String = UUID().uuidString
+
+    init() { startIndex = 0 }
 
     @discardableResult open func append<T>(child node: T) throws -> T where T: Node { node }
 
@@ -60,9 +76,26 @@ open class Node: Hashable {
 
     open func isDefault(namespaceURI: String) -> Bool { false }
 
-    open func forEachChild(_ block: (Node) throws -> Void) rethrows {}
+    open subscript(position: Int) -> Node { fatalError("Index out of bounds.") }
 
-    open func isEqualTo(_ other: Node) -> Bool { false }
+    open func index(after i: Index) -> Index {
+        guard i < endIndex else { fatalError("Index out of bounds.") }
+        return i + 1
+    }
+
+    open func index(before i: Index) -> Index {
+        guard i > 0 else { fatalError("Index out of bounds.") }
+        return i - 1
+    }
+
+    open var textContent: String {
+        get {
+            var str: String = ""
+            forEach { str += $0.textContent }
+            return str
+        }
+        set {}
+    }
 
     open func hash(into hasher: inout Hasher) {
         hasher.combine(nodeType)
@@ -71,34 +104,38 @@ open class Node: Hashable {
         hasher.combine(prefix)
         hasher.combine(namespaceURI)
         hasher.combine(nodeValue)
-        hasher.combine(childNodes)
         hasher.combine(attributes)
     }
 
-    public static func == (lhs: Node, rhs: Node) -> Bool {
-        guard (lhs.nodeType == rhs.nodeType) &&
-              (lhs.nodeName == rhs.nodeName) &&
-              (lhs.localName == rhs.localName) &&
-              (lhs.prefix == rhs.prefix) &&
-              (lhs.namespaceURI == rhs.namespaceURI) &&
-              (lhs.nodeValue == rhs.nodeValue) else { return false }
-
-        let lCNodes = lhs.childNodes
-        let rCNodes = rhs.childNodes
-
-        guard lCNodes.isReadOnly == rCNodes.isReadOnly else { return false }
-        guard lCNodes.count == rCNodes.count else { return false }
-
-        for i in (0 ..< lCNodes.count) { guard lCNodes[lCNodes.startIndex + i] == rCNodes[rCNodes.startIndex + i] else { return false } }
-
-        let lAttrs = lhs.attributes
-        let rAttrs = rhs.attributes
-
-        guard lAttrs.isReadOnly == rAttrs.isReadOnly else { return false }
-        guard lAttrs.count == rAttrs.count else { return false }
-
-        for e: NodeMapElement in lAttrs { guard let n = rAttrs[e.nodeName], n == e.node else { return false } }
-
+    open func isEqual(to node: Node) -> Bool {
+        guard (type(of: self) == type(of: node)) &&
+              (nodeType == node.nodeType) &&
+              (nodeName == node.nodeName) &&
+              (localName == node.localName) &&
+              (prefix == node.prefix) &&
+              (namespaceURI == node.namespaceURI) &&
+              (nodeValue == node.nodeValue) else { return false }
+        guard attributes == node.attributes else { return false }
+        guard count == node.count else { return false }
+        for i in (0 ..< count) { guard self[startIndex + i] == node[node.startIndex + i] else { return false } }
         return true
     }
+
+    public required init(from decoder: Decoder) throws { fatalError("init(from:) not implemented.") }
+
+    public func encode(to encoder: Encoder) throws {
+        var c = encoder.container(keyedBy: CodingKeys.self)
+        try c.encodeIfPresent(namespaceURI, forKey: .namespaceURI)
+        try c.encodeIfPresent(prefix, forKey: .prefix)
+        try c.encode(localName, forKey: .localName)
+        try c.encode(nodeName, forKey: .nodeName)
+        try c.encodeIfPresent(ownerDocument, forKey: .ownerDocument)
+        try c.encodeIfPresent(parentNode, forKey: .parentNode)
+    }
+
+    public static func == (lhs: Node, rhs: Node) -> Bool { lhs.isEqual(to: rhs) }
+}
+
+extension CodingUserInfoKey {
+    static let referenceIDs = CodingUserInfoKey(rawValue: "referenceIDs")!
 }

@@ -19,7 +19,7 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-public enum NodeTypes: String {
+public enum NodeTypes: String, Codable {
     case Attribute             = "#attribute"
     case AttributeDecl         = "#attribute-decl"
     case CData                 = "#cdata-section"

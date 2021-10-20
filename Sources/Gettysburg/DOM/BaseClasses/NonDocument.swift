@@ -20,12 +20,26 @@ import CoreFoundation
 import Rubicon
 
 open class NonDocument: Node {
-    open override var ownerDocument: DocumentNode { _ownerDocument }
+    open override var ownerDocument: DocumentNode {
+        get { _ownerDocument }
+        set {}
+    }
 
     let _ownerDocument: DocumentNode
 
     public init(ownerDocument: DocumentNode) {
         self._ownerDocument = ownerDocument
         super.init()
+    }
+
+    public required init(from decoder: Decoder) throws {
+        _ownerDocument = try decoder.container(keyedBy: CodingKeys.self).decode(DocumentNode.self, forKey: .OwnerDocument)
+        try super.init(from: decoder)
+    }
+
+    public override func encode(to encoder: Encoder) throws {
+        var c = encoder.container(keyedBy: CodingKeys.self)
+        try c.encode(_ownerDocument, forKey: .OwnerDocument)
+        try super.encode(to: encoder)
     }
 }

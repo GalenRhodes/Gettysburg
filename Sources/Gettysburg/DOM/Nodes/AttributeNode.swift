@@ -20,12 +20,12 @@ import CoreFoundation
 import Rubicon
 
 open class AttributeNode: NamedNodes {
-    open override var nodeType: NodeTypes { .Attribute }
-    open override var nodeValue: String? {
-        get { value }
-        set { value = (newValue ?? "") }
-    }
-    var value: String
+    //@f:0
+    open override var nodeType:    NodeTypes { .Attribute }
+    open override var nodeValue:   String?   { get { value } set { value = (newValue ?? "") } }
+    open override var textContent: String    { get { value } set { value = newValue } }
+    public        var value:       String
+    //@f:1
 
     init(ownerDocument: DocumentNode, qualifiedName: String, namespaceURI: String? = nil, value: String) throws {
         self.value = value

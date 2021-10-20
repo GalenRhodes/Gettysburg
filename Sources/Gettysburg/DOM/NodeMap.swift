@@ -19,32 +19,42 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-public typealias NodeMapElement = (nodeName: String, node: Node)
+public class NodeMap<T>: BidirectionalCollection, Hashable, Codable where T: Node {
 
-public protocol NodeMap: Hashable, BidirectionalCollection where Element == NodeMapElement, Index == Int {
-    var isReadOnly: Bool { get }
+    public typealias Index = Int
+    public typealias Element = T
 
-    subscript(nodeName: String) -> Node? { get set }
-}
+    public var startIndex: Int { nodes.startIndex }
+    public var endIndex:   Int { nodes.endIndex }
 
-struct EmptyNodeMap: NodeMap {
+    private var nodes: [T] = []
 
-    let startIndex: Int  = 0
-    let endIndex:   Int  = 0
-    let isReadOnly: Bool = true
+    init() {}
 
-    subscript(nodeName: String) -> Node? {
-        get { nil }
-        set { fatalError("Node map is read-only.") }
+    public required init(from decoder: Decoder) throws {
+        var l = try decoder.unkeyedContainer()
+        while !l.isAtEnd { nodes <+ try l.decode(T.self) }
     }
 
-    subscript(position: Int) -> NodeMapElement { fatalError("Index out of bounds.") }
+    public subscript(position: Int) -> T { nodes[position] }
+    public subscript(nodeName: String) -> T? { first { $0.nodeName == nodeName } }
+    public subscript(localName: String, namespaceURI: String) -> T? { first { $0.localName == localName && $0.namespaceURI == namespaceURI } }
 
-    func index(before i: Int) -> Int { fatalError("Index out of bounds.") }
+    public func index(before i: Int) -> Int { nodes.index(before: i) }
 
-    func index(after i: Int) -> Int { fatalError("Index out of bounds.") }
+    public func index(after i: Int) -> Int { nodes.index(after: i) }
 
-    func hash(into hasher: inout Hasher) { hasher.combine(2113) }
+    public func encode(to encoder: Encoder) throws {
+        var l = encoder.unkeyedContainer()
+        try forEach { try l.encode($0) }
+    }
 
-    static func == (lhs: EmptyNodeMap, rhs: EmptyNodeMap) -> Bool { true }
+    public func hash(into hasher: inout Hasher) { forEach { hasher.combine($0) } }
+
+    public static func == (lhs: NodeMap<T>, rhs: NodeMap<T>) -> Bool {
+        if lhs === rhs { return true }
+        guard lhs.count == rhs.count else { return false }
+        for i in (0 ..< lhs.count) { guard rhs.firstIndex(where: { $0 == lhs[i] }) != nil else { return false } }
+        return true
+    }
 }

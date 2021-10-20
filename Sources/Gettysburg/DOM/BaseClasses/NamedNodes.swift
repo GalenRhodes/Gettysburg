@@ -20,13 +20,12 @@ import CoreFoundation
 import Rubicon
 
 open class NamedNodes: NonDocument {
-    open override var nodeName:     String { nsName.name.description }
-    open override var namespaceURI: String? { nsName.uri }
-    open override var localName:    String { nsName.name.localName }
-    open override var prefix:       String? {
-        get { nsName.name.prefix }
-        set { nsName.name.prefix = newValue }
-    }
+//@f:0
+    open override               var nodeName:     String  { nsName.description }
+    open override               var prefix:       String? { get { nsName.prefix }    set { nsName.prefix = newValue }    }
+    open internal(set) override var localName:    String  { get { nsName.localName } set { nsName.localName = newValue } }
+    open internal(set) override var namespaceURI: String? { get { nsName.uri }       set { nsName.uri = newValue }       }
+//@f:1
 
     var nsName: NSName
 
@@ -38,5 +37,23 @@ open class NamedNodes: NonDocument {
             nsName = NSName(name: qualifiedName)
         }
         super.init(ownerDocument: ownerDocument)
+    }
+
+    public override func encode(to encoder: Encoder) throws {
+        var c = encoder.container(keyedBy: CodingKeys.self)
+        try c.encodeIfPresent(namespaceURI, forKey: .namespaceURI)
+        try c.encodeIfPresent(prefix, forKey: .prefix)
+        try c.encode(localName, forKey: .localName)
+        try c.encode(nodeName, forKey: .nodeName)
+        try super.encode(to: encoder)
+    }
+
+    public required init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        let l = try c.decode(String.self, forKey: .localName)
+        let p = try c.decodeIfPresent(String.self, forKey: .prefix)
+        let u = try c.decodeIfPresent(String.self, forKey: .namespaceURI)
+        nsName = NSName(localName: l, prefix: p, namespaceURI: u)
+        try super.init(from: decoder)
     }
 }

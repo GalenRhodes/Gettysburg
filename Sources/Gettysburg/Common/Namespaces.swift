@@ -19,44 +19,48 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-public typealias NamespaceTuple = (localName: String, namespaceURI: String)
-
-@inlinable public func == (lhs: NamespaceTuple, rhs:NamespaceTuple) -> Bool { areEqual((lhs.localName, rhs.localName), (lhs.namespaceURI, rhs.namespaceURI)) }
-
-@inlinable public func < (lhs: NamespaceTuple, rhs: NamespaceTuple) -> Bool { areLessThan((lhs.localName, rhs.localName), (lhs.namespaceURI, rhs.namespaceURI)) }
-
 /*===============================================================================================================================*/
 /// Holds a qualified name.
 ///
 @frozen public struct QName: Hashable, Comparable, CustomStringConvertible, Codable {
-    public var prefix:    String? = nil
-    public let localName: String
+    private enum CodingKeys: CodingKey { case prefix, localName }
 
-    @inlinable public var description: String { qName }
-    @inlinable public var qName:       String {
-        guard let p = prefix else { return localName }
-        return "\(p):\(localName)"
+    //@f:0
+    public               var prefix:      String? = nil
+    public internal(set) var localName:   String
+    @inlinable public    var description: String  { qName }
+    @inlinable public    var qName:       String  { prefix == nil ? localName : "\(prefix!):\(localName)" }
+    //@f:1
+
+    public init(prefix: String?, localName: String) {
+        guard localName.trimmed.isNotEmpty else { fatalError("Empty local name.") }
+        if let p = prefix?.trimmed, p.isNotEmpty { self.prefix = p }
+        self.localName = localName.trimmed
     }
 
-    @inlinable public init(prefix: String?, localName: String) {
-        if let p = prefix { self.prefix = (p.isEmpty ? nil : p) }
-        self.localName = localName
-    }
+    public init(qName: String) {
+        guard qName.trimmed.isNotEmpty else { fatalError("Empty qualified name.") }
 
-    @inlinable public init(qName: String) {
         if let idx = qName.firstIndex(where: { $0 == ":" }) {
-            self.localName = String(qName[qName.index(after: idx) ..< qName.endIndex])
-            self.prefix = ((idx > qName.startIndex) ? String(qName[qName.startIndex ..< idx]) : nil)
+            self.init(prefix: ((idx > qName.startIndex) ? String(qName[qName.startIndex ..< idx]) : nil), localName: String(qName[qName.index(after: idx) ..< qName.endIndex]))
         }
         else {
-            self.prefix = nil
-            self.localName = String(qName)
+            self.init(prefix: nil, localName: qName)
         }
     }
 
-    @inlinable public init(name: String) {
-        localName = String(name)
-        prefix = nil
+    public init(name: String) { self.init(prefix: nil, localName: name) }
+
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        prefix = try c.decodeIfPresent(String.self, forKey: .prefix)
+        localName = try c.decode(String.self, forKey: .localName)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var c = encoder.container(keyedBy: CodingKeys.self)
+        try c.encodeIfPresent(prefix, forKey: .prefix)
+        try c.encode(localName, forKey: .localName)
     }
 
     @inlinable public func hash(into hasher: inout Hasher) {
@@ -73,46 +77,66 @@ public typealias NamespaceTuple = (localName: String, namespaceURI: String)
 /// Holds a qualified namespace name along with it's associated URI.
 ///
 @frozen public struct NSName: Hashable, Comparable, CustomStringConvertible, Codable {
+    private enum CodingKeys: CodingKey { case name, uri }
 
-    public var name: QName
-    public let uri:  String?
+//@f:0
+    public internal(set) var localName:   String  { get { _name.localName } set { _name.localName = newValue } }
+    public internal(set) var prefix:      String? { get { _name.prefix }    set { _name.prefix = newValue }    }
+    public internal(set) var uri:         String?
+    @inlinable public    var description: String  { _name.description }
+//@f:1
 
-    @inlinable public var description: String { name.description }
+    @usableFromInline var _name: QName
 
-    @inlinable init(localName: String, prefix: String? = nil, namespaceURI uri: String?) {
-        if let u = uri {
-            self.name = QName(prefix: prefix, localName: localName)
+    public init(localName: String, prefix: String? = nil, namespaceURI uri: String?) {
+        if let u = uri, u.trimmed.isNotEmpty {
+            self._name = QName(prefix: prefix, localName: localName)
             self.uri = u
         }
         else {
-            self.name = QName(prefix: nil, localName: localName)
+            self._name = QName(prefix: nil, localName: localName)
             self.uri = nil
         }
     }
 
-    @inlinable init(name: String) {
+    public init(name: String) {
         self.init(localName: name, prefix: nil, namespaceURI: nil)
     }
 
-    @inlinable init(qName: String, namespaceURI uri: String) {
-        self.name = QName(qName: qName)
+    public init(qName: String, namespaceURI uri: String) {
+        guard uri.trimmed.isNotEmpty else { fatalError("Empty namespace URI") }
+        self._name = QName(qName: qName)
         self.uri = uri
     }
 
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        _name = try c.decode(QName.self, forKey: .name)
+        uri = try c.decodeIfPresent(String.self, forKey: .uri)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var c = encoder.container(keyedBy: CodingKeys.self)
+        try c.encode(_name, forKey: .name)
+        try c.encode(uri, forKey: .uri)
+    }
+
     @inlinable public func hash(into hasher: inout Hasher) {
-        hasher.combine(name)
+        hasher.combine(_name)
         hasher.combine(uri)
     }
 
-    @inlinable public static func < (lhs: NSName, rhs: NSName) -> Bool { areLessThan((lhs.name.localName, rhs.name.localName), (lhs.uri, rhs.uri)) }
+    @inlinable public static func < (lhs: NSName, rhs: NSName) -> Bool { areLessThan((lhs._name.localName, rhs._name.localName), (lhs.uri, rhs.uri)) }
 
-    @inlinable public static func == (lhs: NSName, rhs: NSName) -> Bool { areEqual((lhs.name.localName, rhs.name.localName), (lhs.uri, rhs.uri)) }
+    @inlinable public static func == (lhs: NSName, rhs: NSName) -> Bool { areEqual((lhs._name.localName, rhs._name.localName), (lhs.uri, rhs.uri)) }
 }
 
 /*===============================================================================================================================*/
 /// Holds a `prefix` to `uri` mapping.
 ///
 @frozen public struct NSMapping: Hashable, Comparable, CustomStringConvertible, Codable {
+    private enum CodingKeys: CodingKey { case prefix, namespaceURI }
+
     public let prefix:       String
     public let namespaceURI: String
 
@@ -136,6 +160,18 @@ public typealias NamespaceTuple = (localName: String, namespaceURI: String)
     @inlinable init(prefix: String, namespaceURI uri: String) {
         self.prefix = prefix.trimmed
         self.namespaceURI = uri
+    }
+
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        self.prefix = try c.decode(String.self, forKey: .prefix)
+        self.namespaceURI = try c.decode(String.self, forKey: .namespaceURI)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var c = encoder.container(keyedBy: CodingKeys.self)
+        try c.encode(prefix, forKey: .prefix)
+        try c.encode(namespaceURI, forKey: .namespaceURI)
     }
 
     @inlinable public func hash(into hasher: inout Hasher) {
