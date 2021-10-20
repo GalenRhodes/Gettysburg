@@ -28,6 +28,7 @@
 		1117D04D745A95855B838B79 /* RegexTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D464877EF4F09607BFED /* RegexTests.swift */; };
 		1117D0A4FF07F25A60BC18D2 /* SAXDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D3A1E6C4AA50C5538A81 /* SAXDelegate.swift */; };
 		1117D1AB55647F7E12BB3328 /* ElementDeclNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D3CEA65044DE1220FFB9 /* ElementDeclNode.swift */; };
+		1117D289BB39715B5E28BE1B /* NamedNodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D2649C4063FBA70044BA /* NamedNodes.swift */; };
 		1117D342B4C8EFC8563ED57C /* SAXParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D82BB55E000D210FD595 /* SAXParser.swift */; };
 		1117D3E25985663376356D91 /* AttributeDeclNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D1DC0D5DC9667C623494 /* AttributeDeclNode.swift */; };
 		1117D41B6DD7AF976A121816 /* Entities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DE64065CACAC0BB2A5FD /* Entities.swift */; };
@@ -42,6 +43,7 @@
 		1117D8924F4DCF7CACFF9D85 /* AttributeNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D5F1D383A57B9E2C849D /* AttributeNode.swift */; };
 		1117D9F3B52CD8BC84D679B5 /* Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D05784461054CFA93D44 /* Messages.swift */; };
 		1117DA9392F38A32D4C58657 /* NodeList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D981BC1F333B7CB4C99C /* NodeList.swift */; };
+		1117DAA149496B3F6FB4B8E8 /* NodeMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DD7DE8A525AD2CEF3B5F /* NodeMap.swift */; };
 		1117DAB06F168610D56501FE /* URLSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D3DFC0F6EF93F59575D8 /* URLSessionTests.swift */; };
 		1117DB638102D57A90034A2B /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DA64AAB5D5B731B6F5D7 /* Utils.swift */; };
 		1117DB953363A988A7D0C131 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D248DD92AAACA231F2AD /* Enums.swift */; };
@@ -165,6 +167,7 @@
 		1117D226CA98FFFFC61EEAC6 /* SAXError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SAXError.swift; sourceTree = "<group>"; };
 		1117D248DD92AAACA231F2AD /* Enums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
 		1117D24C2AC342935E43EA54 /* Test.dtd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Test.dtd; sourceTree = "<group>"; };
+		1117D2649C4063FBA70044BA /* NamedNodes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NamedNodes.swift; sourceTree = "<group>"; };
 		1117D2654B632662DADD7449 /* Test_WINDOWS-1252.xml */ = {isa = PBXFileReference; fileEncoding = 12; lastKnownFileType = text.xml; path = "Test_WINDOWS-1252.xml"; sourceTree = "<group>"; };
 		1117D28B5717E792A78E31E5 /* ExperimentTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExperimentTests.swift; sourceTree = "<group>"; };
 		1117D2AD350A984772DC23C9 /* XML_Entities_Data_A.csv */ = {isa = PBXFileReference; lastKnownFileType = file.csv; path = XML_Entities_Data_A.csv; sourceTree = "<group>"; };
@@ -204,6 +207,7 @@
 		1117DC6CE7526681197F1C19 /* Test_UTF-8_ext.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Test_UTF-8_ext.xml"; sourceTree = "<group>"; };
 		1117DCC4A23B52DDDADC3F7D /* NodeTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeTypes.swift; sourceTree = "<group>"; };
 		1117DD5AFC911B2020139DDF /* LinuxMain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinuxMain.swift; sourceTree = "<group>"; };
+		1117DD7DE8A525AD2CEF3B5F /* NodeMap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeMap.swift; sourceTree = "<group>"; };
 		1117DE1A80DF019F4AF22B3E /* DocumentNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentNode.swift; sourceTree = "<group>"; };
 		1117DE2BDCA0459705A3E248 /* CodableTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CodableTests.swift; path = Sources/Gettysburg/DOM/CodableTests.swift; sourceTree = SOURCE_ROOT; };
 		1117DE64065CACAC0BB2A5FD /* Entities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Entities.swift; sourceTree = "<group>"; };
@@ -303,6 +307,7 @@
 			isa = PBXGroup;
 			children = (
 				1117D3415C04CF39935721EC /* NonDocument.swift */,
+				1117D2649C4063FBA70044BA /* NamedNodes.swift */,
 			);
 			path = BaseClasses;
 			sourceTree = "<group>";
@@ -382,6 +387,7 @@
 				1117D202B740A33D05A3A6F3 /* UserData.swift */,
 				1117DCC4A23B52DDDADC3F7D /* NodeTypes.swift */,
 				1117DB18FEA06EFF58835071 /* DOMError.swift */,
+				1117DD7DE8A525AD2CEF3B5F /* NodeMap.swift */,
 			);
 			path = DOM;
 			sourceTree = "<group>";
@@ -743,6 +749,8 @@
 				1117D3E25985663376356D91 /* AttributeDeclNode.swift in Sources */,
 				1117D031B5F0E05F35CB30AA /* InternalTools.swift in Sources */,
 				1117D4A9F7E8C79F5B32AC22 /* DOMError.swift in Sources */,
+				1117DAA149496B3F6FB4B8E8 /* NodeMap.swift in Sources */,
+				1117D289BB39715B5E28BE1B /* NamedNodes.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

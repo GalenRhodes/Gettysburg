@@ -19,7 +19,7 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-open class Node {
+open class Node: Hashable {
     //@f:0
     open               var nodeType:        NodeTypes              { fatalError("Not Implemented") }
     open               var nodeName:        String                 { nodeType.rawValue }
@@ -28,18 +28,18 @@ open class Node {
     open               var namespaceURI:    String?                { nil }
     open               var baseURI:         String?                { nil }
     open               var nodeValue:       String?                { get { nil } set {} }
-    open               var textContent:     String                 { get { "" } set {} }
     open               var ownerDocument:   DocumentNode           { fatalError("Not Implemented") }
     open internal(set) var parentNode:      Node?                  { get { nil } set {} }
-    open internal(set) var firstChildNode:  Node?                  { get { nil } set {} }
-    open internal(set) var lastChildNode:   Node?                  { get { nil } set {} }
     open internal(set) var nextSibling:     Node?                  { get { nil } set {} }
     open internal(set) var previousSibling: Node?                  { get { nil } set {} }
+    open               var firstChildNode:  Node?                  { childNodes.firstNode }
+    open               var lastChildNode:   Node?                  { childNodes.lastNode }
     open               var childNodes:      some NodeList          { EmptyNodeList() }
-    open               var attributes:      [QName: AttributeNode] { [:] }
-    open               var hasAttributes:   Bool                   { false }
-    open               var hasChildNodes:   Bool                   { false }
+    open               var attributes:      some NodeMap           { EmptyNodeMap() }
+    open               var hasAttributes:   Bool                   { attributes.count > 0 }
+    open               var hasChildNodes:   Bool                   { childNodes.count > 0 }
     open               var userData:        [String: UserData]     { get { [:] } set {} }
+    open               var textContent:     String                 { get { "" } set {} }
     //@f:1
 
     init() {}
@@ -64,5 +64,41 @@ open class Node {
 
     open func isEqualTo(_ other: Node) -> Bool { false }
 
-    open func hash(into hasher: inout Hasher) {}
+    open func hash(into hasher: inout Hasher) {
+        hasher.combine(nodeType)
+        hasher.combine(nodeName)
+        hasher.combine(localName)
+        hasher.combine(prefix)
+        hasher.combine(namespaceURI)
+        hasher.combine(nodeValue)
+        hasher.combine(childNodes)
+        hasher.combine(attributes)
+    }
+
+    public static func == (lhs: Node, rhs: Node) -> Bool {
+        guard (lhs.nodeType == rhs.nodeType) &&
+              (lhs.nodeName == rhs.nodeName) &&
+              (lhs.localName == rhs.localName) &&
+              (lhs.prefix == rhs.prefix) &&
+              (lhs.namespaceURI == rhs.namespaceURI) &&
+              (lhs.nodeValue == rhs.nodeValue) else { return false }
+
+        let lCNodes = lhs.childNodes
+        let rCNodes = rhs.childNodes
+
+        guard lCNodes.isReadOnly == rCNodes.isReadOnly else { return false }
+        guard lCNodes.count == rCNodes.count else { return false }
+
+        for i in (0 ..< lCNodes.count) { guard lCNodes[lCNodes.startIndex + i] == rCNodes[rCNodes.startIndex + i] else { return false } }
+
+        let lAttrs = lhs.attributes
+        let rAttrs = rhs.attributes
+
+        guard lAttrs.isReadOnly == rAttrs.isReadOnly else { return false }
+        guard lAttrs.count == rAttrs.count else { return false }
+
+        for e: NodeMapElement in lAttrs { guard let n = rAttrs[e.nodeName], n == e.node else { return false } }
+
+        return true
+    }
 }

@@ -48,4 +48,14 @@ public class DOMError: Error, Codable, CustomStringConvertible {
         public override init(description: String) { super.init(description: description) }
         public required init(from decoder: Decoder) throws { try super.init(from: decoder) }
     }
+
+    public final class WrongDocument: DOMError {
+        public override init(description: String) { super.init(description: description) }
+        public required init(from decoder: Decoder) throws { try super.init(from: decoder) }
+    }
+
+    public final class Hierarchy: DOMError {
+        public override init(description: String) { super.init(description: description) }
+        public required init(from decoder: Decoder) throws { try super.init(from: decoder) }
+    }
 }

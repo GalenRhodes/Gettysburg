@@ -1,9 +1,9 @@
 /*===============================================================================================================================================================================*
  *     PROJECT: Gettysburg
- *    FILENAME: AttributeDeclNode.swift
+ *    FILENAME: NamedNodes.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
- *        DATE: 10/14/21
+ *        DATE: 10/19/21
  *
  * Copyright © 2021. All rights reserved.
  *
@@ -19,9 +19,24 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-open class AttributeDeclNode: Node {
-    public enum AttrType { case ID, IDREF, IDREFS, ENTITY, ENTITIES, NMTOKEN, NMTOKENS, NOTATION, ENUMERATED }
+open class NamedNodes: NonDocument {
+    open override var nodeName:     String { nsName.name.description }
+    open override var namespaceURI: String? { nsName.uri }
+    open override var localName:    String { nsName.name.localName }
+    open override var prefix:       String? {
+        get { nsName.name.prefix }
+        set { nsName.name.prefix = newValue }
+    }
 
-    public enum DefaultType { case Required, Implied, Fixed }
+    var nsName: NSName
 
+    init(ownerDocument: DocumentNode, qualifiedName: String, namespaceURI: String? = nil) throws {
+        if let uri = namespaceURI {
+            nsName = NSName(qName: qualifiedName, namespaceURI: uri)
+        }
+        else {
+            nsName = NSName(name: qualifiedName)
+        }
+        super.init(ownerDocument: ownerDocument)
+    }
 }

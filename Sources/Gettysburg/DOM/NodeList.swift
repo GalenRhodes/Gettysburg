@@ -19,12 +19,14 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-public protocol NodeList: BidirectionalCollection where Element == Node, Index == Int {
+infix operator ~==: ComparisonPrecedence
+
+public protocol NodeList: Hashable, BidirectionalCollection where Element == Node, Index == Int {
     var firstNode:  Node? { get }
     var lastNode:   Node? { get }
     var isReadOnly: Bool { get }
 
-    mutating func append<T>(child node: T) throws -> T where T: Node
+    mutating func append<T>(child newNode: T) throws -> T where T: Node
 
     mutating func insert<T>(child newNode: T, before existingNode: Node?) throws -> T where T: Node
 
@@ -33,7 +35,7 @@ public protocol NodeList: BidirectionalCollection where Element == Node, Index =
     mutating func remove<T>(child node: T) throws -> T where T: Node
 }
 
-struct BasicNodeList: NodeList {
+struct UnownedNodeList: NodeList {
     typealias Element = Node
     typealias Index = Int
 
@@ -43,9 +45,13 @@ struct BasicNodeList: NodeList {
     var startIndex: Int { nodes.startIndex }
     var endIndex:   Int { nodes.endIndex }
 
-    private var nodes: [Node] = []
+    private var nodes:         [Node] = []
+    private let ownerDocument: DocumentNode
 
-    init(isReadOnly: Bool = true) { self.isReadOnly = isReadOnly }
+    init(ownerDocument: DocumentNode, isReadOnly: Bool = true) {
+        self.ownerDocument = ownerDocument
+        self.isReadOnly = isReadOnly
+    }
 
     subscript(position: Int) -> Node {
         get { nodes[position] }
@@ -56,18 +62,21 @@ struct BasicNodeList: NodeList {
 
     func index(after i: Int) -> Int { nodes.index(after: i) }
 
-    @discardableResult mutating func append<T>(child node: T) throws -> T where T: Node {
+    @discardableResult mutating func append<T>(child newNode: T) throws -> T where T: Node {
         guard !isReadOnly else { throw DOMError.ReadOnly(description: "Node list is read-only.") }
-        return node
+        guard newNode.ownerDocument === ownerDocument else { throw DOMError.WrongDocument(description: "New node belongs to the wrong document.") }
+        return newNode
     }
 
     @discardableResult mutating func insert<T>(child newNode: T, before existingNode: Node?) throws -> T where T: Node {
         guard !isReadOnly else { throw DOMError.ReadOnly(description: "Node list is read-only.") }
+        guard newNode.ownerDocument === ownerDocument else { throw DOMError.WrongDocument(description: "New node belongs to the wrong document.") }
         return newNode
     }
 
     @discardableResult mutating func replace<T>(existing oldNode: T, with newNode: Node) throws -> T where T: Node {
         guard !isReadOnly else { throw DOMError.ReadOnly(description: "Node list is read-only.") }
+        guard newNode.ownerDocument === ownerDocument else { throw DOMError.WrongDocument(description: "New node belongs to the wrong document.") }
         return oldNode
     }
 
@@ -77,47 +86,136 @@ struct BasicNodeList: NodeList {
         nodes.remove(at: idx)
         return node
     }
+
+    @inlinable func hash(into hasher: inout Hasher) {
+        hasher.combine(nodes)
+        hasher.combine(isReadOnly)
+    }
+
+    @inlinable static func == (lhs: UnownedNodeList, rhs: UnownedNodeList) -> Bool {
+        guard lhs.isReadOnly == rhs.isReadOnly && lhs.count == rhs.count else { return false }
+        for i in (0 ..< lhs.count) { guard lhs[lhs.startIndex + i] === rhs[rhs.startIndex + i] else { return false } }
+        return true
+    }
 }
 
 struct ChildNodeList: NodeList {
     typealias Element = Node
     typealias Index = Int
 
-    var firstNode:  Node? { nodes.first }
-    var lastNode:   Node? { nodes.last }
-    var startIndex: Int { nodes.startIndex }
-    var endIndex:   Int { nodes.endIndex }
-    let isReadOnly: Bool = false
+    @inlinable var firstNode:  Node? { nodes.first }
+    @inlinable var lastNode:   Node? { nodes.last }
+    @inlinable var startIndex: Int { nodes.startIndex }
+    @inlinable var endIndex:   Int { nodes.endIndex }
+    let            isReadOnly: Bool = false
 
     private var nodes: [Node] = []
     private var owner: Node
 
-    init(owner: Node) { self.owner = owner }
+    @inlinable init(owner: Node) { self.owner = owner }
 
-    subscript(position: Int) -> Node { nodes[position] }
+    @inlinable subscript(position: Int) -> Node { nodes[position] }
 
-    func index(before i: Int) -> Int { nodes.index(before: i) }
+    @inlinable func index(before i: Int) -> Int { nodes.index(before: i) }
 
-    func index(after i: Int) -> Int { nodes.index(after: i) }
+    @inlinable func index(after i: Int) -> Int { nodes.index(after: i) }
 
-    @discardableResult mutating func append<T>(child node: T) throws -> T where T: Node { node }
+    @discardableResult mutating func append<T>(child newNode: T) throws -> T where T: Node {
+        guard newNode.ownerDocument === owner.ownerDocument else { throw DOMError.WrongDocument(description: "New node belongs to the wrong document.") }
+        try testHierarchy(node: newNode)
 
-    @discardableResult mutating func insert<T>(child newNode: T, before existingNode: Node?) throws -> T where T: Node { newNode }
+        if let p = newNode.parentNode {
+            try p.remove(child: newNode)
+        }
+        if let l = lastNode {
+            l.nextSibling = newNode
+            newNode.previousSibling = l
+        }
 
-    @discardableResult mutating func replace<T>(existing oldNode: T, with newNode: Node) throws -> T where T: Node { oldNode }
+        newNode.nextSibling = nil
+        newNode.parentNode = owner
+        nodes <+ newNode
+        return newNode
+    }
+
+    @discardableResult mutating func insert<T>(child newNode: T, before existingNode: Node?) throws -> T where T: Node {
+        guard let oldNode = existingNode else { return try append(child: newNode) }
+        guard oldNode.parentNode === owner, let idx = indexFor(node: oldNode) else { throw DOMError.NodeNotFound(description: "Existing node not found.") }
+        guard newNode.ownerDocument === owner.ownerDocument else { throw DOMError.WrongDocument(description: "New node belongs to the wrong document.") }
+        guard oldNode !== newNode else { return newNode }
+
+        try testHierarchy(node: newNode)
+        try newNode.parentNode?.remove(child: newNode)
+        newNode.parentNode = owner
+
+        newNode.previousSibling = oldNode.previousSibling
+        newNode.previousSibling?.nextSibling = newNode
+        newNode.nextSibling = oldNode
+        oldNode.previousSibling = newNode
+
+        nodes.insert(newNode, at: idx)
+        return newNode
+    }
+
+    @discardableResult mutating func replace<T>(existing oldNode: T, with newNode: Node) throws -> T where T: Node {
+        guard oldNode.parentNode === owner, let idx = indexFor(node: oldNode) else { throw DOMError.NodeNotFound(description: "Existing node not found.") }
+        guard newNode.ownerDocument === owner.ownerDocument else { throw DOMError.WrongDocument(description: "New node belongs to the wrong document.") }
+        guard oldNode !== newNode else { return oldNode }
+
+        try testHierarchy(node: newNode)
+        try newNode.parentNode?.remove(child: newNode)
+        newNode.parentNode = owner
+
+        newNode.previousSibling = oldNode.previousSibling
+        newNode.previousSibling?.nextSibling = newNode
+        newNode.nextSibling = oldNode.nextSibling
+        newNode.nextSibling?.previousSibling = newNode
+
+        oldNode.nextSibling = nil
+        oldNode.previousSibling = nil
+        oldNode.parentNode = nil
+
+        nodes[idx] = newNode
+        return oldNode
+    }
 
     @discardableResult mutating func remove<T>(child node: T) throws -> T where T: Node {
-        guard let idx = nodes.firstIndex(where: { $0 === node }) else { throw DOMError.NodeNotFound(description: "Child node not found.") }
+        guard node.parentNode === owner, let idx = indexFor(node: node) else { throw DOMError.NodeNotFound(description: "Child node not found.") }
         if idx > startIndex {
             nodes[idx - 1].nextSibling = (((idx + 1) < endIndex) ? nodes[idx + 1] : nil)
         }
         if (idx + 1) < endIndex {
             nodes[idx + 1].previousSibling = ((idx > startIndex) ? nodes[idx - 1] : nil)
         }
-        nodes[idx].previousSibling = nil
-        nodes[idx].nextSibling = nil
+        node.parentNode = nil
+        node.nextSibling = nil
+        node.previousSibling = nil
         nodes.remove(at: idx)
         return node
+    }
+
+    @inlinable func indexFor(node: Node) -> Index? {
+        nodes.firstIndex { $0 === node }
+    }
+
+    @inlinable func testHierarchy(node: Node) throws {
+        var _n: Node? = owner
+        while let n = _n {
+            guard n !== node else { throw DOMError.Hierarchy(description: "Heirarchy Error") }
+            _n = n.parentNode
+        }
+    }
+
+    @inlinable func hash(into hasher: inout Hasher) {
+        hasher.combine(owner)
+        hasher.combine(nodes)
+        hasher.combine(isReadOnly)
+    }
+
+    @inlinable static func == (lhs: ChildNodeList, rhs: ChildNodeList) -> Bool {
+        guard lhs.owner === rhs.owner && lhs.isReadOnly == rhs.isReadOnly && lhs.count == rhs.count else { return false }
+        for i in (0 ..< lhs.count) { guard lhs[lhs.startIndex + i] === rhs[rhs.startIndex + i] else { return false } }
+        return true
     }
 }
 
@@ -133,17 +231,23 @@ struct EmptyNodeList: NodeList {
 
     init() {}
 
-    subscript(position: Int) -> Node { fatalError("Index out of bounds.") }
+    @inlinable subscript(position: Int) -> Node { fatalError("Index out of bounds.") }
 
-    func index(before i: Int) -> Int { fatalError("Index out of bounds.") }
+    @inlinable func index(before i: Int) -> Int { fatalError("Index out of bounds.") }
 
-    func index(after i: Int) -> Int { fatalError("Index out of bounds.") }
+    @inlinable func index(after i: Int) -> Int { fatalError("Index out of bounds.") }
 
-    @discardableResult func append<T>(child node: T) throws -> T where T: Node { fatalError("List is read-only.") }
+    @inlinable @discardableResult func append<T>(child newNode: T) throws -> T where T: Node { fatalError("List is read-only.") }
 
-    @discardableResult func insert<T>(child newNode: T, before existingNode: Node?) throws -> T where T: Node { fatalError("List is read-only.") }
+    @inlinable @discardableResult func insert<T>(child newNode: T, before existingNode: Node?) throws -> T where T: Node { fatalError("List is read-only.") }
 
-    @discardableResult func replace<T>(existing oldNode: T, with newNode: Node) throws -> T where T: Node { fatalError("List is read-only.") }
+    @inlinable @discardableResult func replace<T>(existing oldNode: T, with newNode: Node) throws -> T where T: Node { fatalError("List is read-only.") }
 
-    @discardableResult func remove<T>(child node: T) throws -> T where T: Node { fatalError("List is read-only.") }
+    @inlinable @discardableResult func remove<T>(child node: T) throws -> T where T: Node { fatalError("List is read-only.") }
+
+    @inlinable func hash(into hasher: inout Hasher) { hasher.combine(2112) }
+
+    @inlinable static func == (lhs: EmptyNodeList, rhs: EmptyNodeList) -> Bool { true }
+
+    @inlinable static func ~== (lhs: EmptyNodeList, rhs: EmptyNodeList) -> Bool { true }
 }

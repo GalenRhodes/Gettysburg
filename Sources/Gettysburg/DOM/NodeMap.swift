@@ -1,9 +1,9 @@
 /*===============================================================================================================================================================================*
  *     PROJECT: Gettysburg
- *    FILENAME: AttributeDeclNode.swift
+ *    FILENAME: NodeMap.swift
  *         IDE: AppCode
  *      AUTHOR: Galen Rhodes
- *        DATE: 10/14/21
+ *        DATE: 10/19/21
  *
  * Copyright © 2021. All rights reserved.
  *
@@ -19,9 +19,32 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-open class AttributeDeclNode: Node {
-    public enum AttrType { case ID, IDREF, IDREFS, ENTITY, ENTITIES, NMTOKEN, NMTOKENS, NOTATION, ENUMERATED }
+public typealias NodeMapElement = (nodeName: String, node: Node)
 
-    public enum DefaultType { case Required, Implied, Fixed }
+public protocol NodeMap: Hashable, BidirectionalCollection where Element == NodeMapElement, Index == Int {
+    var isReadOnly: Bool { get }
 
+    subscript(nodeName: String) -> Node? { get set }
+}
+
+struct EmptyNodeMap: NodeMap {
+
+    let startIndex: Int  = 0
+    let endIndex:   Int  = 0
+    let isReadOnly: Bool = true
+
+    subscript(nodeName: String) -> Node? {
+        get { nil }
+        set { fatalError("Node map is read-only.") }
+    }
+
+    subscript(position: Int) -> NodeMapElement { fatalError("Index out of bounds.") }
+
+    func index(before i: Int) -> Int { fatalError("Index out of bounds.") }
+
+    func index(after i: Int) -> Int { fatalError("Index out of bounds.") }
+
+    func hash(into hasher: inout Hasher) { hasher.combine(2113) }
+
+    static func == (lhs: EmptyNodeMap, rhs: EmptyNodeMap) -> Bool { true }
 }

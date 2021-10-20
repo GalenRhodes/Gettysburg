@@ -19,6 +19,16 @@ import Foundation
 import CoreFoundation
 import Rubicon
 
-open class AttributeNode: NonDocument {
+open class AttributeNode: NamedNodes {
     open override var nodeType: NodeTypes { .Attribute }
+    open override var nodeValue: String? {
+        get { value }
+        set { value = (newValue ?? "") }
+    }
+    var value: String
+
+    init(ownerDocument: DocumentNode, qualifiedName: String, namespaceURI: String? = nil, value: String) throws {
+        self.value = value
+        try super.init(ownerDocument: ownerDocument, qualifiedName: qualifiedName, namespaceURI: namespaceURI)
+    }
 }
