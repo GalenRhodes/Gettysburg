@@ -5,15 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="60b0239b-d5a7-4057-9e21-57829d56877e" name="Default Changelist" comment="More...">
+      <change afterPath="$PROJECT_DIR$/.idea/template/template_variable_settings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Common/Namespaces.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Common/Namespaces.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/BaseClasses/NamedNodes.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/BaseClasses/NamedNodes.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/BaseClasses/NonDocument.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/BaseClasses/NonDocument.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Node.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Node.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/NodeMap.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/NodeMap.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/NodeTypes.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/NodeTypes.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/AttributeNode.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/AttributeNode.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/DocumentNode.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/DocumentNode.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Common/InternalTools.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Common/InternalTools.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/Common/Messages.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/Common/Messages.swift" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,9 +25,6 @@
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
     </projectState>
-  </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="SCHEME" value="Project" />
   </component>
   <component name="Git.Settings">
     <option name="PREVIEW_PUSH_PROTECTED_ONLY" value="true" />
@@ -93,12 +85,16 @@
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
+    <property name="settings.editor.selected.configurable" value="org.vkravets.idea.project.filetemplate.configuration.ProjectTemplateVariableConfigurable" />
   </component>
   <component name="RunManager" selected="XCTest.Gettysburg Tests - testParser">
-    <configuration default="true" type="Application" factoryName="Application">
+    <configuration default="true" type="AppleRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" IS_LOCATION_SIMULATION_ALLOWED="true" APPLICATION_LANGUAGE="IDELaunchSchemeLanguageUseSystemLanguage" APPLICATION_REGION="" MAKE_ACTIVE="TRUE" SHOULD_DEBUG_EXTENSIONS="false">
+      <EXTENSION ID="org.jetbrains.appcode.reveal.RevealRunConfigurationExtension">
+        <REVEAL_SETTINGS autoInject="false" autoInstall="true" askToEnableAutoInstall="true" />
+      </EXTENSION>
+      <embedded_app_extension_list />
       <method v="2">
-        <option name="Make" enabled="true" />
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
     <list>
@@ -267,14 +263,10 @@
       <workItem from="1634300080863" duration="6031000" />
       <workItem from="1634397495102" duration="16256000" />
       <workItem from="1634648421466" duration="11969000" />
-      <workItem from="1634732266233" duration="10425000" />
-    </task>
-    <task id="LOCAL-00040" summary="More.">
-      <created>1623866700802</created>
-      <option name="number" value="00040" />
-      <option name="presentableId" value="LOCAL-00040" />
-      <option name="project" value="LOCAL" />
-      <updated>1623866700802</updated>
+      <workItem from="1634732266233" duration="10479000" />
+      <workItem from="1634753445367" duration="406000" />
+      <workItem from="1634757169607" duration="849000" />
+      <workItem from="1634776329415" duration="9000" />
     </task>
     <task id="LOCAL-00041" summary="More.">
       <created>1623866822310</created>
@@ -612,7 +604,14 @@
       <option name="project" value="LOCAL" />
       <updated>1634688438730</updated>
     </task>
-    <option name="localTasksCounter" value="89" />
+    <task id="LOCAL-00089" summary="More...">
+      <created>1634743482857</created>
+      <option name="number" value="00089" />
+      <option name="presentableId" value="LOCAL-00089" />
+      <option name="project" value="LOCAL" />
+      <updated>1634743482857</updated>
+    </task>
+    <option name="localTasksCounter" value="90" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
