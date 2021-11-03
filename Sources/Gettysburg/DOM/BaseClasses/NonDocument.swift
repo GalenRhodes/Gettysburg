@@ -33,13 +33,13 @@ open class NonDocument: Node {
     }
 
     public required init(from decoder: Decoder) throws {
-        _ownerDocument = try decoder.container(keyedBy: CodingKeys.self).decode(DocumentNode.self, forKey: .OwnerDocument)
+        _ownerDocument = try decoder.container(keyedBy: CodingKeys.self).decode(DocumentNode.self, forKey: .ownerDocument)
         try super.init(from: decoder)
     }
 
     public override func encode(to encoder: Encoder) throws {
         var c = encoder.container(keyedBy: CodingKeys.self)
-        try c.encode(_ownerDocument, forKey: .OwnerDocument)
+        try c.encode(_ownerDocument, forKey: .ownerDocument)
         try super.encode(to: encoder)
     }
 }

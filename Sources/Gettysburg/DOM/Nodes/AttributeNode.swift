@@ -31,4 +31,9 @@ open class AttributeNode: NamedNodes {
         self.value = value
         try super.init(ownerDocument: ownerDocument, qualifiedName: qualifiedName, namespaceURI: namespaceURI)
     }
+
+    public required init(from decoder: Decoder) throws {
+        value = ""
+        try super.init(from: decoder)
+    }
 }
