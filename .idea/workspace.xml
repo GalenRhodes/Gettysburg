@@ -4,8 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="60b0239b-d5a7-4057-9e21-57829d56877e" name="Default Changelist" comment="More...">
+    <list default="true" id="60b0239b-d5a7-4057-9e21-57829d56877e" name="Default Changelist" comment="No comment.">
+      <change beforePath="$PROJECT_DIR$/.idea/Gettysburg.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Gettysburg.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.pbxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved" beforeDir="false" afterPath="$PROJECT_DIR$/Gettysburg.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,15 +45,16 @@
     </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/Tests/GettysburgTests/GettysburgTests.swift" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Sources/Gettysburg/SAXDelegate.swift" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Tests/GettysburgTests/TestData/Test_UTF-8.xml" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Sources/Gettysburg/SAXDelegate.swift" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Tests/GettysburgTests/GettysburgTests.swift" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MacroExpansionManager">
     <option name="directoryName" value="0kgei8de" />
   </component>
   <component name="ProjectId" id="1nL8BlruAU5rgYSamTyo1akllx4" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <OptionsSetting value="false" id="Update" />
     <ConfirmationsSetting value="2" id="Add" />
   </component>
   <component name="ProjectViewState">
@@ -86,14 +90,14 @@
   </component>
   <component name="RunManager" selected="XCTest.Gettysburg Tests - testParser">
     <list>
-      <item itemvalue="Application.DocFixer" />
       <item itemvalue="Application.EntityTool" />
-      <item itemvalue="Application.Gettysburg" />
-      <item itemvalue="Application.URLSessionTester" />
       <item itemvalue="Application.URLSessionTester - 2" />
+      <item itemvalue="Application.URLSessionTester" />
+      <item itemvalue="Application.DocFixer" />
+      <item itemvalue="Application.Gettysburg" />
+      <item itemvalue="XCTest.RegexTests" />
       <item itemvalue="XCTest.Experiments - URLs" />
       <item itemvalue="XCTest.Gettysburg Tests - testParser" />
-      <item itemvalue="XCTest.RegexTests" />
     </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -261,6 +265,9 @@
       <workItem from="1635776038759" duration="70000" />
       <workItem from="1635944256172" duration="156000" />
       <workItem from="1636068086082" duration="11000" />
+      <workItem from="1636069218320" duration="17000" />
+      <workItem from="1636069258109" duration="127000" />
+      <workItem from="1636069535135" duration="79000" />
     </task>
     <task id="LOCAL-00043" summary="Tests for Linux">
       <created>1623867864146</created>
