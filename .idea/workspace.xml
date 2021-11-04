@@ -5,10 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="60b0239b-d5a7-4057-9e21-57829d56877e" name="Default Changelist" comment="More...">
-      <change afterPath="$PROJECT_DIR$/foo.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/BaseClasses/NonDocument.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/BaseClasses/NonDocument.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/AttributeNode.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/Gettysburg/DOM/Nodes/AttributeNode.swift" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -262,14 +259,8 @@
       <workItem from="1634848296693" duration="750000" />
       <workItem from="1635158851393" duration="836000" />
       <workItem from="1635776038759" duration="70000" />
-      <workItem from="1635944256172" duration="11000" />
-    </task>
-    <task id="LOCAL-00042" summary="Tests for Linux">
-      <created>1623867679742</created>
-      <option name="number" value="00042" />
-      <option name="presentableId" value="LOCAL-00042" />
-      <option name="project" value="LOCAL" />
-      <updated>1623867679742</updated>
+      <workItem from="1635944256172" duration="156000" />
+      <workItem from="1636068086082" duration="11000" />
     </task>
     <task id="LOCAL-00043" summary="Tests for Linux">
       <created>1623867864146</created>
@@ -607,7 +598,14 @@
       <option name="project" value="LOCAL" />
       <updated>1634776399395</updated>
     </task>
-    <option name="localTasksCounter" value="91" />
+    <task id="LOCAL-00091" summary="More...">
+      <created>1635944319507</created>
+      <option name="number" value="00091" />
+      <option name="presentableId" value="LOCAL-00091" />
+      <option name="project" value="LOCAL" />
+      <updated>1635944319507</updated>
+    </task>
+    <option name="localTasksCounter" value="92" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
