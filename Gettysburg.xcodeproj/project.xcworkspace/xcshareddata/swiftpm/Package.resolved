@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/GalenRhodes/RedBlackTree.git",
         "state": {
           "branch": null,
-          "revision": "3bb28f7d81354deaebc0f7b8eb2282fa55d2b9fd",
-          "version": "2.0.3"
+          "revision": "ac929829111ecc957bcf1c27664b30dca32749f6",
+          "version": "2.0.5"
         }
       },
       {
@@ -44,15 +44,6 @@
           "branch": null,
           "revision": "1ba6a5e1be56b9aceab885a98c3d6a7fb81d7119",
           "version": "0.9.0"
-        }
-      },
-      {
-        "package": "swift-argument-parser",
-        "repositoryURL": "https://github.com/apple/swift-argument-parser.git",
-        "state": {
-          "branch": null,
-          "revision": "83b23d940471b313427da226196661856f6ba3e0",
-          "version": "0.4.4"
         }
       }
     ]

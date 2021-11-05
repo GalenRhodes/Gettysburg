@@ -42,19 +42,9 @@ public let FileMan: FileManager = FileManager.default
     return .EqualTo
 }
 
-@inlinable public func compare<T>(_ list: (T?, T?)...) -> ComparisonResults where T: Comparable { compare(list) }
-
 @inlinable public func areEqual<T>(_ list: (T?, T?)...) -> Bool where T: Comparable { (compare(list) == .EqualTo) }
 
 @inlinable public func areLessThan<T>(_ list: (T?, T?)...) -> Bool where T: Comparable { (compare(list) == .LessThan) }
-
-@inlinable public func areGreaterThan<T>(_ list: (T?, T?)...) -> Bool where T: Comparable { (compare(list) == .GreaterThan) }
-
-@inlinable public func areEqual<T>(_ list: [(T?, T?)]) -> Bool where T: Comparable { (compare(list) == .EqualTo) }
-
-@inlinable public func areLessThan<T>(_ list: [(T?, T?)]) -> Bool where T: Comparable { (compare(list) == .LessThan) }
-
-@inlinable public func areGreaterThan<T>(_ list: [(T?, T?)]) -> Bool where T: Comparable { (compare(list) == .GreaterThan) }
 
 @inlinable public func == <C1, C2>(lhs: C1, rhs: C2) -> Bool where C1: Collection, C2: Collection, C1.Element == C2.Element, C1.Element: Equatable {
     guard lhs.count == rhs.count else { return false }

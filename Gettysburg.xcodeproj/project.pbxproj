@@ -50,7 +50,6 @@
 		1117DBACBBB748A8639285FD /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DB804342BF77458B8663 /* main.swift */; };
 		1117DC8DA17365180FC03EAA /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D8EE1CD620C4E6152B79 /* URL.swift */; };
 		1117DCF87ADBD0694A80766E /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D04C0A5A97474077C4F8 /* Node.swift */; };
-		1117DD369D6AD5DD54788721 /* URLSessionTesterAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D631D08E8F21105FD274 /* URLSessionTesterAction.swift */; };
 		1117DD3A3F198482B084D02A /* RegexPatterns.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117DEF013EEFC9E354D7B27 /* RegexPatterns.swift */; };
 		1117DDAABC5C2559C3E58075 /* Gettysburg.h in Headers */ = {isa = PBXBuildFile; fileRef = 1117DA52094C2ABAE3EA2EBA /* Gettysburg.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1117DDB1468294ECF7281E5B /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D202B740A33D05A3A6F3 /* UserData.swift */; };
@@ -59,8 +58,6 @@
 		1117DF8DB58574A9ED6FEB55 /* StringProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D3F82BC0B22065494C83 /* StringProtocol.swift */; };
 		1117DFAF328D68D2A5131153 /* XMLDecl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D37453D0CD4F1F982E84 /* XMLDecl.swift */; };
 		830E3C962631AC0600F3835F /* PGDocFixer in Frameworks */ = {isa = PBXBuildFile; productRef = 83CFA5E22556E70C005498FC /* PGDocFixer */; };
-		831A2D9726A225B20061E945 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 831A2D9626A225B20061E945 /* main.swift */; };
-		831A2D9F26A226290061E945 /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = 831A2D9E26A226290061E945 /* ArgumentParser */; };
 		8356BB3C25D038AA00E41DFC /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1117D86804A3FA8399671C13 /* main.swift */; };
 		8356BB4425D03A8100E41DFC /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 83DD3B8425B9CBEE0083BC1C /* libiconv.tbd */; };
 		835BCD9826ECD81700B5DEF0 /* Rubicon in Frameworks */ = {isa = PBXBuildFile; productRef = 835BCD9726ECD81700B5DEF0 /* Rubicon */; };
@@ -116,15 +113,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		831A2D9226A225B20061E945 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-		};
 		8356BB1825D0375F00E41DFC /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -187,7 +175,6 @@
 		1117D513D9FDF90E82E5D1D1 /* Test_UTF-8_ext.dtd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Test_UTF-8_ext.dtd"; sourceTree = "<group>"; };
 		1117D5F1D383A57B9E2C849D /* AttributeNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttributeNode.swift; sourceTree = "<group>"; };
 		1117D62B33D6FEF9D67D50E6 /* Test_UTF-32LE.xml */ = {isa = PBXFileReference; fileEncoding = 2617245952; lastKnownFileType = text.xml; path = "Test_UTF-32LE.xml"; sourceTree = "<group>"; };
-		1117D631D08E8F21105FD274 /* URLSessionTesterAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLSessionTesterAction.swift; sourceTree = "<group>"; };
 		1117D68B357A879E6682C588 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.info; path = Info.plist; sourceTree = "<group>"; };
 		1117D7BD3C4A2B65CD16265F /* compname.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = compname.txt; sourceTree = "<group>"; };
 		1117D7BF1803856C4213CB5E /* Test.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Test.xml; sourceTree = "<group>"; };
@@ -217,9 +204,6 @@
 		1117DF25C968B209A3179FBE /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = file.gitignore; path = .gitignore; sourceTree = "<group>"; };
 		1117DF9FFB9A6409B0562E05 /* EntityRegexPatternTest.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = EntityRegexPatternTest.pdf; sourceTree = "<group>"; };
 		1117DFA4E13F088ACE70D5BE /* Namespaces.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Namespaces.swift; sourceTree = "<group>"; };
-		831A2D9426A225B20061E945 /* URLSessionTester */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = URLSessionTester; sourceTree = BUILT_PRODUCTS_DIR; };
-		831A2D9626A225B20061E945 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		831A2DA026A226440061E945 /* URLSessionTester.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = URLSessionTester.entitlements; sourceTree = "<group>"; };
 		8356BB1A25D0375F00E41DFC /* EntityTool */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = EntityTool; sourceTree = BUILT_PRODUCTS_DIR; };
 		83CFA5B02556E331005498FC /* Gettysburg.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Gettysburg.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		83CFA5B92556E331005498FC /* GettysburgTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GettysburgTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -229,14 +213,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		831A2D9126A225B20061E945 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				831A2D9F26A226290061E945 /* ArgumentParser in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		8356BB1725D0375F00E41DFC /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -397,16 +373,6 @@
 			name = Other;
 			sourceTree = "<group>";
 		};
-		831A2D9526A225B20061E945 /* URLSessionTester */ = {
-			isa = PBXGroup;
-			children = (
-				831A2DA026A226440061E945 /* URLSessionTester.entitlements */,
-				831A2D9626A225B20061E945 /* main.swift */,
-				1117D631D08E8F21105FD274 /* URLSessionTesterAction.swift */,
-			);
-			path = URLSessionTester;
-			sourceTree = "<group>";
-		};
 		8356BB1B25D0375F00E41DFC /* EntityTool */ = {
 			isa = PBXGroup;
 			children = (
@@ -434,7 +400,6 @@
 				83CFA5B92556E331005498FC /* GettysburgTests.xctest */,
 				83CFA5D72556E6C4005498FC /* DocFixer */,
 				8356BB1A25D0375F00E41DFC /* EntityTool */,
-				831A2D9426A225B20061E945 /* URLSessionTester */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -469,7 +434,6 @@
 		83CFA5CC2556E53E005498FC /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				831A2D9526A225B20061E945 /* URLSessionTester */,
 				8356BB1B25D0375F00E41DFC /* EntityTool */,
 				83CFA5D82556E6C4005498FC /* DocFixer */,
 				83CFA5B22556E331005498FC /* Gettysburg */,
@@ -516,26 +480,6 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		831A2D9326A225B20061E945 /* URLSessionTester */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 831A2D9A26A225B20061E945 /* Build configuration list for PBXNativeTarget "URLSessionTester" */;
-			buildPhases = (
-				831A2D9026A225B20061E945 /* Sources */,
-				831A2D9126A225B20061E945 /* Frameworks */,
-				831A2D9226A225B20061E945 /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = URLSessionTester;
-			packageProductDependencies = (
-				831A2D9E26A226290061E945 /* ArgumentParser */,
-			);
-			productName = URLSessionTester;
-			productReference = 831A2D9426A225B20061E945 /* URLSessionTester */;
-			productType = "com.apple.product-type.tool";
-		};
 		8356BB1925D0375F00E41DFC /* EntityTool */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8356BB2025D0375F00E41DFC /* Build configuration list for PBXNativeTarget "EntityTool" */;
@@ -626,11 +570,8 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1250;
-				LastUpgradeCheck = 1220;
+				LastUpgradeCheck = 1310;
 				TargetAttributes = {
-					831A2D9326A225B20061E945 = {
-						CreatedOnToolsVersion = 12.5.1;
-					};
 					8356BB1925D0375F00E41DFC = {
 						CreatedOnToolsVersion = 12.4;
 					};
@@ -658,10 +599,9 @@
 			);
 			mainGroup = 83CFA5A62556E331005498FC;
 			packageReferences = (
-				83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer.git" */,
-				831A2D9D26A226290061E945 /* XCRemoteSwiftPackageReference "swift-argument-parser.git" */,
-				83780B6F26C566810032AD73 /* XCRemoteSwiftPackageReference "RedBlackTree.git" */,
-				835BCD9626ECD81700B5DEF0 /* XCRemoteSwiftPackageReference "Rubicon.git" */,
+				83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer" */,
+				83780B6F26C566810032AD73 /* XCRemoteSwiftPackageReference "RedBlackTree" */,
+				835BCD9626ECD81700B5DEF0 /* XCRemoteSwiftPackageReference "Rubicon" */,
 			);
 			productRefGroup = 83CFA5B12556E331005498FC /* Products */;
 			projectDirPath = "";
@@ -672,7 +612,6 @@
 				83CFA5D62556E6C4005498FC /* DocFixer */,
 				83CFA60F255735DE005498FC /* All Gettysburg */,
 				8356BB1925D0375F00E41DFC /* EntityTool */,
-				831A2D9326A225B20061E945 /* URLSessionTester */,
 			);
 		};
 /* End PBXProject section */
@@ -695,15 +634,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		831A2D9026A225B20061E945 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				831A2D9726A225B20061E945 /* main.swift in Sources */,
-				1117DD369D6AD5DD54788721 /* URLSessionTesterAction.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		8356BB1625D0375F00E41DFC /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -802,39 +732,13 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		831A2D9826A225B20061E945 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = Sources/URLSessionTester/URLSessionTester.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = Q5XWZ7S7E9;
-				ENABLE_HARDENED_RUNTIME = YES;
-				MACOSX_DEPLOYMENT_TARGET = 11.3;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-			};
-			name = Debug;
-		};
-		831A2D9926A225B20061E945 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = Sources/URLSessionTester/URLSessionTester.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = Q5XWZ7S7E9;
-				ENABLE_HARDENED_RUNTIME = YES;
-				MACOSX_DEPLOYMENT_TARGET = 11.3;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-			};
-			name = Release;
-		};
 		8356BB1E25D0375F00E41DFC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Q5XWZ7S7E9;
 				ENABLE_HARDENED_RUNTIME = YES;
-				MACOSX_DEPLOYMENT_TARGET = 11.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 			};
@@ -843,10 +747,10 @@
 		8356BB1F25D0375F00E41DFC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Q5XWZ7S7E9;
 				ENABLE_HARDENED_RUNTIME = YES;
-				MACOSX_DEPLOYMENT_TARGET = 11.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 			};
@@ -904,7 +808,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MACOSX_DEPLOYMENT_TARGET = 11.5;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -962,7 +866,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MACOSX_DEPLOYMENT_TARGET = 11.5;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -991,7 +895,6 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				PRODUCT_BUNDLE_IDENTIFIER = com.projectgalen.Gettysburg;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -1017,7 +920,6 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				PRODUCT_BUNDLE_IDENTIFIER = com.projectgalen.Gettysburg;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -1107,15 +1009,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		831A2D9A26A225B20061E945 /* Build configuration list for PBXNativeTarget "URLSessionTester" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				831A2D9826A225B20061E945 /* Debug */,
-				831A2D9926A225B20061E945 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		8356BB2025D0375F00E41DFC /* Build configuration list for PBXNativeTarget "EntityTool" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -1173,15 +1066,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		831A2D9D26A226290061E945 /* XCRemoteSwiftPackageReference "swift-argument-parser.git" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/apple/swift-argument-parser.git";
-			requirement = {
-				kind = upToNextMinorVersion;
-				minimumVersion = 0.4.4;
-			};
-		};
-		835BCD9626ECD81700B5DEF0 /* XCRemoteSwiftPackageReference "Rubicon.git" */ = {
+		835BCD9626ECD81700B5DEF0 /* XCRemoteSwiftPackageReference "Rubicon" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/GalenRhodes/Rubicon.git";
 			requirement = {
@@ -1189,15 +1074,15 @@
 				minimumVersion = 0.9.0;
 			};
 		};
-		83780B6F26C566810032AD73 /* XCRemoteSwiftPackageReference "RedBlackTree.git" */ = {
+		83780B6F26C566810032AD73 /* XCRemoteSwiftPackageReference "RedBlackTree" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/GalenRhodes/RedBlackTree.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.3;
+				minimumVersion = 2.0.5;
 			};
 		};
-		83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer.git" */ = {
+		83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/GalenRhodes/PGDocFixer.git";
 			requirement = {
@@ -1208,24 +1093,19 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		831A2D9E26A226290061E945 /* ArgumentParser */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 831A2D9D26A226290061E945 /* XCRemoteSwiftPackageReference "swift-argument-parser.git" */;
-			productName = ArgumentParser;
-		};
 		835BCD9726ECD81700B5DEF0 /* Rubicon */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 835BCD9626ECD81700B5DEF0 /* XCRemoteSwiftPackageReference "Rubicon.git" */;
+			package = 835BCD9626ECD81700B5DEF0 /* XCRemoteSwiftPackageReference "Rubicon" */;
 			productName = Rubicon;
 		};
 		83780B7026C566810032AD73 /* RedBlackTree */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 83780B6F26C566810032AD73 /* XCRemoteSwiftPackageReference "RedBlackTree.git" */;
+			package = 83780B6F26C566810032AD73 /* XCRemoteSwiftPackageReference "RedBlackTree" */;
 			productName = RedBlackTree;
 		};
 		83CFA5E22556E70C005498FC /* PGDocFixer */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer.git" */;
+			package = 83CFA5E12556E70C005498FC /* XCRemoteSwiftPackageReference "PGDocFixer" */;
 			productName = PGDocFixer;
 		};
 /* End XCSwiftPackageProductDependency section */

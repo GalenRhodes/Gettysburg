@@ -60,8 +60,7 @@ do {
     // "NonBreakingSpace":	""
     // "shy":	""
     //
-    regex1.forEachMatch(in: data) { (m, _, _) in
-        guard let match = m else { return }
+    regex1.forEachMatch(in: data) { (match, _) in
         let name            = (match[1].subString ?? "\(UnicodeReplacementChar)").trimmed
         let entity          = (match[2].subString ?? "")
         var names: [String] = []
